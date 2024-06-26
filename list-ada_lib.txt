@@ -1,0 +1,2 @@
+comand: ./build/bin/aunit  -l -L /Users/wayne/bin/dbdaemon    -p 2300
+./test-macosx: line 278: ./build/bin/aunit: No such file or directory

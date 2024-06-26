@@ -1,0 +1,260 @@
+--with Ada_Lib.GNOGA;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
+--with GNOGA.Application;
+
+package body Ada_Lib.Unit_Test.GNOGA_Tests is
+
+-- task type Message_Loop_Task;
+-- type Message_Loop_Access      is access Message_Loop_Task;
+--
+-- use type Ada.Calendar.Time;
+-- use type Ada.Task_Identification.Task_Id;
+--
+-- Options_With_Parameters          : aliased constant String := "g";
+-- Options_Without_Parameters       : aliased constant String := "";
+-- Register_Options                 : Ada_Lib.Command_Line_Iterator.Register_Options_Type (
+--                                     Options_With_Parameters'access, Options_Without_Parameters'access,
+--                                     new String'(Here));
+-- pragma Unreferenced (Register_Options);   -- declared for side affect of Initialization
+-- Temporary_Connection_Data     : Connection_Data_Class_Access := Null;
+-- HTTP_Port                     : constant := 8080;
+-- Message_Loop                  : Message_Loop_Access := Null;
+-- Task_Id                       : Ada.Task_Identification.Task_Id :=
+--                                  Ada.Task_Identification.Null_Task_Id;
+--
+-- ---------------------------------------------------------------
+-- procedure Connection_Event_Handler (
+--    Main_Window                : in out Standard.Gnoga.Gui.Window.Window_Type'Class;
+--    Connection                 : access Standard.Gnoga.Application.Multi_Connect.
+--                                  Connection_Holder_Type) is
+-- pragma Unreferenced (Connection);
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Log_In (Debug, "connection data address " &
+--       Image (Temporary_Connection_Data.all'address));
+--    Temporary_Connection_Data.Main_Window := Main_Window'unchecked_access;
+--    Main_Window.Connection_Data (Temporary_Connection_Data);
+--    Temporary_Connection_Data := Null;
+--    Log_Out (Debug);
+-- end Connection_Event_Handler;
+--
+-- ---------------------------------------------------------------
+-- procedure Dump_Keyboard_Event (
+--    Event                      : in     Standard.Gnoga.Gui.Base.Keyboard_Event_Record) is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Put_Line (
+--       "Message " &  Event.Message'img &
+--       "Key_Code " &  Event.Key_Code'img &
+--       "Key_Char " &  Event.Key_Char'img &
+--       "Alt " &  Event.Alt'img &
+--       "Control " &  Event.Control'img &
+--       "Shift " &  Event.Shift'img &
+--       "Meta " &  Event.Meta'img
+--    );
+--
+-- end Dump_Keyboard_Event;
+
+-- ---------------------------------------------------------------
+-- procedure Dump_Mouse_Event (
+--    Event                      : in     Ada_Lib.Interfaces.Mouse_Event_Type) is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Put_Line ( "message type " & Event.Message'img &
+--               " X " & Event.X'img &
+--               " Y " & Event.Y'img &
+--               " Screen_X " & Event.Screen_X'img &
+--               " Screen_Y " & Event.Screen_Y'img);
+--
+--    Put_Line (  "Left_Button " & Event.Left_Button'img &
+--                " Middle_Button " & Event.Middle_Button'img &
+--                " Right_Button " & Event.Right_Button'img);
+--    Put_Line (  "Alt " & Event.Alt'img &
+--                " Control " & Event.Control'img &
+--                " Shift " & Event.Shift'img &
+--                " Meta " & Event.Meta'img );
+--
+-- end Dump_Mouse_Event;
+
+-- ---------------------------------------------------------------
+-- overriding
+-- function Process_Option (
+--    Options                    : in out Standard.GNOGA_Unit_Test_Options_Type;
+--    Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Iterator_Type'class;
+--    Option                     : in     Character
+-- ) return Boolean is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Log (Trace_Options or Debug, Here, "option '" & Option & "'");
+--    case Option is
+--
+--       when 'g' =>   -- options for GNOGA
+--          Trace_Parse (Iterator);
+--
+--       when Others =>
+--          Log (Trace_Options or Debug, Here, Quote (" other option", Option));
+--          return Ada_Lib.Options.GNOGA.GNOGA_Options_Type (Options).Process_Option (
+--             Iterator, Option);
+--
+--    end case;
+--    Log (Debug, Here, Who & " exit" & Quote (" option", Option) & " handled");
+--    return True;
+-- end Process_Option;
+--
+-- ----------------------------------------------------------------------------
+-- procedure Program_Help (
+--    Options                    : in      Standard.GNOGA_Unit_Test_Options_Type;
+--    Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
+-- ----------------------------------------------------------------------------
+--
+--    Component                  : constant String := "Ada_Lib.GNOGA";
+--
+-- begin
+--    Log_In (Debug, "mode " & Help_Mode'img);
+--    case Help_Mode is
+--
+--    when Ada_Lib.Options.Program =>
+--       Standard.Ada_Lib.Help.Add_Option ('g', "trace options",
+--          "Standard.GNOGA Unit Test traces", Component);
+--
+--    when Ada_Lib.Options.Traces =>
+--       Put_Line ("Ada_Lib.Options.GNOGA library trace options (-g)");
+--       Put_Line ("      a               all");
+--       Put_Line ("      g               Ada_Lib.Unit_Test.GNOGA_Tests (main window)");
+--       New_Line;
+--
+--    end case;
+--    Ada_Lib.Options.GNOGA.GNOGA_Options_Type (Options).Program_Help (Help_Mode);
+--    Log_Out (Debug);
+-- end Program_Help;
+
+-- ---------------------------------------------------------------
+-- procedure Set_Up (
+--    Test                       : in out GNOGA_Test_Type;
+--    Manual                     : in     Boolean := False) is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Log_In (Debug);
+--    Standard.GNOGA.Application.Title ("GNOGA Test");
+--      Standard.GNOGA.Application.HTML_On_Close
+--        ("<b>Connection to Application has been terminated</b>");
+--
+--      Standard.Gnoga.Application.Multi_Connect.Initialize (
+--         Event=> Null, -- Connection_Event_Handler'access,
+--         Port => HTTP_Port,
+--         Boot => "boot.html",
+----       Boot => "boot_jqueryui.html",
+--         Verbose => Ada_Lib.Options.GNOGA.Verbose);
+--
+--      Standard.Gnoga.Application.Multi_Connect.On_Connect_Handler (Connection_Event_Handler'access, "default");
+--      Message_Loop := new Message_Loop_Task;
+--
+--      Log_Here (Debug, "wait for task to initialize");
+--      while Task_ID = Ada.Task_Identification.Null_Task_Id loop
+--         Log_Here (Debug, " wait for task to initialize");
+--         delay 0.1;  -- let task initialize
+--      end loop;
+--
+--      Log_Here (Debug);
+--      Standard.GNOGA.Application.Open_URL;
+--
+--      Log_Here (Debug, "wait for Connection_Event_Handler to complete");
+--      while Temporary_Connection_Data /= Null loop
+--         delay 0.1; --  let Connection_Event_Handler
+--      end loop;
+--
+----    Pause_On_Flag ("main window created");
+--    Log_Out (Debug);
+--
+-- exception
+--    when Fault: others =>
+--       Trace_Exception (Fault);
+--       Set_Up_Exception (Test, FAult, Here, Who);
+--
+-- end Set_Up;
+--
+-- ---------------------------------------------------------------
+-- procedure Tear_Down (
+--    Test                       : in out GNOGA_Test_Type) is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    Log_In (Debug);
+--    Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+--    Log_Here (Debug);
+--    Standard.Gnoga.Application.Multi_Connect.End_Application;
+--    Log_Here (Debug);
+--
+--    if Task_ID /= Ada.Task_Identification.Null_Task_Id then
+--       declare
+--          Timeout              : constant Ada.Calendar.Time :=
+--                                  Ada.Calendar.Clock + 5.0;
+--
+--       begin
+--          while not Ada.Task_Identification.Is_Terminated (Task_Id) loop
+--             delay 0.1;
+--             if Ada.Calendar.Clock > Timeout then
+--                Log (Debug, Here, Who);
+--                raise Failed with "Message Loop task failed to terminate";
+--             end if;
+--          end loop;
+--       end;
+--    end if;
+--    Log_Out (Debug);
+-- end Tear_Down;
+
+-- ----------------------------------------------------------------------------
+-- procedure Trace_Parse (
+--    Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Iterator_Type'class) is
+-- ----------------------------------------------------------------------------
+--
+--    Parameter                  : constant String := Iterator.Get_Parameter;
+--
+-- begin
+--    for Index in Parameter'range  loop
+--       declare
+--          Trace    : constant Character := Parameter (Index);
+--
+--       begin
+--          Log (Debug, Here, Who & Quote (" Parameter", Parameter) &
+--             Quote (" Trace", Trace));
+--          case Trace is
+--
+--             when 'a' =>
+--                Debug := True;
+--
+--             when 'g' =>
+--                Debug := True;
+--
+--             when others =>
+--                Ada_Lib.Options.Bad_Option (Trace, "trace");
+--
+--          end case;
+--
+--
+--       end;
+--    end loop;
+-- end Trace_Parse;
+
+-- ---------------------------------------------------------------
+-- task body Message_Loop_Task is
+-- begin
+--    Tasks.Start ("message loop task", Here);
+--    Log (Debug, Here, Who);
+--    Task_ID := Ada.Task_Identification.Current_Task;
+--    Standard.Gnoga.Application.Multi_Connect.Message_Loop;
+--    Log (Debug, Here, Who);
+--    Tasks.Stop;
+--
+-- exception
+--    when Fault: others =>
+--       Trace_Message_Exception (Fault, Who);
+--       raise;
+--
+-- end Message_Loop_Task;
+end Ada_Lib.Unit_Test.GNOGA_Tests;

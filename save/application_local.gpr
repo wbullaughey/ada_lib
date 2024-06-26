@@ -1,0 +1,9 @@
+with "base";
+
+abstract project application_local is
+
+   Directory_Suffix := "";
+   Target_Suffix := "";
+
+end application_local;
+

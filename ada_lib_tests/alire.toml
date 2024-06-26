@@ -1,0 +1,41 @@
+name = "ada_lib_tests"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["Wayne Bullaughey"]
+maintainers = ["Wayne Bullaughey <wlb122@verizon.net>"]
+maintainers-logins = ["wbullaughey"]
+
+executables = ["ada_lib_tests"]
+
+[[depends-on]]
+ada_lib = "*"
+
+[[pins]]
+ada_lib  = { path = "../" }
+
+[[depends-on]]
+ada_lib_testing = "*"
+
+[[pins]]
+ada_lib_testing  = { path = "../ada_lib_testing" }
+
+[[depends-on]]
+aunit = "*"
+
+[[pins]]
+aunit  = { path = "../../aunit" }
+
+[[depends-on]]
+gnoga = "*"
+
+[[pins]]
+gnoga  = { path = "../../vendor/github.com/gnoga" }
+
+[[depends-on]]
+applications = "*"
+
+[[pins]]
+applications  = { path = "../.." }
+
+

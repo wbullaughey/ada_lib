@@ -1,0 +1,17 @@
+with "ada_lib_local";
+with "aunit_local.gpr";
+with "base";
+with "root";
+
+library project Ada_Lib_AUnit_Lib_Local is
+
+   for Languages use ("Ada");
+   for Object_Dir use Root.Object_Directory;
+   for Library_Name use "ada_lib_aunit_lib";
+   for Library_Kind use Base.Library_Kind;
+   for Library_Dir use Root.Library_Directory;
+   for Source_Dirs use (".", Base.Options_Directory, Root.OS_Family);
+   package Compiler renames Root.Compiler;
+
+
+end Ada_Lib_AUnit_Lib_Local;

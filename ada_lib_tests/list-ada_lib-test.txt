@@ -1,0 +1,530 @@
+command:  bin/test_ada_lib -AAtu -l -L /Users/wayne/bin/dbdaemon    -p 2300
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-options-unit_test.adb:335 Ada_Lib.Options.Unit_Test
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-unit_test-test_cases.adb:276 Ada_Lib.Unit_Test.Test_Cases
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-command_line_iterator-tests.adb:215 Ada_Lib.Command_Line_Iterator.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-curl-tests.adb:97 Ada_Lib.CURL.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-help-tests.adb:120 Ada_Lib.Help.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-lock-tests.adb:210 Ada_Lib.Lock.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-mail-tests.adb:238 Ada_Lib.Mail.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-timer-tests.adb:365 Ada_Lib.Timer.Tests
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-gnoga-unit_test.adb:249 Ada_Lib.GNOGA.Unit_Test
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-gnoga-unit_test-base.adb:286 Ada_Lib.GNOGA.Unit_Test.Base
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-gnoga-unit_test-events.adb:461 Ada_Lib.GNOGA.Unit_Test.Events
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-test-suites.adb:350 Ada_Lib.Test.Suites
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-socket_io-stream_io-unit_test.adb:976 Ada_Lib.Socket_IO.Stream_IO.Unit_Test
+main_task_00007F93B1008800: 00:00:00.00(0) ada_lib-gnoga-unit_test-window_events.adb:627 Ada_Lib.GNOGA.Unit_Test.Window_Events
+test_ada_lib
+main_task_00007F93B1008800: 00:00:00.00(0) test_ada_lib.adb:25 Test_Ada_Lib
+  main_task_00007F93B1008800: 00:00:00.00(1) ada_lib-test-suites.adb:74 Ada_Lib.Test.Suites.Process In
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-database.adb:90 Ada_Lib.Options.Database.Initialize In
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-database.adb:95 Ada_Lib.Options.Database.Initialize Out
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-gnoga.adb:24 Ada_Lib.Options.GNOGA.Initialize In
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-gnoga.adb:29 Ada_Lib.Options.GNOGA.Initialize Out
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-unit_test.adb:40 Ada_Lib.Options.Unit_Test.Initialize In Options_With_Parameters: 'AdesUx'Options_Without_Parameters: 'DHm'
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options-unit_test.adb:44 Ada_Lib.Options.Unit_Test.Initialize Out
+  main_task_00007F93B1008800: 00:00:00.00(1) ada_lib-test-suites.adb:89 Ada_Lib.Test.Suites.Process
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-test-suites.adb:139 Ada_Lib.Test.Suites.Process In
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-test-suites.adb:146 Ada_Lib.Test.Suites.Process option  'A'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:201 Ada_Lib.Test.Suites.Process_Option In Option: 'A'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'A' Options_With_Parameters: 't' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:226 Ada_Lib.Test.Suites.Process_Option Out other option Option: 'A'
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'A' Options_With_Parameters: 'Aes' In_With TRUE Options_Without_Parameters: 'm' In_Without FALSE Result TRUE
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:62 Ada_Lib.Options.AUnit_Lib.Process_Option In option  'A' has options TRUE Options address 00000001053C54C0
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:163 Ada_Lib.Options.AUnit_Lib.Trace_Parse Parameter: 'Atu'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:169 Ada_Lib.Options.AUnit_Lib.Trace_Parse trace: 'A'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:169 Ada_Lib.Options.AUnit_Lib.Trace_Parse trace: 't'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:169 Ada_Lib.Options.AUnit_Lib.Trace_Parse trace: 'u'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:84 Ada_Lib.Options.AUnit_Lib.Process_Option Out  option: 'A' handled
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-test-suites.adb:148 Ada_Lib.Test.Suites.Process 'A'
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-test-suites.adb:146 Ada_Lib.Test.Suites.Process option  'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:201 Ada_Lib.Test.Suites.Process_Option In Option: 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 't' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:226 Ada_Lib.Test.Suites.Process_Option Out other option Option: 'l'
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 'Aes' In_With FALSE Options_Without_Parameters: 'm' In_Without FALSE Result FALSE
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:62 Ada_Lib.Options.AUnit_Lib.Process_Option In option  'l' has options FALSE Options address 00000001053C54C0
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options-aunit_lib.adb:78 Ada_Lib.Options.AUnit_Lib.Process_Option Out other option: 'l'
+    main_task_00007F93B1008800: 00:00:00.00(2) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-gnoga-unit_test.adb:62 Ada_Lib.GNOGA.Unit_Test.Process_Option In option 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 'g' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-gnoga-unit_test.adb:74  other option: 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-unit_test.adb:128 Ada_Lib.Options.Unit_Test.Process_Option In Option: 'l'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 'AdesUx' In_With FALSE Options_Without_Parameters: 'DHm' In_Without FALSE Result FALSE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-unit_test.adb:193 Ada_Lib.Options.Unit_Test.Process_Option Out other option Option: 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:250 Ada_Lib.Options.Process_Option In option 'l' options 00000001053C54C0
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 'a' In_With FALSE Options_Without_Parameters: 'hiPv' In_Without FALSE Result FALSE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:280 Ada_Lib.Options.Process_Option Out  option not handled: 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-database.adb:135 Ada_Lib.Options.Database.Process_Option In option : 'l'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'l' Options_With_Parameters: 'LprRu' In_With FALSE Options_Without_Parameters: 'l' In_Without TRUE Result TRUE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-database.adb:200 Ada_Lib.Options.Database.Process_Option Out  option: 'l' handled
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:148 Ada_Lib.Test.Suites.Process 'l'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-test-suites.adb:146 Ada_Lib.Test.Suites.Process option  'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-test-suites.adb:201 Ada_Lib.Test.Suites.Process_Option In Option: 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 't' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-test-suites.adb:226 Ada_Lib.Test.Suites.Process_Option Out other option Option: 'L'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 'Aes' In_With FALSE Options_Without_Parameters: 'm' In_Without FALSE Result FALSE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-aunit_lib.adb:62 Ada_Lib.Options.AUnit_Lib.Process_Option In option  'L' has options FALSE Options address 00000001053C54C0
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options-aunit_lib.adb:78 Ada_Lib.Options.AUnit_Lib.Process_Option Out other option: 'L'
+      main_task_00007F93B1008800: 00:00:00.00(3) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-gnoga-unit_test.adb:62 Ada_Lib.GNOGA.Unit_Test.Process_Option In option 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 'g' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-gnoga-unit_test.adb:74  other option: 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-unit_test.adb:128 Ada_Lib.Options.Unit_Test.Process_Option In Option: 'L'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 'AdesUx' In_With FALSE Options_Without_Parameters: 'DHm' In_Without FALSE Result FALSE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-unit_test.adb:193 Ada_Lib.Options.Unit_Test.Process_Option Out other option Option: 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:250 Ada_Lib.Options.Process_Option In option 'L' options 00000001053C54C0
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 'a' In_With FALSE Options_Without_Parameters: 'hiPv' In_Without FALSE Result FALSE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:280 Ada_Lib.Options.Process_Option Out  option not handled: 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-database.adb:135 Ada_Lib.Options.Database.Process_Option In option : 'L'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'L' Options_With_Parameters: 'LprRu' In_With TRUE Options_Without_Parameters: 'l' In_Without FALSE Result TRUE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-database.adb:151 Ada_Lib.Options.Database.Process_Option local dbdaemon path '/Users/wayne/bin/dbdaemon'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-database.adb:200 Ada_Lib.Options.Database.Process_Option Out  option: 'L' handled
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-test-suites.adb:148 Ada_Lib.Test.Suites.Process 'L'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-test-suites.adb:146 Ada_Lib.Test.Suites.Process option  'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-test-suites.adb:201 Ada_Lib.Test.Suites.Process_Option In Option: 'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 't' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-test-suites.adb:226 Ada_Lib.Test.Suites.Process_Option Out other option Option: 'p'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 'Aes' In_With FALSE Options_Without_Parameters: 'm' In_Without FALSE Result FALSE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-aunit_lib.adb:62 Ada_Lib.Options.AUnit_Lib.Process_Option In option  'p' has options FALSE Options address 00000001053C54C0
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-aunit_lib.adb:78 Ada_Lib.Options.AUnit_Lib.Process_Option Out other option: 'p'
+        main_task_00007F93B1008800: 00:00:00.00(4) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-gnoga-unit_test.adb:62 Ada_Lib.GNOGA.Unit_Test.Process_Option In option 'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 'g' In_With FALSE Options_Without_Parameters: '' In_Without FALSE Result FALSE
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-gnoga-unit_test.adb:74  other option: 'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options-unit_test.adb:128 Ada_Lib.Options.Unit_Test.Process_Option In Option: 'p'
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 'AdesUx' In_With FALSE Options_Without_Parameters: 'DHm' In_Without FALSE Result FALSE
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options-unit_test.adb:193 Ada_Lib.Options.Unit_Test.Process_Option Out other option Option: 'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options.adb:250 Ada_Lib.Options.Process_Option In option 'p' options 00000001053C54C0
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 'a' In_With FALSE Options_Without_Parameters: 'hiPv' In_Without FALSE Result FALSE
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options.adb:280 Ada_Lib.Options.Process_Option Out  option not handled: 'p'
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options.adb:116 Ada_Lib.Options.Have_Options Modifiable_Options null Ada_Lib.Options not null
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options-database.adb:135 Ada_Lib.Options.Database.Process_Option In option : 'p'
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options.adb:101 Ada_Lib.Options.Has_Option option: 'p' Options_With_Parameters: 'LprRu' In_With TRUE Options_Without_Parameters: 'l' In_Without FALSE Result TRUE
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options-database.adb:200 Ada_Lib.Options.Database.Process_Option Out  option: 'p' handled
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-test-suites.adb:148 Ada_Lib.Test.Suites.Process 'p'
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-options-aunit_lib.adb:215 Ada_Lib.Options.AUnit_Lib.Update_Filter In options 00000001053C54C0 filter 00000001053C5560 Suite: '' routine: ''
+            main_task_00007F93B1008800: 00:00:00.00(6) ada_lib-test-suites.adb:166 Ada_Lib.Test.Suites.Process Out
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-database.adb:300 Ada_Lib.Options.Database.Which_Host local host
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-test-suites.adb:95 Ada_Lib.Test.Suites.Process which host LOCAL
+          main_task_00007F93B1008800: 00:00:00.00(5) ada_lib-options-database.adb:300 Ada_Lib.Options.Database.Which_Host local host
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-suites.adb:117 Ada_Lib.Test.Suites.Process Out
+        main_task_00007F93B1008800: 00:00:00.21(4) runtime_options.adb:13 Runtime_Options.Debug from test_ada_lib.adb:27
+        main_task_00007F93B1008800: 00:00:00.21(4) test_ada_lib.adb:32 Test_Ada_Lib
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-run_suite.adb:46 Ada_Lib.Test.Run_Suite In list suites FALSE
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-suites.adb:65 Ada_Lib.Test.Suites.New_Suite
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Curl'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Curl' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Timer'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Timer' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Lock'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Lock' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Event'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Event' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'AUnit_Events'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'AUnit_Events' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'AUnit_Window_Events'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'AUnit_Window_Events' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Socket_Stream'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Socket_Stream' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Configuration'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Configuration' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Ask'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Ask' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Parser'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Parser' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Help'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Help' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Main'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Main' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Command_Line_Iterator'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Command_Line_Iterator' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Get_Put'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Get_Put' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Send_Mail'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Send_Mail' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Send_Mail' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Textbelt'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Textbelt' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'OS'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'OS' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Template'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Template' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-run_suite.adb:113 Ada_Lib.Test.Run_Suite Host_Kind LOCAL
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-suites.adb:55 Ada_Lib.Test.Suites.New_Suite
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-database-subscribe-tests.adb:271 Ada_Lib.Database.Subscribe.Tests.Subscribe_Suite Which_Host LOCAL
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Subscribe'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Subscribe' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-database-subscription-tests.adb:230 Ada_Lib.Database.Subscription.Tests.Subscription_Suite Which_Host LOCAL
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Subscription'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Subscription' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-run_suite.adb:136 Ada_Lib.Test.Run_Suite add tests for LOCAL
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-database-get_put_tests.adb:54 Ada_Lib.Database.Get_Put_Tests.Database_Suite Which_Host LOCAL
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Get_Put'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Get_Put' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-database-server-tests.adb:841 Ada_Lib.Database.Server.Tests.Server_Suite Which_Host LOCAL
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:164 Ada_Lib.Unit_Test.Suite In Suite_Name: 'Database_Server'
+            main_task_00007F93B1008800: 00:00:00.21(6) ada_lib-unit_test.adb:168 Ada_Lib.Unit_Test.Suite Out
+          main_task_00007F93B1008800: 00:00:00.21(5) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name routine name not set
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:64 AUnit.Test_Suites.Add_Test In TC_elt suite: 'Database_Server' no routine name
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:73 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:47 AUnit.Test_Suites.Add_Test In TS_Elt
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:52 AUnit.Test_Suites.Add_Test Out
+          main_task_00007F93B1008800: 00:00:00.21(5) ada_lib-test-run_suite.adb:113 Ada_Lib.Test.Run_Suite Host_Kind REMOTE
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:89 AUnit.Test_Suites.Run In AUnit_Options 000000030E8C9E30
+            main_task_00007F93B1008800: 00:00:00.21(6) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TS_ELT
+              main_task_00007F93B1008800: 00:00:00.21(7) aunit-test_suites-optional.adb:19 AUnit.Test_Suites.Optional.Run In include TRUE list suites FALSE
+                main_task_00007F93B1008800: 00:00:00.21(8) aunit-test_suites.adb:89 AUnit.Test_Suites.Run In AUnit_Options 000000030E8C9CF0
+                main_task_00007F93B1008800: 00:00:00.21(8) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TS_ELT
+                  main_task_00007F93B1008800: 00:00:00.21(9) aunit-test_suites.adb:89 AUnit.Test_Suites.Run In AUnit_Options 000000030E8C9C40
+                  main_task_00007F93B1008800: 00:00:00.21(9) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TC_ELT
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:78 AUnit.Test_Cases.Run In run options 000000030E8C9B90 have filter 00000001053C5560
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Expand_Template'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Expand_Template'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.CURL.TESTS.TEST_TYPE test address 0532BEE0
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Expand_Template
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Curl' routine: 'Expand_Template'
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Expand_Template
+run suite: 'Curl' routine: 'Expand_Template'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.CURL.TESTS.TEST_TYPE test address 0532BEE0
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 0 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:00.21(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:00.21(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:00.21(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Expand_Template
+                          main_task_00007F93B1008800: 00:00:00.21(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Curl' Routine_Name: 'Expand_Template'
+                          main_task_00007F93B1008800: 00:00:00.21(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:105 AUnit.Test_Cases.Run Out
+                  main_task_00007F93B1008800: 00:00:00.21(9) aunit-test_suites.adb:108 AUnit.Test_Suites.Run Out
+                main_task_00007F93B1008800: 00:00:00.21(8) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TS_ELT
+                  main_task_00007F93B1008800: 00:00:00.21(9) aunit-test_suites.adb:89 AUnit.Test_Suites.Run In AUnit_Options 000000030E8C9C40
+                  main_task_00007F93B1008800: 00:00:00.21(9) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TC_ELT
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:78 AUnit.Test_Cases.Run In run options 000000030E8C9B90 have filter 00000001053C5560
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Single_Event'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Single_Event'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Multiple_Events'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Multiple_Events'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Cancel_Event'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Cancel_Event'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:00.21(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Single_Event
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Timer' routine: 'Single_Event'
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Single_Event
+run suite: 'Timer' routine: 'Single_Event'
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 1 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:00.21(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:00.21(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:00.21(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.21(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:00.21(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:00.75(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Single_Event
+                          main_task_00007F93B1008800: 00:00:00.75(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Timer' Routine_Name: 'Single_Event'
+                          main_task_00007F93B1008800: 00:00:00.75(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:00.75(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:00.75(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:00.75(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Multiple_Events
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Timer' routine: 'Multiple_Events'
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Multiple_Events
+run suite: 'Timer' routine: 'Multiple_Events'
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 2 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.75(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:00.75(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:00.75(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:00.75(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:00.75(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:00.75(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:02.37(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Multiple_Events
+                          main_task_00007F93B1008800: 00:00:02.37(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Timer' Routine_Name: 'Multiple_Events'
+                          main_task_00007F93B1008800: 00:00:02.37(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:02.37(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:02.37(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:02.37(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Cancel_Event
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Timer' routine: 'Cancel_Event'
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Cancel_Event
+run suite: 'Timer' routine: 'Cancel_Event'
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.TIMER.TESTS.TEST_TYPE test address 0532CF60
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 3 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:02.37(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:02.37(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:02.37(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:02.37(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:02.37(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:02.37(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Cancel_Event
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Timer' Routine_Name: 'Cancel_Event'
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:105 AUnit.Test_Cases.Run Out
+                  main_task_00007F93B1008800: 00:00:03.00(9) aunit-test_suites.adb:108 AUnit.Test_Suites.Run Out
+                main_task_00007F93B1008800: 00:00:03.00(8) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TS_ELT
+                  main_task_00007F93B1008800: 00:00:03.00(9) aunit-test_suites.adb:89 AUnit.Test_Suites.Run In AUnit_Options 000000030E8C9C40
+                  main_task_00007F93B1008800: 00:00:03.00(9) aunit-test_suites.adb:92 AUnit.Test_Suites.Run Element find TC_ELT
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:78 AUnit.Test_Cases.Run In run options 000000030E8C9B90 have filter 00000001053C5560
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Test_Lock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Test_Lock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Test_Relock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Test_Relock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:16 Ada_Lib.Unit_Test.Test_Cases.Add_Routine In routine: 'Test_Async_Lock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:48 AUnit.Test_Cases.Add_Routine In routine name: 'Test_Async_Lock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:50 AUnit.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:23 Ada_Lib.Unit_Test.Test_Cases.Add_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Lock
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Lock' routine: 'Test_Lock'
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Lock
+run suite: 'Lock' routine: 'Test_Lock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 4 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:03.00(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:03.00(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Lock
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Lock' Routine_Name: 'Test_Lock'
+                          main_task_00007F93B1008800: 00:00:03.00(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:03.00(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:03.00(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Relock
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Lock' routine: 'Test_Relock'
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Relock
+run suite: 'Lock' routine: 'Test_Relock'
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:03.00(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:03.00(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 5 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:04.00(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:04.00(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:04.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:04.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:04.00(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In
+                          main_task_00007F93B1008800: 00:00:04.00(13) aunit-test_cases.adb:61 AUnit.Test_Cases.Run_Test Out
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Relock
+                          main_task_00007F93B1008800: 00:00:04.00(13) aunit-test_results.adb:221 AUnit.Test_Results.Add_Success In Test_Name: 'Lock' Routine_Name: 'Test_Relock'
+                          main_task_00007F93B1008800: 00:00:04.00(13) aunit-test_results.adb:224 AUnit.Test_Results.Add_Success Out
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-simple_test_cases-run_routine.adb:109 AUnit.Simple_Test_Cases.Run_Routine Out
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:134 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:136 AUnit.Simple_Test_Cases.Run
+                      main_task_00007F93B1008800: 00:00:04.00(11) ada_lib-unit_test-test_cases.adb:215 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Tear_Down
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:142 AUnit.Simple_Test_Cases.Run Out  outcome SUCCESS
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                    main_task_00007F93B1008800: 00:00:04.00(10) aunit-test_cases.adb:91 AUnit.Test_Cases.Run
+                    main_task_00007F93B1008800: 00:00:04.00(10) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Async_Lock
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:101 AUnit.Simple_Test_Cases.Run In  suite: 'Lock' routine: 'Test_Async_Lock'
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-test_cases.adb:114 AUnit.Test_Cases.Routine_Name Test_Async_Lock
+run suite: 'Lock' routine: 'Test_Async_Lock'
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_filters.adb:71 AUnit.Test_Filters.Is_Active In Filter 00000001053C5560 no filter name tag ADA_LIB.LOCK.TESTS.TEST_TYPE test address 0532C5E0
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_filters.adb:79 AUnit.Test_Filters.Is_Active Out  no fiter its active
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:111 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_results.adb:298 AUnit.Test_Results.Start_Test In Tests_Run 6 Subtest_Count 1
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-test_results.adb:301 AUnit.Test_Results.Start_Test Out
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:118 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:04.00(12) ada_lib-unit_test-test_cases.adb:192 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up In
+                        main_task_00007F93B1008800: 00:00:04.00(12) ada_lib-unit_test-test_cases.adb:194 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Set_Up Out
+                      main_task_00007F93B1008800: 00:00:04.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:04.00(11) ada_lib-unit_test-test_cases.adb:244 Ada_Lib.Unit_Test.Test_Cases.Root_Test.Verify_Set_Up Set_Up TRUE Set_Up_FAiled FALSE
+                      main_task_00007F93B1008800: 00:00:04.00(11) aunit-simple_test_cases.adb:132 AUnit.Simple_Test_Cases.Run
+                        main_task_00007F93B1008800: 00:00:04.00(12) aunit-simple_test_cases-run_routine.adb:55 AUnit.Simple_Test_Cases.Run_Routine In
+                          main_task_00007F93B1008800: 00:00:04.00(13) aunit-test_cases.adb:59 AUnit.Test_Cases.Run_Test In

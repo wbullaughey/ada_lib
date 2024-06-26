@@ -1,0 +1,23 @@
+with "ada_lib";
+with "ada_lib_aunit_lib";
+with "ada_lib_aunit_tests";
+with "aunit";
+with "base";
+-- with "components_object";
+with "gnoga";
+with "root";
+
+project Ada_Lib_AUnit is
+   for Languages use ("Ada");
+   for Object_Dir use Root.Object_Directory;
+   for Exec_Dir use Root.Default_Execute_Directory;
+   for Main use ("test_ada_lib.adb");
+   for Source_Dirs use (".");
+
+   package Compiler renames Root.Compiler;
+
+
+   package Builder is
+      for Executable ("test_ada_lib.adb") use "aunit";
+   end Builder;
+end Ada_Lib_AUnit;

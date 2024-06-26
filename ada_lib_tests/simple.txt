@@ -1,0 +1,143 @@
+command:  bin/test_ada_lib -@R0 -v -a@D -l -L /Users/wayne/bin/dbdaemon -s Trace -e Simple  -p 2300
+ada_lib-os.adb:141
+test_ada_lib
+running suite: 'Trace' routine: 'Simple'
+------> ada_lib-trace-tests.adb:393 Ada_Lib.Trace.Tests.Simple main_task_00007FE9B1808800 In <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: '->log here 1<-#' where: 'ada_lib-trace-tests.adb:394' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context SAME level 0 text: '->log here 1<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 0 text: '->log here 1<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 113 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-#' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-#' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-
+]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: 'in ->log in 2<-#' where: 'ada_lib-trace-tests.adb:395' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context INCREMENT level 0 text: 'in ->log in 2<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 1 text: 'in ->log in 2<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 114 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-#  ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-#  ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-
+  ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: '->log here 3<-#' where: 'ada_lib-trace-tests.adb:396' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context SAME level 1 text: '->log here 3<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 1 text: '->log here 3<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 113 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-#  ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-#  ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-
+  ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: 'in ->log in 4<-#' where: 'ada_lib-trace-tests.adb:397' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context INCREMENT level 1 text: 'in ->log in 4<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 2 text: 'in ->log in 4<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 114 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-#    ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-#    ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-
+    ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: '->log here 5<-#' where: 'ada_lib-trace-tests.adb:398' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context SAME level 2 text: '->log here 5<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 2 text: '->log here 5<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 113 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-#    ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-#    ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-
+    ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context DECREMENT level 2 text: 'out ->log out 6<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 2 text: 'out ->log out 6<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 116 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-#    ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-#    ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-
+    ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:1311 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 out enable TRUE context DECREMENT level 1 text: 'out ->log out 6<-#' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context DECREMENT level 1 text: 'out ->log out 7<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 1 text: 'out ->log out 7<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 116 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-#  ' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-#  ' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-
+  ]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace.adb:1311 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 out enable TRUE context DECREMENT level 0 text: 'out ->log out 7<-#' <-------
+------> ada_lib-trace.adb:818 Ada_Lib.Trace.Put main_task_00007FE9B1808800 enable TRUE text: '->log here 8<-#' where: 'ada_lib-trace-tests.adb:401' who: 'Ada_Lib.Trace.Tests.Simple' <-------
+------> ada_lib-trace.adb:1167 Ada_Lib.Trace.Locked_Package.Protected_Type.Find_Task main_task_00007FE9B1808800 task 1 <-------
+------> ada_lib-trace.adb:1270 Ada_Lib.Trace.Locked_Package.Protected_Type.Put main_task_00007FE9B1808800 in enable TRUE context SAME level 0 text: '->log here 8<-#' <-------
+------> ada_lib-trace.adb:241 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 indent TRUE level 0 text: '->log here 8<-#' <-------
+------> ada_lib-trace.adb:266 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 length 113 <-------
+------> ada_lib-trace.adb:273 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 has lf TRUE <-------
+------> ada_lib-trace.adb:297 Ada_Lib.Trace.Format_Output main_task_00007FE9B1808800 buffer: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-#' <-------
+------> ada_lib-trace-tests.adb:330 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 In data: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-#' <-------
+=======[main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-
+]=======
+------> ada_lib-trace-tests.adb:338 Ada_Lib.Trace.Tests.Output main_task_00007FE9B1808800 Out <-------
+------> ada_lib-trace-tests.adb:227 Ada_Lib.Trace.Tests.Flush main_task_00007FE9B1808800 <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 1 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-#' expected level 0 expected line: 'log here 1' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-#'
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:394 Ada_Lib.Trace.Tests.Simple (0) ->log here 1<-#' ( 95 ) 97 start 99 111 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '0' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 2 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-#  ' expected level 1 expected line: 'log in 2' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-#  '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:395 Ada_Lib.Trace.Tests.Simple (1) in ->log in 2<-#  ' ( 95 ) 97 start 102 112 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '1' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 3 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-#  ' expected level 1 expected line: 'log here 3' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-#  '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:396 Ada_Lib.Trace.Tests.Simple (1) ->log here 3<-#  ' ( 95 ) 97 start 99 111 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '1' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 4 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-#    ' expected level 2 expected line: 'log in 4' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-#    '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:397 Ada_Lib.Trace.Tests.Simple (2) in ->log in 4<-#    ' ( 95 ) 97 start 102 112 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '2' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 5 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-#    ' expected level 2 expected line: 'log here 5' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-#    '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:398 Ada_Lib.Trace.Tests.Simple (2) ->log here 5<-#    ' ( 95 ) 97 start 99 111 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '2' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 6 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-#    ' expected level 2 expected line: 'log out 6' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-#    '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:399 Ada_Lib.Trace.Tests.Simple (2) out ->log out 6<-#    ' ( 95 ) 97 start 103 114 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '2' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 7 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-#  ' expected level 1 expected line: 'log out 7' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-#  '
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:400 Ada_Lib.Trace.Tests.Simple (1) out ->log out 7<-#  ' ( 95 ) 97 start 103 114 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '1' <-------
+------> ada_lib-trace-tests.adb:59 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 count 8 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-#' expected level 0 expected line: 'log here 8' <-------
+line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-#'
+------> ada_lib-trace-tests.adb:123 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 line: 'main_task_00007FE9B1808800: [00:00:00] ada_lib-trace-tests.adb:401 Ada_Lib.Trace.Tests.Simple (0) ->log here 8<-#' ( 95 ) 97 start 99 111 <-------
+------> ada_lib-trace-tests.adb:139 Ada_Lib.Trace.Tests.Check_Output main_task_00007FE9B1808800 level: '0' <-------
+------> ada_lib-trace-tests.adb:404 Ada_Lib.Trace.Tests.Simple main_task_00007FE9B1808800 Out <-------
+report Ada_Lib test results
+
+OK Trace : Simple
+
+Total Tests Run:   1
+Successful Tests:  1
+Failed Assertions: 0
+Unexpected Errors: 0
+Exit_Code NO_ERROR for test_ada_lib

@@ -1,0 +1,18 @@
+running .zshrc at /Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests
+full listing
+Note: gnoga*: no build needed.
+Note: Building ada_lib_tests/ada_lib_tests.gpr...
+Changing to object directory of "XmlAda_Unicode": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/xmlada_23.0.0_70494123/unicode/obj/static/"
+Changing to object directory of "XmlAda_Input": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/xmlada_23.0.0_70494123/input_sources/obj/static/"
+Changing to object directory of "XmlAda_Sax": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/xmlada_23.0.0_70494123/sax/obj/static/"
+Changing to object directory of "XmlAda_Dom": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/xmlada_23.0.0_70494123/dom/obj/static/"
+Changing to object directory of "XmlAda_Schema": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/xmlada_23.0.0_70494123/schema/obj/static/"
+Changing to object directory of "GPR": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/libgpr_23.0.0_34e332b9/gpr/libobj/production/static/"
+Changing to object directory of "GnatColl": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/alire/cache/dependencies/gnatcoll_23.0.0_29478a20/obj/gnatcoll/all/"
+Changing to object directory of "Gnoga": "/Users/wayne/Project/git/alr/applications/vendor/github.com/gnoga/obj/development/"
+Changing to object directory of "Ada_Lib": "/Users/wayne/Project/git/alr/applications/ada_lib/obj/release/"
+Changing to object directory of "Aunit": "/Users/wayne/Project/git/alr/applications/aunit/obj/release/"
+Changing to object directory of "Ada_Lib_Testing": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_testing/obj/development/"
+Changing to object directory of "Ada_Lib_Tests": "/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/obj/development/"
+gprbuild: "test_ada_lib" up to date
+Build finished successfully in 1.13 seconds.

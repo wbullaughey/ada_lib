@@ -1,0 +1,85 @@
+command:  bin/test_ada_lib -@R0 -v -ts -as -l -L /Users/wayne/bin/dbdaemon -s Socket_Stream -e Socket_Send_Receive  -p 2300
+test_ada_lib
+main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-client.adb:299 Ada_Lib.Socket_IO.Client.Initialize (1) in socket address 00007FDE2B012D38
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io.adb:288 Ada_Lib.Socket_IO.Stream_IO.Initialize (2) in socket address 00007FDE2B012D38
+    main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io.adb:290 Ada_Lib.Socket_IO.Stream_IO.Initialize (2) out
+    main_task_00007FDE2A808800: [00:00:00] Ada_Lib.Socket_IO.Client.Initialize exit Ada_Lib.Socket_IO.Client.Initialize (1) out ada_lib-socket_io-client.adb:301
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:83 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Register_Tests (1) in
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:109 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Register_Tests (1) out
+  running suite: 'Socket_Stream' routine: 'Socket_Send_Receive'
+main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:119 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Set_Up (1) in
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:137 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Set_Up (1) out
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:395 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Socket_Send_Receive (1) in
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:750 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) in
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:161 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) in Missmatch_Read_Length FALSE Client Read Timeout  9223372036.854775807 Client Write Timeout  9223372036.854775807 Client_Delay_Write_Time  9223372036.854775807 Server Read Timeout  9223372036.854775807 Server Write Timeout  9223372036.854775807ada_lib-socket_io-stream_io-unit_test.adb:397
+    main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:175 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) start server
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:756 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type.Start (1) started Answer TRUE
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:178 Ada_Lib.Socket_IO.Server.Is_Open (1) result FALSE
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:152 Ada_Lib.Socket_IO.Server.Initialize (2) in socket address 000000030638BD80
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:288 Ada_Lib.Socket_IO.Stream_IO.Initialize (3) in socket address 000000030638BD80
+      server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:290 Ada_Lib.Socket_IO.Stream_IO.Initialize (3) out
+      server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:154 Ada_Lib.Socket_IO.Server.Initialize (2) out
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:122 Ada_Lib.Socket_IO.Server.Initialize (2) in socket address 000000030638C860 port 12345
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:126 Ada_Lib.Socket_IO.Server.Initialize (2)
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:134 Ada_Lib.Socket_IO.Server.Initialize (2) listen for socket
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:137 Ada_Lib.Socket_IO.Server.Initialize (2) out
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:784 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) data left 5000 accepted socket  4 server socket  5 do ack TRUE do timeout TRUE timeout duration  9223372036.854775807 Test 00007FDE2B010210
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:19 Ada_Lib.Socket_IO.Server.Accept_Socket (2) in Default_Read_Timeout no timeout Default_Write_Timeout no timeout
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:510 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) in
+  main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:185 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) start client
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:516 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type.Start (1) started Answer TRUE timeout  9223372036.854775807
+  client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:299 Ada_Lib.Socket_IO.Client.Initialize (2) in socket address 0000000306596D98
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:288 Ada_Lib.Socket_IO.Stream_IO.Initialize (3) in socket address 0000000306596D98
+      client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:290 Ada_Lib.Socket_IO.Stream_IO.Initialize (3) out
+      client_00007FDE2B013A00: [00:00:00] Ada_Lib.Socket_IO.Client.Initialize exit Ada_Lib.Socket_IO.Client.Initialize (2) out ada_lib-socket_io-client.adb:301
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:546 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) data left 5000 Do_Acknowledgement TRUE Do_Timeout FALSE delay time  0.500000000 socket 0000000306596D98 new seed  441126 entered seed  0 Test 00007FDE2B010210
+  client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:74 Ada_Lib.Socket_IO.Client.Connect (2) in open TRUE Server_Name: 'localhost' port 12345 timeout  1.000000000 Host_Name: 'localhost:12345' socket address 0000000306596D98
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:85 Ada_Lib.Socket_IO.Client.Connect (2) name found
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:98 Ada_Lib.Socket_IO.Client.Connect (2) handle  6
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:101 Ada_Lib.Socket_IO.Client.Connect (2) connected status  COMPLETED
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:110  (2) Ada_Lib.Socket_IO.Client.Connect Status COMPLETED exit
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-client.adb:119 Ada_Lib.Socket_IO.Client.Connect (2) out connected TRUE
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:570 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) connected
+  client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:583 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) random write length 49 left 5000
+
+
+  client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:605 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) first write length 49 start  1 end  49
+
+  stream.writer_00007FDE2C010000: [00:00:00] ada_lib-socket_io-stream_io.adb:1172 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) data 0000000306DC3720
+server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-server.adb:25 Ada_Lib.Socket_IO.Server.Accept_Socket (2) out
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:797 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) accepted
+  client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:632 Ada_Lib.Socket_IO.Stream_IO.Write (2) in  1 .. 4 timeout  1.000000000 socket 6
+    size 32 Values 1 limit 8 data size 32 buffer first 1 buffer last 1 buffer length 1 message: 'dump for write length 4 called from ada_lib-socket_io-stream_io.adb:639'
+client_00007FDE2B013A00: dump for write length 4 called from ada_lib-socket_io-stream_io.adb:639 source 00000003065956E8
+client_00007FDE2B013A00: 0000: 00000031
+server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:310 Ada_Lib.Socket_IO.Stream_IO.Read (2) in  1 .. 4 socket 7 wait TRUE state OK item length 4 Timeout_Length no timeout throw TRUE
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:338 Ada_Lib.Socket_IO.Stream_IO.Read (2) Timeout_Length  9223372036.854775807 input buffer 000000030638BDC8
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:346 Ada_Lib.Socket_IO.Stream_IO.Read (2) Buffer_Empty TRUE Timeout_Length  9223372036.854775807
+    stream.writer_00007FDE2C00C800: [00:00:00] ada_lib-socket_io-stream_io.adb:1172 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) data 0000000306BB8720
+stream.writer_00007FDE2C00C800: [00:00:00] ada_lib-socket_io-stream_io.adb:1222 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) Start_Send 1 Send_Last  4 last  4 on socket 6
+stream.writer_00007FDE2C00C800: [00:00:00] ada_lib-socket_io-stream_io.adb:1172 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) data 0000000306BB8720
+client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:698 Ada_Lib.Socket_IO.Stream_IO.Write (2) out
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:310 Ada_Lib.Socket_IO.Stream_IO.Read (2) in  1 .. 64 socket 6 wait TRUE state OK item length 64 Timeout_Length no timeout throw TRUE
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:338 Ada_Lib.Socket_IO.Stream_IO.Read (2) Timeout_Length  9223372036.854775807 input buffer 0000000306596DE0
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:346 Ada_Lib.Socket_IO.Stream_IO.Read (2) Buffer_Empty TRUE Timeout_Length  9223372036.854775807
+    main_task_00007FDE2A808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:192 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) wait for tasks to complete
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:360 Ada_Lib.Socket_IO.Stream_IO.Read (2) Get_Last 4 Timeout_Set FALSE event OK
+    size 32 Values 1 limit 8 data size 32 buffer first 1 buffer last 1 buffer length 1 message: 'dump for read length 4 called from ada_lib-socket_io-stream_io.adb:413'
+server_00007FDE2C008200: dump for read length 4 called from ada_lib-socket_io-stream_io.adb:413 source 000000030638A298
+server_00007FDE2C008200: 0000: 00000031
+server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:417 Ada_Lib.Socket_IO.Stream_IO.Read (2) out last 4
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:810 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) read length 49
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:632 Ada_Lib.Socket_IO.Stream_IO.Write (2) in  1 .. 4 timeout no timeout socket 7
+    size 32 Values 1 limit 8 data size 32 buffer first 1 buffer last 1 buffer length 1 message: 'dump for write length 4 called from ada_lib-socket_io-stream_io.adb:639'
+server_00007FDE2C008200: dump for write length 4 called from ada_lib-socket_io-stream_io.adb:639 source 000000030638A6B8
+server_00007FDE2C008200: 0000: 00000031
+server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:698 Ada_Lib.Socket_IO.Stream_IO.Write (2) out
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:826 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) read length 49 received 0 do timeout TRUE start  1 end offset 49
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:838 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) start  1 end offset 49 Received 0
+  server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:310 Ada_Lib.Socket_IO.Stream_IO.Read (2) in  1 .. 49 socket 7 wait TRUE state OK item length 49 Timeout_Length no timeout throw FALSE
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:338 Ada_Lib.Socket_IO.Stream_IO.Read (2) Timeout_Length  9223372036.854775807 input buffer 000000030638BDC8
+    server_00007FDE2C008200: [00:00:00] ada_lib-socket_io-stream_io.adb:346 Ada_Lib.Socket_IO.Stream_IO.Read (2) Buffer_Empty TRUE Timeout_Length  9223372036.854775807
+    stream.writer_00007FDE2C010000: [00:00:00] ada_lib-socket_io-stream_io.adb:1222 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) Start_Send 1 Send_Last  4 last  4 on socket 7
+stream.writer_00007FDE2C010000: [00:00:00] ada_lib-socket_io-stream_io.adb:1172 Ada_Lib.Socket_IO.Stream_IO.Output_Task (0) data 0000000306DC3720
+client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:360 Ada_Lib.Socket_IO.Stream_IO.Read (2) Get_Last 4 Timeout_Set FALSE event OK
+    client_00007FDE2B013A00: [00:00:00] ada_lib-socket_io-stream_io.adb:346 Ada_Lib.Socket_IO.Stream_IO.Read (2) Buffer_Empty TRUE Timeout_Length  9223372036.854775807

@@ -1,0 +1,25 @@
+command:  bin/test_ada_lib -@R0 -v -ts -l -L /Users/wayne/bin/dbdaemon -s Socket_Stream -e Socket_Send_Receive  -p 2300
+test_ada_lib
+main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:83 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Register_Tests (1) in
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:109 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Register_Tests (1) out
+  running suite: 'Socket_Stream' routine: 'Socket_Send_Receive'
+main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:119 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Set_Up (1) in
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:137 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Set_Up (1) out
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:395 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Socket_Send_Receive (1) in
+  server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:750 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) in
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:161 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) in Missmatch_Read_Length FALSE Client Read Timeout  9223372036.854775807 Client Write Timeout  9223372036.854775807 Client_Delay_Write_Time  9223372036.854775807 Server Read Timeout  9223372036.854775807 Server Write Timeout  9223372036.854775807ada_lib-socket_io-stream_io-unit_test.adb:397
+    main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:175 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) start server
+    server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:756 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type.Start (1) started Answer TRUE
+  server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:784 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) data left 5000 accepted socket  4 server socket  5 do ack TRUE do timeout TRUE timeout duration  9223372036.854775807 Test 00007FF2F3008210
+  client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:510 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) in
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:185 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) start client
+    client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:516 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type.Start (1) started Answer TRUE timeout  9223372036.854775807
+  client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:546 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) data left 5000 Do_Acknowledgement TRUE Do_Timeout FALSE delay time  0.500000000 socket 0000000306BE2D98 new seed  769481 entered seed  0 Test 00007FF2F3008210
+  server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:797 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) accepted
+  client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:570 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) connected
+  client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:583 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) random write length 49 left 5000
+  client_00007FF2F3808200: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:605 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Client_Task_Type (1) first write length 49 start  1 end  49
+  main_task_00007FF2F1808800: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:192 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Send_Receive (2) wait for tasks to complete
+    server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:810 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) read length 49
+  server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:826 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) read length 49 received 0 do timeout TRUE start  1 end offset 49
+  server_00007FF2F1816400: [00:00:00] ada_lib-socket_io-stream_io-unit_test.adb:838 Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Server_Task_Type (1) start  1 end offset 49 Received 0

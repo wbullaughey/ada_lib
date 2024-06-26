@@ -1,0 +1,18 @@
+with "base";
+
+abstract project Local is
+
+    Target_Suffix := "obj";
+    C_Compiler_Options := ();
+    CPP_Compiler_Options := ();
+    Ada_Compiler_Options := (
+      "-gnatVa",        -- all optional validity checks
+      "-gnat2012"
+   );
+
+    C_Linker_Options := ();
+    CPP_Linker_Options := ();
+    Ada_Linker_Options := ();
+
+end Local;
+

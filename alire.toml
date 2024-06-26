@@ -1,0 +1,25 @@
+
+name = "ada_lib"
+description = "Ada_Lib Utility Library"
+version = "2.0-dev"
+
+authors = ["Wayne Bullaughey"]
+maintainers = ["Wayne Bullaughey <wlb122@verizon.net>"]
+maintainers-logins = ["wbullaughey"]
+
+[[depends-on]]
+applications = "*"
+
+[[pins]]
+applications  = { path = ".." }
+
+[[depends-on]]
+gnoga = "*"
+
+[[pins]]
+gnoga  = { path = "../vendor/github.com/gnoga" }
+
+[[depends-on]]
+gnatcoll = "*"
+
+

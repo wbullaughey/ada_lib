@@ -1,0 +1,168 @@
+#!/bin/bash
+export OUTPUT=list-ada_lib.txt
+echo "arguments $*"
+
+case $1 in
+
+   "gdb")
+      shift 1
+      export GDB=gdb
+      ;;
+
+   *)
+      ;;
+
+esac
+
+case $1 in
+
+   "hide")
+      shift 1
+      export DISPLAY=false
+      ;;
+
+   "ignore")
+      shift 1
+      export DISPLAY=ignore
+      ;;
+
+   *)
+      export DISPLAY=true
+      ;;
+
+esac
+
+export DATABASE=$1  # local,remote,connect,none
+export PROGRAM=bin/test_ada_lib
+export KILL=true
+#export VERBOSE="-v"
+
+case "$DATABASE" in
+
+   "help")
+      shift 1
+      $PROGRAM -h $* | tee $OUTPUT
+      exit
+      ;;
+
+   "connect")
+      export DATABASE_OPTION="-l"
+      export KILL=false
+      ;;
+
+   "local")
+      export DATABASE_OPTION="-l -L /Users/wayne/bin/dbdaemon"
+      ;;
+
+   "remote")
+      export DATABASE_OPTION="-r compile2.wmi.com -R /home/wayne/bin/dbdaemon -u wayne"
+      ;;
+
+   "none")
+      ;;
+
+   "suites")
+      shift 1
+      echo list suites
+      export COMMAND="$PROGRAM -@l $*"
+      echo "command: $COMMAND"  | tee $OUTPUT
+      $COMMAND 2>&1 | tee -a $OUTPUT
+      exit
+      ;;
+
+   "")
+      shift 1
+      echo no database option provided
+      help
+      exit
+      ;;
+
+   *)
+      echo unrecognize database option \"$DATABASE\" allowed: local,remote,none
+      exit
+      ;;
+
+esac
+
+export SUITE=$2     # mwd - Main_Window_with_DBDaemon
+                    # mwn - Main_Window_without_DBDaemon
+                    # wrd - Widget_Root_With_DBDaemon
+                    # wrn - Widget_Root_Without_DBDaemon
+                    # all - all swites
+export ROUTINE=$3   # all or test routine name
+echo DATABASE $DATABASE
+echo SUITE $SUITE
+echo routine $ROUTINE
+
+shift 3
+
+
+case "$SUITE" in
+
+   all)
+      ;;
+
+   *)
+       export SUITE_OPTION="-s $SUITE"
+       ;;
+
+esac
+
+case "$ROUTINE" in
+
+   all)
+      ;;
+
+   -*)
+      echo missing routine
+      exit;
+      ;;
+
+   "")
+      echo missing routine
+      exit;
+      ;;
+
+   *)
+      echo routine $ROUTINE
+      export ROUTINE_OPTION="-e $ROUTINE"
+      ;;
+
+esac
+
+ps ax | grep dbdaemon
+case "$DATABASE" in
+   true)
+       killall -9 dbdaemon
+       ;;
+
+   false)
+       ;;
+
+   *)
+       echo kill not set
+       ;;
+
+esac
+ps ax | grep dbdaemon
+echo DISPLAY $DISPLAY
+export COMMAND="$GDB $PROGRAM $* $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
+echo "command: $COMMAND"  | tee $OUTPUT
+
+case "$DISPLAY" in
+
+   true)
+      $COMMAND 2>&1 | tee -a $OUTPUT
+      ;;
+
+   false)
+      $COMMAND &> $OUTPUT
+      ;;
+
+   ignore)
+      $COMMAND
+      ;;
+
+esac
+
+sleep 1
