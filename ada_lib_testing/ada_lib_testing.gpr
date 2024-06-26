@@ -1,3 +1,4 @@
+with "ada_lib.gpr";
 with "applications.gpr";
 with "aunit.gpr";
 with "default_config.gpr";

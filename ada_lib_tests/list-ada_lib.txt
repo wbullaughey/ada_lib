@@ -1,148 +1,127 @@
-command:  bin/test_ada_lib -t@T -l -L /Users/wayne/bin/dbdaemon -s Trace   -p 2300
 test_ada_lib
-running suite: 'Trace' routine: 'Simple'
-main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:535 Ada_Lib.Trace.Tests.Simple (1) in In
-  main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:566 Ada_Lib.Trace.Tests.Start_Test (1)
-  main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:537 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 1<-
-main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:538 Ada_Lib.Trace.Tests.Simple (1) in expected ->log in 2<-
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:540 Ada_Lib.Trace.Tests.Simple (1) expected ->log here 3<-
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:541 Ada_Lib.Trace.Tests.Simple (2) in expected ->log in 4<-
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:542 Ada_Lib.Trace.Tests.Simple (2) expected ->log here 5<-
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:543 Ada_Lib.Trace.Tests.Simple (2) out expected ->log out 6<-
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:544 Ada_Lib.Trace.Tests.Simple (1) out expected ->log out 7<-
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:545 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 8<-
-main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:225 Ada_Lib.Trace.Tests.End_Test (0)
-main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:72 Ada_Lib.Trace.Tests.Check_Output (1) in
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 1 line: 'main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:537 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 1<-#' expected level 0 expected line: 'log here 1' expected seconds  0 expected hundreds  1
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:00.00'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 0 hundreds TRUE 0
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:537 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 1<-#' ( 98 ) 100 start 111 123
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '0'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 2 line: 'main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:538 Ada_Lib.Trace.Tests.Simple (1) in expected ->log in 2<-#  ' expected level 1 expected line: 'log in 2' expected seconds  0 expected hundreds  1
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:00.00'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 0 hundreds TRUE 0
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:00.00] ada_lib-trace-tests.adb:538 Ada_Lib.Trace.Tests.Simple (1) in expected ->log in 2<-#  ' ( 98 ) 100 start 114 124
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '1'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 3 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:540 Ada_Lib.Trace.Tests.Simple (1) expected ->log here 3<-#  ' expected level 1 expected line: 'log here 3' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:540 Ada_Lib.Trace.Tests.Simple (1) expected ->log here 3<-#  ' ( 98 ) 100 start 111 123
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '1'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 4 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:541 Ada_Lib.Trace.Tests.Simple (2) in expected ->log in 4<-#    ' expected level 2 expected line: 'log in 4' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:541 Ada_Lib.Trace.Tests.Simple (2) in expected ->log in 4<-#    ' ( 98 ) 100 start 114 124
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '2'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 5 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:542 Ada_Lib.Trace.Tests.Simple (2) expected ->log here 5<-#    ' expected level 2 expected line: 'log here 5' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:542 Ada_Lib.Trace.Tests.Simple (2) expected ->log here 5<-#    ' ( 98 ) 100 start 111 123
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '2'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 6 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:543 Ada_Lib.Trace.Tests.Simple (2) out expected ->log out 6<-#    ' expected level 2 expected line: 'log out 6' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:543 Ada_Lib.Trace.Tests.Simple (2) out expected ->log out 6<-#    ' ( 98 ) 100 start 115 126
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '2'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 7 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:544 Ada_Lib.Trace.Tests.Simple (1) out expected ->log out 7<-#  ' expected level 1 expected line: 'log out 7' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:544 Ada_Lib.Trace.Tests.Simple (1) out expected ->log out 7<-#  ' ( 98 ) 100 start 115 126
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '1'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 8 line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:545 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 8<-#' expected level 0 expected line: 'log here 8' expected seconds  2 expected hundreds  21
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (2) in text: '00:00:02.22'
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (2) out seconds 2 hundreds TRUE 22
-    main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:159 Ada_Lib.Trace.Tests.Check_Output (1) line: 'main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:545 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 8<-#' ( 98 ) 100 start 111 123
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:185 Ada_Lib.Trace.Tests.Check_Output (1) level: '0'
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:207 Ada_Lib.Trace.Tests.Check_Output (1) out
-  main_task_00007FAB09008800: [00:00:02.22] ada_lib-trace-tests.adb:548 Ada_Lib.Trace.Tests.Simple (0) out Out
-missing log in from ada_lib-trace-tests.adb:548:Ada_Lib.Trace.Tests.Simple
-running suite: 'Trace' routine: 'Exception_Test'
-main_task_00007FAB09008800: [00:00:02.23] ada_lib-trace-tests.adb:566 Ada_Lib.Trace.Tests.Start_Test (0)
------------ exception --------------
-Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION
-Exception message:ada_lib-trace-tests.adb:251
-message:'caught expected test exception'
-main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:256  (0) caught at ada_lib-trace-tests.adb:256
-------------------------------------
-main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:225 Ada_Lib.Trace.Tests.End_Test (0)
-main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:72 Ada_Lib.Trace.Tests.Check_Output (1) in
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 1 line: '----------- exception --------------#' expected level 0 expected line: '----------- exception --------------' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 0 text: '----------- exception --------------#' main_task 0 ada_lib 0 caugh_at 0 compare: '----------- exception --------------#' pattern: '----------- exception --------------' trimmed: '----------- exception --------------'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 2 line: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION#' expected level 0 expected line: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 0 text: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION#' main_task 0 ada_lib 0 caugh_at 0 compare: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION#' pattern: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION' trimmed: 'Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 3 line: 'Exception message:ada_lib-trace-tests.adb:251#' expected level 0 expected line: 'Exception message:ada_lib-trace-tests.adb:*' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 43 text: 'Exception message:ada_lib-trace-tests.adb:251#' main_task 0 ada_lib 0 caugh_at 0 compare: 'Exception message:ada_lib-trace-tests.adb:251#' pattern: 'Exception message:ada_lib-trace-tests.adb:' trimmed: 'Exception message:ada_lib-trace-tests.adb:'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 4 line: 'message:'caught expected test exception'#' expected level 0 expected line: 'message:'caught expected test exception'' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 0 text: 'message:'caught expected test exception'#' main_task 0 ada_lib 0 caugh_at 0 compare: 'message:'caught expected test exception'#' pattern: 'message:'caught expected test exception'' trimmed: 'message:'caught expected test exception''
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 5 line: 'main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:256  (0) caught at ada_lib-trace-tests.adb:256#' expected level 0 expected line: 'caught at ada_lib-trace-tests.adb:*' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 35 text: 'main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:256  (0) caught at ada_lib-trace-tests.adb:256#' main_task 1 ada_lib 43 caugh_at 76 compare: 'caught at ada_lib-trace-tests.adb:256#' pattern: 'caught at ada_lib-trace-tests.adb:' trimmed: 'caught at ada_lib-trace-tests.adb:'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:84 Ada_Lib.Trace.Tests.Check_Output (1) count 6 line: '------------------------------------#' expected level 0 expected line: '------------------------------------' expected seconds  0 expected hundreds  0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:127 Ada_Lib.Trace.Tests.Check_Output (1) stop 0 text: '------------------------------------#' main_task 0 ada_lib 0 caugh_at 0 compare: '------------------------------------#' pattern: '------------------------------------' trimmed: '------------------------------------'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:207 Ada_Lib.Trace.Tests.Check_Output (1) out
-  running suite: 'Trace' routine: 'From_Start'
-main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:616 Ada_Lib.Trace.Tests.Time_Parser (1) in text: '00:00:05'
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:628 Ada_Lib.Trace.Tests.Time_Parser (1) out seconds 5 hundreds FALSE 0
-  main_task_00007FAB09008800: [00:00:02.24] ada_lib-trace-tests.adb:334 Ada_Lib.Trace.Tests.From_Start (0) test 1 source: '00:00:05' minutes 0 seconds 3 Hundreds 10 parsed minutes 0 seconds 5 Hundreds 0
-running suite: 'Trace' routine: 'Multi_Thread'
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:434 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:436 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:438 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:436 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-tasks(1)_00007FAB0A808200: [00:00:02.25] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  4.53681E-01 count 1
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:438 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:436 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-tasks(2)_00007FAB0A80BA00: [00:00:02.25] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  3.54837E-02 count 1
-tasks(3)_00007FAB0A80F200: [00:00:02.25] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  4.76448E-01 count 1
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:438 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
-main_task_00007FAB09008800: [00:00:02.25] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  5.73440E-02 count 1
-tasks(2)_00007FAB0A80BA00: [00:00:02.28] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.63493E-01 count 2
-main_task_00007FAB09008800: [00:00:02.31] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  2.46108E-01 count 2
-main_task_00007FAB09008800: [00:00:02.56] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  9.56688E-01 count 3
-tasks(1)_00007FAB0A808200: [00:00:02.70] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  7.63146E-02 count 2
-tasks(3)_00007FAB0A80F200: [00:00:02.72] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  4.08090E-01 count 2
-tasks(1)_00007FAB0A808200: [00:00:02.78] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  6.54083E-01 count 3
-tasks(2)_00007FAB0A80BA00: [00:00:02.85] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.48770E-01 count 3
-tasks(3)_00007FAB0A80F200: [00:00:03.13] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  1.93403E-01 count 3
-tasks(3)_00007FAB0A80F200: [00:00:03.33] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  6.39249E-01 count 4
-tasks(2)_00007FAB0A80BA00: [00:00:03.40] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.94191E-01 count 4
-tasks(1)_00007FAB0A808200: [00:00:03.43] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  7.73441E-01 count 4
-main_task_00007FAB09008800: [00:00:03.52] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  9.96441E-01 count 4
-tasks(3)_00007FAB0A80F200: [00:00:03.97] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  4.89377E-01 count 5
-tasks(2)_00007FAB0A80BA00: [00:00:03.99] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  2.49558E-01 count 5
-tasks(1)_00007FAB0A808200: [00:00:04.21] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  1.22806E-01 count 5
-tasks(2)_00007FAB0A80BA00: [00:00:04.24] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  4.91924E-01 count 6
-tasks(1)_00007FAB0A808200: [00:00:04.33] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  5.78807E-01 count 6
-tasks(3)_00007FAB0A80F200: [00:00:04.46] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  8.62919E-01 count 6
-main_task_00007FAB09008800: [00:00:04.52] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  9.85296E-01 count 5
-tasks(2)_00007FAB0A80BA00: [00:00:04.74] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  9.90555E-01 count 7
-tasks(1)_00007FAB0A808200: [00:00:04.91] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.78583E-01 count 7
-tasks(3)_00007FAB0A80F200: [00:00:05.32] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  1.38733E-01 count 7
-tasks(3)_00007FAB0A80F200: [00:00:05.46] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  7.42688E-01 count 8
-main_task_00007FAB09008800: [00:00:05.51] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  4.49526E-01 count 6
-tasks(2)_00007FAB0A80BA00: [00:00:05.73] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  1.12518E-01 count 8
-tasks(2)_00007FAB0A80BA00: [00:00:05.84] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  4.05322E-02 count 9
-tasks(2)_00007FAB0A80BA00: [00:00:05.88] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.70943E-01 count 10
-tasks(1)_00007FAB0A808200: [00:00:05.89] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  5.02392E-01 count 8
-main_task_00007FAB09008800: [00:00:05.96] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  7.10881E-01 count 7
-tasks(3)_00007FAB0A80F200: [00:00:06.21] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  5.56232E-01 count 9
-tasks(1)_00007FAB0A808200: [00:00:06.39] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.57868E-01 count 9
-main_task_00007FAB09008800: [00:00:06.67] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  8.19882E-01 count 8
-tasks(3)_00007FAB0A80F200: [00:00:06.76] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  8.96104E-01 count 10
-tasks(1)_00007FAB0A808200: [00:00:07.35] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.39215E-01 count 10
-main_task_00007FAB09008800: [00:00:07.49] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  4.89873E-01 count 9
-main_task_00007FAB09008800: [00:00:07.98] ada_lib-trace-tests.adb:391 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  7.51831E-01 count 10
-main_task_00007FAB09008800: [00:00:08.73] ada_lib-trace-tests.adb:225 Ada_Lib.Trace.Tests.End_Test (0)
-report Ada_Lib test results
 
-OK Trace : Simple
-OK Trace : Exception_Test
-OK Trace : Multi_Thread
+test_ada_lib command line options:
+    -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
+    -A <trace options>             : AUnit traces                      (AUnit library)
+    -e <routine>                   : test routine.                     (test_ada_lib)
+    -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
+    -G <trace options>             : GNOGA traces                      (GNOGA library)
+    -h                             : this message                      (Ada_Lib)
+    -l                             : local dbdaemon.                   (Ada_Lib.Options.Database)
+    -L <path>                      : local dbdaemon path.              (Ada_Lib.Options.Database)
+    -p <port number>               : remote DBDaemon port number       (Ada_Lib.Options.Database)
+    -P                             : pause                             (Ada_Lib)
+    -r                             : remote dbdaemon.                  (Ada_Lib.Options.Database)
+    -R <path>                      : remote dbdaemon path.             (Ada_Lib.Options.Database)
+    -s <test suite>                : select test suite to run.         (test_ada_lib)
+    -S <suites>                    : enable default disabled suites.   (test_ada_lib)
+    -t                             : ada_lib unit tests
+    -T <options>                   : enables trace template unit tests (Ada_Lib.Template.Tests)
+    -u <user>                      : remote user.                      (Ada_Lib.Options.Database)
+    -U <unit test trace Ada_Lib.>  : select trace                      (test_ada_lib)
+    -v                             : verbose                           (Ada_Lib)
+    -w                             : Web server port                   (GNOGA library)
+    -x                             : exit on tests complete            (test_ada_lib)
+    -@?                            : trace test condition              (Ada_Lib)
+    -@d                            : driver suites                     (test_ada_lib)
+    -@i                            : indent trace                      (Ada_Lib)
+    -@l                            : List test suites                  (test_ada_lib)
+    -@m                            : manual operations.                (test_ada_lib)
+    -@p                            : include program in trace          (Ada_Lib)
+    -@P                            : Print test suites.                (test_ada_lib)
+    -@R <seed>                     : set random seed                   (test_ada_lib)
+    -@S                            : report random seed                (test_ada_lib)
+    -@t                            : include task in trace             (Ada_Lib)
+    -@x                            : exclude time in trace             (Ada_Lib)
 
-FAIL Trace : From_Start
-    test 1 wrong seconds got 5 expected 3
-    at ada_lib-trace-tests.adb:348
+bin/test_ada_lib trace options (-t)
+      a               all
+      c               configuration
+      C               command line iterator
+      d               directory compare and copy
+      h               help test
+      i               Socket_IO.Clent trace
+      l               Lock Test
+      m               Mail Test
+      o               Ada_Lib.Options.AUnit_Lib options
+      r               suites
+      R               Test program trace
+      s               Socket Stream Test
+      S               Database server Test
+      t               Template Test
+      T               Timer Test
+      @d              Debug Test
+      @T              Debug Tests
+      @t              Debug Test routines
 
-Total Tests Run:   4
-Successful Tests:  3
-Failed Assertions: 1
-Unexpected Errors: 0
+AUnit.Ada_Lib.Options library trace options (-A)
+      a               all
+      A               AUnit.Debug
+      l               AUnit.Ada_Lib.Debug
+      o               AUnit options
+
+Ada_Lib.Options.GNOGA unit test trace options (-g)
+      a               all
+      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
+      g               Ada_Lib.GNOGA.Unit_Test.Debug (main window)
+      o               Ada_Lib.GNOGA.Unit_Test.Debug_Options
+
+Ada_Lib.Template.Tests (-T)
+      a               all
+      c               compile
+      e               evaluate
+      E               expand
+      l               load
+      t               test
+
+Ada_Lib.Options.GNOGA library trace options (-G)
+      a               all
+      m               GNOGA.Ada_Lib
+      o               GNOGA options
+
+Ada_Lib unit test library trace options (-U)
+      a               all
+      A               all unit tests
+      g               Ada_Lib.GNOGA.Unit_Test.Debug
+      l               Ada_Lib.Unit_Test.Debug Library
+      p               test programs
+      r               Runtime_Options
+      t               Ada_Lib.Test.Debug
+      T               Ada_Lib.Trace.Debug_Trace
+
+Enable suites disabled by default (-S)
+      a               enable all
+      d               database server
+      t               text
+
+CAC ada_lib trace library options (-a)
+      a               all
+      b               database subscribe
+      c               Ada_Lib.Command_Line Trace
+      C               Ada_Lib.Configuration Trace
+      e               Event
+      g               GNOGA.Debug
+      G               Ada_Lib.GNOGA.Debug
+      h               Help
+      i               interrupt
+      I               Ada_Lib.interface
+      l               lock
+      m               timer
+      M               mail
+      o               os
+      O               Ada_Lib.Options
+      p               parser
+      P               database post
+      r               run remote, database connect
+      R               Ada_Lib.Runstring_Options.Debug
+      s               socket
+      S               socket Stream
+      t               Ada_Lib.Trace
+      T               Ada_Lib.Trace_Tasks
+      -               Ada_Lib.Text
+      @c              Template Compile
+      @d              Template Detail
+      @D              Ada_Lib.Directory trace
+      @e              Template Evaluate
+      @E              Template Expand
+      @l              Template Load
