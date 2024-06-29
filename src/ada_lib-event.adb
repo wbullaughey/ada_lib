@@ -13,7 +13,8 @@ package body Ada_Lib.Event is
       Result                     : constant Boolean :=
                                     Object.Event_Object.Did_Occure;
    begin
-      Log_Here (Debug, "event occured " & Result'img);
+      Log_Here (Debug, Quote ("event", Object.Description) &
+         " occured " & Result'img);
       return Result;
    end Event_Occured;
 
@@ -35,7 +36,8 @@ package body Ada_Lib.Event is
       Is_Locked                  : constant Boolean := Object.Event_Object.Did_Occure;
 
    begin
-      Log_In (Debug, "from " & From & " locked " & Is_Locked'img );
+      Log_In (Debug, Quote ("event", Object.Description) &
+         " from " & From & " locked " & Is_Locked'img );
 
       Object.Event_Object.Set_Occured (From);
       Log_Out (Debug);
@@ -48,7 +50,7 @@ package body Ada_Lib.Event is
    -------------------------------------------------------------------
 
    begin
-      Log_In (Debug, "event " & Object.Description.all);
+      Log_In (Debug, Quote ("event ", Object.Description));
       Object.Event_Object.Wait_For_Event (From);
       Log_Out (Debug);
    end Wait_For_Event;
@@ -61,7 +63,8 @@ package body Ada_Lib.Event is
       ---------------------------------------------------------------
 
       begin
-         Log_Here (Debug, "occured " & Occured'img);
+         Log_Here (Debug, Quote ("event", Description) &
+            " occured " & Occured'img);
          return Occured;
       end Did_Occure;
 
@@ -79,9 +82,10 @@ package body Ada_Lib.Event is
       ---------------------------------------------------------------
 
       begin
-         Log_Here (Debug, "occured " & Occured'img);
+         Log_Here (Debug, Quote ("description ", Description) &
+            " occured " & Occured'img);
          if Occured then
-            raise Failed with "event " & Description.all &
+            raise Failed with Quote ("event ", Description) &
                " allready occured from " & From;
          end if;
          Occured := True;
@@ -94,7 +98,8 @@ package body Ada_Lib.Event is
       ---------------------------------------------------------------
 
       begin
-         Log_Here (Debug, " from " & From);
+         Log_Here (Debug, Quote ("event", Description) &
+            " from " & From);
       end Wait_For_Event;
 
    end Protected_Event;

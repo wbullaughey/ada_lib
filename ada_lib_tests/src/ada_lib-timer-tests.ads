@@ -32,6 +32,19 @@ Suite_Name                    : constant String := "Timer";
 
 private
 
+   generic
+      with procedure Timed_Out;
+
+   package Timeout_Package is
+
+      type Timeout_Timer_Type    is new Event_Type with null record;
+
+      overriding
+      procedure Callback (
+         Event             : in out Timeout_Timer_Type);
+
+   end Timeout_Package;
+
    type Test_Timer_Type          is new Event_Type with record
       Occurred                   : Boolean := False;
       Occured_At                 : Ada_Lib.Time.Time_Type;
@@ -41,7 +54,6 @@ private
 
    function Allocate_Event (
       Offset                     : in     Duration;
-      Dynamic                    : in     Boolean;
       Description                : in     String := ""
    ) return Test_Timer_Access;
 

@@ -52,6 +52,13 @@ package Ada_Lib.Trace is
       Where                      : in     String := GNAT.Source_Info.Source_Location
    ) return String;
 
+   function From_Start
+   return Duration;
+
+   function From_Start (
+      Time                 : in   Ada.Calendar.Time
+   ) return Duration;
+
    function From_Start (
       Time                 : in   Ada.Calendar.Time;
       Hundreds            : in   Boolean := False;

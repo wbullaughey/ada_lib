@@ -72,6 +72,7 @@ package body Ada_Lib.Event.Unit_Test is
       overriding
       procedure Callback (
          Event             : in out Check_Event_Type) is
+      pragma Unreferenced (Event);
       ------------------------------------------------------------
 
       begin
@@ -87,6 +88,7 @@ package body Ada_Lib.Event.Unit_Test is
       overriding
       procedure Callback (
          Event             : in out Delay_Event_Type) is
+      pragma Unreferenced (Event);
       ------------------------------------------------------------
 
       begin

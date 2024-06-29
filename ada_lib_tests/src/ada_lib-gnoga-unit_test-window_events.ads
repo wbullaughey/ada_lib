@@ -25,6 +25,7 @@ package Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Mouse_Y                    : Integer;
       Left_Position              : Integer;
 --    Left_View                  : Standard.gnoga.Gui.Element.Common.Div_Type;
+      Move_Count                 : Natural := 0;
       Moving                     : Boolean := False;
       Move_Started               : Boolean := False;
       Moved                      : Boolean := False;

@@ -1,8 +1,5 @@
 command: bin/test_ada_lib -@l
 test_ada_lib
-AUnit_Events Keyboard_Test
-AUnit_Events Mouse_Click
-AUnit_Events Test_Mouse_Move
 Ask Basic_Operations
 Client_Socket_IO Test_Connect
 Command_Line_Iterator Options
@@ -33,6 +30,9 @@ Database_Server Wild_Get*
 Directory Test_File_Compare
 Directory Test_File_Copy
 Event Wait_For_Event
+GNOGA_Events Keyboard_Test
+GNOGA_Events Mouse_Click
+GNOGA_Events Test_Mouse_Move
 GNOGA_Window_Events Keyboard_Press
 GNOGA_Window_Events Mouse_Drag
 GNOGA_Window_Events Mouse_Move
@@ -90,6 +90,7 @@ Timer Cancel_Event
 Timer Finalize_Event
 Timer Multiple_Events
 Timer Single_Event
+Timer Wait_For_Event
 Trace Exception_Test
 Trace Multi_Thread
 Trace Parsed_Time

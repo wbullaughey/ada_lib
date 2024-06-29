@@ -409,6 +409,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                                  Meta          => False
                               );
       Steps                   : constant := 100;
+      Move_Steps              : constant := Steps - 1;
 
    begin
       Log_In (Debug);
@@ -451,9 +452,10 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
          Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Down;
          Connection_Data.Top_View.Fire_On_Mouse_Down (Move_Event);
 
-         Assert (Connection_Data.Delta_X = Steps and then
-            Connection_Data.Delta_Y = Steps,
-            "wrong deleta x or y expected " & Steps'img & "," & Steps'img &
+         Assert (Connection_Data.Delta_X = Move_Steps and then
+            Connection_Data.Delta_Y = Move_Steps,
+            "wrong deleta x or y expected " & Move_Steps'img & "," &
+            Move_Steps'img &
             " got " & Connection_Data.Delta_X'img & "," &
                Connection_Data.Delta_Y'img);
          Pause_On_Flag ("move fired");
@@ -489,19 +491,20 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
          Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
       end if;
 
-        case Mouse_Event.Message is
+     case Mouse_Event.Message is
 
-           when Standard.Gnoga.Gui.Base.Mouse_Down =>
-              Connection_Data.Moving := not Connection_Data.Moving;
+        when Standard.Gnoga.Gui.Base.Mouse_Down =>
+           Connection_Data.Moving := not Connection_Data.Moving;
 
-              if Connection_Data.Moving then
-                 Connection_Data.Move_Started := True;
-              else
-                 Connection_Data.Move_Stopped := True;
-              end if;
+           if Connection_Data.Moving then
+              Connection_Data.Move_Started := True;
+           else
+              Connection_Data.Move_Stopped := True;
+           end if;
 
-           when Standard.Gnoga.Gui.Base.Mouse_Move =>
+        when Standard.Gnoga.Gui.Base.Mouse_Move =>
             if Connection_Data.Moving then
+               Connection_Data.Move_Count := Connection_Data.Move_Count + 1;
                declare
                   X              : constant Integer :=  Mouse_Event.X;
                   Y              : constant Integer :=  Mouse_Event.Y;
@@ -519,12 +522,15 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                      " delta x:" & Delta_X'img & " y:" & Delta_Y'img &
                      Mouse_Location (Connection_Data.all));
 
+                  if Connection_Data.Move_Count > 1 then
+                     Connection_Data.Delta_X := Connection_Data.Delta_X + Delta_X;
+                     Connection_Data.Delta_Y := Connection_Data.Delta_Y + Delta_Y;
+                     Connection_Data.Text.Text (Mouse_Location (Connection_Data.all));
+                  end if;
+
+                  Connection_Data.Moved := True;
                   Connection_Data.Mouse_X := X;
                   Connection_Data.Mouse_Y := Y;
-                  Connection_Data.Delta_X := Connection_Data.Delta_X + Delta_X;
-                  Connection_Data.Delta_Y := Connection_Data.Delta_Y + Delta_Y;
-                  Connection_Data.Text.Text (Mouse_Location (Connection_Data.all));
-                  Connection_Data.Moved := True;
                end;
             end if;
 

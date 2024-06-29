@@ -1,6 +1,8 @@
 with Ada.Calendar;
+with Ada_Lib.Event;
 with Ada.Finalization;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings;
+with GNAT.Source_Info;
 
 package Ada_Lib.Timer is
 
@@ -39,6 +41,10 @@ package Ada_Lib.Timer is
       Event             : in out Event_Type
    ) return Boolean;
 
+   function Get_Exception (
+      Event             : in     Event_Type
+   ) return Ada_Lib.Strings.String_Access;
+
 -- function Create_Event (
 --    Offset                  : in     Duration;
 --    Dynamic                 : in     Boolean;
@@ -54,10 +60,6 @@ package Ada_Lib.Timer is
    procedure Finalize (
       Event             : in out Event_Type);
 
--- overriding
--- procedure Initialize (
---    Event             : in out Event_Type);
-
    procedure Initialize (
       Event                      : in out Event_Type;
       Wait                       : in     Duration;
@@ -66,16 +68,25 @@ package Ada_Lib.Timer is
       Repeating                  : in     Boolean := False
    ) with Pre => Wait > 0.0;
 
+   procedure Set_Description (
+      Event                      : in out Event_Type;
+      Description                : in     String);
+
+   procedure Set_Wait (
+      Event                      : in out Event_Type;
+      Wait                       : in     Duration);
+
    function State (
       Event                : in     Event_Type
    ) return State_Type;
 
+   procedure Wait_For_Event (
+      Event                      : in out Event_Type;
+      From                       : in     String :=
+                                             GNAT.Source_Info.Source_Location);
+
    procedure Set_Trace (
       State             : in   Boolean);
-
-   function Wait (
-      Event                      : in     Event_Type
-   ) return Duration;
 
    No_Timeout                    : constant Duration := Duration'last;
    Trace                         : Boolean := False;
@@ -96,15 +107,19 @@ private
 
    type Timer_Task_Access  is access Timer_Task_Type;
 
+   Wait_Event_Description  : aliased constant String := "wait event";
    type Event_Type         is abstract new Ada.Finalization.Limited_Controlled
                                  with record
-      Description          : Ada_Lib.Strings.Unlimited.String_Type;
+      Description          : Ada_Lib.Strings.String_Access := Null;
       Dynamic              : Boolean := False;
+      Exception_Message    : Ada_Lib.Strings.String_Access := Null;
+      Exception_Name       : Ada_Lib.Strings.String_Access := Null;
       Repeating            : Boolean := False;
       State                : State_Type := Waiting;
       Time                 : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;
       Wait                 : Duration;
+      Wait_Event           : Ada_Lib.Event.Event_Access := Null;
    end record;
 
 end Ada_Lib.Timer;

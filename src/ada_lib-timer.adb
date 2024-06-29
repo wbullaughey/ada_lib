@@ -1,4 +1,4 @@
---with Ada.Exceptions;
+with Ada.Exceptions;
 --with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 --with Ada_Lib.Time;
@@ -8,11 +8,19 @@ with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
 package body Ada_Lib.Timer is
 
 -- use type Ada.Calendar.Time;
--- use type Ada_Lib.Strings.String_Constant_Access;
+   use type Ada_Lib.Strings.String_Access;
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => Event_Class_Access,
       Object   => Event_Type'class);
+
+   procedure Free is new Ada.Unchecked_Deallocation (
+      Name     => Ada_Lib.Strings.String_Access,
+      Object   => String);
+
+   procedure Free is new Ada.Unchecked_Deallocation (
+      Name     => Ada_Lib.Event.Event_Access,
+      Object   => Ada_Lib.Event.Event_Type);
 
    ---------------------------------------------------------------------------
    function Active (
@@ -67,6 +75,8 @@ package body Ada_Lib.Timer is
 
          end case;
       end if;
+      Free (Event.Description);
+      Free (Event.Wait_Event);
       Log_Out (Trace);
 
 exception
@@ -84,8 +94,22 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      return Event.Description.Coerce;
+      return Event.Description.all;
    end Description;
+
+   ---------------------------------------------------------------------------
+   function Get_Exception (
+      Event             : in     Event_Type
+   ) return Ada_Lib.Strings.String_Access is
+   ---------------------------------------------------------------------------
+
+   begin
+      return (if Event.Exception_Name = Null then
+            Null
+         else
+            new String'("name " & Event.Exception_Name.all &
+               " message " & Event.Exception_Message.all));
+   end Get_Exception;
 
 -- ---------------------------------------------------------------------------
 -- overriding
@@ -109,14 +133,16 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, Quote ("description", Event.Description) &
+      Log_In (Trace, Quote ("description", Description) &
          " wait " & Wait'img);
-      Event.Description.Construct (Description);
+      Event.Set_Description (Description);
       Event.Dynamic := Dynamic;
       Event.Repeating := Repeating;
       Event.Wait := Wait;
+      Event.Wait_Event := new Ada_Lib.Event.Event_Type (
+         Ada_Lib.Strings.String_Constant_Access (Event.Description));
       Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
-      Log_Out (Trace);
+      Log_Out (Trace, "address " & Image (Event'address));
    end Initialize;
 
 -- ---------------------------------------------------------------------------
@@ -130,6 +156,19 @@ exception
 -- end Offset;
 --
    ---------------------------------------------------------------------------
+   procedure Set_Description (
+      Event                      : in out Event_Type;
+      Description                : in     String) is
+   ---------------------------------------------------------------------------
+
+   begin
+      if Event.Description /= Null then
+         Free (Event.Description);
+      end if;
+      Event.Description := new String'(Description);
+   end Set_Description;
+
+   ---------------------------------------------------------------------------
    procedure Set_Trace (
       State             : in   Boolean) is
    ---------------------------------------------------------------------------
@@ -137,6 +176,16 @@ exception
    begin
       Trace := State;
    end Set_Trace;
+
+   ---------------------------------------------------------------------------
+   procedure Set_Wait (
+      Event                      : in out Event_Type;
+      Wait                       : in     Duration) is
+   ---------------------------------------------------------------------------
+
+   begin
+      Event.Wait := Wait;
+   end Set_Wait;
 
    ---------------------------------------------------------------------------
    function State (
@@ -169,14 +218,15 @@ exception
 -- end To_Duration;
 
    ---------------------------------------------------------------------------
-   function Wait (
-      Event                      : in     Event_Type
-   ) return Duration is
+   procedure Wait_For_Event (
+      Event                   : in out Event_Type;
+      From                    : in     String :=
+                                          GNAT.Source_Info.Source_Location) is
    ---------------------------------------------------------------------------
 
    begin
-      return Event.Wait;
-   end Wait;
+      Event.Wait_Event.Wait_For_Event;
+   end Wait_For_Event;
 
    ---------------------------------------------------------------------------
    task body Timer_Task_Type is
@@ -186,12 +236,14 @@ exception
       Ada_Lib.Trace_Tasks.Start ("timer task", Here);
 
 
-      Log_Here (Trace, Quote ("description", Event.Description) &
+      Log_Here (Trace, "wait " & Event.Wait'img &
+         Quote ("description", Event.Description) &
          "state " & Event.State'img);
 
       while Event.State = Waiting loop -- if null then canceled before set
          Log_Here (Trace, Quote ("description", Event.Description) &
-            " start loop delay time " & Event.Wait'img);
+            " start loop delay time " & Event.Wait'img,
+            " address " & Image (Event.all'address));
          select
             accept Cancel do
                Event.State := Canceled;
@@ -220,9 +272,12 @@ exception
                " repeating " & Event.Repeating'img);
          end select;
       end loop;
+      Log_Here (Trace, "event " & Quote (" description", Event.Description) &
+         " completed");
+      Event.Wait_Event.Set_Event;
 
       Log_Here (Trace, "state " & Event.State'img &
-         Quote ("description", Event.Description) &
+         Quote (" description", Event.Description) &
          " dynamic " & Event.Dynamic'img);
 
       if Event.Dynamic and then Event.State/= Finalized then
@@ -240,6 +295,10 @@ exception
    exception
       when Fault: others =>
          Log_Exception (Trace, Fault);
+         Event.Exception_Name := new String'(
+            Ada.Exceptions.Exception_Name (Fault));
+         Event.Exception_Message := new String'(
+            Ada.Exceptions.Exception_Message (Fault));
          Log_Out (Trace);
 
    end Timer_Task_Type;

@@ -63,13 +63,16 @@ package body Ada_Lib.Trace.Tests is
    procedure Check_Output (
       Output                     : in     Output_Package.List;
       Exception_Test             : in     Boolean;
-      Expected                   : in     Output_List_Type) is
+      Expected                   : in     Output_List_Type;
+      Start_Offset               : in     Duration) is
    ---------------------------------------------------------------
 
       Line_Count                 : Natural := 0;
 
    begin
-      Log_In (Debug_Tests);
+      Log_In (Debug_Tests,
+         "start offset " & Start_Offset'img);
+
       for Line of Output loop
          Line_Count := Line_Count + 1;
          if Line_Count > Expected'length then
@@ -79,14 +82,21 @@ package body Ada_Lib.Trace.Tests is
          declare
             Expected_Entry       : Output_Type renames Expected (Line_Count);
             Expected_Line        : String renames Expected_Entry.Line.all;
+            Raw_Expected         : constant Natural := (
+                                    Expected_Entry.Seconds * 10000 +
+                                    Expected_Entry.Hundreds * 100 +
+                                    Natural (Start_Offset * 10000.0)) / 100;
+            Expected_Seconds     : constant Natural := Raw_Expected / 100;
+            Expected_Hundreds    : constant Natural := Raw_Expected mod 100;
 
          begin
             Log_Here (Debug_Tests, "count" & Line_Count'img &
                Quote (" line", Line) &
                " expected level" & Expected_Entry.Level'img &
                Quote (" expected line", Expected_Line) &
-               " expected seconds " & Expected_Entry.Seconds'img &
-               " expected hundreds " & Expected_Entry.Hundreds'img);
+               " expected seconds " & Expected_Seconds'img &
+               " expected hundreds " & Expected_Hundreds'img &
+               " raw expected" & Raw_Expected'img);
             if Ada_Lib.Options.Program_Options.Verbose then
                Ada.Text_IO.Put_Line (Quote ("line", Line));
             end if;
@@ -167,15 +177,18 @@ package body Ada_Lib.Trace.Tests is
                      "bad start pattern" & Start_Pattern'img & " line" & Line_Count'img);
                   Assert (Stop_Pattern < Output_Line'length, "bad stop pattern" &
                      Stop_Pattern'img);
+                  Log_Here (Debug_Tests,
+                     "Parsed_Time.Seconds " & Parsed_Time.Seconds'img &
+                     " Parsed_Time.Hundreds " & Parsed_Time.Hundreds'img);
                   Assert (Parsed_Time.Minutes = 0,
                      "should not have any minutes. line" & Line_Count'img);
-                  Assert (Parsed_Time.Seconds = Expected_Entry.Seconds,
+                  Assert (Parsed_Time.Seconds = Expected_Seconds,
                      "wrong number of seconds got " & Parsed_Time.Seconds'img &
-                     " expected " & Expected_Entry.Seconds'img &
+                     " expected " & Expected_Seconds'img &
                      ". line" & Line_Count'img);
-                  Assert (abs (Parsed_Time.Hundreds - Expected_Entry.Hundreds) <= 3,
+                  Assert (abs (Parsed_Time.Hundreds - Expected_Hundreds) <= 3,
                      "wrong number of hundreds got " & Parsed_Time.Hundreds'img &
-                     " expected " & Expected_Entry.Hundreds'img &
+                     " expected " & Expected_Hundreds'img &
                      ". line" & Line_Count'img);
 
                   declare
@@ -207,8 +220,9 @@ package body Ada_Lib.Trace.Tests is
       Log_Out (Debug_Tests);
 
    exception
-      when others =>
-         Log_Here (False, "exception in check output");
+      when Fault: others =>
+         Trace_Message_Exception (Debug_Tests, Fault, "exception in check output");
+         Log_Out (Debug_Tests);
    end Check_Output;
 
    ---------------------------------------------------------------
@@ -243,6 +257,8 @@ package body Ada_Lib.Trace.Tests is
                ( 0, new String'("message:'" & Message & "'"), 0, 0),
                ( 0, new String'("caught at ada_lib-trace-tests.adb:*"), 0, 0),
                ( 0, new String'("------------------------------------"), 0, 0));
+      Start_Time                 : constant Ada_Lib.Time.Time_Type :=
+                                    Ada_Lib.Time.Now;
 
    begin
       T (Debug, "In Debug_Test " & Debug_Test'img & " Debug_Tests " & Debug_Tests'img);
@@ -258,7 +274,8 @@ package body Ada_Lib.Trace.Tests is
 
       end;
       End_Test (Local_Test);
-      Check_Output (Local_Test.Output.List, True, Expected_Output);
+      Check_Output (Local_Test.Output.List, True, Expected_Output,
+         From_Start (Start_Time));
       T (Debug, "Out");
 
    exception
@@ -503,6 +520,9 @@ package body Ada_Lib.Trace.Tests is
 
    begin
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      if Debug_Tests then
+         delay (2.5);
+      end if;
    end Set_Up;
 
    ---------------------------------------------------------------
@@ -522,10 +542,9 @@ package body Ada_Lib.Trace.Tests is
                                     ( 1, new String'("log out 7"), 2, 21),
                                     ( 0, new String'("log here 8"), 2, 21));
       Pause_Time                 : constant := 2.2;
-
+      Start_Time                 : constant Ada_Lib.Time.Time_Type :=
+                                    Ada_Lib.Time.Now;
    begin
-
-
       Log_In (Debug_Tests, "In");
       Start_Test (Local_Test);
       Log_Here ("expected " & Tag_Output (Expected_Output (1).Line.all));
@@ -538,7 +557,8 @@ package body Ada_Lib.Trace.Tests is
       Log_Out (True, "expected " & Tag_Output (Expected_Output (7).Line.all));
       Log_Here ("expected " & Tag_Output (Expected_Output (8).Line.all));
       End_Test (Local_Test);
-      Check_Output (Local_Test.Output.List, False, Expected_Output);
+      Check_Output (Local_Test.Output.List, False, Expected_Output,
+         From_Start (Start_Time));
       Log_Out (Debug_Tests, "Out");
 
    exception

@@ -5,9 +5,13 @@ with AUnit.Test_Cases;
 
 package body Ada_Lib.Timer.Tests is
 
+   use type Ada_Lib.Strings.String_Access;
    use type Ada_Lib.Time.Time_Type;
 
    procedure Single_Event (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Wait_For_Event (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    Criteria                      : constant Duration := 0.2;
@@ -16,7 +20,6 @@ package body Ada_Lib.Timer.Tests is
    ---------------------------------------------------------------------------
    function Allocate_Event (
       Offset                     : in     Duration;
-      Dynamic                    : in     Boolean;
       Description                : in     String := ""
    ) return Test_Timer_Access is
    ---------------------------------------------------------------------------
@@ -25,11 +28,10 @@ package body Ada_Lib.Timer.Tests is
                                      new Test_Timer_Type;
    begin
       Log_Here (Debug, Quote ("description", Description) &
-         " dynamic " & Dynamic'img &
          " offset " & Offset'img);
       Result.Initialize (
             Description    => Description,
-            Dynamic        => Dynamic,
+            Dynamic        => True,
             Wait           => Offset);
       return Result;
    end Allocate_Event;
@@ -71,146 +73,161 @@ package body Ada_Lib.Timer.Tests is
             Event_3                    : aliased Test_Timer_Type;
 
          begin
-            Log_Here (Debug);
+            Log_Here (Debug, "Dynamic_Index" & Dynamic_Index'img);
             declare
-               Events                  : Event_Pointers_Type (1 .. Number_Events);
-            begin
-               for Index in Events'range loop   -- create events
-                  declare
-                     Event             : Test_Timer_Access renames Events (Index);
+               Active_Events        : Event_Pointers_Type (1 .. Number_Events);
 
-                  begin
-                     Event := (if Index = Dynamic_Index then
-                           Allocate_Event (
+            begin
+            for Index in Active_Events'range loop   -- create events
+               declare
+                     Event          : Test_Timer_Access renames
+                                       Active_Events (Index);
+               begin
+                  Log_Here (Debug, "index" & Index'img);
+
+                  if Index = Dynamic_Index then
+                     Event := Allocate_Event (
                               Description    => "dynamic event",
-                              Dynamic        => True,
-                              Offset         => Event_Times (Dynamic_Index))
-                        else (case Index is
-                              when 1 =>
-                                 Event_1'unchecked_access,
-                              when 2 =>
-                                 Event_2'unchecked_access,
-                              when 3 =>
-                                 Event_3'unchecked_access));
+                              Offset         => Event_Times (Dynamic_Index));
+                  else
+                     Event := (case Index is
+
+                        when 1 =>
+                           Event_1'unchecked_access,
+                        when 2 =>
+                           Event_2'unchecked_access,
+                        when 3 =>
+                           Event_3'unchecked_access);
 
                      Event.Initialize (
-                        Description    => "static" & Index'img,
-                        Wait           => Event_Times (Index));
-                     Log_Here (Debug, "index" & Index'img &
-                        Quote (" description", Event.Description));
+                           Description    => "static" & Index'img,
+                           Wait           => Event_Times (Index));
+                  end if;
 
-                  end;
-               end loop;
-               declare
-                  All_Occured    : Boolean := False;
-                  Cancel_Event   : Test_Timer_Type renames Events (Cancel_Event_Index).all;
-                  Canceled       : Boolean := False;
-                  Schedule_Time  : constant Ada_Lib.Time.Time_Type :=
+                  Log_Here (Debug, "index" & Index'img &
+                     " wait " & Event.Wait'img &
+                     Quote (" description", Event.Description));
+
+               end;
+            end loop;
+            declare
+               All_Occured       : Boolean := False;
+                  Cancel_Event   : Test_Timer_Type renames
+                                    Active_Events (Cancel_Event_Index).all;
+               Canceled          : Boolean := False;
+               Schedule_Time     : constant Ada_Lib.Time.Time_Type :=
                                     Ada_Lib.Time.Now;
-               begin
-                  delay 0.75; -- after 1st event and before end of cancel event;
-                  Log_Here (Debug, "cancel Index" & Cancel_Event_Index'img);
-                  Canceled := Cancel_Event.Cancel; -- cancel middle event
-                  Log_Here (Debug, " canceled " & Canceled'img);
+            begin
+               delay 0.75; -- after 1st event and before end of cancel event;
+               Log_Here (Debug, "cancel Index" & Cancel_Event_Index'img);
+               Canceled := Cancel_Event.Cancel; -- cancel middle event
+               Log_Here (Debug, " canceled " & Canceled'img);
 
-                  Assert (Canceled, "event" & Cancel_Event_Index'img & " not canceled");
+               Assert (Canceled, "event" & Cancel_Event_Index'img & " not canceled");
 
-                  for Index in Events'range loop
+               for Index in Active_Events'range loop
+                  Log_Here (Debug, "index" & Index'img &
+                     " dynamic" & Dynamic_Index'img);
+                  if    Index /= Dynamic_Index and then  -- cancled dynamic was freed
+                        Index /= Cancel_Event_Index then
+                     declare
+                        Event          : Test_Timer_Type renames
+                                          Active_Events (Index).all;
+                        Active         : constant Boolean := Event.Active;
+                        Expected       : constant Boolean := Expect_Active (Index);
+
+                     begin
+                        Log_Here (Debug, "index" & Index'img &
+                           Quote ( " description", Event.Description) &
+                           " event active " & Active'img &
+                           " expected " & Expected'img);
+                        Assert (Active = Expected,
+                           Quote ("description", Event.Description) &
+                           " index" & Index'img & " expected to be " &
+                           (if Expected then
+                              "active but was not."
+                           else
+                              "in active but was active."));
+                     end;
+                  end if;
+               end loop;
+
+               Log_Here (Debug);
+               loop     -- wait for all events to occure
+                  All_Occured := True;
+                  for Index in 1 .. Number_Events loop
                      Log_Here (Debug, "index" & Index'img &
                         " dynamic" & Dynamic_Index'img);
-                     if    Index /= Dynamic_Index and then  -- cancled dynamic was freed
-                           Index /= Cancel_Event_Index then
-                        declare
-                           Event          : Test_Timer_Type renames Events (Index).all;
-                           Active         : constant Boolean := Event.Active;
-                           Expected       : constant Boolean := Expect_Active (Index);
+                     declare
+                        Event    : Test_Timer_Type renames
+                                    Active_Events (Index).all;
+                        Fault    : constant Ada_Lib.Strings.String_Access :=
+                                    Event.Get_Exception;
+                     begin
+                        if Fault /= Null then
+                           Assert (False, "exception " &
+                              Fault.all & " in timer task");
 
-                        begin
-                           Log_Here (Debug, "index" & Index'img &
-                              Quote ( " description", Event.Description) &
-                              " event active " & Active'img &
-                              " expected " & Expected'img);
-                           Assert (Active = Expected,
-                              Quote ("description", Event.Description) &
-                              " index" & Index'img & " expected to be " &
-                              (if Expected then
-                                 "active but was not."
-                              else
-                                 "in active but was active."));
-                        end;
-                     end if;
-                  end loop;
-
-                  Log_Here (Debug);
-                  loop     -- wait for all events to occure
-                     All_Occured := True;
-                     for Index in 1 .. Number_Events loop
-                        Log_Here (Debug, "index" & Index'img &
-                           " dynamic" & Dynamic_Index'img);
-                        if    Index /= Dynamic_Index then
-                           declare
-                              Event          : Test_Timer_Type renames Events (Index).all;
-
-                           begin
-                              if Index /= Cancel_Event_Index and then
-                                    not Event.Occurred then
-                                 All_Occured := False;
-                                 Log_Here (Debug, "not occured yet");
-                              end if;
-                           end;
                         end if;
-                     end loop;
-
-                     if All_Occured then
-                        Log_Here (Debug, "all Occurred");
-                        exit;
-                     end if;
-
-                     delay 0.1;
+                        if Index /= Cancel_Event_Index and then
+                              not Event.Occurred then
+                           All_Occured := False;
+                           Log_Here (Debug, "not occured yet");
+                        end if;
+                     end;
                   end loop;
-                                             -- all events completed or canceled
-                  Log_Here (Debug);
-                  for Index in 1 .. Number_Events loop
-                     if    Index /= Dynamic_Index then
-                        declare
-                           Event          : Test_Timer_Type renames Events (Index).all;
-                           Expected       : constant Ada_Lib.Time.Time_Type :=
-                                             Schedule_Time + Event_Times (Index);
-                           Offset         : constant Duration := (if Event.Occurred then
-                                                abs (Expected - Event.Occured_At)
-                                             else
-                                                0.0);
-                        begin
-                           Log_Here (Debug, "index" & Index'img &
-                              " expected " & From_Start (Expected, True) &
-                              (if Event.Occurred then
-                                    " occured at " & From_Start (Event.Occured_At, True) &
-                                    " offset " & Offset'img
-                                 else
-                                    " not occured") &
-                              " Schedule time " & From_Start (Schedule_Time, True) &
-                              " event time " & Event_Times (Index)'img);
 
-                           Assert (Offset < Criteria,
-                              "event" & Index'img & " Occurred at wrong time. Offset " &
-                                 Offset'img);
-                        end;
-                     end if;
-                  end loop;
-                  Log_Here (Debug);
+                  if All_Occured then
+                     Log_Here (Debug, "all Occurred");
+                     exit;
+                  end if;
 
-               exception
-                  when Fault: AUNIT.ASSERTIONS.ASSERTION_ERROR =>
-                     Trace_Message_Exception (Fault, "assert Occurred");
-                     return;
-               end;
+                  delay 0.1;
+               end loop;
+                                          -- all events completed or canceled
+               Log_Here (Debug);
+               for Index in 1 .. Number_Events loop
+                  if    Index /= Dynamic_Index then
+                     declare
+                        Event       : Test_Timer_Type renames
+                                       Active_Events (Index).all;
+                        Expected    : constant Ada_Lib.Time.Time_Type :=
+                                       Schedule_Time + Event_Times (Index);
+                        Offset      : constant Duration := (if Event.Occurred then
+                                          abs (Expected - Event.Occured_At)
+                                       else
+                                          0.0);
+                     begin
+                        Log_Here (Debug, "index" & Index'img &
+                           " expected " & From_Start (Expected, True) &
+                           (if Event.Occurred then
+                                 " occured at " & From_Start (Event.Occured_At, True) &
+                                 " offset " & Offset'img
+                              else
+                                 " not occured") &
+                           " Schedule time " & From_Start (Schedule_Time, True) &
+                           " event time " & Event_Times (Index)'img);
+
+                        Assert (Offset < Criteria,
+                           "event" & Index'img & " Occurred at wrong time. Offset " &
+                              Offset'img);
+                     end;
+                  end if;
+               end loop;
+               Log_Here (Debug);
 
             exception
-               when Fault: others =>
-                  Trace_Message_Exception (Fault, "error in library");
-                  Assert (False, "library failed");
-
+               when Fault: AUNIT.ASSERTIONS.ASSERTION_ERROR =>
+                  Trace_Message_Exception (Fault, "assert Occurred");
+                  return;
             end;
+
+         exception
+            when Fault: others =>
+               Trace_Message_Exception (Fault, "error in library");
+               Assert (False, "library failed");
+
+         end;
          end;
       end loop;
       Log_Out (Debug);
@@ -294,7 +311,6 @@ package body Ada_Lib.Timer.Tests is
                   when Dynamic_Index =>
                      Event := Allocate_Event (
                         Description    => "dynamic",
-                        Dynamic        => True,
                         Offset         => Event_Times (Dynamic_Index));
 
                   when 3 =>
@@ -328,6 +344,15 @@ package body Ada_Lib.Timer.Tests is
             Log_Here (Debug);
 
             for Index in 1 .. Number_Events loop
+log_here (index'img);
+if Events (Index) = Null then
+   raise failed with "at " & here;
+end if;
+log_here;
+log_here ("time " & Event_Times (Index)'img);
+log_here;
+log_here (" Schedule time " & From_Start (Schedule_Time, True));
+log_here;
                declare
                   Event          : Test_Timer_Type renames Events (Index).all;
                   Expected       : constant Ada_Lib.Time.Time_Type :=
@@ -345,6 +370,7 @@ package body Ada_Lib.Timer.Tests is
                   Assert (Offset < Criteria,
                      "event" & Index'img & " Occurred at wrong time. Offset " &
                         Offset'img);
+log_here;
                end;
             end loop;
             Log_Here (Debug);
@@ -407,6 +433,10 @@ package body Ada_Lib.Timer.Tests is
          Routine        => Multiple_Events'access,
          Routine_Name   => AUnit.Format ("Multiple_Events")));
 
+      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+         Routine        => Wait_For_Event'access,
+         Routine_Name   => AUnit.Format ("Wait_For_Event")));
+
       Log_Out (Debug);
    end Register_Tests;
 
@@ -430,7 +460,6 @@ package body Ada_Lib.Timer.Tests is
             Event                   : constant Test_Timer_Access := (if Dynamic then
                                           Allocate_EVent (
                                              Description    => "dynamic",
-                                             Dynamic        => Dynamic,
                                              Offset         => Wait_Time)
                                        else
                                           Static_Event'unchecked_access);
@@ -484,6 +513,73 @@ package body Ada_Lib.Timer.Tests is
       Test_Suite.Add_Test (AUnit.Simple_Test_Cases.Test_Case_Access (Tests));
       return Test_Suite;
    end Suite;
+
+   ---------------------------------------------------------------
+   procedure Wait_For_Event (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
+   ---------------------------------------------------------------
+
+      Wait_Canceled              : Boolean := False;
+      Wait_Event                 : Test_Timer_Type;
+
+      procedure Timed_Out;
+
+      package Timeout is new Timeout_Package (Timed_Out);
+
+      Timeout_Event              : Timeout.Timeout_Timer_Type;
+
+      ---------------------------------------------------------------
+      procedure Timed_Out is
+      ---------------------------------------------------------------
+
+      begin
+         Log_Here (Debug);
+         Wait_Canceled := True;
+         Assert (Wait_Event.Cancel, "could not cancel wait event");
+      end Timed_Out;
+      ---------------------------------------------------------------
+
+   begin
+      Log_In (Debug);
+      Timeout_Event.Initialize (
+         Description    => "timeout event",
+         Wait           => 0.5);
+      Wait_Event.Initialize (
+         Description    => "wait event",
+         Wait           => 0.2);
+
+      Wait_Event.Wait_For_Event;
+      Log_Here (Debug);
+      Assert (Timeout_Event.Cancel, "could not cancel timeout event");
+      Assert (not Wait_Canceled, "wait event got canceled");
+
+      Log_Out (Debug);
+
+   exception
+
+      when Fault: others =>
+         Trace_Message_Exception (Fault, "error in library");
+         Assert (False, "library failed");
+
+   end Wait_For_Event;
+
+   ---------------------------------------------------------------
+   package body Timeout_Package is
+
+      ---------------------------------------------------------------
+      overriding
+      procedure Callback (
+         Event             : in out Timeout_Timer_Type) is
+      pragma Unreferenced (Event);
+      ---------------------------------------------------------------
+
+      begin
+         Timed_Out;
+      end Callback;
+
+   end Timeout_Package;
+   ---------------------------------------------------------------
 
 begin
 --Debug := True;

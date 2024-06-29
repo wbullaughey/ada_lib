@@ -361,8 +361,27 @@ package body Ada_Lib.Trace is
    end Format_Output;
 
    --------------------------------------------------------------------
+   function From_Start
+   return Duration is
+   --------------------------------------------------------------------
+
+   begin
+      return From_Start (Ada.Calendar.Clock);
+   end From_Start;
+
+   --------------------------------------------------------------------
    function From_Start (
-      Hundreds            : in   Boolean := False;
+      Time                 : in   Ada.Calendar.Time
+   ) return Duration is
+   --------------------------------------------------------------------
+
+   begin
+      return Time - Start_Time;
+   end From_Start;
+
+   --------------------------------------------------------------------
+   function From_Start (
+      Hundreds             : in   Boolean := False;
       Show_Days            : in   Boolean := False
    ) return String is
    --------------------------------------------------------------------
@@ -378,9 +397,6 @@ package body Ada_Lib.Trace is
       Show_Days            : in   Boolean := False
    ) return String is
    --------------------------------------------------------------------
-
-   Start_Time                 : constant Ada.Calendar.Time :=
-                                 Get_Start_Time;
 
    begin
       if Time = No_Time then

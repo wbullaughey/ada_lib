@@ -52,6 +52,6 @@ package Ada_Lib.GNOGA.Unit_Test.Events is
    procedure Tear_Down (Test : in out Event_Test_Type);
 
    Debug                         : Boolean := False;
-   Suite_Name                    : constant String := "AUnit_Events";
+   Suite_Name                    : constant String := "GNOGA_Events";
 
 end Ada_Lib.GNOGA.Unit_Test.Events;

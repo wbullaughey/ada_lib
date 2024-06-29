@@ -21,11 +21,13 @@ package Ada_Lib.Event is
 
    procedure Set_Event (
       Object                     : in out Event_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location);
+      From                       : in     String :=
+                                             GNAT.Source_Info.Source_Location);
 
    procedure Wait_For_Event (
       Object                     : in out Event_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location);
+      From                       : in     String :=
+                                             GNAT.Source_Info.Source_Location);
 
    Debug                         : aliased Boolean := False;
 

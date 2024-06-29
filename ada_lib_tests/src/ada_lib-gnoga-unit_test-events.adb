@@ -379,17 +379,21 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    begin
       Log_In (Debug, "manual " & Options.Manual'img);
-      Local_Test.Connection_Data.Main_Window.On_Click_Handler (Click_Handler'access);
-      Local_Test.Connection_Data.Main_Window.On_Mouse_Move_Handler (Mouse_Move_Handler'access);
+      Local_Test.Connection_Data.Main_Window.On_Click_Handler (
+         Click_Handler'access);
+      Local_Test.Connection_Data.Main_Window.On_Mouse_Move_Handler (
+         Mouse_Move_Handler'access);
       if Options.Manual then
-         Pause ("Press enter on keyboard and then move the mouse over the window " &
-            "and then click the mouse");
+         Pause ("Press enter on keyboard and then move the mouse over " &
+            "the window and then click the mouse");
          while not Data.Got_Click loop
             delay 0.1;
          end loop;
       else
-         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (Auto_Mouse_Event_1);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (Auto_Mouse_Event_2);
+         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (
+            Auto_Mouse_Event_1);
+         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (
+            Auto_Mouse_Event_2);
          Local_Test.Connection_Data.Main_Window.Fire_On_Click;
          Assert (Connection_Data.Delta_X = Auto_Mouse_Event_2.X and then
             Connection_Data.Delta_Y = Auto_Mouse_Event_2.Y,
@@ -417,17 +421,23 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
          Data                    : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (
                                        Object.Connection_Data);
-         Delta_X                 : constant Integer := Mouse_Event.X - Data.Last_X;
-         Delta_Y                 : constant Integer := Mouse_Event.Y - Data.Last_Y;
-
       begin
          Data.Mouse_Move_Count := Data.Mouse_Move_Count + 1;
-         Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
-         Put_Line ("mouse moved delta X" & Delta_X'img & " Y" & Delta_Y'img);
+         if Data.Mouse_Move_Count > 1 then   -- last has been initialized
+            declare
+               Delta_X           : constant Integer := Mouse_Event.X - Data.Last_X;
+               Delta_Y           : constant Integer := Mouse_Event.Y - Data.Last_Y;
+
+            begin
+               Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+               Data.Delta_X := Data.Delta_X + Delta_X;
+               Data.Delta_Y := Data.Delta_Y + Delta_Y;
+               Put_Line ("move" & Data.Mouse_Move_Count'img &
+                  " mouse moved delta X" & Delta_X'img & " Y" & Delta_Y'img);
+            end;
+         end if;
          Data.Last_X := Mouse_Event.X;
          Data.Last_Y := Mouse_Event.Y;
-         Data.Delta_X := Data.Delta_X + Delta_X;
-         Data.Delta_Y := Data.Delta_Y + Delta_Y;
       end;
       Log_Out (Debug);
    end Mouse_Move_Handler;
