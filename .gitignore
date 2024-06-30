@@ -1,4 +1,4 @@
-/obj/
+obj/
 /lib/
 /alire/
 /config/
@@ -9,4 +9,5 @@
 save/
 new_configuration.cfg
 *.txt
+*.cswi
 message
