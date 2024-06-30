@@ -1,11 +1,10 @@
 obj/
-/lib/
-/alire/
-/config/
-/obj/
-/lib/
-/alire/
-/config/
+lib/
+alire/
+config/
+lib/
+alire/
+config/
 save/
 new_configuration.cfg
 *.txt
