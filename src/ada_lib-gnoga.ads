@@ -20,19 +20,25 @@ package Ada_Lib.GNOGA is
       Connection_Data         : in out Connection_Data_Type;
       Main_Window             : in     Standard.Gnoga.Gui.Window.
                                           Pointer_To_Window_Class);
-   procedure Clear_Connection_Data
-   with Pre => Has_Connection_Data;
+   procedure Clear_Connection_Data(
+      From                    : in     String := GNAT.Source_Info.Source_Location
+   ) with Pre => Has_Connection_Data;
 
-   function Get_Connection_Data return Connection_Data_Class_Access
-   with Pre => Has_Connection_Data;
+   function Get_Connection_Data (
+      From                    : in     String := GNAT.Source_Info.Source_Location
+   ) return Connection_Data_Class_Access
+   with Pre => Ada_Lib.GNOGA.Has_Connection_Data;
 
-   function Has_Connection_Data return Boolean;
+   function Has_Connection_Data (
+      From                    : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean;
 
    procedure Set_Connection_Data (
       Connection_Data            : in     Connection_Data_Class_Access;
       From                       : in     String := GNAT.Source_Info.Source_Location
    ) with Pre => Connection_Data /= Null and then
-                 not Has_Connection_Data;
+                 not Ada_Lib.GNOGA.Has_Connection_Data,
+          Post => Ada_Lib.GNOGA.Has_Connection_Data;
 
    Debug                         : Boolean := False;
 

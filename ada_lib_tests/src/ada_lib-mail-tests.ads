@@ -35,8 +35,8 @@ package Ada_Lib.Mail.Tests is
    overriding
    procedure Set_Up (
       Test                       : in out CURL_Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    type SMTP_Test_Type           is new Test_Type with record
       Credential                 : Ada_Lib.Mail.SMTP.SMTP_Credentials_Type;
@@ -57,8 +57,8 @@ package Ada_Lib.Mail.Tests is
    overriding
    procedure Set_Up (
       Test                       : in out SMTP_Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
 

@@ -327,6 +327,7 @@ package Ada_Lib.Trace is
    Pause_Flag                    : Boolean := False;
    Test_Condition                : Boolean := False;
    Trace_Levels                  : Boolean := False;
+   Trace_Set_Up                  : Boolean := False;
    Trace_Tests                   : Boolean := False;
    Trace_Options                 : Boolean := False;
 

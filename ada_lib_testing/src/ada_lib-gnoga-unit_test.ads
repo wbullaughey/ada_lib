@@ -6,15 +6,18 @@ package Ada_Lib.GNOGA.Unit_Test is
 
    Failed                        : exception;
 
+   -- type to be used by all specific tests that use GNOGA
    type GNOGA_Tests_Type (
       Initialize_GNOGA           : Boolean;
       Test_Driver                : Boolean) is abstract new Ada_Lib.Unit_Test.
-                                    Tests.Test_Case_Type with record
-      Connection_Data            : Ada_Lib.GNOGA.Connection_Data_Class_Access := Null;
-   end record;
+                                    Tests.Test_Case_Type with null record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out GNOGA_Tests_Type);
 
    overriding
    procedure Tear_Down (Test : in out GNOGA_Tests_Type);
@@ -24,13 +27,6 @@ package Ada_Lib.GNOGA.Unit_Test is
       Test                       : in     GNOGA_Tests_Type
    )  return Boolean;
 
-   overriding
-   procedure Set_Up (
-      Test                       : in out GNOGA_Tests_Type
-   ) with Post => Test.Verify_Postsetup;
-
    Debug                         : aliased Boolean := False;
--- Debug_Options                 : aliased Boolean := False;
--- GNOGA_Options                 : GNOGA_Options_Constant_Class_Access := Null;
 
 end Ada_Lib.GNOGA.Unit_Test;

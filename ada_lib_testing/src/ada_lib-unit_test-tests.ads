@@ -18,11 +18,11 @@ package Ada_Lib.Unit_Test.Tests is
    procedure Tear_Down (
       Test                       : in out Test_Case_Type);
 
-   function Verify_Presetup (
+   function Verify_Pre_Setup (
       Test                       : in     Test_Case_Type
    ) return Boolean;
 
-   function Verify_Postsetup (
+   function Verify_Post_Setup (
       Test                       : in     Test_Case_Type
    ) return Boolean;
 

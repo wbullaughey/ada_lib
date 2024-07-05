@@ -313,6 +313,7 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      l               Ada_Lib.Unit_Test.Debug Library");
          Put_Line ("      p               test programs");
          Put_Line ("      r               Runtime_Options");
+         Put_Line ("      s               All Set_Up procedures");
          Put_Line ("      t               Ada_Lib.Test.Debug");
          Put_Line ("      T               Ada_Lib.Trace.Debug_Trace");
          New_Line;
@@ -423,6 +424,9 @@ package body Ada_Lib.Options.Unit_Test is
 
            when 'p' =>
               Options.Debug := True;
+
+            when 's' =>
+               Ada_Lib.Trace.Trace_Set_Up := True;
 
             when 't' =>
                Ada_Lib.Test.Debug := True;

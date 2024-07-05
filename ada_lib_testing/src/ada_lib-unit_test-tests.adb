@@ -14,12 +14,12 @@ package body Ada_Lib.Unit_Test.Tests is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Test.Options := Ada_Lib.Options.
          Program_Options_Constant_Class_Access (
             Ada_Lib.Options.Get_Modifiable_Options);
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ----------------------------------------------------------------------------
@@ -29,14 +29,14 @@ package body Ada_Lib.Unit_Test.Tests is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Test.Options := Null;
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------
-   function Verify_Presetup (
+   function Verify_Pre_Setup (
       Test                       : in     Test_Case_Type
    ) return Boolean is
    ---------------------------------------------------------------
@@ -50,10 +50,10 @@ package body Ada_Lib.Unit_Test.Tests is
          return True;
       end if;
 
-   end Verify_Presetup;
+   end Verify_Pre_Setup;
 
    ---------------------------------------------------------------
-   function Verify_Postsetup (
+   function Verify_Post_Setup (
       Test                       : in     Test_Case_Type
    ) return Boolean is
    ---------------------------------------------------------------
@@ -62,7 +62,7 @@ package body Ada_Lib.Unit_Test.Tests is
       Log_In (Debug);
       return Log_Out (Ada_Lib.Options_Interface.Read_Only_Options /= Null,
          Debug, "Test.Options is null");
-   end Verify_Postsetup;
+   end Verify_Post_Setup;
 
 begin
    if Trace_Tests then

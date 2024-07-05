@@ -66,17 +66,16 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Keyboard_Press (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options                 : Ada_Lib.Options.Unit_Test.
                                  Unit_Test_Options_Type'class renames
                                     Ada_Lib.Options.Unit_Test.
                                        Unit_Test_Options_Constant.all;
-      Local_Test              : Window_Event_Test_Type renames
-                                 Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Local_Test.Connection_Data).all;
+                                    Ada_Lib.GNOGA.Get_Connection_Data).all;
       Press_Event             : constant Standard.Gnoga.Gui.Base.
                                  Keyboard_Event_Record := (
                                     Message     => Standard.Gnoga.
@@ -202,16 +201,16 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Drag (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options                 : Ada_Lib.Options.Unit_Test.
                                  Unit_Test_Options_Type'class renames
                                     Ada_Lib.Options.Unit_Test.
                                        Unit_Test_Options_Constant.all;
-      Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Local_Test.Connection_Data).all;
+                                    Ada_Lib.GNOGA.Get_Connection_Data).all;
    begin
       Log_In (Debug);
       Pause_On_Flag ("start of test");
@@ -384,16 +383,16 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Move (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options                 : Ada_Lib.Options.Unit_Test.
                                  Unit_Test_Options_Type'class renames
                                     Ada_Lib.Options.Unit_Test.
                                        Unit_Test_Options_Constant.all;
-      Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Local_Test.Connection_Data).all;
+                                    Ada_Lib.GNOGA.Get_Connection_Data).all;
       Move_Event              : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
                                  Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
                                  X             => 0,
@@ -586,14 +585,14 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 --                                        Aunit_Options_Constant_Class_Access (
 --                                           Ada_Lib.Options.Program_Options).all;
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Ada_Lib.GNOGA.Set_Connection_Data (new Window_Connection_Data_Type);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
       declare
-         Connection_Data         : Window_Connection_Data_Type renames
-                                    Window_Connection_Data_Type (
-                                       Test.Connection_Data.all);
+         Connection_Data   : constant Window_Connection_Data_Access :=
+                           Window_Connection_Data_Access (
+                              Ada_Lib.GNOGA.Get_Connection_Data);
       begin
          Connection_Data.Top_View.Create (
             Connection_Data.Main_Window.all, "Top_View_ID");
@@ -607,7 +606,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
          Connection_Data.Top_View.Left (20);
          Connection_Data.Top_View.Width (Top_View_Width);
       end;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
 

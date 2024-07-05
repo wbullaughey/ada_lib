@@ -4,7 +4,8 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 package body Ada_Lib.GNOGA is
 
    ---------------------------------------------------------------
-   procedure Clear_Connection_Data is
+   procedure Clear_Connection_Data (
+      From                    : in     String := GNAT.Source_Info.Source_Location) is
    ---------------------------------------------------------------
 
    begin
@@ -13,29 +14,33 @@ package body Ada_Lib.GNOGA is
    end Clear_Connection_Data;
 
    ---------------------------------------------------------------
-   function Get_Connection_Data return Connection_Data_Class_Access is
+   function Get_Connection_Data (
+      From                    : in     String := GNAT.Source_Info.Source_Location
+   ) return Connection_Data_Class_Access is
    ---------------------------------------------------------------
 
    begin
       Log_Here (Debug, "Connection_Data " &
-         Tag_Name (Program_Connection_Data.all'tag) &
-         Image (Program_Connection_Data.all'address));
+         Tag_Name (Program_Connection_Data.all'tag) & " " &
+         Image (Program_Connection_Data.all'address) &
+         " from " & From);
       return Program_Connection_Data;
    end Get_Connection_Data;
 
    ---------------------------------------------------------------
-   function Has_Connection_Data return Boolean is
+   function Has_Connection_Data (
+      From                    : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean is
    ---------------------------------------------------------------
 
       Result                     : constant Boolean :=
                                     Program_Connection_Data /= Null;
    begin
-      Log_Here (Debug, "result " & Result'img & " " & (if Result then
+      return Log_Here (Result, Debug, "result " & Result'img & " " & (if Result then
             Tag_Name (Program_Connection_Data.all'tag)
          else
-            "")
-         );
-      return Result;
+            "") &
+         " from " & From);
    end Has_Connection_Data;
 
    ---------------------------------------------------------------

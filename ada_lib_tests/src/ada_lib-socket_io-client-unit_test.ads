@@ -19,8 +19,8 @@ package Ada_Lib.Socket_IO.Client.Unit_Test is
    overriding
    procedure Set_Up (
       Test                       : in out Socket_Client_Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    function Suite return Standard.AUnit.Test_Suites.Access_Test_Suite;
 

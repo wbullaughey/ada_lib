@@ -196,9 +196,9 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_In (Debug);
+         Log_In (Debug or Trace_Set_Up);
          Test.Set_Up := True;
-         Log_Out (Debug);
+         Log_Out (Debug or Trace_Set_Up);
       end Set_Up;
 
       ----------------------------------------------------------------------------

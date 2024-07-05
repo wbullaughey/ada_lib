@@ -59,8 +59,8 @@ package Ada_Lib.GNOGA.Unit_Test.Window_Events is
    overriding
    procedure Set_Up (
       Test                       : in out Window_Event_Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    function Suite return Standard.AUnit.Test_Suites.Access_Test_Suite;
 

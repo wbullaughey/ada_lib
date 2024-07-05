@@ -46,8 +46,8 @@ package Ada_Lib.Unit_Test.Fixtures is
    overriding
    procedure Set_Up (
       Test                       : in out Base_Test_Fixtures_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    procedure Set_Up_Exception (
       Test                       : in out Base_Test_Fixtures_Type;

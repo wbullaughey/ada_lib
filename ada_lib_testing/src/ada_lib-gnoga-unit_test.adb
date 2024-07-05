@@ -35,12 +35,11 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Options                 : Ada_Lib.Options.GNOGA.GNOGA_Options_Type'class
                                  renames Ada_Lib.Options.GNOGA.GNOGA_Options.all;
    begin
-      Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
+      Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Test.Connection_Data := Ada_Lib.GNOGA.Get_Connection_Data;
       if not Test.Test_Driver then
-         Log_Here (Debug, -- "URL_Opened " & URL_Opened'img &
+         Log_Here (Debug or Trace_Set_Up, -- "URL_Opened " & URL_Opened'img &
             " Initialize_GNOGA " & Test.Initialize_GNOGA'img);
          if Test.Initialize_GNOGA then
             Log_Here (Debug);
@@ -51,10 +50,10 @@ package body Ada_Lib.GNOGA.Unit_Test is
                Port                 => Options.HTTP_Port,
                Verbose              => True, -- Ada_Lib.Options.GNOGA.Verbose);
                Wait_For_Completion  => False);
-            Log_Here (Debug);
+            Log_Here (Debug or Trace_Set_Up);
          end if;
       end if;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ---------------------------------------------------------------
@@ -64,7 +63,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
+      Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
       if Test.Initialize_GNOGA then
          Standard.Gnoga.Application.Multi_Connect.End_Application;
@@ -78,7 +77,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Ada_Lib.GNOGA.Base.Set_Main_Created (False);
 --    Ada_Lib.GNOGA.Base.Message_Loop_Signal.Wait;
                                  -- it does not end until end of program
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
       when Fault: others =>
@@ -115,11 +114,13 @@ package body Ada_Lib.GNOGA.Unit_Test is
    )  return Boolean is
    ---------------------------------------------------------------
 
+      Has_Connection_Data        : constant Boolean :=
+                                    Ada_Lib.GNOGA.Has_Connection_Data;
    begin
-      return Log_Here (Test.Connection_Data /= Null and then
+      return Log_Here (Has_Connection_Data and then
              Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up,
          Debug, (
-            if Test.Connection_Data = Null then
+            if not Has_Connection_Data then
                " Test.Connection_Data is Null"
             else
                ""

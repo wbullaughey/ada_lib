@@ -88,8 +88,8 @@ package Ada_Lib.Database.Unit_Test is
    overriding
    procedure Set_Up (
       Test                       : in out Test_Case_Type)
-   with Pre => Test.Verify_Presetup,
-        Post => Test.Verify_Postsetup;
+   with Pre => Test.Verify_Pre_Setup,
+        Post => Test.Verify_Post_Setup;
 
    procedure Check_Database_Value (
       Test                       : in out Test_Case_Type;
