@@ -4,16 +4,15 @@ with Ada.Real_Time;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Options.AUnit_Lib;
---with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Server;
---with Ada_Lib.Socket_IO.Stream_IO;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
 with GNAT.Source_Info;
 with Hex_IO;
---with Runtime_Options;
 with SYSTEM.ASSERTIONS;
 
 package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
@@ -21,6 +20,74 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    use type Ada.Streams.Stream_Element_Array;
    use type Ada.Streams.Stream_Element_Offset;
    use type Port_Type;
+
+   Buffer_Length                 : constant := 5000;
+   Default_Port                  : constant := 12345;
+
+   type Answer_Type              is (Bad_Ack, Bad_DAta, Success, Timeout_Answer,
+                                    Unexpected, Wrong_Length);
+
+   subtype Data_Buffer_Type      is Ada_Lib.Socket_IO.Buffer_Type (1 ..
+                                    Buffer_Length);
+
+   type Read_Write_Mode_Type        is (
+      Matching_Record_Length);       -- client and server use same record lengths
+--    Unmatched_Record_Length,      -- server fixed length reads, client random
+--                                  -- server has short read timeout and polls
+--    Read_Timeout,                 -- client sends short write, server times out
+--    Write_Timeout,               -- server reads slower then client writes
+--    Connect_Timeout);             -- server doesn't to accept
+
+   type Sockets_Type             is array (1 .. 10) of Socket_Class_Access;
+
+   type Socket_Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
+      Answer                     : Answer_Type := Success;
+      Client_Completed           : Boolean := False;
+      Client_Delay_Write_Time    : Duration := No_Timeout;
+      Client_Delayed             : Boolean := False;
+      Client_Failed              : Boolean := False;
+      Client_Read_Timeout_Time   : Duration := No_Timeout;
+      Client_Started             : Boolean := False;
+      Client_Write_Timeout_Time  : Duration := No_Timeout;
+--    Do_Acknowledgement         : Boolean := False;
+      Read_Write_Mode            : Read_Write_Mode_Type := Matching_Record_Length;
+      Received_Data              : Data_Buffer_Type;
+      Send_Data                  : Data_Buffer_Type;
+      Server_Completed           : Boolean := False;
+      Server_Failed              : Boolean := False;
+      Server_Port                : Ada_Lib.Socket_IO.Port_Type := Default_Port;
+      Server_Read_Timeout_Time   : Duration := No_Timeout;
+      Server_Started             : Boolean := False;
+      Server_Timedout            : Boolean := False;
+      Server_Write_Timeout_Time  : Duration := No_Timeout;
+      Sockets                    : Sockets_Type := (others => Null);
+      Socket_Count               : Natural := 0;
+   end record;
+
+   type Socket_Test_Access is access all Socket_Test_Type;
+
+   overriding
+   function Name (
+      Test                       : Socket_Test_Type
+   ) return Standard.AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Socket_Test_Type);
+
+   procedure Server_Failure (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Socket_Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (Test : in out Socket_Test_Type);
+
+-- type Data_Access              is access all Buffer_Type;
 
    Raise_Assert                     : Exception;
 
@@ -71,9 +138,10 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    Default_Server_Read_Timeout_Time
                                  : constant Duration := 0.2;
    Delay_Time                    : constant Duration := 0.5;   -- time to delay second part of write to test timeout
--- Limit_Length                  : constant := 128;
    Notify_Frequency              : constant := 10;
    Server_Name                   : constant String := "localhost";
+   Suite_Name                    : constant String := "Socket_Stream";
+
 
    ---------------------------------------------------------------
    overriding
@@ -141,7 +209,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Answer := Success;
       Test.Client_Completed := False;
       Test.Client_Delayed             := False;
@@ -603,7 +671,7 @@ put_Line (here);
                   Test.Sockets (Index).Image, Here);
          end;
       end loop;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug);
    end Tear_Down;
 

@@ -5,11 +5,33 @@ with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.OS.Base64;
 with Ada_Lib.OS.Run.Path;
---with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.OS.Tests is
+
+   Suite_Name                    : constant String := "OS";
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with
+                     null record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   procedure Encode_Decode (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Kill_All (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Run_Remote (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    Encode_Source                 : constant String := "abcdef";
 

@@ -1,29 +1,58 @@
 with Ada.Text_IO;use Ada.Text_IO;
+--with Ada_Lib.Database.Subscribe;
+with Ada_Lib.Database.Updater.Unit_Test;
 with Ada_Lib.Database.Updater;
-with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
---with AUnit.Test_Suites;
+with AUnit.Test_Cases;
+
 
 pragma Elaborate_All (Ada_Lib.Database.Updater);
 
 package body Ada_Lib.Database.Subscription.Tests is
 
--- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
+   use type Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type  with null record;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   -- register individual tests that access the DBDaemon
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
 
    type Local_Test_Type is new Test_Type with null record;
    type Remote_Test_Type is new Test_Type with null record;
 
-   Complex_Subscription          : aliased Subscription_Type;
+-- type Subscription_Table_Type is new Ada_Lib.Database.Subscribe.Table_Type with null record;
+
+-- overriding
+-- procedure Load (
+--    Table                      : in out Subscription_Table_Type;
+--    Path                       : in     String);
+
+   procedure Load_Subscription (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Store_Subscription (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Store_Load_Subscription (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   Complex_Subscription          : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
    Load_Subdirectory             : constant String := "tests/data/load_subscriptions/";
    Store_Subdirectory            : constant String := "tests/data/store_subscriptions/";
-   Simple_Subscription           : aliased Subscription_Type;
+   Simple_Subscription           : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
+   Suite_Name                    : constant String := "Subscription";
+
 
 -- ---------------------------------------------------------------
 -- function "="" (
---    Left, Right                : in     Subscription_Type
+--    Left, Right                : in     Ada_Lib.Database.Updater.Unit_Test.Subscription_Type
 -- ) return Boolean is
 -- ---------------------------------------------------------------
 --
@@ -32,20 +61,20 @@ package body Ada_Lib.Database.Subscription.Tests is
 --       Ada_Lib.Database.Updater.Abstract_Updater_Type (Right));
 -- end Equal;
 
-   ---------------------------------------------------------------
-   overriding
-   procedure Load (
-      Table                      : in out Subscription_Table_Type;
-      Path                       : in     String) is
-   ---------------------------------------------------------------
-
-   begin
-not_implemented;
-   end Load;
+--   ---------------------------------------------------------------
+--   overriding
+--   procedure Load (
+--      Table                      : in out Subscription_Table_Type;
+--      Path                       : in     String) is
+--   ---------------------------------------------------------------
+--
+--   begin
+--not_implemented;
+--   end Load;
 
 --   ---------------------------------------------------------------
 --   procedure Load (
---      Subscription               :    out Subscription_Type;
+--      Subscription               :    out Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 --      File                       : in out Ada.Text_IO.File_Type;
 --      Got_Subscription           :    out Boolean) is
 --   ---------------------------------------------------------------
@@ -64,7 +93,7 @@ not_implemented;
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Loaded_Subscription        : Subscription_Type;
+      Loaded_Subscription        : Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
       File                       : Ada.Text_IO.File_Type;
       Got_Subscription           : Boolean := False;
 
@@ -91,24 +120,6 @@ not_implemented;
    begin
       return AUnit.Format (Suite_Name);
    end Name;
-
-   ---------------------------------------------------------------
-   overriding
-   function Name_Value (
-      Subscription               : in     Subscription_Type
-   ) return Name_Value_Type'class is
-   ---------------------------------------------------------------
-
---    Result                     : Name_Value_Type;
-   begin
-      return Name_Value_Type'(
-         Ada_Lib.Database.Name_Index_Tag_Type'(
-            Index          => Subscription.Index,
-            Name           => Ada_Lib.Strings.Unlimited.Coerce (Subscription.Name),
-            Tag            => Ada_Lib.Strings.Unlimited.Coerce (Subscription.DBDaemon_Tag)
-         ) with
-            Value       => Ada_Lib.Strings.Unlimited.Null_String);
-   end Name_Value;
 
    --------------------------------------------------
    overriding
@@ -168,7 +179,7 @@ not_implemented;
                File              : Ada.Text_IO.File_Type;
                Got_Subscription  : Boolean := False;
                Loaded_Subscription
-                                 : Subscription_Type;
+                                 : Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 
             begin
                Log (Ada_Lib.Test.Debug, Here, Who & Quote (" load file", File_Name));
@@ -176,7 +187,7 @@ not_implemented;
                Loaded_Subscription.Load (File, Got_Subscription);
                Ada.Text_IO.Close (File);
                Assert (Got_Subscription, "could not load subscription");
-               Assert (Loaded_Subscription = Subscription_Type (Subscription.all),
+               Assert (Loaded_Subscription = Ada_Lib.Database.Updater.Unit_Test.Subscription_Type (Subscription.all),
                   "loaded subscription does not match." &
                   " Loaded " & Loaded_Subscription.Image & " Original " & Subscription.Image);
             end;
@@ -233,39 +244,9 @@ not_implemented;
       return Test_Suite;
    end Subscription_Suite;
 
-  ---------------------------------------------------------------------------------
-  overriding
-  procedure Update (
-     Subscription               : in out Subscription_Type;
-     Address                    : in     Ada_Lib.Database.Updater.Abstract_Address_Type'class;
-     Tag                        : in     String;
-     Value                      : in     String;
-     Update_Kind                : in     Ada_Lib.Database.Updater.Update_Kind_Type;
-     From                       : in     String := Ada_Lib.Trace.Here) is
-  ---------------------------------------------------------------------------------
-
-  begin
-     Log_In (Debug_Subscribe, Subscription.Image);
---      Subscription.Set_Value (Value);
-
---      case Update_Kind is
---
---         when Ada_Lib.Database.Updater.Internal =>
---            null;
---
---         when others =>
---            Subscription.Update_Count := Subscription.Update_Count + 1;
---
---      end case;
-     Log (Debug_Subscribe, Here, Who & Subscription.Image &
-        " update count" & Subscription.Update_Count'img & " update kind " & Update_Kind'img &
-        " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag) &
-        " subscription address " & Image (Subscription'address) & " from " & From);
-  end Update;
-
 begin
    Complex_Subscription.Initialize (
-      Ada_Tag           => Subscription_Type'class (Complex_Subscription)'tag,
+      Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Complex_Subscription)'tag,
       DBDaemon_Tag      => "tag",
 --    Dynamic     => False,
       Index       => 5,
@@ -275,7 +256,7 @@ begin
 --    Value       => "");
 
    Simple_Subscription.Initialize (
-      Ada_Tag           => Subscription_Type'class (Simple_Subscription)'tag,
+      Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Simple_Subscription)'tag,
       DBDaemon_Tag      => "",
 --    Dynamic     => False,
       Index       => -1,

@@ -214,7 +214,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    procedure Register_Tests (
       Options                    : in     Aunit_Options_Type;
       Suite_Name                 : in     String;
-      Test                       : in out Ada_Lib.Unit_Test.Tests.
+      Test                       : in out Ada_Lib.Unit_Test.Test_Cases.
                                              Test_Case_Type'class) is
    ----------------------------------------------------------------------------
 

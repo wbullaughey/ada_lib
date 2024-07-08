@@ -1,10 +1,11 @@
 --with Ada_Lib.Test.Tests;
 with AUnit.Assertions; use AUnit.Assertions;
--- with Ada_Lib.Database.Server.State;
-with Ada_Lib.Database.Subscription.Tests;
+--with Ada_Lib.Database.Subscription.Tests;
+with Ada_Lib.Database.Updater;
+with Ada_Lib.Database.Updater.Unit_Test;
+with Ada_Lib.Test; -- .Tests;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
-with Ada_Lib.Test; -- .Tests;
 
 package body Ada_Lib.Database.Subscribe.Tests is
 
@@ -40,16 +41,17 @@ package body Ada_Lib.Database.Subscribe.Tests is
 -- Value_1                       : constant String := "value_1";
 -- Value_2                       : constant String := "value_2";
 
-   ---------------------------------------------------------------
-   overriding
-   procedure Load (
-      Table                      : in out Test_Table_Type;
-      Path                       : in     String) is
-   ---------------------------------------------------------------
-
-   begin
-Not_Implemented;
-   end Load;
+-- ---------------------------------------------------------------
+-- overriding
+-- function Allocate (
+--    Table                      : in     Test_Table_Type
+-- ) return Entry_Class_Access is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    return Entry_Class_Access'(new Ada_Lib.Database.Updater.Base_Updater_Package.
+--       Base_Updater_Type);
+-- end Allocate;
 
    ---------------------------------------------------------------
    procedure Load_Subscription (
@@ -68,7 +70,8 @@ Not_Implemented;
       ------------------------------------------------------------
 
          Subscription            : constant Ada_Lib.Database.Updater.Abstract_Updater_Class_Access :=
-                                    new Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+                                    new Ada_Lib.Database.Updater.Unit_Test.
+                                       Subscription_Type;
          File                    : Ada.Text_IO.File_Type;
          Got_Subscription        : Boolean := False;
 
@@ -147,10 +150,14 @@ Not_Implemented;
       Test                       : in out Test_Type) is
    ---------------------------------------------------------------
 
-      Subscription_1             : constant Ada_Lib.Database.Updater.Abstract_Updater_Class_Access :=
-                                    new Ada_Lib.Database.Subscription.Tests.Subscription_Type;
-      Subscription_2             : constant Ada_Lib.Database.Updater.Abstract_Updater_Class_Access :=
-                                    new Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription_1             : constant Ada_Lib.Database.Updater.
+                                    Abstract_Updater_Class_Access :=
+                                       new Ada_Lib.Database.Updater.Unit_Test.
+                                          Subscription_Type;
+      Subscription_2             : constant Ada_Lib.Database.Updater.
+                                    Abstract_Updater_Class_Access :=
+                                       new Ada_Lib.Database.Updater.Unit_Test.
+                                          Subscription_Type;
 
    begin
       Log_In (Ada_Lib.Test.Debug);
@@ -174,10 +181,10 @@ Not_Implemented;
          Update_Mode    => Ada_Lib.Database.Updater.Always);
 --       Value          =>Value_2);
 
-      Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_1));
-      Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_2));
+      Test.Table.Add_Subscription (Subscription_1);
+      Test.Table.Add_Subscription (Subscription_2);
       Test.Subscribed := True;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Ada_Lib.Test.Debug);
    end Set_Up;
 
@@ -282,7 +289,7 @@ Not_Implemented;
 
    begin
       Test.Table.Delete_All;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
    end Tear_Down;
 
 begin

@@ -115,7 +115,7 @@ package body Ada_Lib.Configuration is
 
    ---------------------------------------------------------------
    procedure Load (
-      Configuration              :    out Configuration_Type;
+      Configuration           :    out Configuration_Type;
       Path                    : in     String;
       Create                  : in     Boolean) is
    ---------------------------------------------------------------

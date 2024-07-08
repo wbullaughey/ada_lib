@@ -86,6 +86,7 @@ Ada_Lib unit test library trace options (-U)
       l               Ada_Lib.Unit_Test.Debug Library
       p               test programs
       r               Runtime_Options
+      s               All Set_Up procedures
       t               Ada_Lib.Test.Debug
       T               Ada_Lib.Trace.Debug_Trace
 

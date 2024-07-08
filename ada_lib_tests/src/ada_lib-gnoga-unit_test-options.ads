@@ -2,7 +2,7 @@ with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Options;
 with Ada_Lib.Options_Interface;
 --with Ada_Lib.Socket_IO;
---with Ada_Lib.Unit_Test.Tests;
+--with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.GNOGA.Unit_Test.Options is
 

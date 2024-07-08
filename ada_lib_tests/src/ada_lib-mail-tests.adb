@@ -1,14 +1,69 @@
 with Ada.Directories;
 with Ada.Exceptions;
 with Ada.Text_IO;
-with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Unit_Test;
--- with Ada_Lib.Mail.GMail;
+with Ada_Lib.Mail.CURL;
+with Ada_Lib.Mail.SMTP;
 with Ada_Lib.OS;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
--- with Ada_Lib.Unit_Test.Test_Cases;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Assertions; use AUnit.Assertions;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Mail.Tests is
+
+   type Test_Type                is abstract new Ada_Lib.Unit_Test.Test_Cases.
+                                    Test_Case_Type with null record;
+
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   type CURL_Test_Type           is new Test_Type with record
+      Credential                 : Ada_Lib.Mail.CURL.CURL_Credentials_Type;
+   end record;
+
+   type  CURL_Test_Access is access CURL_Test_Type;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out CURL_Test_Type);
+
+   procedure Send_CURL_Mail (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Send_CURL_File_Mail (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out CURL_Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   type SMTP_Test_Type           is new Test_Type with record
+      Credential                 : Ada_Lib.Mail.SMTP.SMTP_Credentials_Type;
+   end record;
+
+   type  SMTP_Test_Access is access SMTP_Test_Type;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out SMTP_Test_Type);
+
+   procedure Send_SMTP_Mail (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Send_SMTP_File_Mail (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out SMTP_Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (Test : in out SMTP_Test_Type);
 
    Account                       : constant String := "wbullaughey@gmail.com";
 -- Account_Base64                : constant String := "d2J1bGxhdWdoZXlAZ21haWwuY29tCg==";
@@ -16,6 +71,7 @@ package body Ada_Lib.Mail.Tests is
    Password                      : constant String := "nvvjhdzbfthfwyey";
 -- Password_Base64               : constant String := "bnZ2amhkemJmdGhmd3lleQo=";
    Subject                       : constant String := "test subject";
+   Suite_Name                    : constant String := "Send_Mail";
    To_Address                    : constant String := "wlb122@verizon.net";
 
    ---------------------------------------------------------------
@@ -53,14 +109,13 @@ package body Ada_Lib.Mail.Tests is
    ---------------------------------------------------------------
 
    begin
---    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
---       Routine        => Send_SMTP_Mail'access,
---       Routine_Name   => AUnit.Format ("Send_SMTP_Mail")));
+      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+         Routine        => Send_SMTP_Mail'access,
+         Routine_Name   => AUnit.Format ("Send_SMTP_Mail")));
 
---    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
---       Routine        => Send_SMTP_File_Mail'access,
---       Routine_Name   => AUnit.Format ("Send_SMTP_File_Mail")));
-null;
+      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+         Routine        => Send_SMTP_File_Mail'access,
+         Routine_Name   => AUnit.Format ("Send_SMTP_File_Mail")));
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -174,7 +229,7 @@ null;
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
       Log_Out (Debug);
 
@@ -193,7 +248,7 @@ null;
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
       Log_Out (Debug);
 
@@ -216,7 +271,9 @@ null;
    begin
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
       Test_Suite.Add_Test (CURL_Tests);
-      Test_Suite.Add_Test (SMTP_Tests);
+      if Include_SMTP_Mail then
+         Test_Suite.Add_Test (SMTP_Tests);
+      end if;
       return Test_Suite;
    end Suite;
 

@@ -1,21 +1,84 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
--- with Ada_Lib.Options.GNOGA.Database.AUnit;
 with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Database.Common;
-with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Options_Interface;
+with Ada_Lib.Database.Unit_Test;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Unit_Test.Test_Cases;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Assertions; use AUnit.Assertions;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Database.Get_Put_Tests is
 
    use type Ada_Lib.Options.Mode_Type;
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
--- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
+   -- used for tests which access DBDaemon
+   type Database_Test_Type is new Ada_Lib.Database.Unit_Test.Test_Case_Type with null record;
+
+   -- used for tests which do not access DBDaemon
+   type No_Database_Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+   type No_Database_Test_Access is access No_Database_Test_Type;
+
+   -- register individual tests that access the DBDaemon
+   overriding
+   procedure Register_Tests (Test : in out Database_Test_Type);
+
+   -- register individual tests that do not access the DBDaemon
+   overriding
+   procedure Register_Tests (Test : in out No_Database_Test_Type);
+
+   procedure Flush_Input (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Is_Open_True (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Is_Open_False (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   -- returns the name of the test list
+   overriding
+   function Name (Test : Database_Test_Type) return AUnit.Message_String;
+
+   -- returns the name of the test list
+   overriding
+   function Name (Test : No_Database_Test_Type) return AUnit.Message_String;
+
+   procedure Parse_Line (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Post_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Post_Get_With_Token (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Name_Value_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Name_Value_Get_With_Token (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Set_Up (               -- opens database
+      Test                       : in out Database_Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (
+      Test                       : in out Database_Test_Type)
+      with post => Verify_Torn_Down (Test);
+
+   procedure Timeout_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Wild_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
 
    type Local_Database_Test_Type is new Database_Test_Type with null record;
 
@@ -26,6 +89,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Append                     : in     Ada_Lib.Strings.Unlimited.String_Type
    ) return String renames Ada_Lib.Strings.Unlimited.Construct;
 
+   Suite_Name                    : constant String := "Get_Put";
    Value                         : constant String := "xyz";
    Value_Name                          : constant String := "abc";
    Name_Value                    : constant String := Value_Name & "=" & Value;

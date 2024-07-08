@@ -3,7 +3,7 @@ with Ada_Lib.Options.Database;
 with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.Template;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
 
@@ -81,7 +81,7 @@ private
    procedure Register_Tests (
       Options                    : in     Aunit_Options_Type;
       Suite_Name                 : in     String;
-      Test                       : in out Ada_Lib.Unit_Test.Tests.
+      Test                       : in out Ada_Lib.Unit_Test.Test_Cases.
                                              Test_Case_Type'class);
    overriding
    procedure Trace_Parse (

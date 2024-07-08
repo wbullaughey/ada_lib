@@ -1,10 +1,23 @@
 with Ada.Exceptions;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 
 package body Ada_Lib.Event.Unit_Test is
+
+   Suite_Name                    : constant String := "Event";
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
 
    procedure Wait_For_Event(
       Test                       : in out AUnit.Test_Cases.Test_Case'class);

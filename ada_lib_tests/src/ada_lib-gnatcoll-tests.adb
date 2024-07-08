@@ -8,6 +8,26 @@ with Runtime_Options;
 
 package body Ada_Lib.GNATCOLL.Tests is
 
+   Suite_Name                    : constant String := "GNATCOLL";
+
+   type Test_Type                is abstract new Ada_Lib.Unit_Test.Test_Cases.
+                                    Test_Case_Type with null record;
+
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   type Template_Test_Type           is new Test_Type with null record;
+
+   type  Template_Test_Access is access Template_Test_Type;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Template_Test_Type);
+
+   procedure Expand_Template (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
    ---------------------------------------------------------------
    overriding
    function Name (
@@ -81,7 +101,7 @@ package body Ada_Lib.GNATCOLL.Tests is
 --
 -- begin
 --    Log_In (Debug);
---    Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+--    Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
 --    Test.Credential.Initialize (Account, Password);
 --    Log_Out (Debug);
 --

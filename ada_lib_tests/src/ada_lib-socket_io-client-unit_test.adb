@@ -1,27 +1,33 @@
---with Ada.Exceptions;
---with Ada.Numerics.Discrete_Random;
---with Ada.Real_Time;
---with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.OS;
---with Ada_Lib.Socket_IO.Client;
---with Ada_Lib.Socket_IO.Server;
+with Ada_Lib.Unit_Test.Test_Cases;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Trace_Tasks;
 with AUnit.Test_Cases;
---with Hex_IO;
---with Runtime_Options;
---with SYSTEM.ASSERTIONS;
 
 package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
--- use type Ada.Streams.Stream_Element_Array;
--- use type Ada.Streams.Stream_Element_Offset;
--- use type Ada_Lib.Socket_IO.Port_Type;
+   type Socket_Client_Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type
+                                    with null record;
+   type Socket_Client_Test_Access is access Socket_Client_Test_Type;
+
+   overriding
+   function Name (
+      Test                       : Socket_Client_Test_Type
+   ) return Standard.AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Socket_Client_Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Socket_Client_Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
 
    procedure Test_Connect (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   Suite_Name                    : constant String := "Client_Socket_IO";
 
    ---------------------------------------------------------------
    overriding
@@ -59,7 +65,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
 
    exception

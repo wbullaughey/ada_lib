@@ -1,8 +1,7 @@
 with Ada.Numerics.Float_Random;
---with Ada.Text_IO; use  Ada.Text_IO;
---with Ada_Lib.Unit_Test;
 with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
@@ -10,6 +9,23 @@ with AUnit.Test_Cases;
 package body Ada_Lib.Lock.Tests is
 
    use type Ada_Lib.Time.Time_Type;
+
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
+                                    Test_Case_Type with null record;
+
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Type)
+   with Pre => Test.Verify_Pre_Setup,
+        Post => Test.Verify_Post_Setup;
 
    procedure Test_Async_Lock (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
@@ -28,6 +44,8 @@ package body Ada_Lib.Lock.Tests is
 
    Async_Test_Length             : constant Duration := 1.0;
    Random_Generator              : Ada.Numerics.Float_Random.Generator;
+   Suite_Name                    : constant String := "Lock";
+
 
  ---------------------------------------------------------------
    overriding
@@ -77,7 +95,7 @@ package body Ada_Lib.Lock.Tests is
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Ada.Numerics.Float_Random.Reset (Random_Generator);
       Log_Out (Debug);
    end Set_Up;

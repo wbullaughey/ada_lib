@@ -1,12 +1,13 @@
---with AUnit.Assertions;
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Options_Interface;
 with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.Test.Suites;
---with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Unit_Test.Test_Cases is
 
+   use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
    use type Ada_Lib.Options.Mode_Type;
+   use type Ada_Lib.Options.Program_Options_Constant_Class_Access;
+
 
    ----------------------------------------------------------------------------
    overriding
@@ -30,6 +31,21 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Routine (Test_Case_Type'class (Test).Name.all, Val.Routine_Name.all);
       Log_Out (Debug);
    end Add_Routine;
+
+   ----------------------------------------------------------------------------
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Case_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_In (Debug or Trace_Set_Up);
+      Test.Options := Ada_Lib.Options.
+         Program_Options_Constant_Class_Access (
+            Ada_Lib.Options.Get_Modifiable_Options);
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
+      Log_Out (Debug or Trace_Set_Up);
+   end Set_Up;
 
    ----------------------------------------------------------------------------
    procedure Set_Up_Exception (
@@ -92,22 +108,19 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       end if;
    end Set_Up_Failure;
 
---   ----------------------------------------------------------------------------
---   procedure Tear_Down (
---      Test                       : in out Test_Case_Type) is
---   ----------------------------------------------------------------------------
---
---   begin
---      Log ( Debug, Here, Who & " enter");
---
-----    if Ada_Lib.Database.Unit_Test.Is_DBDaemon_Running then
-----       raise Ada_Lib.Unit_Test.Test_Cases.Failed with "dbdaemon not closed at " & Here & " " & Who;
-----    end if;
---
---      AUnit.Test_Cases.Test_Case (Test).Tear_Down;
---      Log ( Debug, Here, Who & " exit");
---   end Tear_Down;
---
+   ----------------------------------------------------------------------------
+   overriding
+   procedure Tear_Down (
+      Test                       : in out Test_Case_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_In (Debug or Trace_Set_Up);
+      Test.Options := Null;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
+      Log_Out (Debug or Trace_Set_Up);
+   end Tear_Down;
+
      ----------------------------------------------------------------------------
      procedure Tear_Down_Exception (
         Test                       : in out Test_Case_Type;
@@ -150,21 +163,6 @@ package body Ada_Lib.Unit_Test.Test_Cases is
         end if;
      end Tear_Down_Failure;
 
---   ----------------------------------------------------------------------------
---   function Was_There_An_Async_Failure
---   return Boolean is
---   ----------------------------------------------------------------------------
---
---   begin
---      if Length (Current_Fixture.Async_Failure_Message) > 0 then
---         Put_Line (To_String (Current_Fixture.Async_Failure_Message) & " called from " &
---            To_String (Current_Fixture.Failure_From));
---         return True;
---      else
---         return False;
---      end if;
---   end Was_There_An_Async_Failure;
-
    package body Root_Test is
 
       ----------------------------------------------------------------------------
@@ -176,18 +174,6 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       begin
          return Test.Set_Up_Failed;
       end Did_Set_Up_Fail;
-
---    ----------------------------------------------------------------------------
---    overriding
---    procedure Register_Tests (
---       Test                    : in out Test_Type) is
---    ----------------------------------------------------------------------------
---
---    begin
---       Log_In (Debug);
---       AUnit.Test_Cases.Test_Case'class (Test).Register_Tests;
---       Log_Out (Debug);
---    end Register_Tests;
 
       ----------------------------------------------------------------------------
       overriding
@@ -262,6 +248,35 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       end Verify_Torn_Down;
 
    end Root_Test;
+
+   ---------------------------------------------------------------
+   function Verify_Pre_Setup (
+      Test                       : in     Test_Case_Type
+   ) return Boolean is
+   ---------------------------------------------------------------
+
+   begin
+      if Test.Options /= Null then
+         Log_Here ("Test.Options is not null");
+         return False;
+      else
+         Log_Here (Debug, "Test.Options is null");
+         return True;
+      end if;
+
+   end Verify_Pre_Setup;
+
+   ---------------------------------------------------------------
+   function Verify_Post_Setup (
+      Test                       : in     Test_Case_Type
+   ) return Boolean is
+   ---------------------------------------------------------------
+
+   begin
+      Log_In (Debug);
+      return Log_Out (Ada_Lib.Options_Interface.Read_Only_Options /= Null,
+         Debug, "Test.Options is null");
+   end Verify_Post_Setup;
 
 begin
    if Trace_Tests then

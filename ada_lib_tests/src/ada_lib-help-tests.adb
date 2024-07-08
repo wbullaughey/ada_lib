@@ -1,12 +1,26 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 
 package body Ada_Lib.Help.Tests is
 
    use Ada_Lib.Options_Interface;
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   overriding
+   procedure Tear_Down (Test : in out Test_Type);
 
    type String_Pointer           is access constant String;
 
@@ -23,6 +37,8 @@ package body Ada_Lib.Help.Tests is
 
    procedure Test_Prefix_Help (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   Suite_Name                    : constant String := "Help";
 
    ---------------------------------------------------------------
    overriding

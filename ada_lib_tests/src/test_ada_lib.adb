@@ -24,7 +24,6 @@ begin
       Debug                         : Boolean renames
                                        AUnit_Options.Tester_Debug;
    begin
---Debug := True;
       if Aunit_Options.Initialize then
          Log_Here (Debug);
          Ada_Lib.Trace_Tasks.Start ("main");

@@ -1,22 +1,12 @@
 
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
--- with Ada_Lib.Database.Server;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Database.Subscribe_Tests;
 
 package Ada_Lib.Database.Subscribe.Tests is
 
-   type Test_Table_Type is new Ada_Lib.Database.Subscribe.Table_Type with null record;
-
-   overriding
-   procedure Load (
-      Table                      : in out Test_Table_Type;
-      Path                       : in     String);
-
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type  with record
-      Subscribed                 : Boolean := False;
-      Table                      : Test_Table_Type;
-   end record;
+   type Test_Type    is new Ada_Lib.Database.Subscribe_Tests.
+                        Test_Type with null record;
 
    overriding
    procedure Set_Up (

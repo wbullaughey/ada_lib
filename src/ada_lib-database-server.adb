@@ -54,7 +54,8 @@ package body Ada_Lib.Database.Server is
    ---------------------------------------------------------------------------------
    procedure Add_Subscription (
       Server                     : in out Server_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access) is
+      Updater                    : in     Ada_Lib.Database.Updater.
+                                             Abstract_Updater_Class_Access) is
    ---------------------------------------------------------------------------------
 
       Task_Gateway               : Gateway.Gateway_Type := Gateway.Enter;
@@ -244,7 +245,7 @@ package body Ada_Lib.Database.Server is
    ---------------------------------------------------------------------------------
    function Delete_Subscription (
       Server                     : in out Server_Type;
-      Updater               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+      Updater               : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access
    ) return Boolean is
    ---------------------------------------------------------------------------------
 
@@ -380,10 +381,10 @@ package body Ada_Lib.Database.Server is
       Index                      : in     Optional_Vector_Index_Type;
       DBDaemon_Tag               : in     String;
       Ada_Tag                    : in     Ada.Tags.Tag
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access is
+   ) return Ada_Lib.Database.Updater.Abstract_Updater_Class_Access is
    ---------------------------------------------------------------------------------
 
-      Result                     : Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+      Result                     : Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
       Task_Gateway               : Gateway.Gateway_Type := Gateway.Enter;
       pragma Unreferenced (Task_Gateway); -- declared for sideeffect
 
@@ -1018,7 +1019,7 @@ end Poll_Timeout;
 --
 --      ----------      ---------------------------------------------------------------------------------
 --      procedure Delete_By_Updater (
---         Updater                 : in     Ada_Lib.Database.Subscribe.Updater_Interface_Class_Access;
+--         Updater                 : in     Ada_Lib.Database.Subscribe.Abstract_Updater_Class_Access;
 --         Result                  :    out Boolean) is
 --      ---------------------------------------------------------------------------------
 --
@@ -1124,7 +1125,7 @@ end Poll_Timeout;
                   select
                      ---------------------------------------------------------------------------------
                      accept Add_Subscription (
-                        Updater  : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access) do
+                        Updater  : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access) do
                      ---------------------------------------------------------------------------------
 
                         Table.Add_Subscription (Updater);
@@ -1173,7 +1174,7 @@ end Poll_Timeout;
                   or
                      ---------------------------------------------------------------------------------
                      accept Delete (
-                        Updater        : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+                        Updater        : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
                         Result         :    out Boolean) do
                      pragma Unreferenced (Result);
                      ---------------------------------------------------------------------------------
@@ -1226,7 +1227,7 @@ end Poll_Timeout;
                         DBDaemon_Tag   : in     String;
                         Ada_Tag        : in     Ada.Tags.Tag;
 --                      Action         : in     Ada_Lib.Database.Subscribe.Action_Type; -- removed 8/30/22
-                        Updater        :    out Ada_Lib.Database.Updater.Updater_Interface_Class_Access) do
+                        Updater        :    out Ada_Lib.Database.Updater.Abstract_Updater_Class_Access) do
 
                         Log_In (Trace_All, " enter name '" & Name & "' index " & Index'img);
                         Updater := Table.Get_Subscription (Name, Index, DBDaemon_Tag, Ada_Tag); -- , Action); removed 8/20/22

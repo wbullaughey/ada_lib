@@ -2,7 +2,7 @@ with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Containers;
 with Ada.Strings.Hash;
 with Ada.Tags;
--- with Ada_Lib.Database.Subscription;
+--with Ada_Lib.Database.Subscription;
 with Ada_Lib.Database.Updater;
 -- with Ada_Lib.Strings.Unlimited;
 -- with Ada_Lib.Trace;
@@ -12,61 +12,15 @@ package Ada_Lib.Database.Subscribe is
    Duplicate                  : exception;
    Failed                     : exception;
 
--- package Subscription_Package is
---    type Reference_Type is new Ada.Finalization.Controlled with private;
---
---    function Create_Reference (
---       Subscription            : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
---    ) return Reference_Type;
---
---    function Equal (
---       Left, Right             : in     Reference_Type
---    ) return Boolean;
---
---    function Get_Subscription (
---       Subscription            : in     Reference_Type
---    ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
---
--- private
---    type Reference_Type is new Ada.Finalization.Controlled with record
---       Subscription            : Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
---    end record;
--- end Subscription_Package;
+   subtype Entry_Access       is Ada_Lib.Database.Updater.
+                                 Abstract_Updater_Access;
 
--- package Subscription_Vector_Package is new Ada.Containers.Vectors (
---    Optional_Vector_Index_Type,
---    Ada_Lib.Database.Updater.Updater_Interface_Class_Access,
---    Ada_Lib.Database.Subscription.Equal);
---
--- subtype Vector_Cursor_Type is Subscription_Vector_Package.Cursor;
---
--- type Vector_Type is new Subscription_Vector_Package.Vector with null record;
---
--- function Compare_Vectors (
---    Left, Right                : Vector_Type
--- ) return Boolean;
-
--- function Get_Subscription (
---    Cursor                     : in     Vector_Cursor_Type
--- ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Accessy;
-
--- Empty_Vector                  : constant Vector_Type;
-
--- function Hash (
---    Key                        : in     Ada_Lib.Database.Updater.Key_Type
--- ) return Ada.Containers.Hash_Type;
---
--- function Image (
---    Key                        : in     Ada_Lib.Database.Updater.Key_Type
--- ) return String;
-
--- function Key (
---    Subscription               : in     Ada_Lib.Database.Subscription.Abstract_Subscription_Type'class
--- ) return Key_Type;
+   subtype Entry_Class_Access is Ada_Lib.Database.Updater.
+                                 Abstract_Updater_Class_Access;
 
    package Hash_Table_Package is new Ada.Containers.Indefinite_Hashed_Maps (
       String,
-      Ada_Lib.Database.Updater.Updater_Interface_Class_Access,
+      Entry_Class_Access,
       Ada.Strings.Hash,
       "=",
       Ada_Lib.Database.Updater.Equal);
@@ -81,17 +35,21 @@ package Ada_Lib.Database.Subscribe is
 
    type Subscription_Cursor_Type is abstract tagged record
 --    Number_Subscriptions       : Natural;
-      Updater                    : Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+      Updater                    : Entry_Class_Access;
    end record;
 
    procedure Add_Subscription (
       Table                      : in out Table_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access);
+      Updater                    : in     Entry_Class_Access);
 --    Timeout                    : in     Duration := Default_Post_Timeout);
+
+   function Allocate (
+      Table                      : in     Table_Type
+   ) return Entry_Class_Access is abstract;
 
    function Delete (
       Table                      : in out Table_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+      Updater                    : in     Entry_Class_Access
    ) return Boolean;
 
    -- delete all subscriptions for named item, returns numbe subscrpitions deleted
@@ -126,7 +84,7 @@ package Ada_Lib.Database.Subscribe is
       Index                      : in     Optional_Vector_Index_Type;
       DBDaemon_Tag               : in     String;
       Ada_Tag                    : in     Ada.Tags.Tag
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+   ) return Entry_Class_Access;
 
    procedure Get_Subscription_Update_Mode (
       Table                   : in out Table_Type;
@@ -157,7 +115,7 @@ package Ada_Lib.Database.Subscribe is
 
 -- procedure Insert (   use Add_Subscription instead
 --    Table                      : in out Table_Type;
---    Subscription               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access);
+--    Subscription               : in     Entry_Class_Access);
 
 -- function Is_Valid (
 --    Cursor                     : in     Subscription_Cursor_Type
@@ -173,7 +131,7 @@ package Ada_Lib.Database.Subscribe is
                                               --
    procedure Load (
       Table                      : in out Table_Type;
-      Path                       : in     String) is abstract;
+      Path                       : in     String);
 
 -- function Name_Value (                      --
 --    Cursor                     : in     Subscription_Cursor_Type
@@ -221,7 +179,7 @@ package Ada_Lib.Database.Subscribe is
 -- -- add a subscription returns false if one already exists
 -- function Subscribe (
 --    Table                      : in out Table_Type;
---    Subscription               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+--    Subscription               : in     Entry_Class_Access;
 --    Name                       : in     String;
 --    Index                      : in     Optional_Vector_Index_Type;
 --    Tag                        : in     String;
@@ -231,11 +189,11 @@ package Ada_Lib.Database.Subscribe is
 
    function Subscription (
       Cursor                     : in out Subscription_Cursor_Type
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+   ) return Entry_Class_Access;
 
    function Subscription_Protected (   -- only call from routine called from task
       Cursor                     : in out Subscription_Cursor_Type
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+   ) return Entry_Class_Access;
 
    -- remove a subscription
    function Unsubscribe (

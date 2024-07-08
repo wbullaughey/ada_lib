@@ -2,9 +2,31 @@ with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Test_Cases;
 with GNAT.OS_Lib;
 
 package body Ada_Lib.Configuration.Tests is
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
+      Configuration              : Configuration_Type;
+   end record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (Test : in out Test_Type);
 
    procedure Test_Configuration (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
@@ -24,6 +46,7 @@ package body Ada_Lib.Configuration.Tests is
    Missing_Configuration_Path    : constant String := Root_Path &
                                                       "missing_configuration.cfg";
    Prevous_Name                  : constant String := "previous_name";
+   Suite_Name                    : constant String := "Configuration";
    Update_New_Path               : constant String := Root_Path &
                                                       "test-update_new_path.cfg";
    Update_Name                   : constant String := "update_name";
@@ -158,7 +181,7 @@ package body Ada_Lib.Configuration.Tests is
       Log_In (Debug);
       Delete_File (New_Configuration_Path);
       Delete_File (Missing_Configuration_Path);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
    end Set_Up;
 
@@ -188,7 +211,7 @@ package body Ada_Lib.Configuration.Tests is
          Log_Here (Debug);
          Test.Configuration.Close;
       end if;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug);
    end Tear_Down;
 

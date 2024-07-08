@@ -1,15 +1,19 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Database.Common;
-with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.DAtabase.Subscribe;
-with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Database.Event;
+with Ada_Lib.Database.Server.State;
+with Ada_Lib.Database.Updater.Unit_Test;
+with Ada_Lib.Database.Unit_Test;
+with Ada_Lib.Database.Subscribe_Tests;
+--with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Assertions; use AUnit.Assertions;
+with AUnit.Test_Cases;
 
 pragma Elaborate_All (Ada_Lib.Database);
 
@@ -20,21 +24,123 @@ package body Ada_Lib.Database.Server.Tests is
    use type Ada_Lib.Strings.Unlimited.String_Type;
    use type Ada_Lib.Database.Updater.Update_Mode_Type;
 
--- type Generic_Event_Type is new Ada_Lib.Database.Event.Event_Intervace with null record;
+   package Server_Test_Package is
 
--- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
+      -- used for tests which access DBDaemon, open close done by set_up,tear_down
+      type Server_Test_Type   is new Ada_Lib.Database.Unit_Test.Test_Case_Type
+                                 with record
+         Started              : Boolean := False;
+         Subscription_Table   : aliased Ada_Lib.Database.Subscribe_Tests.
+                                 Test_Table_Type;
+      end record;
 
--- type Local_Open_Close_Server_Test_Type is new Server_Open_Close_Test_Type with null record;
-   type Local_Server_Test_Type is new Server_Test_Type with null record;
+      overriding
+      function Name (Test : Server_Test_Type) return AUnit.Message_String;
+
+      -- register individual tests that access the DBDaemon
+      overriding
+      procedure Register_Tests (Test : in out Server_Test_Type);
+
+      -- allocates Server
+      -- calls Server.Open
+      overriding
+      procedure Set_Up (               -- allocates and opens database
+         Test                       : in out Server_Test_Type)
+      with Pre => Test.Verify_Pre_Setup,
+           Post => Test.Verify_Post_Setup;
+
+      overriding
+      procedure Tear_Down (         -- closes, frees database
+         Test                       : in out Server_Test_Type)
+         with post => Verify_Set_Up (Test);
+
+      procedure Test_Subscription (
+         Test                       : in     Server_Test_Type;
+         Name_Value                 : in     Ada_Lib.Database.Name_Value_Type;
+         Update_Mode                : in     Ada_Lib.Database.Updater.Update_Mode_Type;
+         Subscription               : in out Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
+         Expected_Count             : in out Natural;
+         First_Subscription         : in     Boolean);
+
+   end Server_Test_Package;
+
+   type Local_Server_Test_Type   is new Server_Test_Package.Server_Test_Type
+                                    with null record;
 --
--- type Remote_Open_Close_Server_Test_Type is new Server_Open_Close_Test_Type with null record;
-   type Remote_Server_Test_Type is new Server_Test_Type with null record;
+   type Remote_Server_Test_Type  is new Server_Test_Package.Server_Test_Type
+                                    with null record;
 --
    type Content_Type is new Ada_Lib.Database.Event.Event_Content_Type with record
       Update_Count            : Natural := 0;
    end record;
 
--- type Content_Access        is access all Content_Type;
+   procedure Delete (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Delete_All (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Duplicate_Subscription (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Flush_Input (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Iterate_Subscriptions (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Start_Stop (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- -- returns the name of the test list
+-- overriding
+-- function Name (Test : Server_Open_Close_Test_Type) return AUnit.Message_String;
+
+   procedure Name_Value_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- procedure Name_Value_Get_With_Token (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- -- register individual tests that access the DBDaemon
+-- overriding
+-- procedure Register_Tests (Test : in out Server_Open_Close_Test_Type);
+
+   procedure Post_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- procedure Post_Get_With_Token (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class);
+--
+   procedure Read (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Resubscribe (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- -- allocates Server
+-- overriding
+-- procedure Set_Up (               -- allocates database
+--    Test                       : in out Server_Open_Close_Test_Type)
+
+   procedure Subscribe (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Subscribe_Unsubscribe (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- procedure Subscription_State (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- overriding
+-- procedure Tear_Down (         -- frees database
+--    Test                       : in out Server_Open_Close_Test_Type)
+
+   procedure Timeout_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Wild_Get (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    overriding
    procedure Signaled (
@@ -47,14 +153,6 @@ package body Ada_Lib.Database.Server.Tests is
 
 -- procedure Signal (
 --    Event                      : in     Generic_Event_Type);
-
-   procedure Test_Subscription (
-      Test                       : in     Server_Test_Type;
-      Name_Value                 : in     Ada_Lib.Database.Name_Value_Type;
-      Update_Mode                : in     Ada_Lib.Database.Updater.Update_Mode_Type;
-      Subscription               : in out Ada_Lib.Database.Subscription.Tests.Subscription_Type;
-      Expected_Count             : in out Natural;
-      First_Subscription         : in     Boolean);
 
    Name_1                        : constant String := "name_1";
    Name_2                        : constant String := "name_2";
@@ -69,7 +167,9 @@ package body Ada_Lib.Database.Server.Tests is
                                     Ada_Lib.Database.Create (
                                        Name_2, Ada_Lib.Database.No_Vector_Index, "", Value_1);
    Read_Timeout                  : constant Duration := 1.0;
+   Server_State                  : aliased Ada_Lib.Database.Server.State.Server_Type;
    Subscribe_Timeout             : constant Duration := 0.25;
+   Suite_Name                    : constant String := "Database_Server";
    Test_Timeout                  : constant Duration := 0.5;
    Update_Time                   : constant Duration := 0.25;
    Write_Timeout                 : constant Duration := 0.25;
@@ -84,13 +184,13 @@ package body Ada_Lib.Database.Server.Tests is
 --    Options                    : constant Ada_Lib.Options.GNOGA.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
-      Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription               : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 
    begin
       Log (Debug, Here, Who & " enter");
       Assert (Server.Is_Open, "data base not open");
       Subscription.Initialize (
-         Ada_Tag           => Ada_Lib.Database.Subscription.Tests.
+         Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.
                                  Subscription_Type'class (Subscription)'tag,
          DBDaemon_Tag      => "",
 --       Dynamic           => False,
@@ -113,7 +213,7 @@ package body Ada_Lib.Database.Server.Tests is
 --       Assert (Signal.Update_Count = 1, "wrong update count. expected 1 got" & Signal.Update_Count'img);
 
          Assert (Server.Delete_Subscription (Name_1, Ada_Lib.Database.No_Vector_Index, "",
-            Ada_Lib.Database.Subscription.Tests.Subscription_Type'class (Subscription)'tag),
+            Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Subscription)'tag),
             "Delete_Subscription failed");
          Assert (not Server.Has_Subscription (Name_1, Ada_Lib.Database.No_Vector_Index, "",
             Ada_Lib.Database.Updater.Abstract_Updater_Type'tag), "not all subscriptions deleted");
@@ -155,7 +255,7 @@ package body Ada_Lib.Database.Server.Tests is
                                  Server.Read (Name_2,
                                     Ada_Lib.Database.No_Vector_Index, "", Read_Timeout);
             pragma Unreferenced (Response);
-            Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+            Subscription               : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 --          Subscription               : aliased Ada_Lib.Database.Updater.Abstract_Updater_Type :=
 --                                        Ada_Lib.Database.Updater.Abstract_Updater_Type'(Ada_Lib.Database.Subscription.Create (
 --                Name              => Name_1,
@@ -167,7 +267,7 @@ package body Ada_Lib.Database.Server.Tests is
          begin
             Log (Debug, Here, Who);
             Subscription.Initialize (
-               Ada_Tag           => Ada_Lib.Database.Subscription.Tests.Subscription_Type'class (Subscription)'tag,
+               Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Subscription)'tag,
                DBDaemon_Tag      => "",
 --             Dynamic           => False,
                Index             => Ada_Lib.Database.No_Vector_Index,
@@ -208,7 +308,7 @@ package body Ada_Lib.Database.Server.Tests is
 --    Options                    : constant Ada_Lib.Options.GNOGA.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
-      Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription               : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 --    Subscription               : aliased Ada_Lib.Database.Updater.Abstract_Updater_Type :=
 --                                  Ada_Lib.Database.Updater.Abstract_Updater_Type'(Ada_Lib.Database.Subscription.Create (
 --          Name              => Name_1,
@@ -221,7 +321,7 @@ package body Ada_Lib.Database.Server.Tests is
       Log (Debug, Here, Who & " enter");
       Assert (Server.Is_Open, "data base not open");
       Subscription.Initialize (
-         Ada_Tag           => Ada_Lib.Database.Subscription.Tests.Subscription_Type'class (Subscription)'tag,
+         Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Subscription)'tag,
          DBDaemon_Tag      => "",
 --       Dynamic           => False,
          Index             => Ada_Lib.Database.No_Vector_Index,
@@ -319,7 +419,7 @@ package body Ada_Lib.Database.Server.Tests is
 --    Options                    : constant Ada_Lib.Options.GNOGA.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
-      Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription               : aliased Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
 --    Subscription               : aliased Ada_Lib.Database.Updater.Abstract_Updater_Type :=
 --                                  Ada_Lib.Database.Updater.Abstract_Updater_Type'(Ada_Lib.Database.Subscription.Create (
 --          Name              => Name_1,
@@ -359,7 +459,7 @@ package body Ada_Lib.Database.Server.Tests is
    begin
       Log (Debug, Here, Who & " enter");
       Subscription.Initialize (
-         Ada_Tag           => Ada_Lib.Database.Subscription.Tests.Subscription_Type'class (Subscription)'tag,
+         Ada_Tag           => Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Subscription)'tag,
          DBDaemon_Tag      => "",
 --       Dynamic           => False,
          Index             => Ada_Lib.Database.No_Vector_Index,
@@ -381,16 +481,6 @@ package body Ada_Lib.Database.Server.Tests is
 -- begin
 --    return AUnit.Format (Suite_Name);
 -- end Name;
-
-   ---------------------------------------------------------------
-   overriding
-   function Name (Test : Server_Test_Type) return AUnit.Message_String is
-   pragma Unreferenced (Test);
-   ---------------------------------------------------------------
-
-   begin
-      return AUnit.Format (Suite_Name);
-   end Name;
 
    ---------------------------------------------------------------
    procedure Name_Value_Get (
@@ -604,106 +694,6 @@ package body Ada_Lib.Database.Server.Tests is
 --         Routine_Name   => AUnit.Format ("Start_Stop")));
 --   end Register_Tests;
 
-   --------------------------------------------------
-   overriding
-   procedure Register_Tests (Test : in out Server_Test_Type) is
-   ---------------------------------------------------------------
-
-   use Ada_Lib.Options.Unit_Test;
-
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
-      Listing_Suites             : constant Boolean :=
-                                    Options.Mode /= Ada_Lib.Options.Run_Tests;
-      Star_Names                 : constant String :=
-                                    (if Listing_Suites then "*" else "");
-   begin
-      Log (Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
-
-      if Listing_Suites or else
-            Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-           Routine        => Parse_Name_Value'access,
-           Routine_Name   => AUnit.Format ("Parse_Name_Value" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-           Routine        => Start_Stop'access,
-           Routine_Name   => AUnit.Format ("Start_Stop" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Flush_Input'access,
-            Routine_Name   => AUnit.Format ("Flush_Input" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Post_Get'access,
-            Routine_Name   => AUnit.Format ("Post_Get" & Star_Names)));
-
-   --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-   --       Routine        => Post_Get_With_Token'access,
-   --       Routine_Name   => AUnit.Format ("Post_Get_With_Token" & Star_Names)));
-   --
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Name_Value_Get'access,
-            Routine_Name   => AUnit.Format ("Name_Value_Get" & Star_Names)));
-
-   --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-   --       Routine        => Name_Value_Get_With_Token'access,
-   --       Routine_Name   => AUnit.Format ("Name_Value_Get_With_Token" & Star_Names)));
-   --
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Subscribe'access,
-            Routine_Name   => AUnit.Format ("Subscribe" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Delete'access,
-            Routine_Name   => AUnit.Format ("Delete" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Delete_All'access,
-            Routine_Name   => AUnit.Format ("Delete_All" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Iterate_Subscriptions'access,
-            Routine_Name   => AUnit.Format ("Iterate_Subscriptions" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Subscribe_Unsubscribe'access,
-            Routine_Name   => AUnit.Format ("Subscribe_Unsubscribe" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Resubscribe'access,
-            Routine_Name   => AUnit.Format ("Resubscribe" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Duplicate_Subscription'access,
-            Routine_Name   => AUnit.Format ("Duplicate_Subscription" & Star_Names)));
-
-   --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-   --       Routine        => Subscription_State'access,
-   --       Routine_Name   => AUnit.Format ("Subscription_State" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Read'access,
-            Routine_Name   => AUnit.Format ("Read" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Timeout_Get'access,
-            Routine_Name   => AUnit.Format ("Timeout_Get" & Star_Names)));
-
-   --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-   --       Routine        => Set_Subscription_Mode'access,
-   --       Routine_Name   => AUnit.Format ("Set_Subscription_Mode" & Star_Names)));
-
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Wild_Get'access,
-            Routine_Name   => AUnit.Format ("Wild_Get" & Star_Names)));
-      end if;
-
--- Log_Here ("exit");
-   end Register_Tests;
-
    ---------------------------------------------------------------
    procedure Read (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
@@ -778,12 +768,13 @@ package body Ada_Lib.Database.Server.Tests is
       First_Subscription         : Boolean := True;
       Local_Name_Value           : constant Ada_Lib.Database.Name_Value_Type := Ada_Lib.Database.Create (
                                     "variable", Ada_Lib.Database.No_Vector_Index, "", "event 1");
-      Subscription               : Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription               : Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
       Unsubscribe_Resubscribe : constant array (Subscription_Types) of Ada_Lib.Database.Updater.Update_Mode_Type := (
                                  Update_Mode_Unsubscribed   => Ada_Lib.Database.Updater.Unique,
                                  Any_Kept                   => Ada_Lib.Database.Updater.Always,
                                  Any_Unsubscribed           => Ada_Lib.Database.Updater.Unique);
-      This_Test               : Server_Test_Type renames Server_Test_Type (Test);
+      This_Test               : Server_Test_Package.Server_Test_Type renames
+                                 Server_Test_Package.Server_Test_Type (Test);
 --    Options                    : constant Ada_Lib.Options.GNOGA.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
@@ -793,7 +784,7 @@ package body Ada_Lib.Database.Server.Tests is
       Assert (Server.Is_Open, "data base not open");
 
       for Update_Mode of Unsubscribe_Resubscribe loop
-         Test_Subscription (This_Test, Local_Name_Value, Update_Mode, Subscription,
+         This_Test.Test_Subscription (Local_Name_Value, Update_Mode, Subscription,
             Expected_Count, First_Subscription);
          First_Subscription := False;
          delay 0.2;     -- make sure last update completes before resubscribing
@@ -876,36 +867,6 @@ package body Ada_Lib.Database.Server.Tests is
 --       Log (Debug, Here, Who & " kill");
 -- end Set_Up;
 
-   ---------------------------------------------------------------
-   -- allocates Server
-   -- calls Server.Open
-   overriding
-   procedure Set_Up (
-      Test                          : in out Server_Test_Type) is
-   ---------------------------------------------------------------
-
-      Options                 : Ada_Lib.Options.AUnit_Lib.
-                                 Aunit_Options_Type'class renames
-                                    Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.all;
-      Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
-                                    Table_Class_Access := new Ada_Lib.Database.
-                                       Subscription.Tests.Subscription_Table_Type;
-   begin
-      Log (Debug, Here, Who & " enter which host " & Test.Which_Host'img);
-      Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
-      Test.Started := Server_State.Create_Server (
-         Subscription_Table,
-         Options.Database_Options.Get_Host,
-         Options.Database_Options.Port);
-      Log (Debug, Here, Who & " exit");
-
-   exception
-      when Fault: others =>
-         Trace_Message_Exception (Fault, Who, Here);
-         Test.Set_Up_Message_Exception (Fault, Here, Who, "could not open database");
-         Log (Debug, Here, Who & " kill");
-   end Set_Up;
-
    ---------------------------------------------------------------------------------
    overriding
    procedure Signaled (
@@ -922,7 +883,8 @@ package body Ada_Lib.Database.Server.Tests is
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
+      This_Test                  : Server_Test_Package.Server_Test_Type renames
+                                    Server_Test_Package.Server_Test_Type (Test);
 --    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
@@ -953,8 +915,9 @@ package body Ada_Lib.Database.Server.Tests is
 
       Event                      : Ada_Lib.Database.Event.Event_Type;
       Expected_Count            : Natural := 0;
-      Subscription               : Ada_Lib.Database.Subscription.Tests.Subscription_Type;
-      This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
+      Subscription               : Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
+      This_Test                  : Server_Test_Package.Server_Test_Type renames
+                                    Server_Test_Package.Server_Test_Type (Test);
 --    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
@@ -969,7 +932,7 @@ package body Ada_Lib.Database.Server.Tests is
 --       Signal                  : constant Content_Access := Content_Access (Event.Ptr);
 --
 --    begin
-      Test_Subscription (This_Test, Name_Value_1, Update_Mode, Subscription,
+      This_Test.Test_Subscription (Name_Value_1, Update_Mode, Subscription,
          Expected_Count, True);
 --    end;
       Log (Debug, Here, Who & " exit");
@@ -1002,12 +965,13 @@ package body Ada_Lib.Database.Server.Tests is
       Expected_Count            : Natural := 0;
       Local_Name_Value           : constant Ada_Lib.Database.Name_Value_Type := Ada_Lib.Database.Create (
                                     "variable", Ada_Lib.Database.No_Vector_Index, "", "event 1");
-      Subscription               : Ada_Lib.Database.Subscription.Tests.Subscription_Type;
+      Subscription               : Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
       Unsubscribe_Resubscribe : constant array (Subscription_Types) of Ada_Lib.Database.Updater.Update_Mode_Type := (
                                  Update_Mode_Unsubscribed   => Ada_Lib.Database.Updater.Unique,
                                  Any_Kept                   => Ada_Lib.Database.Updater.Always,
                                  Any_Unsubscribed           => Ada_Lib.Database.Updater.Unique);
-      This_Test               : Server_Test_Type renames Server_Test_Type (Test);
+      This_Test               : Server_Test_Package.Server_Test_Type renames
+                                 Server_Test_Package.Server_Test_Type (Test);
 --    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
@@ -1027,7 +991,8 @@ package body Ada_Lib.Database.Server.Tests is
 --             Signal                  : constant Content_Access := Content_Access (Event.Ptr);
 --
 --          begin
-               Test_Subscription (This_Test, Local_Name_Value, Update_Mode, Subscription, Expected_Count, True);
+               This_Test.Test_Subscription (Local_Name_Value, Update_Mode,
+                  Subscription, Expected_Count, True);
                delay 0.2;     -- make sure last update completes before unsubscribing
                Assert (Server.Unsubscribe (True, Local_Name_Value.Name.Coerce,
                   Ada_Lib.Database.No_Vector_Index, "", Ada_Lib.Database.Updater.Abstract_Updater_Type'tag), "Unsubscribe failed");
@@ -1089,34 +1054,6 @@ package body Ada_Lib.Database.Server.Tests is
 --    end;
 -- end Subscription_State;
 --
-   ---------------------------------------------------------------
-   overriding
-   procedure Tear_Down (
-      Test                          : in out Server_Test_Type) is
-   ---------------------------------------------------------------
-
---    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
---                                     Runtime_Options.Get_Options;
-      Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
-
-   begin
-      Log (Debug, Here, Who & " enter");
-
-      Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
-      Log (Debug, Here, Who & " delete value");
-      Test.Get_Database.Delete (Name_1, Ada_Lib.Database.No_Vector_Index);
-
-      if Server /= Null then
-         Log (Debug, Here, Who & " close server");
-         Server.Close;
-         Log (Debug, Here, Who & " free server");
-         Server_State.Free_Server;
-      end if;
-
-      Pause (Pause_Flag and Debug, "Pause before Tear Down cleanup", Here, Debug);
-      Log (Debug, Here, Who & " exit");
-   end Tear_Down;
-
 -- ---------------------------------------------------------------
 -- procedure Tear_Down (
 --    Test                          : in out Server_Open_Close_Test_Type) is
@@ -1134,79 +1071,6 @@ package body Ada_Lib.Database.Server.Tests is
 --    Pause (This_Test.Options.Pause, "Pause before Tear Down cleanup", Here, Debug);
 --    Log (Debug, Here, Who & " exit");
 -- end Tear_Down;
-
-   ---------------------------------------------------------------
-   procedure Test_Subscription (
-      Test                       : in     Server_Test_Type;
-      Name_Value                 : in     Ada_Lib.Database.Name_Value_Type;
-      Update_Mode                : in     Ada_Lib.Database.Updater.Update_Mode_Type;
-      Subscription               : in out Ada_Lib.Database.Subscription.Tests.Subscription_Type;
-      Expected_Count            : in out Natural;
-      First_Subscription         : in     Boolean) is
-   pragma Unreferenced (Test);
-   ---------------------------------------------------------------
-
-      Name                       : constant String := Name_Value.Name.Coerce;
---    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
---                                     Runtime_Options.Get_Options;
-      Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
---    Value                      : constant String := Name_Value.Value.Coerce;
-
-   begin
-      case First_Subscription is
-
-      when True =>
-      Server.Add_Subscription (Subscription'unchecked_access);
-
-      when False =>
-         Server.Set_Subscription_Mode (Name, Ada_Lib.Database.No_Vector_Index, "",
-            Ada_Lib.Database.Subscription.Tests.Subscription_Type'class (Subscription)'tag, Update_Mode);
-
-      end case;
-      Server.Post (Name_Value, Write_Timeout);
-
-      if    Update_Mode = Ada_Lib.Database.Updater.Always or else
-            not First_Subscription then           -- don't increment when 1st post is same as original value
-         Expected_Count := Expected_Count + 1;
-      end if;
-
-      delay 0.2;     -- let update complete
-
-      declare
-         Number_Repititions      : constant := 3;
-         Number_Unique_Updates   : constant := 10;
-         Value                   : Natural  := 0;
-
-      begin
-         for Unique_Counter in 1 .. Number_Unique_Updates loop
-            Value := Value + 1;
-            for Repitition_Counter in 1 .. Number_Repititions loop
-               Server.Post (Ada_Lib.Database.Name_Value_Type'(Ada_Lib.Database.Create (
-                     Name  => Name_Value.Name.Coerce,
-                     Index => Ada_Lib.Database.No_Vector_Index,
-                     Tag   => "",
-                     Value => Value'img)),
-                  Write_Timeout);
-            end loop;
-         end loop;
-
-         Log (Debug, Here, Who);
-         delay Subscribe_Timeout;     -- wait for all updates to come in
-
-         Expected_Count := Expected_Count + Number_Unique_Updates *
-            (if Update_Mode = Ada_Lib.Database.Updater.Unique then 1 else Number_Repititions );
-
-         Log (Debug, Here, Who & " on change " & Update_Mode'img &
-            " name value " & Subscription.Name_Value.Image &
-            " Expected_Count" & Expected_Count'img &
-            " Number_Unique_Updates" & Number_Unique_Updates'img &
-            " subscription count" & Subscription.Update_Count'img &
-            " address " & Image (Subscription'address));
-         Assert (Subscription.Update_Count = Expected_Count, "wrong update count. got" &
-            Subscription.Update_Count'img & " expected" & Expected_Count'img &
-            " subscription address " & Image (Subscription'address));
-      end;
-   end Test_Subscription;
 
    ---------------------------------------------------------------
    procedure Timeout_Get (
@@ -1327,7 +1191,8 @@ package body Ada_Lib.Database.Server.Tests is
       Test                          : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
+      This_Test                  : Server_Test_Package.Server_Test_Type renames
+                                    Server_Test_Package.Server_Test_Type (Test);
 
    begin
       Ada_Lib.Database.Common.Wild_Get (This_Test.Get_Database.all);
@@ -1336,6 +1201,251 @@ package body Ada_Lib.Database.Server.Tests is
       when Fault: Ada_Lib.Database.Common.Failed =>
          raise Failed with Ada.Exceptions.Exception_Message (Fault);
    end Wild_Get;
+
+   package body Server_Test_Package is
+
+      ---------------------------------------------------------------
+      overriding
+      function Name (Test : Server_Test_Type) return AUnit.Message_String is
+      pragma Unreferenced (Test);
+      ---------------------------------------------------------------
+
+      begin
+         return AUnit.Format (Suite_Name);
+      end Name;
+
+      --------------------------------------------------
+      overriding
+      procedure Register_Tests (Test : in out Server_Test_Type) is
+      ---------------------------------------------------------------
+
+      use Ada_Lib.Options.Unit_Test;
+
+         Options                 : Ada_Lib.Options.Unit_Test.
+                                    Unit_Test_Options_Type'class renames
+                                       Ada_Lib.Options.Unit_Test.
+                                          Unit_Test_Options_Constant.all;
+         Listing_Suites             : constant Boolean :=
+                                       Options.Mode /= Ada_Lib.Options.Run_Tests;
+         Star_Names                 : constant String :=
+                                       (if Listing_Suites then "*" else "");
+      begin
+         Log (Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
+
+         if Listing_Suites or else
+               Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+              Routine        => Parse_Name_Value'access,
+              Routine_Name   => AUnit.Format ("Parse_Name_Value" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+              Routine        => Start_Stop'access,
+              Routine_Name   => AUnit.Format ("Start_Stop" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Flush_Input'access,
+               Routine_Name   => AUnit.Format ("Flush_Input" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Post_Get'access,
+               Routine_Name   => AUnit.Format ("Post_Get" & Star_Names)));
+
+      --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+      --       Routine        => Post_Get_With_Token'access,
+      --       Routine_Name   => AUnit.Format ("Post_Get_With_Token" & Star_Names)));
+      --
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Name_Value_Get'access,
+               Routine_Name   => AUnit.Format ("Name_Value_Get" & Star_Names)));
+
+      --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+      --       Routine        => Name_Value_Get_With_Token'access,
+      --       Routine_Name   => AUnit.Format ("Name_Value_Get_With_Token" & Star_Names)));
+      --
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Subscribe'access,
+               Routine_Name   => AUnit.Format ("Subscribe" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Delete'access,
+               Routine_Name   => AUnit.Format ("Delete" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Delete_All'access,
+               Routine_Name   => AUnit.Format ("Delete_All" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Iterate_Subscriptions'access,
+               Routine_Name   => AUnit.Format ("Iterate_Subscriptions" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Subscribe_Unsubscribe'access,
+               Routine_Name   => AUnit.Format ("Subscribe_Unsubscribe" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Resubscribe'access,
+               Routine_Name   => AUnit.Format ("Resubscribe" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Duplicate_Subscription'access,
+               Routine_Name   => AUnit.Format ("Duplicate_Subscription" & Star_Names)));
+
+      --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+      --       Routine        => Subscription_State'access,
+      --       Routine_Name   => AUnit.Format ("Subscription_State" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Read'access,
+               Routine_Name   => AUnit.Format ("Read" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Timeout_Get'access,
+               Routine_Name   => AUnit.Format ("Timeout_Get" & Star_Names)));
+
+      --    Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+      --       Routine        => Set_Subscription_Mode'access,
+      --       Routine_Name   => AUnit.Format ("Set_Subscription_Mode" & Star_Names)));
+
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Wild_Get'access,
+               Routine_Name   => AUnit.Format ("Wild_Get" & Star_Names)));
+         end if;
+      end Register_Tests;
+
+      ---------------------------------------------------------------
+      -- allocates Server
+      -- calls Server.Open
+      overriding
+      procedure Set_Up (
+         Test                          : in out Server_Test_Type) is
+      ---------------------------------------------------------------
+
+         Options              : Ada_Lib.Options.AUnit_Lib.
+                                 Aunit_Options_Type'class renames
+                                    Ada_Lib.Options.AUnit_Lib.
+                                       AUnit_Lib_Options.all;
+--       Subscription_Table   : constant Ada_Lib.DAtabase.Subscribe_Test.
+--                               Table_Class_Access :=
+--                                  new Ada_Lib.Database.Updater.
+--                                     Base_Updater_Package.Base_Updater_Type;
+      begin
+         Log (Debug, Here, Who & " enter which host " & Test.Which_Host'img);
+         Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
+         Test.Started := Server_State.Create_Server (
+            Test.Subscription_Table'unchecked_access,
+            Options.Database_Options.Get_Host,
+            Options.Database_Options.Port);
+         Log (Debug, Here, Who & " exit");
+
+      exception
+         when Fault: others =>
+            Trace_Message_Exception (Fault, Who, Here);
+            Test.Set_Up_Message_Exception (Fault, Here, Who, "could not open database");
+            Log (Debug, Here, Who & " kill");
+      end Set_Up;
+
+      ---------------------------------------------------------------
+      overriding
+      procedure Tear_Down (
+         Test                          : in out Server_Test_Type) is
+      ---------------------------------------------------------------
+
+   --    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
+   --                                     Runtime_Options.Get_Options;
+         Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
+
+      begin
+         Log (Debug, Here, Who & " enter");
+
+         Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
+         Log (Debug, Here, Who & " delete value");
+         Test.Get_Database.Delete (Name_1, Ada_Lib.Database.No_Vector_Index);
+
+         if Server /= Null then
+            Log (Debug, Here, Who & " close server");
+            Server.Close;
+            Log (Debug, Here, Who & " free server");
+            Server_State.Free_Server;
+         end if;
+
+         Pause (Pause_Flag and Debug, "Pause before Tear Down cleanup", Here, Debug);
+         Log (Debug, Here, Who & " exit");
+      end Tear_Down;
+
+      ---------------------------------------------------------------
+      procedure Test_Subscription (
+         Test                       : in     Server_Test_Type;
+         Name_Value                 : in     Ada_Lib.Database.Name_Value_Type;
+         Update_Mode                : in     Ada_Lib.Database.Updater.Update_Mode_Type;
+         Subscription               : in out Ada_Lib.Database.Updater.Unit_Test.Subscription_Type;
+         Expected_Count            : in out Natural;
+         First_Subscription         : in     Boolean) is
+      pragma Unreferenced (Test);
+      ---------------------------------------------------------------
+
+         Name                       : constant String := Name_Value.Name.Coerce;
+   --    Options                    : constant Runtime_Options.Options_Constant_Class_Access :=
+   --                                     Runtime_Options.Get_Options;
+         Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
+   --    Value                      : constant String := Name_Value.Value.Coerce;
+
+      begin
+         case First_Subscription is
+
+         when True =>
+         Server.Add_Subscription (Subscription'unchecked_access);
+
+         when False =>
+            Server.Set_Subscription_Mode (Name, Ada_Lib.Database.No_Vector_Index, "",
+               Ada_Lib.Database.Updater.Unit_Test.Subscription_Type'class (Subscription)'tag, Update_Mode);
+
+         end case;
+         Server.Post (Name_Value, Write_Timeout);
+
+         if    Update_Mode = Ada_Lib.Database.Updater.Always or else
+               not First_Subscription then           -- don't increment when 1st post is same as original value
+            Expected_Count := Expected_Count + 1;
+         end if;
+
+         delay 0.2;     -- let update complete
+
+         declare
+            Number_Repititions      : constant := 3;
+            Number_Unique_Updates   : constant := 10;
+            Value                   : Natural  := 0;
+
+         begin
+            for Unique_Counter in 1 .. Number_Unique_Updates loop
+               Value := Value + 1;
+               for Repitition_Counter in 1 .. Number_Repititions loop
+                  Server.Post (Ada_Lib.Database.Name_Value_Type'(Ada_Lib.Database.Create (
+                        Name  => Name_Value.Name.Coerce,
+                        Index => Ada_Lib.Database.No_Vector_Index,
+                        Tag   => "",
+                        Value => Value'img)),
+                     Write_Timeout);
+               end loop;
+            end loop;
+
+            Log (Debug, Here, Who);
+            delay Subscribe_Timeout;     -- wait for all updates to come in
+
+            Expected_Count := Expected_Count + Number_Unique_Updates *
+               (if Update_Mode = Ada_Lib.Database.Updater.Unique then 1 else Number_Repititions );
+
+            Log (Debug, Here, Who & " on change " & Update_Mode'img &
+               " name value " & Subscription.Name_Value.Image &
+               " Expected_Count" & Expected_Count'img &
+               " Number_Unique_Updates" & Number_Unique_Updates'img &
+               " subscription count" & Subscription.Update_Count'img &
+               " address " & Image (Subscription'address));
+            Assert (Subscription.Update_Count = Expected_Count, "wrong update count. got" &
+               Subscription.Update_Count'img & " expected" & Expected_Count'img &
+               " subscription address " & Image (Subscription'address));
+         end;
+      end Test_Subscription;
+
+   end Server_Test_Package;
 
 begin
    if Trace_Tests then

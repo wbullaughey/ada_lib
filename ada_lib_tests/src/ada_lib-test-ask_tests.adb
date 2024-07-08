@@ -1,18 +1,29 @@
 with Ada.Text_IO;use Ada.Text_IO;
---with Ada_Lib.Test.Tests;
 with Ask;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Test;
-
---pragma Elaborate (Ada_Lib.Test);
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Test.Ask_Tests is
 
--- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+
+   type Test_Access is access Test_Type;
+
+   procedure Basic_Operations (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
 
    function Near is new Ada_Lib.Test.Near (Float);
+
+   Suite_Name                    : constant String := "Ask";
 
    ---------------------------------------------------------------
    procedure Basic_Operations(

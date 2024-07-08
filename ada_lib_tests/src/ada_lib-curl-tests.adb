@@ -1,9 +1,35 @@
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Curl.Tests is
+
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
+                                    Test_Case_Type with null record;
+
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Test_Type);
+
+   procedure Expand_Template (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- overriding
+-- procedure Set_Up (Test : in out Test_Type)
+-- with post => Test.Verify_Set_Up;
+
+-- overriding
+-- procedure Tear_Down (Test : in out Test_Type)
+-- with post => Verify_Set_Up (Test);
+
+   Suite_Name                    : constant String := "Curl";
 
    ---------------------------------------------------------------
    procedure Expand_Template (
@@ -54,7 +80,7 @@ package body Ada_Lib.Curl.Tests is
 --
 -- begin
 --    Log_In (Debug);
---    Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+--    Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
 --    Test.Credential.Initialize (Account, Password);
 --    Log_Out (Debug);
 --

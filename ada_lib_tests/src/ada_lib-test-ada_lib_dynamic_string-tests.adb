@@ -4,10 +4,37 @@ with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
-
---with Ada_Lib.Strings.Unlimited.Text_IO; use Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited.Text_IO;
+with Ada.Text_IO;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
+
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
+      File                    : Ada.Text_IO.File_Type;
+   end record;
+
+   type Test_Access is access Test_Type;
+
+   procedure Basic_Operations (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   procedure Register_Tests (Test : in out Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Type
+   ) with Pre => Test.Verify_Pre_Setup,
+          Post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (Test : in out Test_Type)
+   with post => Verify_Set_Up (Test);
+
+   procedure Text_IO_Operations(
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    subtype Word_Type          is String (1 .. 10);
    type Words_Array           is array (1 .. 5) of Word_Type;

@@ -41,6 +41,10 @@ package Ada_Lib.Database is
       Tag                        : Ada_Lib.Strings.Unlimited.String_Type;
     end record;
 
+   function Key (                      -- used as key into subscription table
+      Name_Index_Tag             : in     Name_Index_Tag_Type
+   ) return String;
+
     type Name_Value_Type;
 
     type Name_Index_Tag_Access is access Name_Index_Tag_Type;
@@ -287,7 +291,7 @@ package Ada_Lib.Database is
     ) return String;
 
    function Get_Subscription_Field (
-      File                       : in out Ada.Text_IO.File_Type;
+      File                       : in     Ada.Text_IO.File_Type;
       Allow_Null                 : in     Boolean;
       From                       : in     String := Ada_Lib.Trace.Here
    ) return String;

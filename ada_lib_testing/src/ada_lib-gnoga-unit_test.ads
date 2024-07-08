@@ -1,6 +1,6 @@
 --with Ada_Lib.Command_Line_Iterator;
 --with Ada_Lib.Socket_IO;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.GNOGA.Unit_Test is
 
@@ -10,7 +10,7 @@ package Ada_Lib.GNOGA.Unit_Test is
    type GNOGA_Tests_Type (
       Initialize_GNOGA           : Boolean;
       Test_Driver                : Boolean) is abstract new Ada_Lib.Unit_Test.
-                                    Tests.Test_Case_Type with null record;
+                                    Test_Cases.Test_Case_Type with null record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;

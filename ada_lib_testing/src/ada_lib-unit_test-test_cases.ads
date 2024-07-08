@@ -58,7 +58,10 @@ package Ada_Lib.Unit_Test.Test_Cases is
    type Test_Case_Type is abstract new Root_Test.Test_Type with record
       Async_Failure_Message      : Ada_Lib.Strings.Unlimited.String_Type;
       Failure_From               : Ada_Lib.Strings.Unlimited.String_Type;
+      Options                    : Ada_Lib.Options.
+                                    Program_Options_Constant_Class_Access := Null;
       Suite_Name                 : Ada_Lib.Strings.Unlimited.String_Type;
+      Test_Failed                : Boolean := False;
    end record;
 
    type Test_Case_Class_Access is access all Test_Case_Type'class;
@@ -68,6 +71,10 @@ package Ada_Lib.Unit_Test.Test_Cases is
       Test                    : in out Test_Case_Type;
       Val                     : AUnit.Test_Cases.Routine_Spec
    ) with pre => Ada_Lib.Options_Interface.Read_Only_Options/= Null;
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Case_Type);
 
    procedure Set_Up_Exception (
       Test                       : in out Test_Case_Type;
@@ -89,8 +96,9 @@ package Ada_Lib.Unit_Test.Test_Cases is
       Who                        : in     String := Ada_Lib.Trace.Who;
       Message                    : in     String := "");
 
--- procedure Tear_Down (
---    Test                       : in out Test_Case_Type)
+   overriding
+   procedure Tear_Down (
+      Test                       : in out Test_Case_Type);
 --
    procedure Tear_Down_Exception (
       Test                       : in out Test_Case_Type;
@@ -106,7 +114,12 @@ package Ada_Lib.Unit_Test.Test_Cases is
       Who                        : in     String := Ada_Lib.Trace.Who;
       Message                    : in     String := "");
 
--- function Was_There_An_Async_Failure
--- return Boolean;
+   function Verify_Post_Setup (
+      Test                       : in     Test_Case_Type
+   ) return Boolean;
+
+   function Verify_Pre_Setup (
+      Test                       : in     Test_Case_Type
+   ) return Boolean;
 
 end Ada_Lib.Unit_Test.Test_Cases;

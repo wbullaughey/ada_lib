@@ -37,7 +37,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       if not Test.Test_Driver then
          Log_Here (Debug or Trace_Set_Up, -- "URL_Opened " & URL_Opened'img &
             " Initialize_GNOGA " & Test.Initialize_GNOGA'img);
@@ -64,7 +64,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
 
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       if Test.Initialize_GNOGA then
          Standard.Gnoga.Application.Multi_Connect.End_Application;
          delay 0.2;  -- let server stop
@@ -118,14 +118,14 @@ package body Ada_Lib.GNOGA.Unit_Test is
                                     Ada_Lib.GNOGA.Has_Connection_Data;
    begin
       return Log_Here (Has_Connection_Data and then
-             Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up,
+             Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Verify_Set_Up,
          Debug, (
             if not Has_Connection_Data then
                " Test.Connection_Data is Null"
             else
                ""
             ) &
-            (if Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up then
+            (if Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Verify_Set_Up then
                ""
             else
                " Verify_Set_Up failed"

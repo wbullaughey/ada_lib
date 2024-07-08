@@ -71,17 +71,26 @@ package Ada_Lib.Database.Updater is
       Left, Right                : in     Updater_Interface
    ) return Boolean is abstract;
 
-   function Equal (
-      Left, Right                : in     Updater_Interface_Class_Access
-   ) return Boolean;
+-- function Equal (
+--    Left, Right                : in     Updater_Interface_Class_Access
+-- ) return Boolean;
 
    function Image (
+      Updater                    : in     Updater_Interface
+   ) return String is abstract;
+
+   function Key (
       Updater                    : in     Updater_Interface
    ) return String is abstract;
 
    function Index (
       Base_Updater               : in     Updater_Interface
    ) return Optional_Vector_Index_Type is abstract;
+
+   procedure Load (
+      Base_Updater               :    out Updater_Interface;
+      File                       : in     Ada.Text_IO.File_Type;
+      Loaded                     :    out Boolean) is abstract;
 
    function Name (
       Updater                    : in     Updater_Interface
@@ -128,7 +137,11 @@ package Ada_Lib.Database.Updater is
    ) return String is abstract;
 
    package Base_Updater_Package is
-      type Base_Updater_Type is tagged limited  private;
+
+      type Base_Updater_Type     is tagged limited private;
+      type Base_Updater_Access   is access Base_Updater_Type;
+      type Base_Updater_Class_Access
+                                 is access Base_Updater_Type'class;
 
       function "=" (
          Left, Right                : in     Base_Updater_Type
@@ -142,6 +155,10 @@ package Ada_Lib.Database.Updater is
          Updater                    : in     Base_Updater_Type;
          Title                      : in     String := "";
          From                       : in     String := Ada_Lib.Trace.Here);
+
+      function Equal (
+         Left, Right                : in     Base_Updater_Class_Access
+      ) return Boolean;
 
       function Image (
          Updater                    : in     Base_Updater_Type
@@ -159,9 +176,13 @@ package Ada_Lib.Database.Updater is
          Ada_Tag                    : in     Ada.Tags.Tag;
          Update_Mode                : in     Update_Mode_Type);
 
+      function Key (
+         Updater                    : in     Base_Updater_Type
+      ) return String;
+
       procedure Load (
-         Updater                    : in out Base_Updater_Type;
-         File                       : in out Ada.Text_IO.File_Type;
+         Updater                    :    out Base_Updater_Type;
+         File                       : in     Ada.Text_IO.File_Type;
          Got_Subscription           :    out Boolean);
 
       function Name (
@@ -175,6 +196,12 @@ package Ada_Lib.Database.Updater is
       procedure Store (
          Updater                    : in     Base_Updater_Type;
          File                       : in out Ada.Text_IO.File_Type);
+
+      procedure Update (
+         Updater                    : in out Base_Updater_Type;
+         ID                         : in     Ada_Lib.Strings.Unlimited.String_Type;   -- lookup key in server
+         Name_Index_Tag             : in     Name_Index_Tag_Type;
+         Update_Mode                : in     Update_Mode_Type);
 
       function Update_Count (
          Updater                    : in     Base_Updater_Type
@@ -210,24 +237,14 @@ package Ada_Lib.Database.Updater is
       Title                      : in     String := "";
       From                       : in     String := Ada_Lib.Trace.Here);
 
--- function "=" (
---    Left                       : in     Abstract_Updater_Type;
---    Right                      : in     Abstract_Updater_Type
--- ) return Boolean;
-
--- function Image (
---    Updater                    : in     Abstract_Updater_Type
--- ) return String;
-
--- procedure Load (
---    Table                      :    out Abstract_Updater_Type;
---    Path                       : in     String) is abstract;
-
    overriding
-   procedure Load (
+   procedure Update (
       Updater                    : in out Abstract_Updater_Type;
-      File                       : in out Ada.Text_IO.File_Type;
-      Got_Subscription           :    out Boolean);
+      Address                    : in     Abstract_Address_Type'class;
+      Tag                        : in     String;
+      Value                      : in     String;
+      Update_Kind                : in     Update_Kind_Type;
+      From                       : in     String := Ada_Lib.Trace.Here);
 
    overriding
    function Value (
@@ -239,14 +256,12 @@ package Ada_Lib.Database.Updater is
       Updater                    : in     Abstract_Updater_Type
    ) return Name_Value_Type'class;
 
-   overriding
-   procedure Update (
-      Updater                    : in out Abstract_Updater_Type;
-      Address                    : in     Abstract_Address_Type'class;
-      Tag                        : in     String;
-      Value                      : in     String;
-      Update_Kind                : in     Update_Kind_Type;
-      From                       : in     String := Ada_Lib.Trace.Here) is abstract;
+   function Equal (
+      Left, Right                : in     Abstract_Updater_Class_Access
+   ) return Boolean;
+
+   procedure Free (
+      Updater                    : in out Abstract_Updater_Class_Access);
 
     Null_Address                 : constant Null_Address_Type := (null record);
 

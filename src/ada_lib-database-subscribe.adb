@@ -1,10 +1,13 @@
 with Ada.Text_IO; use Ada.Text_IO;
+--with Ada_Lib.Database.Subscription;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Subscribe is
 
-   use type Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+   use type Entry_Class_Access;
+-- use type Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
+   use type Ada_Lib.Database.Updater.Base_Updater_Package.Base_Updater_Access;
    use type Ada_Lib.Database.Updater.Update_Mode_Type;
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
@@ -26,7 +29,7 @@ package body Ada_Lib.Database.Subscribe is
 -- ) return Key_Type;
 
 -- function Create_Key (
---    Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+--    Updater                    : in     Entry_Class_Access
 -- ) return Key_Type;
 
    Null_Address                  : Ada_Lib.Database.Updater.Null_Address_Type renames
@@ -35,7 +38,7 @@ package body Ada_Lib.Database.Subscribe is
    ---------------------------------------------------------------------------------
    procedure Add_Subscription (
       Table                      : in out Table_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access) is
+      Updater                    : in     Entry_Class_Access) is
 --    Timeout                    : in     Duration := Default_Post_Timeout) is
    ---------------------------------------------------------------------------------
 
@@ -77,7 +80,7 @@ package body Ada_Lib.Database.Subscribe is
    -- delete all subscriptions for named item
    function Delete (
       Table                      : in out Table_Type;
-      Updater               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+      Updater               : in     Entry_Class_Access
    ) return Boolean is
    ---------------------------------------------------------------------------------
 
@@ -198,7 +201,7 @@ package body Ada_Lib.Database.Subscribe is
 
 -- ---------------------------------------------------------------------------------
 -- function Equal (
---    Left, Right                : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+--    Left, Right                : in     Entry_Class_Access
 -- ) return Boolean is
 -- ---------------------------------------------------------------------------------
 --
@@ -221,7 +224,7 @@ package body Ada_Lib.Database.Subscribe is
 -- ---------------------------------------------------------------------------------
 -- function Get_Subscription (
 --    Cursor                     : in     Vector_Cursor_Type
--- ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access is
+-- ) return Entry_Class_Access is
 -- ---------------------------------------------------------------------------------
 --
 -- begin
@@ -236,7 +239,7 @@ package body Ada_Lib.Database.Subscribe is
       Index                      : in     Optional_Vector_Index_Type;
       DBDaemon_Tag               : in     String;
       Ada_Tag                    : in     Ada.Tags.Tag
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access is
+   ) return Entry_Class_Access is
    ---------------------------------------------------------------------------------
 
       Map_Key                    : constant String := Ada_Lib.Database.Updater.Updater_ID (Name, Index,
@@ -248,7 +251,7 @@ package body Ada_Lib.Database.Subscribe is
 
       if Hash_Table_Package.Has_Element (Table_Cursor) then
          Log_Out (Debug_Subscribe);
-         return Ada_Lib.Database.Updater.Updater_Interface_Class_Access (
+         return Entry_Class_Access (
             Hash_Table_Package.Element (Table_Cursor));
       end if;
       Log_Exception (Debug_Subscribe);
@@ -345,7 +348,7 @@ package body Ada_Lib.Database.Subscribe is
    ---------------------------------------------------------------------------------
 -- procedure Insert (
 --    Table                      : in out Table_Type;
---    Subscription               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access) is
+--    Subscription               : in     Entry_Class_Access) is
 -- ---------------------------------------------------------------------------------
 --
 -- begin
@@ -370,7 +373,7 @@ package body Ada_Lib.Database.Subscribe is
 
 -- ---------------------------------------------------------------------------------
 -- function Create_Key (
---    Updater               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+--    Updater               : in     Entry_Class_Access
 -- ) return Key_Type is
 -- ---------------------------------------------------------------------------------
 --
@@ -406,40 +409,37 @@ package body Ada_Lib.Database.Subscribe is
 --    return Cursor.Subscription.Last_Value;
 -- end Last_Value;
 
---   ---------------------------------------------------------------------------------
---   procedure Load (
---      Table                      : in out Table_Type;
---      Path                       : in     String) is
---   ---------------------------------------------------------------------------------
---
---      File                       : Ada.Text_IO.File_Type;
---
---   begin
---      Log_In (Debug_Subscribe, Quote ("Path", Path));
---      Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Path);
---
---      loop
---         declare
---            Got_Subscription     : Boolean;
---            Subscription         : Ada_Lib.Database.Updater.Updater_Interface_Class_Access :=
---                                    new Ada_Lib.Database.Updater.Abstract_Updater_Type;
---
---         begin
---            Subscription.Load (File, Got_Subscription);
---            if Got_Subscription then
---               Table.Map.Insert (Create_Key (Subscription.all),
---                  Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription));
-----             Table.Insert (Subscription);
-----             Widget.Add_Named_Row (Subscription.Name_Value.Name.Coerce);
---            else
---               Ada_Lib.Database.Subscription.Free (Subscription);
---               exit;
---            end if;
---         end;
---      end loop;
---      Log_OUt (Debug_Subscribe);
---    end Load;
---
+   ---------------------------------------------------------------------------------
+   procedure Load (
+      Table                      : in out Table_Type;
+      Path                       : in     String) is
+   ---------------------------------------------------------------------------------
+
+      File                       : Ada.Text_IO.File_Type;
+
+   begin
+      Log_In (Debug_Subscribe, Quote ("Path", Path));
+      Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Path);
+
+      loop
+         declare
+            Got_Subscription  : Boolean;
+            Subscription      : Entry_Class_Access :=
+                                 Table_Type'class (Table).Allocate;
+
+         begin
+            Subscription.Load (File, Got_Subscription);
+            if Got_Subscription then
+               Table.Map.Insert (Subscription.Key, Subscription);
+            else
+               Ada_Lib.Database.Updater.Free (Subscription);
+               exit;
+            end if;
+         end;
+      end loop;
+      Log_OUt (Debug_Subscribe);
+    end Load;
+
 -- ---------------------------------------------------------------------------------
 -- function Name_Value (
 --    Cursor                     : in     Subscription_Cursor_Type
@@ -466,8 +466,8 @@ package body Ada_Lib.Database.Subscribe is
       for Cursor in Table.Map.Iterate loop
            declare
               Send_Update        : Boolean;
-              Updater            : constant Ada_Lib.Database.Updater.Updater_Interface_Class_Access :=
-                                    Ada_Lib.Database.Updater.Updater_Interface_Class_Access  (
+              Updater            : constant Entry_Class_Access :=
+                                    Entry_Class_Access  (
                                        Hash_Table_Package.Element (Cursor));
            begin
               Log (Debug_Subscribe, Here, Who & Quote (" notify name", Name_Value.Name) &
@@ -548,7 +548,7 @@ package body Ada_Lib.Database.Subscribe is
 
          if Element_Key = Tag then
             declare
-               Updater           : constant Ada_Lib.Database.Updater.Updater_Interface_Class_Access :=
+               Updater           : constant Entry_Class_Access :=
                                     Hash_Table_Package.Element (Cursor);
             begin
                Updater.Update (Null_Address, Tag, Value, Ada_Lib.Database.Updater.Internal);
@@ -599,7 +599,7 @@ package body Ada_Lib.Database.Subscribe is
 
          if Element_Key = Key then
             declare
-               Updater           : constant Ada_Lib.Database.Updater.Updater_Interface_Class_Access :=
+               Updater           : constant Entry_Class_Access :=
                                     Hash_Table_Package.Element (Cursor);
             begin
                if Result = Update_Failed then  -- 1st Updater with matching key
@@ -652,7 +652,7 @@ package body Ada_Lib.Database.Subscribe is
 --
 --    if Table.Has_Subscription (Name_Value.Name.Coerce, Index) then
 --       declare
---          Subscription         : constant Ada_Lib.Database.Updater.Updater_Interface_Class_Access :=
+--          Subscription         : constant Entry_Class_Access :=
 --                                  Table.Get_Subscription (Name_Index);
 --
 --       begin
@@ -693,7 +693,7 @@ package body Ada_Lib.Database.Subscribe is
 -- -- add a subscription returns false if one already exists
 -- function Subscribe (
 --    Table                      : in out Table_Type;
---    Subscription               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+--    Subscription               : in     Entry_Class_Access;
 --    Name                       : in     String;
 --    Index                      : in     Optional_Vector_Index_Type;
 --    Tag                        : in     String;
@@ -724,7 +724,7 @@ package body Ada_Lib.Database.Subscribe is
    ---------------------------------------------------------------------------------
    function Subscription (
       Cursor                     : in out Subscription_Cursor_Type
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access is
+   ) return Entry_Class_Access is
    ---------------------------------------------------------------------------------
 
    begin
@@ -734,7 +734,7 @@ package body Ada_Lib.Database.Subscribe is
    ---------------------------------------------------------------------------------
    function Subscription_Protected (
       Cursor                     : in out Subscription_Cursor_Type
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access is
+   ) return Entry_Class_Access is
    ---------------------------------------------------------------------------------
 
    begin

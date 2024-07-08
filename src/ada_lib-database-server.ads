@@ -12,7 +12,7 @@ package Ada_Lib.Database.Server is
 
    Subscriber_Time_Out           : exception;
 
-   use type Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+   use type Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
 
    type Callback_Parameter_Type is abstract tagged record
       Subscriber                : Ada_Lib.Database.Subscribe.Table_Class_Access;
@@ -28,7 +28,8 @@ package Ada_Lib.Database.Server is
 
    procedure Add_Subscription (
       Server                     : in out Server_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access)
+      Updater                    : in     Ada_Lib.Database.Updater.
+                                             Abstract_Updater_Class_Access)
    with pre => Is_Open (Server);
 
    function Allocate_Server (
@@ -72,7 +73,7 @@ package Ada_Lib.Database.Server is
 
    function Delete_Subscription (
       Server                     : in out Server_Type;
-      Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+      Updater                    : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access
    ) return Boolean
    with pre => Is_Open (Server);
 
@@ -113,7 +114,7 @@ package Ada_Lib.Database.Server is
       Index                      : in     Optional_Vector_Index_Type;
       DBDaemon_Tag               : in     String;
       Ada_Tag                    : in     Ada.Tags.Tag
-   ) return Ada_Lib.Database.Updater.Updater_Interface_Class_Access
+   ) return Ada_Lib.Database.Updater.Abstract_Updater_Class_Access
    with post => Get_Subscription'Result /= Null;
 
    function Get_Subscription_Update_Mode (
@@ -254,7 +255,7 @@ package Ada_Lib.Database.Server is
 -- -- with derived Subscription_Type
 -- function Subscribe_With (
 --    Server                     : in out Server_Type;
---    Subscription               : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+--    Subscription               : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
 --    Name                       : in     String;
 --    Index                      : in     Optional_Vector_Index_Type;
 --    Tag                        : in     String;
@@ -288,7 +289,7 @@ package Ada_Lib.Database.Server is
    task type Subscriber_Task is
 
       entry Add_Subscription (
-         Updater                 : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access);
+         Updater                 : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access);
 
       entry Call_Callback (
          Parameter               : in out Callback_Parameter_Type'class);
@@ -296,7 +297,7 @@ package Ada_Lib.Database.Server is
       entry Close;
 
       entry Delete (
-         Updater                 : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+         Updater                 : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
          Result                  :    out Boolean);
 
       entry Delete (
@@ -319,7 +320,7 @@ package Ada_Lib.Database.Server is
          Index                   : in     Optional_Vector_Index_Type;
          DBDaemon_Tag            : in     String;
          Ada_Tag                 : in     Ada.Tags.Tag;
-         Updater                 :    out Ada_Lib.Database.Updater.Updater_Interface_Class_Access);
+         Updater                 :    out Ada_Lib.Database.Updater.Abstract_Updater_Class_Access);
 
       entry Get_Subscription_Update_Mode (
          Name                    : in     String;
@@ -388,7 +389,7 @@ package Ada_Lib.Database.Server is
          Path                    : in     String);
 
 --    entry Subscribe (
---       Subscription            : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
+--       Subscription            : in     Ada_Lib.Database.Updater.Abstract_Updater_Class_Access;
 --       Name                    : in     String;
 --       Index                   : in     Optional_Vector_Index_Type;
 --       Tag                     : in     String;

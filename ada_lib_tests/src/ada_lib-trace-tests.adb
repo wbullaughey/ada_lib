@@ -6,15 +6,71 @@ with Ada_Lib.Options;
 with Ada_Lib.Parser;
 with Ada_Lib.Strings;
 with Ada_Lib.Time;
+with Ada.Containers.Doubly_Linked_Lists;
+with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
---with hex_io;
+
 package body Ada_Lib.Trace.Tests is
+
+   use type Ada_Lib.Strings.Unlimited.String_Type;
 
    Test_Exception                : exception;
 
-   use type Ada_Lib.Time.Time_Type;
+   package Output_Package is new Ada.Containers.Doubly_Linked_Lists (
+      Element_Type   => Ada_Lib.Strings.Unlimited.String_Type);
+
+   type Test_File_Type           is new File_Type with record
+      List                       : Output_Package.List;
+   end record;
+
+-- type Test_File_Access         is access all Test_File_Type;
+-- type Test_File_Class_Access   is access Test_File_Type'class;
+
+   overriding
+   procedure Flush (
+      File                       : in     Test_File_Type);
+
+   overriding
+   procedure Output (
+      File                       : in out Test_File_Type;
+      Data                       : in     String);
+
+   package Test_Package is
+
+      type Test_Type                 is new Ada_Lib.Unit_Test.Test_Cases.
+                                       Test_Case_Type with record
+         Output                     : aliased Test_File_Type;
+         Saved_Output_File          : File_Class_Access := Null;
+      end record;
+
+      procedure End_Test (
+         Test                       : in out Test_Type);
+
+      overriding
+      function Name (
+         Test                       : in     Test_Type) return AUnit.Message_String;
+
+      overriding
+      procedure Register_Tests (
+         Test                       : in out Test_Type);
+
+      overriding
+      procedure Set_Up (Test : in out Test_Type)
+      with post => Test.Verify_Set_Up;
+
+      procedure Start_Test (
+         Test                       : in out Test_Type);
+
+      overriding
+      procedure Tear_Down (Test : in out Test_Type)
+      with post => Verify_Torn_Down (Test);
+
+   end Test_Package;
+
+   use Test_Package;
 
    type Output_Type              is record
       Level                      : Level_Type;
@@ -33,9 +89,6 @@ package body Ada_Lib.Trace.Tests is
       Seconds                    : Natural;
    end record;
 
-   procedure End_Test (
-      Test                       : in out Test_Type);
-
    procedure Exception_Test (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
@@ -48,9 +101,6 @@ package body Ada_Lib.Trace.Tests is
    procedure Simple (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
-   procedure Start_Test (
-      Test                       : in out Test_Type);
-
    function Tag_Output (
       Line                       : in     String
    ) return String;
@@ -58,6 +108,8 @@ package body Ada_Lib.Trace.Tests is
    function Time_Parser (
       Text                       : in     String
    ) return Parsed_Time_Type;
+
+   Suite_Name                    : constant String := "Trace";
 
    ---------------------------------------------------------------
    procedure Check_Output (
@@ -226,21 +278,6 @@ package body Ada_Lib.Trace.Tests is
    end Check_Output;
 
    ---------------------------------------------------------------
-   procedure End_Test (
-      Test                       : in out Test_Type) is
-   ---------------------------------------------------------------
-
-      Previous_File              : File_Class_Access;
-
-   begin
---ada.Text_io.put_line (here);
-      Replace_Output_File (Test.Saved_Output_File, Previous_File);
---ada.Text_io.put_line (here);
-      Log_Here (Debug_Tests);
---ada.Text_io.put_line (here);
-   end End_Test;
-
-   ---------------------------------------------------------------
    procedure Exception_Test (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
@@ -313,9 +350,9 @@ package body Ada_Lib.Trace.Tests is
          Hundreds               : Natural;
       end record;
 
-      Start_Time                 : constant Ada_Lib.Time.Time_Type :=
-                                    Ada_Lib.Time.Now;
-
+--    Start_Time                 : constant Ada_Lib.Time.Time_Type :=
+--                                  Ada_Lib.Time.Now;
+--
       Tests          : constant array (Positive range <>) of Test_Type := (
                         (
                            Source      => new String'("01:02:03"),
@@ -454,17 +491,6 @@ package body Ada_Lib.Trace.Tests is
       End_Test (Local_Test);
    end Multi_Thread;
 
- ---------------------------------------------------------------
-   overriding
-   function Name (
-      Test                       : in     Test_Type) return AUnit.Message_String is
-   pragma Unreferenced (Test);
-   ---------------------------------------------------------------
-
-   begin
-      return AUnit.Format (Suite_Name);
-   end Name;
-
    ---------------------------------------------------------------
    overriding
    procedure Output (
@@ -486,44 +512,6 @@ package body Ada_Lib.Trace.Tests is
       T (Debug_Test, "Out");
 --ada.Text_io.put_line (here);
    end Output;
-
-   ---------------------------------------------------------------
-   overriding
-   procedure Register_Tests (
-      Test                       : in out Test_Type) is
-   ---------------------------------------------------------------
-
-   begin
-      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-         Routine        => Simple'access,
-         Routine_Name   => AUnit.Format ("Simple")));
-
-      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-         Routine        => Exception_Test'access,
-         Routine_Name   => AUnit.Format ("Exception_Test")));
-
-      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-         Routine        => Parsed_Time'access,
-         Routine_Name   => AUnit.Format ("Parsed_Time")));
-
-      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-         Routine        => Multi_Thread'access,
-         Routine_Name   => AUnit.Format ("Multi_Thread")));
-
-   end Register_Tests;
-
-   ---------------------------------------------------------------
-   overriding
-   procedure Set_Up (
-      Test                       : in out Test_Type) is
-   ---------------------------------------------------------------
-
-   begin
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      if Debug_Tests then
-         delay (2.5);
-      end if;
-   end Set_Up;
 
    ---------------------------------------------------------------
    procedure Simple (
@@ -572,18 +560,6 @@ package body Ada_Lib.Trace.Tests is
    end Simple;
 
    ---------------------------------------------------------------
-   procedure Start_Test (
-      Test                       : in out Test_Type) is
-   ---------------------------------------------------------------
-
-   begin
-      Log_Here (Debug_Tests);
-      Override_Level (0);
-      Replace_Output_File (Test.Output'unchecked_access,
-         Test.Saved_Output_File);
-   end Start_Test;
-
-   ---------------------------------------------------------------
    function Suite return AUnit.Test_Suites.Access_Test_Suite is
    ---------------------------------------------------------------
 
@@ -606,16 +582,6 @@ package body Ada_Lib.Trace.Tests is
    begin
       return "->" & Line & "<-";
    end Tag_Output;
-
-   ---------------------------------------------------------------
-   overriding
-   procedure Tear_Down (Test : in out Test_Type) is
-   ---------------------------------------------------------------
-
-   begin
-      Output_Package.Clear (Test.Output.List);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-   end Tear_Down;
 
    ---------------------------------------------------------------
    function Time_Parser (
@@ -643,6 +609,96 @@ package body Ada_Lib.Trace.Tests is
          " hundreds " & Result.Parsed_Hundreds'img & Result.Hundreds'img);
       return Result;
    end Time_Parser;
+
+   package body Test_Package is
+
+      ---------------------------------------------------------------
+      procedure End_Test (
+         Test                       : in out Test_Type) is
+      ---------------------------------------------------------------
+
+         Previous_File              : File_Class_Access;
+
+      begin
+   --ada.Text_io.put_line (here);
+         Replace_Output_File (Test.Saved_Output_File, Previous_File);
+   --ada.Text_io.put_line (here);
+         Log_Here (Debug_Tests);
+   --ada.Text_io.put_line (here);
+      end End_Test;
+
+    ---------------------------------------------------------------
+      overriding
+      function Name (
+         Test                       : in     Test_Type) return AUnit.Message_String is
+      pragma Unreferenced (Test);
+      ---------------------------------------------------------------
+
+      begin
+         return AUnit.Format (Suite_Name);
+      end Name;
+
+      ---------------------------------------------------------------
+      overriding
+      procedure Register_Tests (
+         Test                       : in out Test_Type) is
+      ---------------------------------------------------------------
+
+      begin
+         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+            Routine        => Simple'access,
+            Routine_Name   => AUnit.Format ("Simple")));
+
+         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+            Routine        => Exception_Test'access,
+            Routine_Name   => AUnit.Format ("Exception_Test")));
+
+         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+            Routine        => Parsed_Time'access,
+            Routine_Name   => AUnit.Format ("Parsed_Time")));
+
+         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+            Routine        => Multi_Thread'access,
+            Routine_Name   => AUnit.Format ("Multi_Thread")));
+
+      end Register_Tests;
+
+      ---------------------------------------------------------------
+      overriding
+      procedure Set_Up (
+         Test                       : in out Test_Type) is
+      ---------------------------------------------------------------
+
+      begin
+         Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
+         if Debug_Tests then
+            delay (2.5);
+         end if;
+      end Set_Up;
+
+      ---------------------------------------------------------------
+      procedure Start_Test (
+         Test                       : in out Test_Type) is
+      ---------------------------------------------------------------
+
+      begin
+         Log_Here (Debug_Tests);
+         Override_Level (0);
+         Replace_Output_File (Test.Output'unchecked_access,
+            Test.Saved_Output_File);
+      end Start_Test;
+
+      ---------------------------------------------------------------
+      overriding
+      procedure Tear_Down (Test : in out Test_Type) is
+      ---------------------------------------------------------------
+
+      begin
+         Output_Package.Clear (Test.Output.List);
+         Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
+      end Tear_Down;
+
+   end Test_Package;
 
 begin
 --Debug := True;

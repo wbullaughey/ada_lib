@@ -1,6 +1,6 @@
 --with AUnit.Test_Filters;
 --with Ada_Lib.Strings.Unlimited;
---with Ada_Lib.Unit_Test.Tests;
+--with Ada_Lib.Unit_Test.Test_Cases;
 
 -- options for unit test of Ada_Lib
 package Ada_Lib.Options.Template is

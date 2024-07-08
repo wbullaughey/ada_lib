@@ -599,7 +599,7 @@ package body Ada_Lib.Database is
 
    ------------------------------------------------------------------------------
    function Get_Subscription_Field (
-      File                       : in out Ada.Text_IO.File_Type;
+      File                       : in     Ada.Text_IO.File_Type;
       Allow_Null                 : in     Boolean;
       From                       : in     String := Here
    ) return String is
@@ -791,6 +791,17 @@ package body Ada_Lib.Database is
          " initialized " & Database.Initialized'img & Log_Label (Database));
       return Database.Socket_Opened and then Database.Selector_Created;
     end Is_Open;
+
+    ---------------------------------------------------------------------------
+   function Key (                      -- used as key into subscription table
+      Name_Index_Tag             : in     Name_Index_Tag_Type
+   ) return String is
+    ---------------------------------------------------------------------------
+
+   begin
+      return Indexed_Tagged_Name (Name_Index_Tag.Name.Coerce,
+         Name_Index_Tag.Index, Name_Index_Tag.Tag.Coerce);
+   end Key;
 
     ---------------------------------------------------------------------------
    function Log_Label (

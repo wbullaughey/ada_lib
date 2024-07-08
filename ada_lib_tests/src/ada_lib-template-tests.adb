@@ -1,25 +1,39 @@
 with Ada.Directories;
--- with Ada.Exceptions;
--- with Ada.Strings.Fixed;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
--- with Ada_Lib.Mail.GMail;
 with Ada_Lib.Options.AUnit_Lib;
--- with Ada_Lib.OS.Base64;
--- with Ada_Lib.OS.Run.Path;
--- with Ada_Lib.OS.Run.Tests.PATH;
--- with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Template.Compile;
 with Ada_Lib.Template.Parameters;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
--- with Ada_Lib.Unit_Test.Test_Cases;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.Template.Tests is
 
--- use type Unlimited_String_Type;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   procedure Test_Simple_Template (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Test_Simple_Variable_Template (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+-- procedure Test_Expression_Template (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class);
+--
+-- procedure Test_If_Expression_Template (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    Global_Path                   : constant String := "templates/";
+   Suite_Name                    : constant String := "Template";
 
    ---------------------------------------------------------------
    procedure Tester (
@@ -93,35 +107,35 @@ package body Ada_Lib.Template.Tests is
       Log_Out (Trace_Test);
    end Test_Simple_Variable_Template;
 
-   ---------------------------------------------------------------
-   procedure Test_Expression_Template (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class) is
-      pragma Unreferenced (Test);
-   ---------------------------------------------------------------
-
-      Path                       : constant String := "expression_template";
-
-   begin
-      Log_In (Trace_Test, Quote ("path", Path) &
-         Quote ("current directory", Ada.Directories.Current_Directory));
-      Tester (Path);
-      Log_Out (Trace_Test);
-   end Test_Expression_Template;
-
-   ---------------------------------------------------------------
-   procedure Test_If_Expression_Template (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class) is
-      pragma Unreferenced (Test);
-   ---------------------------------------------------------------
-
-      Path                       : constant String := "if_expression_template";
-
-   begin
-      Log_In (Trace_Test, Quote ("path", Path) &
-         Quote ("current directory", Ada.Directories.Current_Directory));
-      Tester (Path);
-      Log_Out (Trace_Test);
-   end Test_If_Expression_Template;
+-- ---------------------------------------------------------------
+-- procedure Test_Expression_Template (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+--    pragma Unreferenced (Test);
+-- ---------------------------------------------------------------
+--
+--    Path                       : constant String := "expression_template";
+--
+-- begin
+--    Log_In (Trace_Test, Quote ("path", Path) &
+--       Quote ("current directory", Ada.Directories.Current_Directory));
+--    Tester (Path);
+--    Log_Out (Trace_Test);
+-- end Test_Expression_Template;
+--
+-- ---------------------------------------------------------------
+-- procedure Test_If_Expression_Template (
+--    Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+--    pragma Unreferenced (Test);
+-- ---------------------------------------------------------------
+--
+--    Path                       : constant String := "if_expression_template";
+--
+-- begin
+--    Log_In (Trace_Test, Quote ("path", Path) &
+--       Quote ("current directory", Ada.Directories.Current_Directory));
+--    Tester (Path);
+--    Log_Out (Trace_Test);
+-- end Test_If_Expression_Template;
 
    ---------------------------------------------------------------
    overriding

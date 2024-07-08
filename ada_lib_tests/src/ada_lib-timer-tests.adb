@@ -1,4 +1,6 @@
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Time;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
@@ -8,6 +10,47 @@ package body Ada_Lib.Timer.Tests is
    use type Ada_Lib.Strings.String_Access;
    use type Ada_Lib.Time.Time_Type;
 
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
+                                    Test_Case_Type with null record;
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Test_Type);
+
+   generic
+      with procedure Timed_Out;
+
+   package Timeout_Package is
+
+      type Timeout_Timer_Type    is new Event_Type with null record;
+
+      overriding
+      procedure Callback (
+         Event             : in out Timeout_Timer_Type);
+
+   end Timeout_Package;
+
+   type Test_Timer_Type          is new Event_Type with record
+      Occurred                   : Boolean := False;
+      Occured_At                 : Ada_Lib.Time.Time_Type;
+   end record;
+
+   type Test_Timer_Access        is access all Test_Timer_Type;
+
+   function Allocate_Event (
+      Offset                     : in     Duration;
+      Description                : in     String := ""
+   ) return Test_Timer_Access;
+
+   type Event_Pointers_Type      is array (Positive range <>) of Test_Timer_Access;
+
+   overriding
+   procedure Callback (
+      Event             : in out Test_Timer_Type);
+
    procedure Single_Event (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
@@ -16,6 +59,8 @@ package body Ada_Lib.Timer.Tests is
 
    Criteria                      : constant Duration := 0.2;
                                     -- limit of actual event from expected
+   Suite_Name                    : constant String := "Timer";
+
 
    ---------------------------------------------------------------------------
    function Allocate_Event (

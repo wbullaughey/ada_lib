@@ -1,4 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Unchecked_Deallocation;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Updater is
@@ -46,7 +47,7 @@ package body Ada_Lib.Database.Updater is
 
    -------------------------------------------------------------------
    function Equal (
-      Left, Right                : in     Updater_Interface_Class_Access
+      Left, Right                : in     Abstract_Updater_Class_Access
    ) return Boolean is
    -------------------------------------------------------------------
 
@@ -54,32 +55,18 @@ package body Ada_Lib.Database.Updater is
       return Left.all = Right.all;
    end Equal;
 
---    -------------------------------------------------------------------
---   function "=" (
---      Left, Right                : in     Abstract_Updater_Type
---   ) return Boolean is
---    -------------------------------------------------------------------
---
---   begin
---      Log_In (Trace);
---      return Base_Updater_Package.Base_Updater_Type (Left).Equal (
---         Base_Updater_Package.Base_Updater_Type (Right));
-----    return Left.ID = Right.ID and
-----           Left.Update_Mode = Right.Update_Mode and
-----           Left.Name_Index_Tag.Equal (Right.Name_Index_Tag);
---   end "=";
+   ---------------------------------------------------------------
+   procedure Free (
+      Updater                    : in out Abstract_Updater_Class_Access) is
+   ---------------------------------------------------------------
 
-   ---------------------------------------------------------------------------------
-   overriding
-   procedure Load (
-      Updater                    : in out Abstract_Updater_Type;
-      File                       : in out Ada.Text_IO.File_Type;
-      Got_Subscription           :    out Boolean) is
-   ---------------------------------------------------------------------------------
+      procedure Free_It is new Ada.Unchecked_Deallocation (
+         Name     => Abstract_Updater_Class_Access,
+         Object   => Abstract_Updater_Type'class);
 
    begin
-      Base_Updater_Package.Base_Updater_Type (Updater).Load (File, Got_Subscription);
-   end Load;
+      Free_It (Updater);
+   end Free;
 
    ---------------------------------------------------------------
    overriding
@@ -119,6 +106,21 @@ not_implemented;
       return "Null Address";
    end Image;
 
+    -------------------------------------------------------------------
+   overriding
+   procedure Update (
+      Updater                    : in out Abstract_Updater_Type;
+      Address                    : in     Abstract_Address_Type'class;
+      Tag                        : in     String;
+      Value                      : in     String;
+      Update_Kind                : in     Update_Kind_Type;
+      From                       : in     String := Ada_Lib.Trace.Here) is
+   pragma Unreferenced (Address, From, Tag, Update_Kind, Value, Updater);
+    -------------------------------------------------------------------
+
+   begin
+      null;
+   end Update;
 
     -------------------------------------------------------------------
    function Updater_ID (
@@ -181,6 +183,16 @@ not_implemented;
          Put_Line ("   update mode " & Updater.Update_Mode'img);
       end Dump;
 
+      ---------------------------------------------------------------------------------
+      function Equal (
+         Left, Right                : in     Base_Updater_Class_Access
+      ) return Boolean is
+      ---------------------------------------------------------------------------------
+
+      begin
+         return Left = Right or else Left.all = Right.all;
+      end Equal;
+
        -------------------------------------------------------------------
       function Image (
          Updater                    : in     Base_Updater_Type
@@ -224,10 +236,20 @@ not_implemented;
          Log_Out (Debug_Subscribe);
       end Initialize;
 
+       ---------------------------------------------------------------------------
+      function Key (                      -- used as key into subscription table
+         Updater                    : in     Base_Updater_Type
+      ) return String is
+       ---------------------------------------------------------------------------
+
+      begin
+         return Updater.Name_Index_Tag.Key;
+      end Key;
+
       ---------------------------------------------------------------------------------
       procedure Load (
-         Updater                    : in out Base_Updater_Type;
-         File                       : in out Ada.Text_IO.File_Type;
+         Updater                    :    out Base_Updater_Type;
+         File                       : in     Ada.Text_IO.File_Type;
          Got_Subscription           :    out Boolean) is
       ---------------------------------------------------------------------------------
 
@@ -317,6 +339,22 @@ not_implemented;
          Put_Line (File, File_Seperator & Updater.Update_Mode'img);
          Log_Out (Debug_Subscribe);
       end Store;
+
+       -------------------------------------------------------------------
+      procedure Update (
+         Updater                    : in out Base_Updater_Type;
+         ID                         : in     Ada_Lib.Strings.Unlimited.String_Type;   -- lookup key in server
+         Name_Index_Tag             : in     Name_Index_Tag_Type;
+         Update_Mode                : in     Update_Mode_Type) is
+       -------------------------------------------------------------------
+
+      begin
+         Log_In (Debug);
+         Updater.Name_Index_Tag := Name_Index_Tag;
+         Updater.ID := ID;
+         Updater.Update_Mode := Update_Mode;
+         Log_Out (Debug);
+      end Update;
 
        -------------------------------------------------------------------
       function Update_Count (

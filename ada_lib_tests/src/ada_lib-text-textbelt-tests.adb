@@ -5,13 +5,34 @@ with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test;
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Test_Cases;
+
 
 package body Ada_Lib.Text.Textbelt.Tests is
 
    use type Ada_Lib.Options.Mode_Type;
 
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   procedure Send_Text_Invalid_Number (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Send_Text_Valid_Number (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   procedure Test_Parse (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
    Phone_Number                  : constant String := "4846787757";
+   Suite_Name                    : constant String := "Textbelt";
 
    ---------------------------------------------------------------
    overriding

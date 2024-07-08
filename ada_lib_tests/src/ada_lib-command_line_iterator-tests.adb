@@ -1,21 +1,45 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
+with AUnit.Test_Cases;
 with Ada_Lib.Help;
 with Ada_Lib.Options_Interface;
 with Ada_Lib.Runstring_Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Unit_Test.Test_Cases;
+with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Command_Line_Iterator.Tests is
 
--- use type Ada.Strings.Maps.Character_Set;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   procedure Process (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Type
+   ) with pre => Test.Verify_Pre_Setup,
+          post => Test.Verify_Post_Setup;
+
+   overriding
+   procedure Tear_Down (Test : in out Test_Type);
+
 
    procedure Run_String (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    procedure Test_Quote (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   Suite_Name                    : constant String := "Command_Line_Iterator";
 
    ---------------------------------------------------------------
    procedure Options(
@@ -445,7 +469,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
    begin
       Log_In (Debug);
       Ada_Lib.Runstring_Options.Options.Reset;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
    end Set_Up;
 
@@ -470,7 +494,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
    begin
       Log_In (Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug);
    end Tear_Down;
 
