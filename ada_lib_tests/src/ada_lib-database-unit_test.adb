@@ -4,7 +4,7 @@ with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Database.Connection;
 with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Test_Cases;
+--with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Database.Unit_Test is
 

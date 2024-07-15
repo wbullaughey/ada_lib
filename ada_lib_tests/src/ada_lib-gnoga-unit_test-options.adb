@@ -23,7 +23,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    overriding
    function Initialize (
      Options                     : in out GNOGA_Unit_Test_Options_Type;
-     From                        : in     String
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    -------------------------------------------------------------------
 

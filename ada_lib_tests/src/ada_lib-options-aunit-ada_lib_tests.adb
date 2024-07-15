@@ -17,8 +17,8 @@ with Ada_Lib.Socket_IO.Stream_IO.Unit_Test;
 --with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Template;
 --with Ada_Lib.Test;
+with Ada_Lib.Trace.Tests;
 with Ada_Lib.Timer.Tests;
-with Ada_Lib.Trace.Tests; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test; --.GNOGA;
 --with AUnit.Ada_Lib.Options;
 with Debug_Options;
@@ -66,7 +66,7 @@ package body Ada_Lib.Options.AUnit.Ada_Lib_Tests is
    overriding
    function Initialize (
      Options                     : in out Aunit_Options_Type;
-     From                        : in     String
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 

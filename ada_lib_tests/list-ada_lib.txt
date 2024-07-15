@@ -1,128 +1,311 @@
+command:  bin/test_ada_lib  -l -L /Users/wayne/bin/dbdaemon    -p 2300
 test_ada_lib
+running suite: 'Curl' routine: 'Expand_Template'
+running suite: 'Directory' routine: 'Test_File_Compare'
+test file compare
+running suite: 'Directory' routine: 'Test_File_Copy'
+test file copy
+running suite: 'Timer' routine: 'Finalize_Event'
+running suite: 'Timer' routine: 'Cancel_Event'
+ada_lib-trace.adb:594
+running suite: 'Timer' routine: 'Single_Event'
+running suite: 'Timer' routine: 'Multiple_Events'
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:392 Ada_Lib.Timer.Tests.Multiple_Events (0)  1
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:396 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:397 Ada_Lib.Timer.Tests.Multiple_Events (0) time  1.500000000
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:398 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:399 Ada_Lib.Timer.Tests.Multiple_Events (0)  Schedule time 00:00:04.16
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:400 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:418 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:392 Ada_Lib.Timer.Tests.Multiple_Events (0)  2
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:396 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:397 Ada_Lib.Timer.Tests.Multiple_Events (0) time  0.500000000
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:398 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:399 Ada_Lib.Timer.Tests.Multiple_Events (0)  Schedule time 00:00:04.16
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:400 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:418 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:392 Ada_Lib.Timer.Tests.Multiple_Events (0)  3
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:396 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:397 Ada_Lib.Timer.Tests.Multiple_Events (0) time  1.000000000
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:398 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:399 Ada_Lib.Timer.Tests.Multiple_Events (0)  Schedule time 00:00:04.16
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:400 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+main_task_00007FC09F008800: [00:00:05.69] ada_lib-timer-tests.adb:418 Ada_Lib.Timer.Tests.Multiple_Events (0) 
+running suite: 'Timer' routine: 'Wait_For_Event'
+running suite: 'Trace' routine: 'Simple'
+main_task_00007FC09F008800: [00:00:05.89] ada_lib-trace-tests.adb:538 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 1<-
+  main_task_00007FC09F008800: [00:00:05.89] ada_lib-trace-tests.adb:539 Ada_Lib.Trace.Tests.Simple (1) in expected ->log in 2<-
+  main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:541 Ada_Lib.Trace.Tests.Simple (1) expected ->log here 3<-
+    main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:542 Ada_Lib.Trace.Tests.Simple (2) in expected ->log in 4<-
+    main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:543 Ada_Lib.Trace.Tests.Simple (2) expected ->log here 5<-
+    main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:544 Ada_Lib.Trace.Tests.Simple (2) out expected ->log out 6<-
+  main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:545 Ada_Lib.Trace.Tests.Simple (1) out expected ->log out 7<-
+main_task_00007FC09F008800: [00:00:08.09] ada_lib-trace-tests.adb:546 Ada_Lib.Trace.Tests.Simple (0) expected ->log here 8<-
+running suite: 'Trace' routine: 'Exception_Test'
+----------- exception --------------
+Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION
+Exception message:ada_lib-trace-tests.adb:304
+message:'caught expected test exception'
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:309  (0) caught at ada_lib-trace-tests.adb:309
+------------------------------------
+running suite: 'Trace' routine: 'Parsed_Time'
+running suite: 'Trace' routine: 'Multi_Thread'
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:482 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:484 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:486 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:484 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+tasks(1)_00007FC09F00DE00: [00:00:08.10] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  4.53681E-01 count 1
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:486 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:484 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+tasks(2)_00007FC09F011600: [00:00:08.10] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  3.54837E-02 count 1
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:486 Ada_Lib.Trace.Tests.Multi_Thread (0) expected
+main_task_00007FC09F008800: [00:00:08.10] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  4.76448E-01 count 1
+tasks(3)_00007FC09F025600: [00:00:08.10] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  5.73440E-02 count 1
+tasks(2)_00007FC09F011600: [00:00:08.13] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.63493E-01 count 2
+tasks(3)_00007FC09F025600: [00:00:08.16] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  2.46108E-01 count 2
+tasks(3)_00007FC09F025600: [00:00:08.40] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  9.56688E-01 count 3
+tasks(1)_00007FC09F00DE00: [00:00:08.55] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  7.63146E-02 count 2
+main_task_00007FC09F008800: [00:00:08.58] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  4.08090E-01 count 2
+tasks(1)_00007FC09F00DE00: [00:00:08.63] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  6.54083E-01 count 3
+tasks(2)_00007FC09F011600: [00:00:08.70] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.48770E-01 count 3
+main_task_00007FC09F008800: [00:00:08.99] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  1.93403E-01 count 3
+main_task_00007FC09F008800: [00:00:09.19] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  6.39249E-01 count 4
+tasks(2)_00007FC09F011600: [00:00:09.25] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.94191E-01 count 4
+tasks(1)_00007FC09F00DE00: [00:00:09.29] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  7.73441E-01 count 4
+tasks(3)_00007FC09F025600: [00:00:09.36] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  9.96441E-01 count 4
+main_task_00007FC09F008800: [00:00:09.83] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  4.89377E-01 count 5
+tasks(2)_00007FC09F011600: [00:00:09.84] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  2.49558E-01 count 5
+tasks(1)_00007FC09F00DE00: [00:00:10.07] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  1.22806E-01 count 5
+tasks(2)_00007FC09F011600: [00:00:10.10] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  4.91924E-01 count 6
+tasks(1)_00007FC09F00DE00: [00:00:10.19] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  5.78807E-01 count 6
+main_task_00007FC09F008800: [00:00:10.32] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  8.62919E-01 count 6
+tasks(3)_00007FC09F025600: [00:00:10.36] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  9.85296E-01 count 5
+tasks(2)_00007FC09F011600: [00:00:10.59] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  9.90555E-01 count 7
+tasks(1)_00007FC09F00DE00: [00:00:10.77] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.78583E-01 count 7
+main_task_00007FC09F008800: [00:00:11.18] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  1.38733E-01 count 7
+main_task_00007FC09F008800: [00:00:11.33] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  7.42688E-01 count 8
+tasks(3)_00007FC09F025600: [00:00:11.35] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  4.49526E-01 count 6
+tasks(2)_00007FC09F011600: [00:00:11.60] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  1.12518E-01 count 8
+tasks(2)_00007FC09F011600: [00:00:11.71] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  4.05322E-02 count 9
+tasks(1)_00007FC09F00DE00: [00:00:11.75] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  5.70943E-01 count 8
+tasks(2)_00007FC09F011600: [00:00:11.75] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 2 delay  5.02392E-01 count 10
+tasks(3)_00007FC09F025600: [00:00:11.81] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  7.10881E-01 count 7
+main_task_00007FC09F008800: [00:00:12.08] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  5.56232E-01 count 9
+tasks(1)_00007FC09F00DE00: [00:00:12.32] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.57868E-01 count 9
+tasks(3)_00007FC09F025600: [00:00:12.53] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  8.19882E-01 count 8
+main_task_00007FC09F008800: [00:00:12.64] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected main delay  8.96104E-01 count 10
+tasks(1)_00007FC09F00DE00: [00:00:13.28] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 1 delay  9.39215E-01 count 10
+tasks(3)_00007FC09F025600: [00:00:13.35] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  4.89873E-01 count 9
+tasks(3)_00007FC09F025600: [00:00:13.85] ada_lib-trace-tests.adb:439 Ada_Lib.Trace.Tests.Multi_Thread.Thread_Body (0) expected thread 3 delay  7.51831E-01 count 10
+running suite: 'Lock' routine: 'Test_Lock'
+running suite: 'Lock' routine: 'Test_Relock'
+running suite: 'Lock' routine: 'Test_Async_Lock'
+running suite: 'Event' routine: 'Wait_For_Event'
+running suite: 'GNOGA_Events' routine: 'Keyboard_Test'
+Gnoga            :1.2b
+Application root :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/
+Executable at    :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/bin/
+HTML root        :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/html/
+Upload directory :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/html/
+Templates root   :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/templates/
+/js  at          :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/js/
+/css at          :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/css/
+/img at          :/Users/wayne/Project/git/alr/applications/ada_lib/ada_lib_tests/img/
+Boot file        :boot_jqueryui.html
+HTTP listen on   ::8080
+Press Ctrl-C to close server.
+2024-07-14 22:19:41.26 : HTTP Server Started
+2024-07-14 22:19:41.39 : New long polling connection - ID 1
+2024-07-14 22:19:41.44 : Swapping websocket connection  2 <=> 1
+2024-07-14 22:19:41.76 : Shutting down long polling connection - 2
+key A
+2024-07-14 22:19:41.76 : Deleting connection - 1
+2024-07-14 22:19:41.76 : Deleting connection - 2
+2024-07-14 22:19:41.77 : HTTP Server Stopping
+running suite: 'GNOGA_Events' routine: 'Mouse_Click'
+2024-07-14 22:19:41.98 : HTTP Server Started
+2024-07-14 22:19:42.12 : New long polling connection - ID 3
+2024-07-14 22:19:42.17 : Swapping websocket connection  4 <=> 3
+mouse click occured
+mouse event occured
+message type CLICK X  0 Y  0 Screen_X -1 Screen_Y -2
+Left_Button TRUE Middle_Button FALSE Right_Button FALSE
+Alt TRUE Control FALSE Shift TRUE Meta FALSE
+2024-07-14 22:19:42.50 : Shutting down long polling connection - 4
+running suite: 'GNOGA_Events' routine: 'Test_Mouse_Move'
+2024-07-14 22:19:42.71 : HTTP Server Started
+2024-07-14 22:19:42.81 : New long polling connection - ID 5
+2024-07-14 22:19:42.85 : Swapping websocket connection  6 <=> 5
+2024-07-14 22:19:43.02 : Shutting down long polling connection - 4
+message type CLICK X  100 Y  200 Screen_X -1 Screen_Y -2
+Left_Button TRUE Middle_Button FALSE Right_Button FALSE
+Alt TRUE Control FALSE Shift TRUE Meta FALSE
+move 2 mouse moved delta X 100 Y 200
+mouse click occured
+mouse move count 2
+running suite: 'GNOGA_Window_Events' routine: 'Mouse_Move'
+2024-07-14 22:19:43.42 : HTTP Server Started
+2024-07-14 22:19:43.55 : New long polling connection - ID 7
+2024-07-14 22:19:43.59 : Swapping websocket connection  8 <=> 7
+2024-07-14 22:19:44.02 : Shutting down long polling connection - 4
+running suite: 'GNOGA_Window_Events' routine: 'Mouse_Drag'
+2024-07-14 22:20:04.44 : HTTP Server Started
+2024-07-14 22:20:04.57 : New long polling connection - ID 9
+2024-07-14 22:20:04.62 : Swapping websocket connection  10 <=> 9
+2024-07-14 22:20:05.03 : Shutting down long polling connection - 4
+running suite: 'GNOGA_Window_Events' routine: 'Keyboard_Press'
+2024-07-14 22:20:07.21 : HTTP Server Started
+2024-07-14 22:20:07.35 : New long polling connection - ID 11
+2024-07-14 22:20:07.40 : Swapping websocket connection  12 <=> 11
+2024-07-14 22:20:07.57 : Shutting down long polling connection - 4
+running suite: 'Client_Socket_IO' routine: 'Test_Connect'
+running suite: 'Socket_Stream' routine: 'Socket_Open_Close'
+running suite: 'Socket_Stream' routine: 'Socket_Send_Receive'
+ada_lib-socket_io-stream_io-unit_test.adb:537
+running suite: 'Socket_Stream' routine: 'Socket_Acknowledge_Send_Receive'
+long test ~45 seconds
+running suite: 'Socket_Stream' routine: 'Send_Receive_Missmatch_Read_Length'
+long test ~45 seconds
+running suite: 'Socket_Stream' routine: 'Socket_Timeout_Send_Receive'
+long test ~45 seconds
+running suite: 'Socket_Stream' routine: 'Server_Failure'
+doing repitition 1 port will fail on repetition 2
+doing repitition 2 port will fail on repetition 2
+doing repitition 3 port will fail on repetition 2
+running suite: 'Configuration' routine: 'Missing_Configuration'
+running suite: 'Configuration' routine: 'New_Configuration'
+running suite: 'Configuration' routine: 'Test_Configuration'
+running suite: 'Configuration' routine: 'Update_New_Configuration'
+running suite: 'Configuration' routine: 'Update_Same_Configuration'
+running suite: 'Ask' routine: 'Basic_Operations'
+Basic Operations
+ask character: 
 
+ask string: abc 
+ask float(0.0): 1.2 
+ask integer( 0): 12 
+ask time(0.00): 2.1 
+running suite: 'Parser' routine: 'Basic_Operations'
+Basic Operations
+running suite: 'Help' routine: 'Test_Help'
 test_ada_lib command line options:
-    -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
-    -A <trace options>             : AUnit library traces              (AUnit library)
-    -e <routine>                   : test routine.                     (test_ada_lib)
-    -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
-    -G <trace options>             : GNOGA traces                      (GNOGA library)
-    -h                             : this message                      (Ada_Lib)
-    -l                             : local dbdaemon.                   (Ada_Lib.Options.Database)
-    -L <path>                      : local dbdaemon path.              (Ada_Lib.Options.Database)
-    -p <port number>               : remote DBDaemon port number       (Ada_Lib.Options.Database)
-    -P                             : pause                             (Ada_Lib)
-    -r                             : remote dbdaemon.                  (Ada_Lib.Options.Database)
-    -R <path>                      : remote dbdaemon path.             (Ada_Lib.Options.Database)
-    -s <test suite>                : select test suite to run.         (test_ada_lib)
-    -S <suites>                    : enable default disabled suites.   (test_ada_lib)
-    -t <options>                   : ada_lib unit tests
-    -T <options>                   : enables trace template unit tests (Ada_Lib.Template.Tests)
-    -u <user>                      : remote user.                      (Ada_Lib.Options.Database)
-    -U <unit test trace Ada_Lib.>  : select trace                      (test_ada_lib)
-    -v                             : verbose                           (Ada_Lib)
-    -w                             : Web server port                   (GNOGA library)
-    -x                             : exit on tests complete            (test_ada_lib)
-    -@?                            : trace test condition              (Ada_Lib)
-    -@d                            : driver suites                     (test_ada_lib)
-    -@i                            : indent trace                      (Ada_Lib)
-    -@l                            : List test suites                  (test_ada_lib)
-    -@m                            : manual operations.                (test_ada_lib)
-    -@p                            : include program in trace          (Ada_Lib)
-    -@P                            : Print test suites.                (test_ada_lib)
-    -@R <seed>                     : set random seed                   (test_ada_lib)
-    -@S                            : report random seed                (test_ada_lib)
-    -@t                            : include task in trace             (Ada_Lib)
-    -@x                            : exclude time in trace             (Ada_Lib)
+-a <a parameter>  : a option
+-b <b parameter>  : b option
+-c <c parameter>  : c option
+running suite: 'Help' routine: 'Test_Prefix_Help'
+test_ada_lib command line options:
+line: '-b <b parameter>   : b option' counter 1
+line: '-@a <@a parameter> : @a option' counter 2
+line: '-@b <@b parameter> : @b option' counter 3
+line: '-@B <@B parameter> : @B option' counter 4
+running suite: 'Main' routine: 'Connect_Browser'
+2024-07-14 22:20:14.83 : HTTP Server Started
+2024-07-14 22:20:14.97 : New long polling connection - ID 13
+2024-07-14 22:20:15.02 : Swapping websocket connection  14 <=> 13
+2024-07-14 22:20:15.19 : Shutting down long polling connection - 4
+running suite: 'Main' routine: 'Create_Main_Window'
+2024-07-14 22:20:15.36 : HTTP Server Started
+2024-07-14 22:20:15.47 : New long polling connection - ID 15
+2024-07-14 22:20:15.51 : Swapping websocket connection  16 <=> 15
+2024-07-14 22:20:15.70 : Shutting down long polling connection - 4
+running suite: 'Main' routine: 'Main_Window_With_Exit_Button'
+2024-07-14 22:20:15.87 : HTTP Server Started
+2024-07-14 22:20:16.00 : New long polling connection - ID 17
+2024-07-14 22:20:16.04 : Swapping websocket connection  18 <=> 17
+2024-07-14 22:20:16.21 : Shutting down long polling connection - 4
+running suite: 'Command_Line_Iterator' routine: 'Process'
+Process
+running suite: 'Command_Line_Iterator' routine: 'Options'
+running suite: 'Command_Line_Iterator' routine: 'Test_Quote'
+Process
+running suite: 'Command_Line_Iterator' routine: 'Run_String'
+Process
+running suite: 'Get_Put' routine: 'Is_Open_False'
+running suite: 'Get_Put' routine: 'Parse_Line'
+expect exception for line: 'a='
+expect exception for line: '!a'
+expect exception for line: '='
+expect exception for line: '!='
+running suite: 'Send_Mail' routine: 'Send_CURL_Mail'
+running suite: 'Send_Mail' routine: 'Send_CURL_File_Mail'
+running suite: 'OS' routine: 'Encode_Decode'
+running suite: 'OS' routine: 'Run_Remote'
+test Ada_Lib.OS.Tests.Run_Remote skipped, no Remote host
+running suite: 'OS' routine: 'Kill_All'
+running suite: 'Template' routine: 'Test_Simple_Template'
+running suite: 'Template' routine: 'Test_Simple_Variable_Template'
+running suite: 'Subscription' routine: 'Load_Subscription'
+running suite: 'Subscription' routine: 'Store_Subscription'
+running suite: 'Subscription' routine: 'Store_Load_Subscription'
+running suite: 'Subscribe' routine: 'Load_Subscription'
+running suite: 'Subscribe' routine: 'Store_Subscription'
+report Ada_Lib test results
 
-bin/test_ada_lib trace options (-t)
-      a               all
-      c               configuration
-      C               command line iterator
-      d               directory compare and copy
-      h               help test
-      i               Socket_IO.Clent trace
-      l               Lock Test
-      m               Mail Test
-      o               Ada_Lib.Options.AUnit.Ada_Lib_Tests options
-      r               suites
-      R               Test program trace
-      s               Socket Stream Test
-      S               Database server Test
-      t               Template Test
-      T               Timer Test
-      @d              Debug Test
-      @T              Debug Tests
-      @t              Debug Test routines
+OK Curl : Expand_Template
+OK Directory : Test_File_Compare
+OK Directory : Test_File_Copy
+OK Timer : Finalize_Event
+OK Timer : Cancel_Event
+OK Timer : Single_Event
+OK Timer : Multiple_Events
+OK Timer : Wait_For_Event
+OK Trace : Simple
+OK Trace : Exception_Test
+OK Trace : Parsed_Time
+OK Trace : Multi_Thread
+OK Lock : Test_Lock
+OK Lock : Test_Relock
+OK Lock : Test_Async_Lock
+OK Event : Wait_For_Event
+OK GNOGA_Events : Keyboard_Test
+OK GNOGA_Events : Mouse_Click
+OK GNOGA_Events : Test_Mouse_Move
+OK GNOGA_Window_Events : Mouse_Move
+OK GNOGA_Window_Events : Mouse_Drag
+OK GNOGA_Window_Events : Keyboard_Press
+OK Client_Socket_IO : Test_Connect
+OK Socket_Stream : Socket_Open_Close
+OK Socket_Stream : Socket_Send_Receive
+OK Socket_Stream : Socket_Acknowledge_Send_Receive
+OK Socket_Stream : Send_Receive_Missmatch_Read_Length
+OK Socket_Stream : Socket_Timeout_Send_Receive
+OK Socket_Stream : Server_Failure
+OK Configuration : Missing_Configuration
+OK Configuration : New_Configuration
+OK Configuration : Test_Configuration
+OK Configuration : Update_New_Configuration
+OK Configuration : Update_Same_Configuration
+OK Ask : Basic_Operations
+OK Parser : Basic_Operations
+OK Help : Test_Help
+OK Help : Test_Prefix_Help
+OK Main : Connect_Browser
+OK Main : Create_Main_Window
+OK Main : Main_Window_With_Exit_Button
+OK Command_Line_Iterator : Process
+OK Command_Line_Iterator : Options
+OK Command_Line_Iterator : Test_Quote
+OK Command_Line_Iterator : Run_String
+OK Get_Put : Is_Open_False
+OK Get_Put : Parse_Line
+OK Send_Mail : Send_CURL_Mail
+OK Send_Mail : Send_CURL_File_Mail
+OK OS : Encode_Decode
+OK OS : Run_Remote
+OK OS : Kill_All
+OK Template : Test_Simple_Template
+OK Template : Test_Simple_Variable_Template
+OK Subscription : Load_Subscription
+OK Subscription : Store_Subscription
+OK Subscription : Store_Load_Subscription
+OK Subscribe : Load_Subscription
+OK Subscribe : Store_Subscription
 
-AUnit.Ada_Lib.Options library trace options (-A)
-      a               all
-      A               AUnit.Debug
-      l               AUnit.Ada_Lib.Debug
-      o               AUnit options
-
-Ada_Lib.Options.GNOGA unit test trace options (-g)
-      a               all
-      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
-      g               Ada_Lib.GNOGA.Unit_Test.Debug (main window)
-      o               Ada_Lib.GNOGA.Unit_Test.Debug_Options
-
-Ada_Lib.Template.Tests (-T)
-      a               all
-      c               compile
-      e               evaluate
-      E               expand
-      l               load
-      t               test
-
-Ada_Lib.Options.GNOGA library trace options (-G)
-      a               all
-      m               GNOGA.Ada_Lib
-      o               GNOGA options
-
-Ada_Lib unit test library trace options (-U)
-      a               all
-      A               all unit tests
-      g               Ada_Lib.GNOGA.Unit_Test.Debug
-      l               Ada_Lib.Unit_Test.Debug Library
-      p               test programs
-      r               Runtime_Options
-      s               All Set_Up procedures
-      t               Ada_Lib.Test.Debug
-      T               Ada_Lib.Trace.Debug_Trace
-
-Enable suites disabled by default (-S)
-      a               enable all
-      d               database server
-      t               text
-
-CAC ada_lib trace library options (-a)
-      a               all
-      b               database subscribe
-      c               Ada_Lib.Command_Line Trace
-      C               Ada_Lib.Configuration Trace
-      e               Event
-      g               GNOGA.Debug
-      G               Ada_Lib.GNOGA.Debug
-      h               Help
-      i               interrupt
-      I               Ada_Lib.interface
-      l               lock
-      m               timer
-      M               mail
-      o               os
-      O               Ada_Lib.Options
-      p               parser
-      P               database post
-      r               run remote, database connect
-      R               Ada_Lib.Runstring_Options.Debug
-      s               socket
-      S               socket Stream
-      t               Ada_Lib.Trace
-      T               Ada_Lib.Trace_Tasks
-      -               Ada_Lib.Text
-      @c              Template Compile
-      @d              Template Detail
-      @D              Ada_Lib.Directory trace
-      @e              Template Evaluate
-      @E              Template Expand
-      @l              Template Load
+Total Tests Run:   59
+Successful Tests:  59
+Failed Assertions: 0
+Unexpected Errors: 0
+tasks left running:
+timer task:ada_lib-timer.adb:236.event.timer_task_00007FC0A8808200
+server:ada_lib-socket_io-stream_io-unit_test.adb:938.server_00007FC0AB014C00
+output task:ada_lib-socket_io-stream_io.adb:1297.stream.writer_00007FC0A981AC00

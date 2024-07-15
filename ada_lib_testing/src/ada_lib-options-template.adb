@@ -32,7 +32,7 @@ package body Ada_Lib.Options.Template is
    overriding
    function Initialize (
      Options                     : in out Template_Options_Type;
-     From                        : in     String := Here
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 

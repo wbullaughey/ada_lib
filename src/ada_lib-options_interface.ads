@@ -123,7 +123,7 @@ package Ada_Lib.Options_Interface is
    -- indirect decentdent should return initialize of parent
    function Initialize (
      Options                     : in out Interface_Options_Type;
-     From                        : in     String
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is abstract;
 
    function Process_Argument (  -- process one argument

@@ -3,6 +3,7 @@ with Ada_Lib.Options.Database;
 with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.Template;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
@@ -54,7 +55,7 @@ package Ada_Lib.Options.AUnit.Ada_Lib_Tests is
    overriding
    function Initialize (
      Options                     : in out Aunit_Options_Type;
-     From                        : in     String
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 

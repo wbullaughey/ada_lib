@@ -115,7 +115,7 @@ package body Ada_Lib.Options.Unit_Test is
 
       ----------------------------------------------------------------------------
       procedure Bad_Options (
-         From                    : in     String := Here) is
+         From                    : in     String := Ada_Lib.Trace.Here) is
       ----------------------------------------------------------------------------
 
       begin

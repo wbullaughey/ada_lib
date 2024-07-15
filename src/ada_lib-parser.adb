@@ -11,7 +11,7 @@ package body Ada_Lib.Parser is
 
    procedure Dump (
       Iterator                   : in     Iterator_Type;
-      Line                       : in     String := Here;
+      Line                       : in     String := Ada_Lib.Trace.Here;
       What                       : in     String := Who);
 
    Null_String                   : Buffer_Type renames Buffer_Package.Null_String;
@@ -32,7 +32,7 @@ package body Ada_Lib.Parser is
    -----------------------------------------------------------------------
    procedure Dump (
       Iterator                   : in     Iterator_Type;
-      Line                       : in     String := Here;
+      Line                       : in     String := Ada_Lib.Trace.Here;
       What                       : in     String := Who) is
    -----------------------------------------------------------------------
 

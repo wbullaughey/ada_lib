@@ -2,6 +2,7 @@ with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Options;
 with Ada_Lib.Options_Interface;
 --with Ada_Lib.Socket_IO;
+with Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.GNOGA.Unit_Test.Options is
@@ -17,7 +18,7 @@ package Ada_Lib.GNOGA.Unit_Test.Options is
    overriding
    function Initialize (
       Options                    : in out GNOGA_Unit_Test_Options_Type;
-     From                        : in     String
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
