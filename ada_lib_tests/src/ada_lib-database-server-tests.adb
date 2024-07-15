@@ -7,7 +7,7 @@ with Ada_Lib.Database.Updater.Unit_Test;
 with Ada_Lib.Database.Unit_Test;
 with Ada_Lib.Database.Subscribe_Tests;
 --with Ada_Lib.Database.Subscription.Tests;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -1320,9 +1320,9 @@ package body Ada_Lib.Database.Server.Tests is
          Test                          : in out Server_Test_Type) is
       ---------------------------------------------------------------
 
-         Options              : Ada_Lib.Options.AUnit_Lib.
+         Options              : Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                  Aunit_Options_Type'class renames
-                                    Ada_Lib.Options.AUnit_Lib.
+                                    Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                        AUnit_Lib_Options.all;
 --       Subscription_Table   : constant Ada_Lib.DAtabase.Subscribe_Test.
 --                               Table_Class_Access :=

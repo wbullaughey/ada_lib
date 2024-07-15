@@ -2,7 +2,7 @@ with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.OS.Base64;
 with Ada_Lib.OS.Run.Path;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -121,8 +121,10 @@ package body Ada_Lib.OS.Tests is
    ---------------------------------------------------------------
 
    begin
-      if Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Database_Options.Remote_Host.Length > 0 then
-         if Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Database_Options.Remote_User.Length > 0 then
+      if Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.Database_Options.
+            Remote_Host.Length > 0 then
+         if Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.Database_Options.
+               Remote_User.Length > 0 then
             Put_Line ("could not run test" & Who & ". No user specified");
          end if;
 
@@ -146,10 +148,10 @@ package body Ada_Lib.OS.Tests is
                "' Log_File '" & Ada_Lib.OS.Run.Path.Log_File &
                   "' Parameters '" & Parameters & "'");
             Return_Code := Ada_Lib.OS.Run.Spawn (
-               Remote      => Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.
+               Remote      => Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.
                                  Database_Options.Remote_Host.Coerce,
                Program     => "/usr/bin/ssh",
-               User        => Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.
+               User        => Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.
                                  Database_Options.Remote_User.Coerce,
                Parameters  => Parameters,
                Output_File => Ada_Lib.OS.Run.Path.Log_File);
@@ -173,7 +175,7 @@ package body Ada_Lib.OS.Tests is
                      if Ada.Strings.Fixed.Index (Line,
                            "Could not resolve hostname") > 0 then
                         Put_Line ("Host '" &
-                           Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Database_Options.Remote_Host.Coerce &
+                           Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.Database_Options.Remote_Host.Coerce &
                            "' not available");
                         exit;
                      end if;

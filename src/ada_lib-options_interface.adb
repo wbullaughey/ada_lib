@@ -281,14 +281,15 @@ package body Ada_Lib.Options_Interface is
       ---------------------------------------------------------------
       overriding
       function Initialize (
-         Options                 : in out Options_Type
+         Options                 : in out Options_Type;
+         From                        : in     String:= Ada_Lib.Trace.Here
       ) return Boolean is
       ---------------------------------------------------------------
 
       begin
          Log_In (Debug or Trace_Options, "options address " &
             Image (Options'address) &" options tag " &
-            Tag_Name (Options_Type'class (Options)'tag));
+            Tag_Name (Options_Type'class (Options)'tag), "from " & From);
          if Debug or Trace_Options then
             Tag_History (Options_Type'class (Options)'tag);
          end if;
@@ -351,7 +352,8 @@ package body Ada_Lib.Options_Interface is
       begin
          Log_In (Debug or Trace_Options, "options tag " &
             Tag_Name (Options_Type'class (Options)'tag) &
-            " Read_Only_Options " & Image (Read_Only_Options.all'address));
+            " Read_Only_Options " & Image (Read_Only_Options.all'address) &
+            " from " & From);
          if Debug or Trace_Options then
             Tag_History (Options_Type'class (Options)'tag);
          end if;

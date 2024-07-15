@@ -2,7 +2,7 @@ test_ada_lib
 
 test_ada_lib command line options:
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
-    -A <trace options>             : AUnit traces                      (AUnit library)
+    -A <trace options>             : AUnit library traces              (AUnit library)
     -e <routine>                   : test routine.                     (test_ada_lib)
     -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
     -G <trace options>             : GNOGA traces                      (GNOGA library)
@@ -15,7 +15,7 @@ test_ada_lib command line options:
     -R <path>                      : remote dbdaemon path.             (Ada_Lib.Options.Database)
     -s <test suite>                : select test suite to run.         (test_ada_lib)
     -S <suites>                    : enable default disabled suites.   (test_ada_lib)
-    -t                             : ada_lib unit tests
+    -t <options>                   : ada_lib unit tests
     -T <options>                   : enables trace template unit tests (Ada_Lib.Template.Tests)
     -u <user>                      : remote user.                      (Ada_Lib.Options.Database)
     -U <unit test trace Ada_Lib.>  : select trace                      (test_ada_lib)
@@ -43,7 +43,7 @@ bin/test_ada_lib trace options (-t)
       i               Socket_IO.Clent trace
       l               Lock Test
       m               Mail Test
-      o               Ada_Lib.Options.AUnit_Lib options
+      o               Ada_Lib.Options.AUnit.Ada_Lib_Tests options
       r               suites
       R               Test program trace
       s               Socket Stream Test

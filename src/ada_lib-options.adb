@@ -215,12 +215,13 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Program_Options_Type
+     Options                     : in out Program_Options_Type;
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
-     Log_In_Checked (Initialize_Recursed, Debug or Trace_Options);
+     Log_In_Checked (Initialize_Recursed, Debug or Trace_Options, "from " & From);
      Program_Options := Options'unchecked_access;
 
       Ada_Lib.Runstring_Options.Options.Register (

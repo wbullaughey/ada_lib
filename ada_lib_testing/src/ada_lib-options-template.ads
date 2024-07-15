@@ -21,7 +21,8 @@ package Ada_Lib.Options.Template is
 
    overriding
    function Initialize (
-     Options                     : in out Template_Options_Type
+     Options                     : in out Template_Options_Type;
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 

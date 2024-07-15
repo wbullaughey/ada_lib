@@ -119,8 +119,8 @@ package body Ada_Lib.Trace is
       Display_Level              : in     Level_Type;
       Indent_Level               : in     Level_Type);
 
-   function Get_Start_Time
-   return Ada.Calendar.Time;
+-- function Get_Start_Time
+-- return Ada.Calendar.Time;
 
    procedure Put (
       Enable                     : in     Boolean;
@@ -666,15 +666,21 @@ put_Line (here);
    -------------------------------------------------------------------
 
    begin
+      Log_In (Enable, "recursed " & Recursed'img & " " & Message, Where, Who);
+
       if Recursed then
-         Put_Line ("recursive call from " & Where & " by " & Who &
-            Quote (" message", Message));
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+         declare
+            Text        : constant String := "recursive call from " &
+                           Where & " by " & Who & Quote (" message", Message);
+         begin
+            Put_Line (Text);
+--          Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+            raise Recursive_Failure with Text;
+         end;
       else
          Recursed := True;
       end if;
 
-      Log_In (Enable, Message, Where, Who);
    end Log_In_Checked;
 
    -------------------------------------------------------------------
@@ -711,7 +717,7 @@ put_Line (here);
 
    -------------------------------------------------------------------
    procedure Log_Out_Checked (
-      Recursed                   : in out Boolean;
+      Recursed                   : in     Boolean;
       Enable                     : in     Boolean := True;
       Message                    : in     String := "";
       Where                      : in     String := GNAT.Source_Info.Source_Location;
@@ -720,7 +726,7 @@ put_Line (here);
 
    begin
       if Recursed then
-         Recursed := False;
+--       Recursed := False;
          Log_Out (Enable, Message, Where, Who);
       else
          raise Recursive_Failure with "not logged in from " & Where & " by " & Who;
@@ -729,7 +735,7 @@ put_Line (here);
 
    -------------------------------------------------------------------
    function Log_Out_Checked (
-      Recursed                   : in out Boolean;
+      Recursed                   : in     Boolean;
       Result                     : in     Boolean;
       Enable                     : in     Boolean := True;
       Message                    : in     String := "";
@@ -740,7 +746,7 @@ put_Line (here);
 
    begin
       if Recursed then
-         Recursed := False;
+--       Recursed := False;
          Log_Out (Enable, "result " & Result'img & " " & Message, Where, Who);
          return Result;
       else

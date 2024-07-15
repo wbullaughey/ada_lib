@@ -3,7 +3,7 @@ with Ada.Numerics.Discrete_Random;
 with Ada.Real_Time;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Server;
@@ -701,8 +701,8 @@ put_Line (here);
          Generator               : Random_Number_Offset_Generator.Generator;
          Now                     : constant Ada.Real_Time.Time := Ada.Real_Time.Clock;
          Offset                  : Duration;
-         Options                 : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                    Ada_Lib.Options.AUnit_Lib.
+         Options                 : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+                                    Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                        Aunit_Options_Constant_Class_Access (
                                           Ada_Lib.Options.Program_Options).all;
          Seconds                 : Ada.Real_Time.Seconds_Count;

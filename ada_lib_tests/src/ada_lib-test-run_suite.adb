@@ -33,7 +33,7 @@ pragma Elaborate_All (Ada_Lib.Lock);
 
 ----------------------------------------------------------------------------
 procedure Ada_Lib.Test.Run_Suite (
-   Options                       : in     Ada_Lib.Options.AUnit_Lib.
+   Options                       : in     Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                              Aunit_Options_Type'class) is
 ----------------------------------------------------------------------------
 
@@ -49,9 +49,9 @@ begin
    declare
       AUnit_Options           : AUnit.Options.AUnit_Options;
       Have_Host               : Boolean := False;
-      Non_DBDaemon_Test_Suite : constant Ada_Lib.Options.AUnit_Lib.
+      Non_DBDaemon_Test_Suite : constant Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                  Non_DBDamon_Test_Access :=
-                                    Ada_Lib.Options.AUnit_Lib.New_Suite;
+                                    Ada_Lib.Options.AUnit.Ada_Lib_Tests.New_Suite;
       Outcome                 : AUnit.Status;
       Reporter                : Ada_Lib.Unit_Test.Reporter.Reporter_Type;
       Results                 : AUnit.Test_Results.Result;
@@ -127,9 +127,9 @@ begin
             ) then
             declare
                DBDaemon_Test_Suite
-                              : constant Ada_Lib.Options.AUnit_Lib.
+                              : constant Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                  DBDamon_Test_Access :=
-                                    Ada_Lib.Options.AUnit_Lib.New_Suite;
+                                    Ada_Lib.Options.AUnit.Ada_Lib_Tests.New_Suite;
                Subscribe_Test_Suite
                               : constant AUnit.Test_Suites.Access_Test_Suite :=
                                  Ada_Lib.Database.Subscribe.Tests.

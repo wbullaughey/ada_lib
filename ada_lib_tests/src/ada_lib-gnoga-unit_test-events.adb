@@ -11,6 +11,7 @@ with Gnoga.Gui.Base;
 with Gnoga.GUI.Window;
 with Gnoga.Types;
 
+-- only use in Ada_Lib tests
 package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    use type Standard.Gnoga.Gui.Base.Keyboard_Event_Record;

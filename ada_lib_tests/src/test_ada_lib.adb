@@ -3,7 +3,7 @@
 --
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
 --with Ada_Lib.Timer;
@@ -15,11 +15,11 @@ procedure Test_Ada_Lib is
 
 begin
    Put_Line ("test_ada_lib");
-   Ada_Lib.Options.AUnit_Lib.Set_Options;
+   Ada_Lib.Options.AUnit.Ada_Lib_Tests.Set_Options;
    declare
-      Aunit_Options                 : constant Ada_Lib.Options.AUnit_Lib.
+      Aunit_Options                 : constant Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Class_Access :=
-                                             Ada_Lib.Options.AUnit_Lib.
+                                             Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                                 Get_Modifiable_AUnit_Options;
       Debug                         : Boolean renames
                                        AUnit_Options.Tester_Debug;

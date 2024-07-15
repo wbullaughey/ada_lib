@@ -47,7 +47,8 @@ package Ada_Lib.Options.Unit_Test is
 
    overriding
    function Initialize (
-     Options                     : in out Unit_Test_Options_Type
+     Options                     : in out Unit_Test_Options_Type;
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 

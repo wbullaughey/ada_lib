@@ -25,7 +25,7 @@ with Debug_Options;
 
 --pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
-package body Ada_Lib.Options.AUnit_Lib is
+package body Ada_Lib.Options.AUnit.Ada_Lib_Tests is
 
    Trace_Option                  : constant Character := 't';
    Options_With_Parameters       : aliased constant
@@ -65,12 +65,13 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type
+     Options                     : in out Aunit_Options_Type;
+     From                        : in     String
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Options);
+      Log_In (Debug or Trace_Options, "from " & From);
       Ada_Lib.Runstring_Options.Options.Register (
          Ada_Lib.Runstring_Options.With_Parameters, Options_With_Parameters);
       Ada_Lib.Runstring_Options.Options.Register (
@@ -135,9 +136,6 @@ package body Ada_Lib.Options.AUnit_Lib is
 
          case Option.Option is
 
-            when 'A' => -- ada_lib trace options
-                Options.Trace_Parse (Iterator);
-
             when Trace_Option =>    -- t
                Options.Trace_Parse (Iterator);
 
@@ -174,7 +172,7 @@ package body Ada_Lib.Options.AUnit_Lib is
       when Ada_Lib.Options.Program =>
 --       Ada_Lib.Help.Add_Option ('d', "seed", "set random seed");
 --       Ada_Lib.Help.Add_Option ('D', "", "report random seed");
-         Ada_Lib.Help.Add_Option ('t', "", "ada_lib unit tests");
+         Ada_Lib.Help.Add_Option ('t', "options", "ada_lib unit tests");
 --       Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete");
 
       when Ada_Lib.Options.Traces =>
@@ -188,7 +186,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          Put_Line ("      i               Socket_IO.Clent trace");
          Put_Line ("      l               Lock Test");
          Put_Line ("      m               Mail Test");
-         Put_Line ("      o               Ada_Lib.Options.AUnit_Lib options");
+         Put_Line ("      o               Ada_Lib.Options.AUnit.Ada_Lib_Tests options");
          Put_Line ("      r               suites");
          Put_Line ("      R               Test program trace");
          Put_Line ("      s               Socket Stream Test");
@@ -371,5 +369,5 @@ exception
    when Fault: others =>
       Trace_Exception (Fault);
 -- Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
-end Ada_Lib.Options.AUnit_Lib;
+end Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 

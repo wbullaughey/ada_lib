@@ -16,7 +16,8 @@ package Ada_Lib.GNOGA.Unit_Test.Options is
                                  is access constant GNOGA_Unit_Test_Options_Type'class;
    overriding
    function Initialize (
-      Options                    : in out GNOGA_Unit_Test_Options_Type
+      Options                    : in out GNOGA_Unit_Test_Options_Type;
+     From                        : in     String
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 

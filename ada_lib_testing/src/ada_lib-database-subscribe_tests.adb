@@ -1,5 +1,5 @@
 --with Ada_Lib.Test.Tests;
-with AUnit.Assertions; use AUnit.Assertions;
+--with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Database.Subscription.Tests;
 --with Ada_Lib.Database.Updater.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;

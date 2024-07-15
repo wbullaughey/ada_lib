@@ -22,12 +22,13 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    -------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out GNOGA_Unit_Test_Options_Type
+     Options                     : in out GNOGA_Unit_Test_Options_Type;
+     From                        : in     String
    ) return Boolean is
    -------------------------------------------------------------------
 
    begin
-      Log_In (Debug_Options or Trace_Options);
+      Log_In (Debug_Options or Trace_Options, "from " & From);
 --    GNOGA_Options := Options'unchecked_access;
       Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.
          With_Parameters, Options_With_Parameters);

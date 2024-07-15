@@ -1,6 +1,6 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Interfaces;
@@ -199,8 +199,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Keyboard_Event                : in     Standard.Gnoga.Gui.Base.Keyboard_Event_Record) is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
+      Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.
+                                    Aunit_Options_Type'class renames
+                                       Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Program_Options).all;
       Connection_Data            : constant Window_Connection_Data_Access :=
@@ -533,8 +534,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Mouse_Event             : in     Standard.Gnoga.Gui.Base.Mouse_Event_Record) is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
+      Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+                                       Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Program_Options).all;
       Connection_Data         : constant Window_Connection_Data_Access :=
@@ -641,8 +642,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Test                       : in out Window_Event_Test_Type) is
    ---------------------------------------------------------------
 
---    Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
---                                     Ada_Lib.Options.AUnit_Lib.
+--    Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+--                                     Ada_Lib.Options.AUnit.Ada_Lib_Tests.
 --                                        Aunit_Options_Constant_Class_Access (
 --                                           Ada_Lib.Options.Program_Options).all;
    begin

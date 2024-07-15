@@ -31,12 +31,13 @@ package body Ada_Lib.Options.Template is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Template_Options_Type
+     Options                     : in out Template_Options_Type;
+     From                        : in     String := Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug, "from " & From);
       Template_Options_Constant := Options'unchecked_access;
       Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.With_Parameters,
          Options_With_Parameters);

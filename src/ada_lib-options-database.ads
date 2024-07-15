@@ -28,7 +28,8 @@ package Ada_Lib.Options.Database is
 
    overriding
    function Initialize (
-     Options                     : in out Database_Options_Type
+     Options                     : in out Database_Options_Type;
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 

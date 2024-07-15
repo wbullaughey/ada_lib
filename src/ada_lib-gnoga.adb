@@ -19,11 +19,20 @@ package body Ada_Lib.GNOGA is
    ) return Connection_Data_Class_Access is
    ---------------------------------------------------------------
 
+      Has_Connection_Data                     : constant Boolean :=
+                                    Program_Connection_Data /= Null;
    begin
-      Log_Here (Debug, "Connection_Data " &
-         Tag_Name (Program_Connection_Data.all'tag) & " " &
-         Image (Program_Connection_Data.all'address) &
-         " from " & From);
+      Log_Here (Debug or not Has_Connection_Data, "Connection_Data " &
+         (if Has_Connection_Data then
+            Tag_Name (Program_Connection_Data.all'tag) & " " &
+            Image (Program_Connection_Data.all'address)
+         else
+            " null Program_Connection_Data"
+      ) & " from " & From);
+
+      if not Has_Connection_Data then
+         raise Failed with "connection data not set. called from " & From;
+      end if;
       return Program_Connection_Data;
    end Get_Connection_Data;
 
@@ -36,7 +45,8 @@ package body Ada_Lib.GNOGA is
       Result                     : constant Boolean :=
                                     Program_Connection_Data /= Null;
    begin
-      return Log_Here (Result, Debug, "result " & Result'img & " " & (if Result then
+      return Log_Here (Result, Debug and not Result,
+         (if Result then
             Tag_Name (Program_Connection_Data.all'tag)
          else
             "") &

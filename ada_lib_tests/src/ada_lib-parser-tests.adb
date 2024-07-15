@@ -3,7 +3,7 @@ with Ada.Strings.Fixed;
 with Ada.Text_IO;use Ada.Text_IO;
 -- with Ask;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
@@ -31,8 +31,8 @@ package body Ada_Lib.Parser.Tests is
    return Boolean is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
+      Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+                                       Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Program_Options).all;
    begin
@@ -342,6 +342,6 @@ package body Ada_Lib.Parser.Tests is
 -- end Tear_Down;
 
 begin
---Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Debug := True;
+--Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.Debug := True;
    Log_Here (Elaborate);
 end Ada_Lib.Parser.Tests;

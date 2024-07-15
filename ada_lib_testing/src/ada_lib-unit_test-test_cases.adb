@@ -1,10 +1,9 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Options_Interface;
 with Ada_Lib.Options.Unit_Test;
 
 package body Ada_Lib.Unit_Test.Test_Cases is
 
-   use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
+-- use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
    use type Ada_Lib.Options.Mode_Type;
    use type Ada_Lib.Options.Program_Options_Constant_Class_Access;
 
@@ -43,7 +42,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Test.Options := Ada_Lib.Options.
          Program_Options_Constant_Class_Access (
             Ada_Lib.Options.Get_Modifiable_Options);
-      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
+      Root_Test.Test_Type (Test).Set_Up;
       Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
@@ -117,7 +116,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
    begin
       Log_In (Debug or Trace_Set_Up);
       Test.Options := Null;
-      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
+      Root_Test.Test_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 

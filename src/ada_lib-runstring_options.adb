@@ -148,7 +148,8 @@ package body Ada_Lib.Runstring_Options is
 
          Check_Duplicates;
          for Option of Options loop
-            Log_Here (Debug, Option.Image & " kind " & Kind'img);
+            Log_Here (Debug, Option.Image & " kind " & Kind'img &
+               " from " & From);
             declare
                Element           : Element_Type;
 

@@ -92,7 +92,8 @@ package body Ada_Lib.Options.Database is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Database_Options_Type
+     Options                     : in out Database_Options_Type;
+     From                        : in     String := Here
    ) return Boolean is
 -- pragma Unreferenced (Options);
    ----------------------------------------------------------------------------

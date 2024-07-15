@@ -122,7 +122,8 @@ package Ada_Lib.Options_Interface is
    -- direct decendent should return true
    -- indirect decentdent should return initialize of parent
    function Initialize (
-     Options                     : in out Interface_Options_Type
+     Options                     : in out Interface_Options_Type;
+     From                        : in     String
    ) return Boolean is abstract;
 
    function Process_Argument (  -- process one argument
@@ -176,7 +177,8 @@ package Ada_Lib.Options_Interface is
 
       overriding
       function Initialize (
-         Options                 : in out Options_Type
+         Options                 : in out Options_Type;
+         From                        : in     String := Ada_Lib.Trace.Here
       ) return Boolean
       with Pre => Options.Verify_Preinitialize;
 

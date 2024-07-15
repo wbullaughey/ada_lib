@@ -6,6 +6,8 @@ with Gnoga.Types;
 
 package Ada_Lib.GNOGA is
 
+   Failed                        : exception;
+
    type Connection_Data_Type is new Standard.Gnoga.Types.Connection_Data_Type with
                                     record
          Main_Window             : Standard.Gnoga.Gui.Window.
@@ -22,12 +24,11 @@ package Ada_Lib.GNOGA is
                                           Pointer_To_Window_Class);
    procedure Clear_Connection_Data(
       From                    : in     String := GNAT.Source_Info.Source_Location
-   ) with Pre => Has_Connection_Data;
+   ) with Pre => Has_Connection_Data (From);
 
    function Get_Connection_Data (
       From                    : in     String := GNAT.Source_Info.Source_Location
-   ) return Connection_Data_Class_Access
-   with Pre => Ada_Lib.GNOGA.Has_Connection_Data;
+   ) return Connection_Data_Class_Access;
 
    function Has_Connection_Data (
       From                    : in     String := GNAT.Source_Info.Source_Location

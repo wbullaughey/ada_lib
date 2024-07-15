@@ -2,7 +2,7 @@ with Ada.Directories;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Template.Compile;
 with Ada_Lib.Template.Parameters;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -52,7 +52,7 @@ package body Ada_Lib.Template.Tests is
       Log_In (Trace_Test, Quote ("source", Full_Source_Path) &
          Quote ("parameters", Full_Parameter_Path) &
          Quote ("parameters", Raw));
-      if Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Verbose then
+      if Ada_Lib.Options.AUnit.Ada_Lib_Tests.AUnit_Lib_Options.Verbose then
          Put_Line ("---------------------------------------");
          Put_Line (Processed);
          Put_Line ("---------------------------------------");

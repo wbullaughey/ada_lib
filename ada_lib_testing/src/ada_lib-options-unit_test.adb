@@ -34,7 +34,7 @@ package body Ada_Lib.Options.Unit_Test is
                                              Driver_List_Option & "lmP",
                                              Ada_Lib.Help.Modifier);
 
-   Recursed                      : Boolean := False;
+   Recursed_Initialized                      : Boolean := False;
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
@@ -59,12 +59,13 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Unit_Test_Options_Type
+     Options                     : in out Unit_Test_Options_Type;
+     From                        : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
-     Log_In_Checked (Recursed, Debug or Trace_Options);
+     Log_In_Checked (Recursed_Initialized, Debug or Trace_Options, "from " & From);
      Unit_Test_Options_Constant := Options'unchecked_access;
 
       Ada_Lib.Runstring_Options.Options.Register (
@@ -75,8 +76,8 @@ package body Ada_Lib.Options.Unit_Test is
          Options_Without_Parameters);
 --    Unit_Test_Options := Options'unchecked_access;
 
-      return Log_Out_Checked (Recursed,
-         Options.GNOGA_Options.Initialize and then
+      return Log_Out_Checked (Recursed_Initialized,
+            Options.GNOGA_Options.Initialize and then
          Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
@@ -127,7 +128,7 @@ package body Ada_Lib.Options.Unit_Test is
       use Standard.Ada_Lib.Options_Interface;
 
    begin
-      Log_In_Checked (Recursed, Trace_Options or Debug, Option.Image &
+      Log_In (Trace_Options or Debug, Option.Image &
          " mode " & Options.Mode'img);
 
       if Has_Option (Option, Options_With_Parameters,
@@ -257,10 +258,10 @@ package body Ada_Lib.Options.Unit_Test is
 
          end case;
 
-         return Log_Out_Checked (Recursed, True, Trace_Options or Debug,
+         return Log_Out (True, Trace_Options or Debug,
             " option" & Option.Image & " handled");
       else
-         return Log_Out_Checked (Recursed,
+         return Log_Out (
             Options.GNOGA_Options.Process_Option (Iterator, Option),
             Trace_Options or Debug,
             "other option" & " Option" & Option.Image);
@@ -447,7 +448,7 @@ package body Ada_Lib.Options.Unit_Test is
 
          end case;
       end loop;
-      Log_Out (Debug or Trace_Options);
+      Log_Out (Debug or Trace_Options, "all processed");
    end Trace_Parse;
 
    ----------------------------------------------------------------------------

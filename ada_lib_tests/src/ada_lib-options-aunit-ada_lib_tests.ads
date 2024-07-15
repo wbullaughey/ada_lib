@@ -8,16 +8,16 @@ with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
 
 -- options for unit tests of Ada_Lib
-package Ada_Lib.Options.AUnit_Lib is
+package Ada_Lib.Options.AUnit.Ada_Lib_Tests is
 
-   type DBDamon_Test_Suite       is new AUnit.Test_Suites.Test_Suite
+   type DBDamon_Test_Suite       is new Standard.AUnit.Test_Suites.Test_Suite
                                     with null record;
 
    type DBDamon_Test_Access      is access DBDamon_Test_Suite;
 
    function New_Suite return DBDamon_Test_Access;
 
-   type Non_DBDamon_Test_Suite   is new AUnit.Test_Suites.Test_Suite with null record;
+   type Non_DBDamon_Test_Suite   is new Standard.AUnit.Test_Suites.Test_Suite with null record;
 
    type Non_DBDamon_Test_Access  is access Non_DBDamon_Test_Suite;
 
@@ -27,7 +27,7 @@ package Ada_Lib.Options.AUnit_Lib is
 
    -- type used in application for unit testing;
    type Aunit_Options_Type       is new Program_Options_Type with record
-      AUnit_Options              : AUnit.Ada_Lib.Options.AUnit_Options_Type;
+      AUnit_Options              : Standard.AUnit.Ada_Lib.Options.AUnit_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
       Database_Options           : Ada_Lib.Options.Database.Database_Options_Type;
@@ -53,7 +53,8 @@ package Ada_Lib.Options.AUnit_Lib is
 
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type
+     Options                     : in out Aunit_Options_Type;
+     From                        : in     String
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
@@ -90,4 +91,4 @@ private
                                              Abstract_Package.
                                                 Abstract_Iterator_Type'class);
 
-end Ada_Lib.Options.AUnit_Lib;
+end Ada_Lib.Options.AUnit.Ada_Lib_Tests;

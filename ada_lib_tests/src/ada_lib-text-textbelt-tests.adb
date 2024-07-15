@@ -1,7 +1,7 @@
 with Ada.Characters.Latin_1;
 with Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.AUnit.Ada_Lib_Tests;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -82,8 +82,8 @@ package body Ada_Lib.Text.Textbelt.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
+      Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+                                       Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Program_Options).all;
    begin
@@ -106,8 +106,8 @@ package body Ada_Lib.Text.Textbelt.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
+      Options                    : Ada_Lib.Options.AUnit.Ada_Lib_Tests.Aunit_Options_Type'class renames
+                                       Ada_Lib.Options.AUnit.Ada_Lib_Tests.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Program_Options).all;
    begin
