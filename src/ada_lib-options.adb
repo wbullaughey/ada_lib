@@ -142,14 +142,15 @@ package body Ada_Lib.Options is
    end Bad_Trace_Option;
 
    ----------------------------------------------------------------------------
-   function Get_Modifiable_Options
-   return Program_Options_Class_Access is
+   function Get_Modifiable_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Program_Options_Class_Access is
    ----------------------------------------------------------------------------
 
    begin
 --log_here;
       return Program_Options_Class_Access (
-         Ada_Lib.Options_Interface.Get_Modifiable_Options);
+         Ada_Lib.Options_Interface.Get_Modifiable_Options (From));
 
    exception
       when Fault: others =>
@@ -192,11 +193,7 @@ package body Ada_Lib.Options is
       Log_In (Debug or Trace_Options, Quote ("message", Message) &
          " halt " & Halt'img &
          " options tag " & Tag_Name (Interface_Options_Type'class (
-            Options)'tag) &
-         " in help " & Options.In_Help'img);
-      if Options.In_Help then
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
-      end if;
+            Options)'tag));
 
       if Message'length > 0 then
          Put_Line (Message);
@@ -206,7 +203,7 @@ package body Ada_Lib.Options is
       Ada_Lib.Help.Display (Print_Help'access);
       New_Line;
 
-      Interface_Options_Type'class (Options).Program_Help (Traces);
+--    Program_Options_Package.Options_Type (Options).Program_Help (Traces);
       if Halt then
          Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
       end if;

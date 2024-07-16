@@ -80,7 +80,6 @@ package Ada_Lib.Options is
    -- type to application options
    type Program_Options_Type     is abstract limited new
                                     Program_Options_Package.Options_Type with record
-      In_Help                    : Boolean := False;
       Processed                  : Boolean := False;
       Test_Driver                : Boolean := False;
       Verbose                    : Boolean := False;
@@ -92,8 +91,9 @@ package Ada_Lib.Options is
    type Program_Options_Constant_Class_Access
                                  is access constant Program_Options_Type'class;
 
-   function Get_Modifiable_Options
-   return Program_Options_Class_Access;
+   function Get_Modifiable_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Program_Options_Class_Access;
 
    procedure Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
                               -- prints full help, aborts program
