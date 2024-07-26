@@ -117,8 +117,8 @@ package body Ada_Lib.Trace is
       Task_Data               : in out Task_Type;
       Indent                  : in     Boolean);
 
-   function Get_Start_Time
-   return Ada.Calendar.Time;
+-- function Get_Start_Time
+-- return Ada.Calendar.Time;
 
    procedure Put (
       Enable                     : in     Boolean;
@@ -411,14 +411,14 @@ package body Ada_Lib.Trace is
       end if;
    end From_Start;
 
-   --------------------------------------------------------------------
-   function Get_Start_Time
-   return Ada.Calendar.Time is
-   --------------------------------------------------------------------
-
-   begin
-      return Start_Time;
-   end Get_Start_Time;
+-- --------------------------------------------------------------------
+-- function Get_Start_Time
+-- return Ada.Calendar.Time is
+-- --------------------------------------------------------------------
+--
+-- begin
+--    return Start_Time;
+-- end Get_Start_Time;
 
    -------------------------------------------------------------------
    function Image (
@@ -1335,6 +1335,7 @@ put_Line (here);
                declare
                   Answer               : constant Character :=
                                           Ask.Ask_Character (Prompt);
+                  pragma Unreferenced (Answer);
                begin
                   New_Line;
                end;

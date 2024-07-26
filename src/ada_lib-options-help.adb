@@ -5,15 +5,15 @@ with Ada.Containers.Indefinite_Ordered_Sets;
 with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.Options;
 with Ada_Lib.OS;
---with Ada_Lib.Runstring_Options;
+--with Ada_Lib.Options.Runstring;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 with Debug_Options;
 
-package body Ada_Lib.Help is
+package body Ada_Lib.Options.Help is
 
-   use type Ada_Lib.Options_Interface.Option_Type;
+   use type Ada_Lib.Options.Option_Type;
 
    subtype Line_Type             is String;
 
@@ -22,7 +22,7 @@ package body Ada_Lib.Help is
       Description_Length         : Positive;
       Component_Length           : Natural;
       Source_Line_Length         : Positive) is record
-      Option                     : Ada_Lib.Options_Interface.Option_Type;
+      Option                     : Ada_Lib.Options.Option_Type;
       Parameter                  : Line_Type (1 .. Parameter_Length);
       Description                : Line_Type (1 .. Description_Length);
       Component                  : Line_Type (1 .. Component_Length);
@@ -52,7 +52,7 @@ package body Ada_Lib.Help is
 
    ----------------------------------------------------------------------------
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options_Interface.Option_Type;
+      Option                     : in     Ada_Lib.Options.Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -145,12 +145,12 @@ package body Ada_Lib.Help is
       Description                : in     String;
       Component                  : in     String := "";
       Modifier                   : in     Character :=
-                                             Ada_Lib.Options_Interface.Unmodified;
+                                             Ada_Lib.Options.Unmodified;
       Source_Line                : in     String := Ada_Lib.Trace.Here) is
    ----------------------------------------------------------------------------
 
    begin
-      Add_Option (Ada_Lib.Options_Interface.Create_Option (Option, Modifier), Parameter,
+      Add_Option (Ada_Lib.Options.Create_Option (Option, Modifier), Parameter,
          Description, Component, Source_Line);
    end Add_Option;
 
@@ -176,10 +176,10 @@ package body Ada_Lib.Help is
       begin
          Log_In (Debug, Quote ("option", Element.Option.Option) &
             (case Element.Option.Kind is
-               when Ada_Lib.Options_Interface.Nil_Option   => "",
-               when Ada_Lib.Options_Interface.Plain =>
+               when Ada_Lib.Options.Nil_Option   => "",
+               when Ada_Lib.Options.Plain =>
                   Quote (" option", Element.Option.Option),
-               when Ada_Lib.Options_Interface.Modified     =>
+               when Ada_Lib.Options.Modified     =>
                   Quote (" modifier", Element.Option.Modifier) &
                   Quote (" option", Element.Option.Option)) &
             Quote (" parameter", Element.Parameter) &
@@ -264,8 +264,8 @@ begin
 --debug := True;
 --trace_options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
--- Ada_Lib.Runstring_Options.Options.Register (
---    Ada_Lib.Runstring_Options.With_Parameters,
---    Ada_Lib.Options_Interface.Create_Options (
---       Ada_Lib.Options_Interface.Options_Prefix));
-end Ada_Lib.Help;
+-- Ada_Lib.Options.Runstring.Options.Register (
+--    Ada_Lib.Options.Runstring.With_Parameters,
+--    Ada_Lib.Options.Create_Options (
+--       Ada_Lib.Options.Options_Prefix));
+end  Ada_Lib.Options.Help;

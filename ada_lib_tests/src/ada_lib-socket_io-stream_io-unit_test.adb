@@ -2,9 +2,9 @@ with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
 with Ada.Real_Time;
 with Ada.Text_IO;use Ada.Text_IO;
+with Ada_Lib.Options.Actual;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Options.AUnit_Lib;
---with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Server;
@@ -636,7 +636,7 @@ put_Line (here);
          Options                 : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                                     Ada_Lib.Options.AUnit_Lib.
                                        Aunit_Options_Constant_Class_Access (
-                                          Ada_Lib.Options.Program_Options).all;
+                                          Ada_Lib.Options.Read_Only_Options).all;
          Seconds                 : Ada.Real_Time.Seconds_Count;
          Seed                    : Integer;
          Client_Socket           : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
@@ -797,8 +797,10 @@ put_Line (here);
                         Log_Here (Debug, "answer " & Local_Test.Answer'img &
                            " sum" & Sum'img & " ack" & Ack'img);
 
-                        if Ada_Lib.Options.Program_Options.Verbose and then
-                              Count mod Notify_Frequency = 0 then
+                        if Ada_Lib.Options.Actual.
+                              Program_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Read_Only_Options).Verbose and then
+                                    Count mod Notify_Frequency = 0 then
                            Put_Line (Count'img & " records received");
                         end if;
                      end;
@@ -1011,7 +1013,9 @@ put_Line (here);
 --                      Request_Buffer.Response_Socket.Write (Answer);
                      end;
                   else
-                     if Ada_Lib.Options.Program_Options.Verbose and then
+                     if Ada_Lib.Options.Actual.
+                           Program_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Read_Only_Options).Verbose and then
                            Count mod Notify_Frequency = 0 then
                         Put_Line ("records" & Count'img);
                      end if;

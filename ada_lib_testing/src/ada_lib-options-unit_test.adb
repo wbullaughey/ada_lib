@@ -1,10 +1,9 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.GNOGA.Unit_Test;
-with Ada_Lib.Help;
+with Ada_Lib.Options.Help;
 --with Ada_Lib.Options.GNOGA;
-with Ada_Lib.Options_Interface;
 with Ada_Lib.OS;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Runstring;
 with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test;
@@ -12,27 +11,25 @@ with Debug_Options;
 
 package body Ada_Lib.Options.Unit_Test is
 
-   use type Ada_Lib.Options_Interface.Options_Type;
--- use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
+   use type Ada_Lib.Options.Options_Type;
+-- use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
    Driver_List_Option            : constant Character := 'd';
 
    Options_With_Parameters
                                     : aliased constant
-                                    Ada_Lib.Options_Interface.
-                                       Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                    Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options (
                                              "esSU") &
-                                          Ada_Lib.Options_Interface.Create_Options (
-                                             "RS", Ada_Lib.Help.Modifier);
+                                          Ada_Lib.Options.Create_Options (
+                                             "RS", Ada_Lib.Options.Help.Modifier);
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options_Interface.
-                                       Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                    Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options (
                                              "x") &
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                          Ada_Lib.Options.Create_Options (
                                              Driver_List_Option & "lmP",
-                                             Ada_Lib.Help.Modifier);
+                                             Ada_Lib.Options.Help.Modifier);
 
    Recursed                      : Boolean := False;
 
@@ -59,7 +56,8 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Unit_Test_Options_Type
+     Options                     : in out Unit_Test_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -67,17 +65,17 @@ package body Ada_Lib.Options.Unit_Test is
      Log_In_Checked (Recursed, Debug or Trace_Options);
      Unit_Test_Options_Constant := Options'unchecked_access;
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters,
             Options_With_Parameters);
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters,
          Options_Without_Parameters);
 --    Unit_Test_Options := Options'unchecked_access;
 
       return Log_Out_Checked (Recursed,
          Options.GNOGA_Options.Initialize and then
-         Nested_Options_Type (Options).Initialize,
+         Actual.Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
 
@@ -89,16 +87,16 @@ package body Ada_Lib.Options.Unit_Test is
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    if Ada_Lib.Options_Interface.Read_Only_Options = Null then
+--    if Ada_Lib.Options.Read_Only_Options = Null then
 --       raise Failed with "Read_Only_Options not set called from " & From;
 --    end if;
 --
 --    Log_Here (Debug, "from " & From &
 --       " Read_Only_Options tag " & Tag_Name (
---          Ada_Lib.Options_Interface.Read_Only_Options.all'tag));
+--          Ada_Lib.Options.Read_Only_Options.all'tag));
 --
 --    return Unit_Test_Options_Constant_Class_Access (
---       Ada_Lib.Options_Interface.Read_Only_Options);
+--       Ada_Lib.Options.Read_Only_Options);
 -- end Options;
 
    ----------------------------------------------------------------------------
@@ -106,9 +104,8 @@ package body Ada_Lib.Options.Unit_Test is
    overriding
    function Process_Option (
       Options                    : in out Unit_Test_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -124,7 +121,7 @@ package body Ada_Lib.Options.Unit_Test is
       end Bad_Options;
       ----------------------------------------------------------------------------
 
-      use Standard.Ada_Lib.Options_Interface;
+      use Standard.Ada_Lib.Options;
 
    begin
       Log_In_Checked (Recursed, Trace_Options or Debug, Option.Image &
@@ -283,27 +280,27 @@ package body Ada_Lib.Options.Unit_Test is
 
       when Ada_Lib.Options.Program =>
          -- options without modifier
-         Ada_Lib.Help.Add_Option ('e', "routine", "test routine.", Component);
-         Ada_Lib.Help.Add_Option ('s', "test suite", "select test suite to run.",
+         Ada_Lib.Options.Help.Add_Option ('e', "routine", "test routine.", Component);
+         Ada_Lib.Options.Help.Add_Option ('s', "test suite", "select test suite to run.",
             Component);
-         Ada_Lib.Help.Add_Option ('S', "suites", "enable default disabled suites.",
+         Ada_Lib.Options.Help.Add_Option ('S', "suites", "enable default disabled suites.",
             Component);
-         Ada_Lib.Help.Add_Option ('U', "unit test trace Ada_Lib.",
+         Ada_Lib.Options.Help.Add_Option ('U', "unit test trace Ada_Lib.",
             "select trace", Component);
-         Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete", Component);
+         Ada_Lib.Options.Help.Add_Option ('x', "", "exit on tests complete", Component);
          -- options with modifier
-         Ada_Lib.Help.Add_Option ('d', "", "driver suites", Component,
-            Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Add_Option ('l', "", "List test suites", Component,
-            Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Add_Option ('m', "", "manual operations.", Component,
-            Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Add_Option ('P', "", "Print test suites.", Component,
-            Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Add_Option ('S', "", "report random seed", Component,
-            Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Add_Option ('R', "seed", "set random seed", Component,
-            Ada_Lib.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('d', "", "driver suites", Component,
+            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('l', "", "List test suites", Component,
+            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('m', "", "manual operations.", Component,
+            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('P', "", "Print test suites.", Component,
+            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('S', "", "report random seed", Component,
+            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Options.Help.Add_Option ('R', "seed", "set random seed", Component,
+            Ada_Lib.Options.Help.Modifier);
 
       when Ada_Lib.Options.Traces =>
          Put_Line ("Ada_Lib unit test library trace options (-U)");
@@ -389,7 +386,7 @@ package body Ada_Lib.Options.Unit_Test is
    overriding
    procedure Trace_Parse (
       Options                    : in out Unit_Test_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

@@ -10,7 +10,7 @@ package Ada_Lib.GNOGA is
                                     record
          Main_Window             : Standard.Gnoga.Gui.Window.
                                     Pointer_To_Window_Class := Null;
-         Options                 : Ada_Lib.Options.Program_Options_Class_Access := Null;
+         Options                 : Ada_Lib.Options.Interface_Options_Class_Access := Null;
       end record;
 
    type Connection_Data_Access is access all Connection_Data_Type;

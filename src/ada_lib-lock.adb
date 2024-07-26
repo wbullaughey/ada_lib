@@ -1,4 +1,4 @@
-with Ada.Text_IO; use  Ada.Text_IO;
+--with Ada.Text_IO; use  Ada.Text_IO;
 
 package body Ada_Lib.Lock is
 
@@ -102,7 +102,7 @@ package body Ada_Lib.Lock is
 
       ---------------------------------------------------------------
       function Has_Lock (
-         From                    : in     String
+         From                    : in     String := Standard.Ada_Lib.Trace.Here
       ) return Boolean is
       pragma Unreferenced (From);
       ---------------------------------------------------------------

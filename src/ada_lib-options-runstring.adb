@@ -1,16 +1,15 @@
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Debug_Options;
 
-package body Ada_Lib.Runstring_Options is
+package body Ada_Lib.Options.Runstring is
 
-   use type Ada_Lib.Options_Interface.Option_Type;
+-- use type Ada_Lib.Options.Option_Type;
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
    function Find_Registration (
-      Registrations              : in     Registrations_Type;
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
-   ) return Element_Constant_Access;
+      Registrations           : in     Registrations_Type;
+      Option                  : in     Ada_Lib.Options.Option_Type
+   ) return Constant_Reference_Type;
 
    -------------------------------------------------------------------
    overriding
@@ -27,22 +26,33 @@ package body Ada_Lib.Runstring_Options is
    -------------------------------------------------------------------
    function Find_Registration (
       Registrations              : in     Registrations_Type;
-      Option                     : in     Ada_Lib.Options_Interface.Option_Type
-   ) return Element_Constant_Access is
+      Option                     : in     Ada_Lib.Options.Option_Type
+   ) return Constant_Reference_Type is
    -------------------------------------------------------------------
+
+      use Registrations_Package;
+
+      Cursor          : Registrations_Package.Cursor := First (Registrations);
 
    begin
       Log_In (Debug, Option.Image & " registrations" & Registrations.Length'img);
-      for Registration of Registrations loop
-         Log_Here (Debug, Registration.Option.Image);
-         if Registration.Option = Option then
-            Log_Out (Debug, Registration.Option.Image);
-            return Registration'unchecked_access;
-         end if;
+      while Has_Element (Cursor) loop
+         declare
+            Element  : constant Constant_Reference_Type :=
+                        Constant_Reference (Registrations, Cursor);
+         begin
+            Log_Here (Debug, Element.Option.Image);
+            if Element.Option = Option then
+               Log_Out (Debug, Element.Option.Image);
+               return Element;
+            end if;
+         end;
+
+         Next (Cursor);
       end Loop;
 
       Log_Out (Debug);
-      return Null;
+      raise Failed with Quote ("options", Option.Option) & " not defined";
    end Find_Registration;
 
    protected body Registration_Type is
@@ -84,39 +94,54 @@ package body Ada_Lib.Runstring_Options is
 
       -------------------------------------------------------------------
       function Has_Parameter (
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return Boolean is
       -------------------------------------------------------------------
 
-         Element                 : constant Element_Constant_Access :=
-                                    Find_Registration (Registrations, Option);
       begin
-         if Element = Null then
-            raise Failed with Option.Image & " not defined";
-         else
-            return Element.Kind = With_Parameters;
+         if Is_Registered (Option) then
+            declare
+               Prameter          : constant Constant_Reference_Type :=
+                                    Find_Registration (Registrations, Option);
+            begin
+               return Prameter.Kind = With_Parameters;
+            end;
          end if;
+
+         return False;
       end Has_Parameter;
 
       -------------------------------------------------------------------
       function Is_Registered (
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return Boolean is
       -------------------------------------------------------------------
 
+      use Registrations_Package;
+
+         Cursor          : Registrations_Package.Cursor := First (Registrations);
+
       begin
-         Log_In (Debug, Option.Image);
-         return Log_Out (Find_Registration (Registrations, Option) /= Null,
-            Debug);
+         Log_In (Debug, Option.Image &
+            " registrations" & Registrations.Length'img);
+         while Has_Element (Cursor) loop
+            declare
+               Element  : constant Constant_Reference_Type :=
+                           Constant_Reference (Registrations, Cursor);
+            begin
+               if Element.Option = Option then
+                  return Log_Out (True, Debug, Element.Option.Image);
+               end if;
+            end;
+            Next (Cursor);
+         end Loop;
+         return Log_Out (False, Debug, Quote ("options", Option.Option));
       end Is_Registered;
 
       -------------------------------------------------------------------
       procedure Register (
          Kind                    : in     Kind_Type;
-         Options                 : in     Ada_Lib.Options_Interface.
-                                             Options_Type;
+         Options                 : in     Ada_Lib.Options.Options_Type;
          From                    : in     String:= Ada_Lib.Trace.Here) is
       -------------------------------------------------------------------
 
@@ -165,8 +190,7 @@ package body Ada_Lib.Runstring_Options is
 
       -------------------------------------------------------------------
       function Registration (
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return String is
       -------------------------------------------------------------------
 
@@ -197,4 +221,4 @@ begin
      Debug := Debug_Options.Debug_All;
 --debug := true;
    Log_Here (Elaborate or Trace_Options);
-end Ada_Lib.Runstring_Options;
+end Ada_Lib.Options.Runstring;

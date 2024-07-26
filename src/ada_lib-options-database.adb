@@ -1,21 +1,20 @@
 with Ada.Exceptions;
-with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Help;
-with Ada_Lib.Options_Interface;
-with Ada_Lib.Runstring_Options;
+--with Ada_Lib.Command_Line_Iterator;
+with Ada_Lib.Options.Help;
+with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
-pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
+--pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
 package body Ada_Lib.Options.Database is
 
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options_Interface.Options_Type :=
-                                       Ada_Lib.Options_Interface.Create_Options (
+                                    Ada_Lib.Options.Options_Type :=
+                                       Ada_Lib.Options.Create_Options (
                                           "LprRu");
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options_Interface.Options_Type :=
-                                       Ada_Lib.Options_Interface.Create_Options (
+                                    Ada_Lib.Options.Options_Type :=
+                                       Ada_Lib.Options.Create_Options (
                                           "l");
 
    Debug                         : Boolean renames Ada_Lib.Database.Trace_All;
@@ -92,18 +91,19 @@ package body Ada_Lib.Options.Database is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Database_Options_Type
+     Options                     : in out Database_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
 -- pragma Unreferenced (Options);
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Debug or Trace_Options);
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.With_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.With_Parameters,
          Options_With_Parameters);
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.Without_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.Without_Parameters,
          Options_Without_Parameters);
-      return Log_Out (Nested_Options_Type (Options).Initialize,
+      return Log_Out (Actual.Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
 
@@ -111,17 +111,16 @@ package body Ada_Lib.Options.Database is
    overriding
    function Process_Option (
       Options                    : in out Database_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+--    use Ada_Lib.Options;
 
    begin
       Log_In (Trace_Options or Debug, Option.Image);
-      if Ada_Lib.Options_Interface.Has_Option (Option, Options_With_Parameters,
+      if Ada_Lib.Options.Has_Option (Option, Options_With_Parameters,
             Options_Without_Parameters) then
          case Option.Kind is
 
@@ -238,13 +237,13 @@ package body Ada_Lib.Options.Database is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Ada_Lib.Help.Add_Option ('l', "", "local dbdaemon.", Component);
-         Ada_Lib.Help.Add_Option ('L', "path", "local dbdaemon path.", Component);
-         Ada_Lib.Help.Add_Option ('p', "port number", "remote DBDaemon port number", Component);
---       Ada_Lib.Help.Add_Option ('P', "browser port", Component);
-         Ada_Lib.Help.Add_Option ('r', "", "remote dbdaemon.", Component);
-         Ada_Lib.Help.Add_Option ('R', "path", "remote dbdaemon path.", Component);
-         Ada_Lib.Help.Add_Option ('u', "user", "remote user.", Component);
+         Ada_Lib.Options.Help.Add_Option ('l', "", "local dbdaemon.", Component);
+         Ada_Lib.Options.Help.Add_Option ('L', "path", "local dbdaemon path.", Component);
+         Ada_Lib.Options.Help.Add_Option ('p', "port number", "remote DBDaemon port number", Component);
+--       Ada_Lib.Options.Help.Add_Option ('P', "browser port", Component);
+         Ada_Lib.Options.Help.Add_Option ('r', "", "remote dbdaemon.", Component);
+         Ada_Lib.Options.Help.Add_Option ('R', "path", "remote dbdaemon path.", Component);
+         Ada_Lib.Options.Help.Add_Option ('u', "user", "remote user.", Component);
 
       when Ada_Lib.Options.Traces =>
          Null;
@@ -270,7 +269,7 @@ package body Ada_Lib.Options.Database is
    overriding
    procedure Trace_Parse (
       Options                    : in out Database_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Command_Line_Iterator_Interface'class) is
    pragma Unreferenced (Options, Iterator);
    ----------------------------------------------------------------
 

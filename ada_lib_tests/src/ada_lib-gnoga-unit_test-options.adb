@@ -1,37 +1,37 @@
 --with Ada.Unchecked_Deallocation;
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada_Lib.Command_Line_Iterator;
 --with Ada_Lib.GNOGA.Base;
 with Ada_Lib.GNOGA.Unit_Test.Events;
-with Ada_Lib.Help;
+with Ada_Lib.Options.Help;
 --with Ada_Lib.Options;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Gnoga.Application.Multi_Connect;
 
-pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
+--pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
 package body Ada_Lib.GNOGA.Unit_Test.Options is
 
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options_Interface.Options_Type :=
-                                       Ada_Lib.Options_Interface.Create_Options ('g');
+                                    Ada_Lib.Options.Options_Type :=
+                                       Ada_Lib.Options.Create_Options ('g');
 
    -------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out GNOGA_Unit_Test_Options_Type
+     Options                     : in out GNOGA_Unit_Test_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    -------------------------------------------------------------------
 
    begin
       Log_In (Debug_Options or Trace_Options);
 --    GNOGA_Options := Options'unchecked_access;
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.
          With_Parameters, Options_With_Parameters);
-      return Log_Out (Ada_Lib.Options.Nested_Options_Type (
+      return Log_Out (Ada_Lib.Options.Actual.Nested_Options_Type (
          Options).Initialize, Debug_Options or Trace_Options);
    end Initialize;
 
@@ -39,17 +39,16 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    overriding
    function Process_Option (
       Options                    : in out GNOGA_Unit_Test_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ---------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+      use Ada_Lib.Options;
 
    begin
       Log_In (Trace_Options or Debug_Options, Option.Image);
-      if Ada_Lib.Options_Interface.Has_Option (Option,
+      if Ada_Lib.Options.Has_Option (Option,
             Options_With_Parameters, Null_Options) then
          if Option.Modified then
             return False;
@@ -65,7 +64,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
             end case;
          end if;
       else
-         return Log_Out (Ada_Lib.Options.Nested_Options_Type (
+         return Log_Out (Ada_Lib.Options.Actual.Nested_Options_Type (
             Options).Process_Option (Iterator, Option),
             Trace_Options or Debug_Options);
       end if;
@@ -86,7 +85,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Standard.Ada_Lib.Help.Add_Option ('g', "trace options",
+         Standard.Ada_Lib.Options.Help.Add_Option ('g', "trace options",
             "GNOGA Unit Test traces", Component);
 
       when Ada_Lib.Options.Traces =>
@@ -98,7 +97,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
          New_Line;
 
       end case;
-      Ada_Lib.Options.Nested_Options_Type (Options).Program_Help (
+      Ada_Lib.Options.Actual.Nested_Options_Type (Options).Program_Help (
          Help_Mode);
       Log_Out (Debug_Options);
    end Program_Help;
@@ -107,7 +106,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    overriding
    procedure Trace_Parse (
       Options                    : in out GNOGA_Unit_Test_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

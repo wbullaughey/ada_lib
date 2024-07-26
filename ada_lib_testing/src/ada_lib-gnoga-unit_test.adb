@@ -7,8 +7,8 @@ with Ada_Lib.GNOGA.Base;
 with Ada_Lib.Options;
 with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.Runstring_Options;
---with Ada_Lib.Options_Interface;
+--with Ada_Lib.Options.Runstring;
+--with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.Application.Multi_Connect;
 

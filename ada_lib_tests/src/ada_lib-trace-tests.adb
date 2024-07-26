@@ -2,7 +2,7 @@ with Ada.Exceptions;
 with Ada.Numerics.Float_Random;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
-with Ada_Lib.Options;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Parser;
 with Ada_Lib.Strings;
 with Ada_Lib.Time;
@@ -97,7 +97,8 @@ package body Ada_Lib.Trace.Tests is
                " expected seconds " & Expected_Seconds'img &
                " expected hundreds " & Expected_Hundreds'img &
                " raw expected" & Raw_Expected'img);
-            if Ada_Lib.Options.Program_Options.Verbose then
+            if Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
+                  Ada_Lib.Options.Read_Only_Options).Verbose then
                Ada.Text_IO.Put_Line (Quote ("line", Line));
             end if;
 

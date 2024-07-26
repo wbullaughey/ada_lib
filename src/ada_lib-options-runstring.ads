@@ -1,9 +1,9 @@
 with Ada.Containers.Doubly_Linked_Lists;
-with Ada_Lib.Options_Interface;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 
-package Ada_Lib.Runstring_Options is
+package Ada_Lib.Options.Runstring is
 
    Duplicate_Options       : exception;
    Failed                  : exception;
@@ -17,7 +17,7 @@ package Ada_Lib.Runstring_Options is
    type Element_Type          is record
       From                    : Ada_Lib.Strings.Unlimited.String_Type;
       Kind                    : Kind_Type;
-      Option                  : Ada_Lib.Options_Interface.Option_Type;
+      Option                  : Ada_Lib.Options.Option_Type;
    end record;
 
    type Element_Access        is access all Element_Type;
@@ -34,7 +34,10 @@ package Ada_Lib.Runstring_Options is
       Element_Type   => Element_Type,
       "="            => "=");
 
-   subtype Registrations_Type    is Registrations_Package.List;
+   subtype Registrations_Type
+                           is Registrations_Package.List;
+   subtype Constant_Reference_Type
+                           is Registrations_Package.Constant_Reference_Type;
 
    protected type Registration_Type is
 
@@ -47,24 +50,20 @@ package Ada_Lib.Runstring_Options is
       ) return String;
 
       function Has_Parameter (
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return Boolean;
 
       function Is_Registered (   -- tests if option was registered for the whole program
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return Boolean;
 
       procedure Register (
          Kind                    : in     Kind_Type;
-         Options                 : in     Ada_Lib.Options_Interface.
-                                             Options_Type;
+         Options                 : in     Ada_Lib.Options.Options_Type;
          From                    : in     String := Ada_Lib.Trace.Here);
 
       function Registration (
-         Option                  : in     Ada_Lib.Options_Interface.
-                                             Option_Type
+         Option                  : in     Ada_Lib.Options.Option_Type
       ) return String;
 
       procedure Reset;                 -- clears sets if need different iterator sets
@@ -81,4 +80,4 @@ package Ada_Lib.Runstring_Options is
    Debug                         : Boolean := False;
    Options                       : aliased Registration_Type;
 
-end Ada_Lib.Runstring_Options;
+end Ada_Lib.Options.Runstring;

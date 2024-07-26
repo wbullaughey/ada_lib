@@ -1,4 +1,5 @@
 with Ada_Lib.Database;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Strings.Unlimited;
 
 package Ada_Lib.Options.Database is
@@ -6,10 +7,12 @@ package Ada_Lib.Options.Database is
    Multiple_Hosts                : exception;
    No_Host                       : exception;
 
-   type Database_Options_Type is Limited new Nested_Options_Type with record
+   type Database_Options_Type    is Limited new Ada_Lib.Options.Actual.
+                                    Nested_Options_Type with record
       No_DBDaemon                : Boolean := True;
       Remote_Host                : Ada_Lib.Strings.Unlimited.String_Type;   -- host for tests which connect to a remote host
-      Port                       : Ada_Lib.Database.Port_Type := Ada_Lib.Database.Default_Port;
+      Port                       : Ada_Lib.Database.Port_Type :=
+                                    Ada_Lib.Database.Default_Port;
       Remote_User                : Ada_Lib.Strings.Unlimited.String_Type;
       Remote_DBDaemon_Path       : Ada_Lib.Strings.Unlimited.String_Type;   -- dbdaemon executable program path on remote host or null
       Has_Local_DBDaemon         : Boolean;
@@ -17,7 +20,8 @@ package Ada_Lib.Options.Database is
    end record;
 
    type Database_Options_Access is access all Database_Options_Type;
-   type Database_Options_Class_Access is access all Database_Options_Type'class;
+   type Database_Options_Class_Access
+                                 is access all Database_Options_Type'class;
 
    function Has_Database(
       Options                    : in     Database_Options_Type) return Boolean;
@@ -28,7 +32,8 @@ package Ada_Lib.Options.Database is
 
    overriding
    function Initialize (
-     Options                     : in out Database_Options_Type
+     Options                     : in out Database_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
@@ -48,17 +53,15 @@ package Ada_Lib.Options.Database is
    overriding
    function Process_Option (
       Options                    : in out Database_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 
    overriding
    procedure Trace_Parse (
       Options                    : in out Database_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                    Abstract_Package.Abstract_Iterator_Type'class);
+      Iterator                   : in out Command_Line_Iterator_Interface'class);
 
    function Which_Host (
       Options                    : in     Database_Options_Type

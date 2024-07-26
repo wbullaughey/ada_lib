@@ -1,4 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Options.Help;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -6,7 +7,7 @@ with AUnit.Test_Cases;
 
 package body Ada_Lib.Help.Tests is
 
-   use Ada_Lib.Options_Interface;
+   use Ada_Lib.Options;
 
    type String_Pointer           is access constant String;
 
@@ -73,7 +74,7 @@ package body Ada_Lib.Help.Tests is
    ---------------------------------------------------------------
 
    begin
-      Reset;
+      Ada_Lib.Options.Help.Reset;
    end Tear_Down;
 
    ---------------------------------------------------------------
@@ -132,12 +133,12 @@ package body Ada_Lib.Help.Tests is
    begin
       Log_In (Debug);
       for Line of Test_Case loop
-         Ada_Lib.Help.Add_Option (Line.Option, (
+         Ada_Lib.Options.Help.Add_Option (Line.Option, (
             if Line.Parameter = Null then "" else Line.Parameter.all),
          Line.Description.all);
       end loop;
 
-      Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
+      Ada_Lib.Options.Help.Display (Check_Test_Suite_And_Routine'access);
       Log_Out (Debug);
    end Test_Help;
 
@@ -204,7 +205,7 @@ package body Ada_Lib.Help.Tests is
 
    begin
       for Line of Test_Case loop
-         Ada_Lib.Help.Add_Option (
+         Ada_Lib.Options.Help.Add_Option (
             Component      => "",
             Description    => Line.Description.all,
             Option         => Line.Option,
@@ -214,7 +215,7 @@ package body Ada_Lib.Help.Tests is
                               Line.Parameter.all));
       end loop;
 
-      Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
+      Ada_Lib.Options.Help.Display (Check_Test_Suite_And_Routine'access);
    end Test_Prefix_Help;
 
 begin

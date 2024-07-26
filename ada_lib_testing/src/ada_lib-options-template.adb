@@ -1,8 +1,7 @@
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
-with Ada_Lib.Options_Interface;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Help;
+with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Template;
 with Ada_Lib.Test;
@@ -11,52 +10,47 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Debug_Options;
 --with AUnit;
 
-pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
-
 package body Ada_Lib.Options.Template is
 
 -- use type  Ada_Lib.Strings.Unlimited.String_Type;
 
    Trace_Option                  : constant Character := 'T';
    Options_With_Parameters       : aliased constant
-                                    Standard.Ada_Lib.Options_Interface.
-                                       Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                    Standard.Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options (
                                              Trace_Option);
    Options_Without_Parameters    : aliased constant
-                                    Standard.Ada_Lib.Options_Interface.
-                                       Options_Type := Standard.Ada_Lib.
-                                          Options_Interface.Null_Options;
+                                    Standard.Ada_Lib.Options.Options_Type := Standard.Ada_Lib.
+                                          Options.Null_Options;
 
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Template_Options_Type
+     Options                     : in out Template_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Debug);
       Template_Options_Constant := Options'unchecked_access;
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.With_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.With_Parameters,
          Options_With_Parameters);
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.Without_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.Without_Parameters,
          Options_Without_Parameters);
-      return Log_Out (Nested_Options_Type (Options).Initialize, Debug or Trace_Options);
+      return Log_Out (Actual.Nested_Options_Type (Options).Initialize, Debug or Trace_Options);
    end Initialize;
 
    ----------------------------------------------------------------------------
    overriding
    function Process_Option (
       Options                    : in out Template_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
-      use Standard.Ada_Lib.Options_Interface;
+      use Standard.Ada_Lib.Options;
 
       Has_On_Options             : constant Boolean :=
                                     Has_Option (Option,
@@ -96,7 +90,7 @@ package body Ada_Lib.Options.Template is
       Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
-      use Standard.Ada_Lib.Options_Interface;
+      use Standard.Ada_Lib.Options;
 
       Component                  : constant String := "Ada_Lib.Template.Tests";
 
@@ -106,7 +100,7 @@ package body Ada_Lib.Options.Template is
 
          when Ada_Lib.Options.Program =>
             New_Line;
-            Ada_Lib.Help.Add_Option (Trace_Option, "options", -- t
+            Ada_Lib.Options.Help.Add_Option (Trace_Option, "options", -- t
                "enables trace template unit tests", Component);
 
          when Ada_Lib.Options.Traces =>
@@ -140,7 +134,7 @@ package body Ada_Lib.Options.Template is
    overriding
    procedure Trace_Parse (
       Options                    : in out Template_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

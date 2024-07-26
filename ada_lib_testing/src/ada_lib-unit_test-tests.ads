@@ -1,11 +1,11 @@
-with Ada_Lib.Options;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Unit_Test.Tests is
 
    type Test_Case_Type           is abstract new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with record
-      Options                    : Ada_Lib.Options.
+      Options                    : Ada_Lib.Options.Actual.
                                     Program_Options_Constant_Class_Access := Null;
       Test_Failed                : Boolean := False;
    end record;

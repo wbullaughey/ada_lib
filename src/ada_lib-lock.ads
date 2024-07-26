@@ -1,4 +1,5 @@
 with Ada_Lib.Lock_Interface;
+with Ada_Lib.Trace;
 with Ada.Task_Identification;
 with Ada_Lib.Strings;
 with GNAT.Source_Info;
@@ -57,7 +58,7 @@ private
       function Get_Task_Id return Ada.Task_Identification.Task_Id;
 
       function Has_Lock (
-         From                    : in     String
+         From                    : in     String := Standard.Ada_Lib.Trace.Here
       ) return Boolean;
 
       procedure Unlock (

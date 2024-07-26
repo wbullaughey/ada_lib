@@ -1,42 +1,42 @@
 with Ada.Text_IO; use Ada.Text_IO;
--- with Ada_Lib.Help;
-with Ada_Lib.Command_Line_Iterator;
---with Ada_Lib.Database.Server;
+-- with Ada_Lib.Options.Help;
+----with Ada_Lib.Database.Server;
 --with Ada_Lib.GNOGA;
-with Ada_Lib.Help;
+with Ada_Lib.Options.Help;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Runstring;
 --with Debug_Options;
 with GNOGA.Ada_Lib;
 
-pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
+--pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 package body Ada_Lib.Options.GNOGA is
 
    Trace_Option                     : constant Character := 'G';
    Options_With_Parameters          : aliased constant
-                                       Ada_Lib.Options_Interface.Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                       Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options (
                                              Trace_Option);
    Options_Without_Parameters       : aliased constant
-                                       Ada_Lib.Options_Interface.Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options ('w');
+                                       Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options ('w');
 
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out GNOGA_Options_Type
+     Options                     : in out GNOGA_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Debug or Trace_Options);
       GNOGA_Options := Options'unchecked_access;
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters,
          Options_With_Parameters);
-      Ada_Lib.Runstring_Options.Options.Register (Ada_Lib.Runstring_Options.Without_Parameters,
+      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.Without_Parameters,
          Options_Without_Parameters);
-      return Log_Out (Nested_Options_Type (Options).Initialize,
+      return Log_Out (Actual.Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
 
@@ -44,20 +44,18 @@ package body Ada_Lib.Options.GNOGA is
    overriding
    function Process_Option (
       Options                    : in out GNOGA_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Debug or Trace_Options, " option" & Option.Image);
-      if Ada_Lib.Options_Interface.Has_Option (Option, Options_With_Parameters,
-            Ada_Lib.Options_Interface.Null_Options) then
+      if Ada_Lib.Options.Has_Option (Option, Options_With_Parameters,
+            Ada_Lib.Options.Null_Options) then
          case Option.Kind is
 
-         when Ada_Lib.Options_Interface.Plain =>
+         when Ada_Lib.Options.Plain =>
             case Option.Option is
 
                when 'G' =>   -- options for GNOGA
@@ -73,8 +71,8 @@ package body Ada_Lib.Options.GNOGA is
 
             end case;
 
-         when Ada_Lib.Options_Interface.Nil_Option |
-              Ada_Lib.Options_Interface.Modified =>
+         when Ada_Lib.Options.Nil_Option |
+              Ada_Lib.Options.Modified =>
             raise Failed with "Has_Option incorrectly passed " & Option.Image;
 
          end case;
@@ -93,16 +91,16 @@ package body Ada_Lib.Options.GNOGA is
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+--    use Ada_Lib.Options;
 
    begin
       Log_In (Debug or Trace_Options);
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-            Ada_Lib.Help.Add_Option (Create_Option ('G'), "trace options",
+            Ada_Lib.Options.Help.Add_Option (Create_Option ('G'), "trace options",
                "GNOGA traces", "GNOGA library");
-            Ada_Lib.Help.Add_Option (Create_Option ('w'), "",
+            Ada_Lib.Options.Help.Add_Option (Create_Option ('w'), "",
                "Web server port", "GNOGA library");
 
       when Ada_Lib.Options.Traces =>
@@ -121,7 +119,7 @@ package body Ada_Lib.Options.GNOGA is
    overriding
    procedure Trace_Parse (
       Options                    : in out GNOGA_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

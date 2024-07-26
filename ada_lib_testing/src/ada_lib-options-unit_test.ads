@@ -1,4 +1,4 @@
-with Ada_Lib.Command_Line_Iterator;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.GNOGA;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Filters.Ada_Lib;
@@ -20,7 +20,8 @@ package Ada_Lib.Options.Unit_Test is
                                  -- include ada_lib
       Multi_Test                 : Boolean -- perform multiple tests in one
                                             -- execution of test program
-                                    ) is new Nested_Options_Type with record
+                                    ) is new Ada_Lib.Options.Actual.
+                                       Nested_Options_Type with record
       Debug                      : Boolean := False;  -- debug unit test application
       Debug_Options              : Boolean := False;  -- debug unit test application options
       Exit_On_Done               : Boolean := False;  -- exit test application after all unit tests complete
@@ -47,16 +48,16 @@ package Ada_Lib.Options.Unit_Test is
 
    overriding
    function Initialize (
-     Options                     : in out Unit_Test_Options_Type
+     Options                     : in out Unit_Test_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
    overriding
    function Process_Option (  -- process one option
      Options                     : in out Unit_Test_Options_Type;
-     Iterator                    : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+     Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 
@@ -89,8 +90,8 @@ private
 
    overriding
    procedure Trace_Parse (
-      Options                    : in out Unit_Test_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                    Abstract_Package.Abstract_Iterator_Type'class);
+      Options              : in out Unit_Test_Options_Type;
+      Iterator             : in out Ada_Lib.Options.
+                                       Command_Line_Iterator_Interface'class);
 
 end Ada_Lib.Options.Unit_Test;

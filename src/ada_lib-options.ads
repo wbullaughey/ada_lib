@@ -1,197 +1,284 @@
+with Ada.Characters.Latin_1;
 --with  Ada.Characters.Latin_1;
 with Ada.Finalization;
 --with Ada.Tags;
-with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Options_Interface;
 with Ada_Lib.Trace; -- use Ada_Lib.Trace;
 with GNAT.Source_Info;
+with Interfaces;
 
 package Ada_Lib.Options is
 
    Failed                        : exception;
 
-   subtype Help_Mode_Type        is Ada_Lib.Options_Interface.Help_Mode_Type;
+   type Help_Mode_Type           is (Program, Traces);
 
    type Mode_Type                is (Driver_Suites, List_Suites, Print_Suites,
                                        Run_Tests);
 
-   Program                       : constant Help_Mode_Type :=
-                                    Ada_Lib.Options_Interface.Program;
-   Traces                        : constant Help_Mode_Type :=
-                                    Ada_Lib.Options_Interface.Traces;
+   type Option_Kind_Type         is (Nil_Option, Plain, Modified);
 
-   subtype Interface_Options_Type
-                                 is Ada_Lib.Options_Interface.
-                                    Interface_Options_Type;
+   No_Option                     : constant Character :=
+                                    Ada.Characters.Latin_1.NUL;
+   Unmodified                    : constant Character :=
+                                    Ada.Characters.Latin_1.NUL;
 
-   subtype Interface_Options_Class_Access
-                                 is Ada_Lib.Options_Interface.
-                                    Interface_Options_Class_Access;
-   subtype Interface_Options_Constant_Class_Access
-                                 is Ada_Lib.Options_Interface.
-                                    Interface_Options_Constant_Class_Access;
+   type Option_Type              is tagged record
+      Kind                       : Option_Kind_Type := Nil_Option;
+      Modifier                   : Character := Unmodified;
+      Option                     : Character;
+   end record;
 
-   type Abstract_Options_Type is abstract limited new Interface_Options_Type
-                                 with null record;
+   function Create_Option (
+      Option                     : in     Character;
+      Modifier                   : in     Character := Unmodified
+   ) return Option_Type;
 
-   type Abstract_Options_Class_Access
-                                 is access all Abstract_Options_Type'class;
-   type Abstract_Options_Constant_Class_Access
-                                 is access constant Abstract_Options_Type'class;
+   function Image (
+      Option                     : in     Option_Type;
+      Quote                      : in     Boolean := True
+   ) return String;
 
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
+   function Less (
+      Left, Right                : in     Option_Type
+   ) return Boolean;
+
+   function Modified (
+      Option                     : in     Option_Type
+   ) return Boolean;
+
+   function Modifier (
+      Option                     : in     Option_Type
+   ) return Character;
+
+   type Options_Type             is array (Positive range <>) of Option_Type;
+   type Options_Access           is access Options_Type;
+
+   function Create_Options (     -- create a single options
+      Option                     : in     Character;
+      Modifier                   : in     Character := Unmodified
+   ) return Options_Type;
+
+   function Create_Options (
+      Source                     : in     String;
+      Modifier                   : in     Character := Unmodified
+   ) return Options_Access;
+
+   function Create_Options (     -- create a single options
+      Option                     : in     Character;
+      Modifier                   : in     Character := Unmodified
+   ) return Options_Access;
+
+   function Create_Options (
+      Source                     : in     String;
+      Modifier                   : in     Character := Unmodified
+   ) return Options_Type;
+
+   function Has_Option (   -- tests if option is registered for a catagory
+      Option                     : in     Option_Type;
+      Options_With_Parameters    : in     Options_Type;
+      Options_Without_Parameters : in     Options_Type
+   ) return Boolean;
+
+   function Image (
+      Options                    : in     Options_Type;
+      Quote                      : in     Boolean := True
+   ) return String;
+
+   type Command_Line_Iterator_Interface
+                                 is interface;
+
+      procedure Advance (
+         Iterator          : in out Command_Line_Iterator_Interface) is abstract;
+
+      function At_End (
+         Iterator          : in   Command_Line_Iterator_Interface
+      ) return Boolean is abstract;
+
+      procedure Dump_Iterator (
+         Iterator                : in     Command_Line_Iterator_Interface;
+         What                    : in     String;
+         Where                   : in     String := Ada_Lib.Trace.Here
+      ) is abstract;
+
+      function Get_Argument (
+         Iterator                : in     Command_Line_Iterator_Interface
+      ) return String is abstract;
+
+      function Get_Argument (
+         Iterator                : in     Command_Line_Iterator_Interface;
+         Index                   : in     Positive
+      ) return String is abstract;
+
+      function Get_Option (
+         Iterator          : in   Command_Line_Iterator_Interface
+      ) return Ada_Lib.Options.Option_Type'class is abstract;
+
+      -- parameter of an option
+      function Get_Parameter (
+         Iterator          : in out Command_Line_Iterator_Interface
+      ) return String is abstract;
+
+      -- numeric parameter of an option
+      -- raise Invalid_Number
+      function Get_Integer (
+         Iterator          : in out Command_Line_Iterator_Interface
+      ) return Integer  is abstract;
+
+      -- numeric parameter of an option
+      -- raise Invalid_Number
+      function Get_Float (
+         Iterator          : in out Command_Line_Iterator_Interface
+      ) return float is abstract;
+
+      -- numeric parameter of an option
+      -- raise Invalid_Number
+      function Get_Unsigned (
+         Iterator          : in out Command_Line_Iterator_Interface;
+         Base              : in   Positive := 16
+      ) return Interfaces.Unsigned_64 is abstract;
+
+
+      function Is_Option (
+         Iterator                : in   Command_Line_Iterator_Interface
+      ) return Boolean is abstract;
+
+   type Interface_Options_Type is limited interface;
+
+   type Interface_Options_Class_Access
+                                 is access all Interface_Options_Type'class;
+   type Interface_Options_Constant_Class_Access
+                                 is access constant Interface_Options_Type'class;
+
+   procedure Bad_Option (
+      Options                    : in     Interface_Options_Type;
       What                       : in     Character;
       Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
+      Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
+   procedure Bad_Option (
+      Options                    : in     Interface_Options_Type;
       What                       : in     String;
       Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
+      Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
-      Option                     : in     Ada_Lib.Options_Interface.Option_Type'class;
+   procedure Bad_Option (
+      Options                    : in     Interface_Options_Type;
+      Option                     : in     Option_Type'class;
       Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
+      Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 
-   overriding
-   procedure Bad_Trace_Option (  -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
+-- function Has_Option (   added 2/22/24 to resolve issue with multple option lists
+--    Options                    : in     Interface_Options_Type;
+--    Option                     : in     Option_Type
+-- ) return Boolean is abstract;
+
+   procedure Bad_Trace_Option (
+      Options                    : in     Interface_Options_Type;
       Trace_Option               : in     Character;
       What                       : in     Character;
       Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
+      Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 
-   overriding
-   procedure Update_Filter (
-      Options                    : in out Abstract_Options_Type) ;
-
-   package Program_Options_Package
-                                 is new Ada_Lib.Options_Interface.
-                                    Verification_Package (
-                                       Abstract_Options_Type);
-
-   -- type to application options
-   type Program_Options_Type     is abstract limited new
-                                    Program_Options_Package.Options_Type with record
-      In_Help                    : Boolean := False;
-      Processed                  : Boolean := False;
-      Test_Driver                : Boolean := False;
-      Verbose                    : Boolean := False;
-   end record;
-
-   type Program_Options_Access  is access all Program_Options_Type;
-   type Program_Options_Class_Access
-                                 is access all Program_Options_Type'class;
-   type Program_Options_Constant_Class_Access
-                                 is access constant Program_Options_Type'class;
-
-   function Get_Modifiable_Options
-   return Program_Options_Class_Access;
-
-   procedure Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
                               -- prints full help, aborts program
-     Options                     : in     Program_Options_Type;  -- only used for dispatch
+     Options                     : in     Interface_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help
-     Halt                        : in     Boolean := True);
+     Halt                        : in     Boolean := True) is abstract;
 
-   overriding
+   -- direct decendent should return true
+   -- indirect decentdent should return initialize of parent
    function Initialize (
-     Options                     : in out Program_Options_Type
-   ) return Boolean
-   with pre => Options.Verify_Preinitialize,
-        post => Options.Verify_Initialized;
+     Options                     : in out Interface_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
+   ) return Boolean is abstract;
 
-   -- needs to be overrident by type used to allocate options object
-   function Process (
-     Options                     : in out Program_Options_Type;
-     Include_Options             : in     Boolean;
-     Include_Non_Options         : in     Boolean;
-     Option_Prefix               : in     Character := '-';
-     Modifiers                   : in     String := ""
-   ) return Boolean
-   with Pre => Options.Verify_Preprocess,
-        Post => Options.Verify_Postprocess;
+   function Process_Argument (  -- process one argument
+     Options                     : in out Interface_Options_Type;
+     Iterator                    : in out Command_Line_Iterator_Interface'class;
+     Argument                    : in     String
+   ) return Boolean is abstract;
 
-   procedure Process (     -- process command line options
-     Options                    : in out Program_Options_Type;
-     Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                    Abstract_Package.Abstract_Iterator_Type'class);
-
-   overriding
    function Process_Option (  -- process one option
-      Options                    : in out Program_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
-   ) return Boolean
-   with pre => Options.Initialized;
--- with Pre => not Have_Options;
+     Options                     : in out Interface_Options_Type;
+     Iterator                    : in out Command_Line_Iterator_Interface'class;
+     Option                      : in     Option_Type'class
+   ) return Boolean is abstract;
 
-   overriding
    procedure Program_Help (      -- common for all programs that use Ada_Lib.Options.GNOGA
-      Options                    : in      Program_Options_Type;  -- only used for dispatch
-      Help_Mode                  : in      Help_Mode_Type);
+     Options                     : in     Interface_Options_Type;  -- only used for dispatch
+     Help_Mode                   : in     Help_Mode_Type) is abstract;
 
-   overriding
    procedure Trace_Parse (
-      Options                    : in out Program_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                    Abstract_Package.Abstract_Iterator_Type'class);
+      Options                    : in out Interface_Options_Type;
+      Iterator                   : in out Command_Line_Iterator_Interface'class
+   ) is abstract;
 
-   overriding
+   procedure Update_Filter (
+      Options                    : in out Interface_Options_Type) is abstract;
+
    function Verify_Initialized (
-      Options                    : in     Program_Options_Type;
+      Options                    : in     Interface_Options_Type;
       From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean;
+   ) return Boolean is abstract;
 
-   overriding
    function Verify_Preinitialize (
-      Options                    : in     Program_Options_Type;
+      Options                    : in     Interface_Options_Type;
       From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean;
+   ) return Boolean is abstract;
 
-   function Verify_Postprocess (
-      Options                    : in     Program_Options_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean;
+   generic
+      type Generic_Options_Type  is abstract limited new Interface_Options_Type
+                                    with private;
 
-   function Verify_Preprocess (
-      Options                    : in     Program_Options_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean;
+   package Verification_Package is
 
-   package Nested_Options_Package
-                                 is new Ada_Lib.Options_Interface.
-                                    Verification_Package (
-                                       Abstract_Options_Type);
-   -- type used for options nested in other options
-   type Nested_Options_Type      is abstract limited new Nested_Options_Package.
-                                    Options_Type with null record;
+      type Options_Type          is abstract limited new Generic_Options_Type
+                                    with record
+         Initialized             : Boolean := False;
+      end record;
 
-   type Nested_Options_Access is access all Nested_Options_Type;
-   type Nested_Options_Class_Access is access all Nested_Options_Type'class;
-   type Nested_Options_Constant_Class_Access is access constant Nested_Options_Type'class;
+      type Options_Access        is access all Options_Type;
+      type Options_Class_Access  is access all Options_Type'class;
+      type Options_Constant_Class_Access
+                                 is access constant Options_Type'class;
 
-   overriding
-   procedure Program_Help (
-      Options                    : in      Nested_Options_Type;  -- only used for dispatch
-      Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type);
+      overriding
+      function Initialize (
+         Options                 : in out Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
+      ) return Boolean
+      with Pre => Options.Verify_Preinitialize;
 
-   overriding
-   function Process_Option (
-      Options                    : in out Nested_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
-   ) return Boolean;
+      overriding
+      function Process_Argument (  -- process one argument
+         Options                  : in out Options_Type;
+         Iterator                 : in out Command_Line_Iterator_Interface'class;
+         Argument                 : in     String
+      ) return Boolean;
+
+      overriding
+      function Verify_Initialized (
+         Options                 : in     Options_Type;
+         From                    : in     String := GNAT.Source_Info.Source_Location
+      ) return Boolean;
+
+      overriding
+      function Verify_Preinitialize (
+         Options                 : in     Options_Type;
+         From                    : in     String := GNAT.Source_Info.Source_Location
+      ) return Boolean;
+
+   end Verification_Package;
+
+   function Ada_Lib_Options
+   return Interface_Options_Constant_Class_Access;
+
+   function Get_Modifiable_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Interface_Options_Class_Access;
+
+   procedure Set_Ada_Lib_Options (
+      Options                    : in     Interface_Options_Class_Access);
 
    type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
 
@@ -203,7 +290,13 @@ package Ada_Lib.Options is
    function Parsing_Failed return Boolean;
 
    Debug                         : Boolean := False;
-   Program_Options               : Program_Options_Constant_Class_Access := Null;
+   Null_Option                   : constant Option_Type := Option_Type'(
+                                    Kind     => Nil_Option,
+                                    Modifier => Unmodified,
+                                    Option   => No_Option);
+   Null_Options                  : constant Options_Type (1 .. 0) :=
+                                    (others => Null_Option);
+   Read_Only_Options             : Interface_Options_Constant_Class_Access := Null;
    Use_Options_Prefix            : constant Boolean := True;
 
 end Ada_Lib.Options;

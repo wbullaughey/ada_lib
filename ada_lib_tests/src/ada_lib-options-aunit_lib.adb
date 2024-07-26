@@ -1,6 +1,5 @@
 with Ada.Command_Line;
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
 with Ada_Lib.Database.Server.Tests;
@@ -8,8 +7,8 @@ with Ada_Lib.Directory.Test;
 with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
---with Ada_Lib.Options.Database;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Help;
+with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Template;
 with Ada_Lib.Socket_IO.Client.Unit_Test;
@@ -29,14 +28,12 @@ package body Ada_Lib.Options.AUnit_Lib is
 
    Trace_Option                  : constant Character := 't';
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options_Interface.
-                                       Options_Type :=
-                                          Ada_Lib.Options_Interface.Create_Options (
+                                    Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Create_Options (
                                              Trace_Option);
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options_Interface.
-                                       Options_Type :=
-                                          Ada_Lib.Options_Interface.Null_Options;
+                                    Ada_Lib.Options.Options_Type :=
+                                          Ada_Lib.Options.Null_Options;
    Protected_Options             : aliased Aunit_Options_Type;
                                     -- multiple Ada_Lib unit tests can be run
                                     -- by the same instance of the tester
@@ -65,28 +62,29 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type
+     Options                     : in out Aunit_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Debug or Trace_Options);
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters, Options_With_Parameters);
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters, Options_Without_Parameters);
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters, Options_With_Parameters);
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters, Options_Without_Parameters);
       return Log_Out (
          Options.AUnit_Options.Initialize and then
          Options.Database_Options.Initialize and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
          Options.Template.Initialize and then
          Options.Unit_Test.Initialize and then
-         Program_Options_Type (Options).Initialize and then
+         Actual.Program_Options_Type (Options).Initialize and then
          Options.Process (
             Include_Options      => True,
             Include_Non_Options  => False,
             Modifiers            => String'(
-               1 => Ada_Lib.Help.Modifier)),
+               1 => Ada_Lib.Options.Help.Modifier)),
          Debug or Trace_Options);
    end Initialize;
 
@@ -113,14 +111,13 @@ package body Ada_Lib.Options.AUnit_Lib is
    overriding
    function Process_Option (
       Options                    : in out Aunit_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
       Has_Option                 : constant Boolean :=
-                                    Ada_Lib.Options_Interface.Has_Option (Option,
+                                    Ada_Lib.Options.Has_Option (Option,
                                        Options_With_Parameters,
                                        Options_Without_Parameters);
    begin
@@ -155,7 +152,7 @@ package body Ada_Lib.Options.AUnit_Lib is
             Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
             Options.Template.Process_Option (Iterator, Option) or else
             Options.Unit_Test.Process_Option (Iterator, Option) or else
-            Program_Options_Type (Options).Process_Option (Iterator, Option),
+            Actual.Program_Options_Type (Options).Process_Option (Iterator, Option),
             Trace_Options or Debug, Option.Image & " processed");
       end if;
    end Process_Option;
@@ -172,10 +169,10 @@ package body Ada_Lib.Options.AUnit_Lib is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
---       Ada_Lib.Help.Add_Option ('d', "seed", "set random seed");
---       Ada_Lib.Help.Add_Option ('D', "", "report random seed");
-         Ada_Lib.Help.Add_Option ('t', "", "ada_lib unit tests");
---       Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete");
+--       Ada_Lib.Options.Help.Add_Option ('d', "seed", "set random seed");
+--       Ada_Lib.Options.Help.Add_Option ('D', "", "report random seed");
+         Ada_Lib.Options.Help.Add_Option ('t', "", "ada_lib unit tests");
+--       Ada_Lib.Options.Help.Add_Option ('x', "", "exit on tests complete");
 
       when Ada_Lib.Options.Traces =>
          Put_Line (Ada.Command_Line.Command_Name & " trace options (-" &
@@ -206,7 +203,7 @@ package body Ada_Lib.Options.AUnit_Lib is
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
       Options.Template.Program_Help (Help_Mode);
       Options.Unit_Test.Program_Help (Help_Mode);
-      Program_Options_Type (Options).Program_Help (Help_Mode);
+      Actual.Program_Options_Type (Options).Program_Help (Help_Mode);
       Log_Out (Debug or Trace_Options);
    end Program_Help;
 
@@ -232,7 +229,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    begin
       Log_Here (Debug, Tag_Name (Aunit_Options_Type'class (Protected_Options)'tag));
 
-      Ada_Lib.Options_Interface.Set_Ada_Lib_Options (
+      Ada_Lib.Options.Set_Ada_Lib_Options (
          Protected_Options'access);
    end Set_Options;
 
@@ -240,8 +237,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    overriding
    procedure Trace_Parse (
       Options                    : in out Aunit_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.Abstract_Iterator_Type'class) is
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

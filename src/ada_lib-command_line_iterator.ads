@@ -3,7 +3,7 @@
 with Ada.Characters.Latin_1;
 --with Ada.Finalization;
 with Ada.Strings.Maps;
-with Ada_Lib.Options_Interface;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with Interfaces;
@@ -42,43 +42,41 @@ package Ada_Lib.Command_Line_Iterator is
                                     others                  => False);
 
    package Abstract_Package is
-      type Abstract_Iterator_Type is abstract tagged private;
+      type Abstract_Iterator_Type   is abstract new Ada_Lib.Options.
+                                       Command_Line_Iterator_Interface with private;
       type Iterator_Class_Access
                            is access Abstract_Iterator_Type'class;
 
       -- assumes state left at end of previous Advance or initialized state
+      overriding
       procedure Advance (
          Iterator          : in out Abstract_Iterator_Type);
 
---    -- raises Not_Option, No_Parameter, No_Argument
---    procedure Advance_Parameter (
---       Iterator          : in out Abstract_Iterator_Type);
-
+      overriding
       function At_End (
          Iterator          : in   Abstract_Iterator_Type
       ) return Boolean;
 
+      overriding
       procedure Dump_Iterator (
          Iterator                : in     Abstract_Iterator_Type;
          What                    : in     String;
          Where                   : in     String := Ada_Lib.Trace.Here);
 
+      overriding
       function Get_Argument (
          Iterator                : in     Abstract_Iterator_Type
       ) return String
       with Pre => Iterator.Get_State /= At_End;
 
-      function Get_Argument (
-         Iterator                : in     Abstract_Iterator_Type;
-         Index                   : in     Positive
-      ) return String is abstract;
-
+      overriding
       function Get_Option (
          Iterator          : in   Abstract_Iterator_Type
-      ) return Ada_Lib.Options_Interface.Option_Type
+      ) return Ada_Lib.Options.Option_Type'class
       with Pre => Option_States (Iterator.Get_State);
 
       -- parameter of an option
+      overriding
       function Get_Parameter (
          Iterator          : in out Abstract_Iterator_Type
       ) return String
@@ -86,6 +84,7 @@ package Ada_Lib.Command_Line_Iterator is
 
       -- numeric parameter of an option
       -- raise Invalid_Number
+      overriding
       function Get_Integer (
          Iterator          : in out Abstract_Iterator_Type
       ) return Integer
@@ -93,6 +92,7 @@ package Ada_Lib.Command_Line_Iterator is
 
       -- numeric parameter of an option
       -- raise Invalid_Number
+      overriding
       function Get_Float (
          Iterator          : in out Abstract_Iterator_Type
       ) return float
@@ -100,6 +100,7 @@ package Ada_Lib.Command_Line_Iterator is
 
       -- numeric parameter of an option
       -- raise Invalid_Number
+      overriding
       function Get_Unsigned (
          Iterator          : in out Abstract_Iterator_Type;
          Base              : in   Positive := 16
@@ -139,6 +140,7 @@ package Ada_Lib.Command_Line_Iterator is
          Skip                    : in     Natural := 0);
 
       -- raises No_Argument
+      overriding
       function Is_Option (
          Iterator                : in   Abstract_Iterator_Type
       ) return Boolean;
@@ -158,7 +160,9 @@ package Ada_Lib.Command_Line_Iterator is
       No_Modifiers               : constant Character_Set :=
                                     Ada.Strings.Maps.Null_Set;
 
-      type Abstract_Iterator_Type is abstract tagged record
+      type Abstract_Iterator_Type is abstract new Ada_Lib.Options.
+                                    Command_Line_Iterator_Interface
+                                       with record
          Argument                : Ada_Lib.Strings.Unlimited.String_Type;
          Argument_Count          : Natural;
          Argument_Index          : Natural;
@@ -168,7 +172,7 @@ package Ada_Lib.Command_Line_Iterator is
          Include_Non_Options     : Boolean;
          Include_Options         : Boolean;
          Modifiers               : Character_Set;
-         Option                  : Ada_Lib.Options_Interface.Option_Type;
+         Option                  : Ada_Lib.Options.Option_Type;
          Option_Prefix           : Character;
          Parameter_Index         : Positive;
          State                   : Iterator_State_Type;

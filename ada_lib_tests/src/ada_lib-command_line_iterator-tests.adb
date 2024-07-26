@@ -1,9 +1,8 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Help;
-with Ada_Lib.Options_Interface;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Help;
+with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
 
@@ -23,30 +22,30 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+      use Ada_Lib.Options;
 
       B                          : constant Character := 'b';
       B_Option                   : constant Option_Type :=
-                                    Create_Option (B, Ada_Lib.Help.Modifier);
+                                    Create_Option (B, Ada_Lib.Options.Help.Modifier);
       Options_With_Modifiers     : constant String := "b";
       Options_Without_Modifiers  : constant String := "ac";
       Options                    : constant Options_Type :=
                                     Create_Options (Options_With_Modifiers,
-                                       Ada_Lib.Help.Modifier) &
+                                       Ada_Lib.Options.Help.Modifier) &
                                     Create_Options (Options_Without_Modifiers);
-      Expected_All_Options       : constant String := Ada_Lib.Help.Modifier &
-                                    "bac";
+      Expected_All_Options       : constant String := Ada_Lib.Options.Help.
+                                    Modifier & "bac";
    begin
       Log_In (Debug);
       Assert (B_Option.Modified, "B option not modified");
-      Ada_Lib.Runstring_Options.Options.Reset;
+      Ada_Lib.Options.Runstring.Options.Reset;
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters, Options);
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters, Options);
 
       declare
          Got_Without_Parameters  : constant String :=
-                                    Ada_Lib.Runstring_Options.
+                                    Ada_Lib.Options.Runstring.
                                        Options.All_Options (False);
          Test_Result             : constant Boolean :=
                                     Expected_All_Options = Got_Without_Parameters;
@@ -65,21 +64,21 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+      use Ada_Lib.Options;
 
       With_Parameters            : aliased constant String := "st";
       Without_Parameters              : aliased constant String := "xyz";
 
    begin
       Log_In (Debug);
-      Ada_Lib.Runstring_Options.Options.Reset;
+      Ada_Lib.Options.Runstring.Options.Reset;
       Log_Here (Debug);
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters, Create_Options (With_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters, Create_Options (With_Parameters));
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters, Create_Options (Without_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (Without_Parameters));
       Log_Here (Debug);
 
       declare
@@ -112,7 +111,8 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option            : constant Option_Type := Iterator.Get_Option;
+                  Option            : constant Option_Type'class :=
+                                       Iterator.Get_Option;
 
                begin
                   Log_Here (Debug, Option.Image);
@@ -238,7 +238,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+      use Ada_Lib.Options;
 
       Arguments                  : constant Ada_Lib.Strings.
                                        Constant_String_Array := (
@@ -309,13 +309,13 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
    begin
       Log_In (Debug);
       Ada_Lib.Command_Line_Iterator.Debug := Debug;
-      Ada_Lib.Runstring_Options.Options.Reset;
+      Ada_Lib.Options.Runstring.Options.Reset;
       Log_Here (Debug);
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters, Create_Options (With_Parameters));
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters, Create_Options (Without_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters, Create_Options (With_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (Without_Parameters));
 
       Log_Here (Debug);
 
@@ -344,7 +344,8 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option            : constant Option_Type := Iterator.Get_Option;
+                  Option            : constant Option_Type'class :=
+                                       Iterator.Get_Option;
 
                begin
                   Log_Here (Debug, "option " & Option.Image);
@@ -444,7 +445,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
    begin
       Log_In (Debug);
-      Ada_Lib.Runstring_Options.Options.Reset;
+      Ada_Lib.Options.Runstring.Options.Reset;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
    end Set_Up;
@@ -480,21 +481,21 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      use Ada_Lib.Options_Interface;
+      use Ada_Lib.Options;
 
       With_Parameters            : aliased constant String := "pq";
       Without_Parameters              : aliased constant String := "n";
 
    begin
       Log_In (Debug);
-      Ada_Lib.Runstring_Options.Options.Reset;
+      Ada_Lib.Options.Runstring.Options.Reset;
       Log_Here (Debug);
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.With_Parameters, Create_Options (With_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.With_Parameters, Create_Options (With_Parameters));
 
-      Ada_Lib.Runstring_Options.Options.Register (
-         Ada_Lib.Runstring_Options.Without_Parameters, Create_Options (Without_Parameters));
+      Ada_Lib.Options.Runstring.Options.Register (
+         Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (Without_Parameters));
       Log_Here (Debug);
 
       declare
@@ -528,7 +529,8 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option            : constant Option_Type := Iterator.Get_Option;
+                  Option            : constant Option_Type'class :=
+                                       Iterator.Get_Option;
 
                begin
                   Log_Here (Debug, "option " & Option.Image);

@@ -5,7 +5,7 @@ with Ada.Strings.Fixed;
 --with Ada_Lib.Strings.Unlimited;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.OS;
-with Ada_Lib.Runstring_Options;
+with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Debug_Options;
 
@@ -15,7 +15,7 @@ package body Ada_Lib.Command_Line_Iterator is
 -- use type Ada_Lib.Strings.String_Access;
    use type Ada_Lib.Strings.String_Constant_Access;
 -- use type Ada_Lib.Strings.Unlimited.String_Type;
-   use type Ada_Lib.Options_Interface.Option_Kind_Type;
+   use type Ada_Lib.Options.Option_Kind_Type;
 
    package Modular_IO         is new Ada.Text_IO.Modular_IO (Interfaces.Unsigned_64);
 
@@ -97,25 +97,25 @@ package body Ada_Lib.Command_Line_Iterator is
 
                Iterator.Option.Modifier := Iterator.Current;
                Iterator.Option.Kind :=
-                  Ada_Lib.Options_Interface.Modified;
+                  Ada_Lib.Options.Modified;
                if not Next_Character (False) then    -- get option character
                   raise Failed with "next_character should never fail";
                end if;
             else
                Iterator.Option.Kind :=
-                  Ada_Lib.Options_Interface.Plain;
+                  Ada_Lib.Options.Plain;
             end if;
 
             Iterator.Option.Option := Iterator.Current;
             Log_Here (Debug, Iterator.Option.Image (True));
 
             -- make sure option is registerd
-            if Ada_Lib.Runstring_Options.Options.Is_Registered (
+            if Ada_Lib.Options.Runstring.Options.Is_Registered (
                  Iterator.Option) then
                Log_Here (Debug, "registered " &
                   Iterator.Option.Image (True));
                -- check if it has a parameter
-               if Ada_Lib.Runstring_Options.Options.Has_Parameter (
+               if Ada_Lib.Options.Runstring.Options.Has_Parameter (
                     Iterator.Option) then
                   Log_Here (Debug, "need parameter");
                                  -- option needs parameter
@@ -235,7 +235,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       begin
          Log_In (Debug);
-         Iterator.Option := Ada_Lib.Options_Interface.Null_Option;
+         Iterator.Option := Ada_Lib.Options.Null_Option;
          Abstract_Iterator_Type'class (Iterator).Dump_Iterator ("Advance in");
          Iterate;
          Iterator.Dump_Iterator ("Advance out");
@@ -243,6 +243,7 @@ package body Ada_Lib.Command_Line_Iterator is
       end Advance;
 
       -------------------------------------------------------------------
+      overriding
       function At_End (
          Iterator          : in   Abstract_Iterator_Type
       ) return Boolean is
@@ -256,6 +257,7 @@ package body Ada_Lib.Command_Line_Iterator is
       end At_End;
 
       -------------------------------------------------------------------
+      overriding
       procedure Dump_Iterator (
          Iterator                : in     Abstract_Iterator_Type;
          What                    : in     String;
@@ -268,7 +270,7 @@ package body Ada_Lib.Command_Line_Iterator is
       begin
          if Debug and then not Inhibit_Trace then
             Debug := False;
-            Ada_Lib.Runstring_Options.Debug := False;
+            Ada_Lib.Options.Runstring.Debug := False;
             Put_Line ("Iterator for " & What & " from " & Where);
             Put_Line ("  State                   " & Iterator.State'img);
             Put_Line (Quote ("  Argument                ",
@@ -290,11 +292,12 @@ package body Ada_Lib.Command_Line_Iterator is
             Put_Line ("  Options_Prefix      " & Iterator.Option_Prefix);
             Put_Line ("  Parameter_Index     " & Iterator.Parameter_Index'img);
             Debug := True;
-            Ada_Lib.Runstring_Options.Debug := True;
+            Ada_Lib.Options.Runstring.Debug := True;
          end if;
       end Dump_Iterator;
 
       -------------------------------------------------------------------
+      overriding
       function Get_Argument (
          Iterator          : in     Abstract_Iterator_Type
       ) return String is
@@ -306,6 +309,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raise Invalid_Number
       -------------------------------------------------------------------
+      overriding
       function Get_Float (
          Iterator          : in out Abstract_Iterator_Type
       ) return Float is
@@ -328,6 +332,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raise Invalid_Number
       -------------------------------------------------------------------
+      overriding
       function Get_Integer (
          Iterator          : in out Abstract_Iterator_Type
       ) return Integer is
@@ -350,6 +355,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raise Invalid_Number
       -------------------------------------------------------------------
+      overriding
       function Get_Unsigned (
          Iterator          : in out Abstract_Iterator_Type;
          Base              : in   Positive := 16
@@ -381,9 +387,10 @@ package body Ada_Lib.Command_Line_Iterator is
       end Get_Unsigned;
 
       -------------------------------------------------------------------
+      overriding
       function Get_Option (
          Iterator          : in   Abstract_Iterator_Type
-      ) return Ada_Lib.Options_Interface.Option_Type is
+      ) return Ada_Lib.Options.Option_Type'class is
       -------------------------------------------------------------------
 
       begin
@@ -395,6 +402,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raises No_Parameter, Not_Option
       -------------------------------------------------------------------
+      overriding
       function Get_Parameter (
          Iterator          : in out Abstract_Iterator_Type
       ) return String is
@@ -502,7 +510,7 @@ package body Ada_Lib.Command_Line_Iterator is
          Iterator.Include_Options         := Include_Options;
          Iterator.Include_Non_Options     := Include_Non_Options;
          Iterator.Modifiers               := Ada.Strings.Maps.To_Set (Modifiers);
-         Iterator.Option                  := Ada_Lib.Options_Interface.Null_Option;
+         Iterator.Option                  := Ada_Lib.Options.Null_Option;
          Iterator.Option_Prefix           := Option_Prefix;
          Iterator.Parameter_Index         := 1;
          Iterator.State                   := Initial;

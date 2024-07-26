@@ -1,11 +1,11 @@
-with Ada_Lib.Options_Interface;
+--with Ada_Lib.Options.Actual;
 --with Ada_Lib.Options.Unit_Test;
 
 package body Ada_Lib.Unit_Test.Tests is
 
-   use type Ada_Lib.Options.Program_Options_Constant_Class_Access;
+   use type Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access;
 -- use type Ada_Lib.Options.Unit_Test.Unit_Test_Options_Constant_Class_Access;
-   use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
+   use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
    ----------------------------------------------------------------------------
    overriding
@@ -15,8 +15,7 @@ package body Ada_Lib.Unit_Test.Tests is
 
    begin
       Log_In (Debug);
-      Test.Options := Ada_Lib.Options.
-         Program_Options_Constant_Class_Access (
+      Test.Options := Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
             Ada_Lib.Options.Get_Modifiable_Options);
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
@@ -60,7 +59,7 @@ package body Ada_Lib.Unit_Test.Tests is
 
    begin
       Log_In (Debug);
-      return Log_Out (Ada_Lib.Options_Interface.Read_Only_Options /= Null,
+      return Log_Out (Ada_Lib.Options.Read_Only_Options /= Null,
          Debug, "Test.Options is null");
    end Verify_Postsetup;
 

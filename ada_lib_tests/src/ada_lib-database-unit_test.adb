@@ -82,11 +82,11 @@ package body Ada_Lib.Database.Unit_Test is
 -- ----------------------------------------------------------------
 -- function Get_Options (
 --    Test                       : in     Test_Case_Type
--- ) return Ada_Lib.Options.Program_Options_Constant_Class_Access is
+-- ) return Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access is
 -- ----------------------------------------------------------------
 --
 -- begin
---    return Ada_Lib.Options.Program_Options_Constant_Class_Access (Test.Options);
+--    return Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (Test.Options);
 -- end Get_Options;
 
    ----------------------------------------------------------------

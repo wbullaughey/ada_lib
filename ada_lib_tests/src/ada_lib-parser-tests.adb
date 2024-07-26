@@ -16,10 +16,10 @@ package body Ada_Lib.Parser.Tests is
    return Boolean is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Program_Options).all;
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                           renames Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Read_Only_Options).all;
    begin
       return Options.Unit_Test.Debug;
    end Debug;

@@ -1,16 +1,16 @@
---with Ada_Lib.Database;
-with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Options_Interface;
+with Ada_Lib.Options.Actual;
+--with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Socket_IO;
 
 --pragma Warnings (On, "GNOGA");
 -- needs to bin in ada_lib directory so gnoga can include it
 package Ada_Lib.Options.GNOGA is
 
-   Failed                        : exception;
+   Failed                  : exception;
 
-   type GNOGA_Options_Type is limited new Ada_Lib.Options.Nested_Options_Type with record
-      HTTP_Port                  : Ada_Lib.Socket_IO.Port_Type := 8080;
+   type GNOGA_Options_Type is limited new Ada_Lib.Options.Actual.
+                              Nested_Options_Type with record
+      HTTP_Port            : Ada_Lib.Socket_IO.Port_Type := 8080;
    end record;
 
    type GNOGA_Options_Access           is access GNOGA_Options_Type;
@@ -20,7 +20,8 @@ package Ada_Lib.Options.GNOGA is
 
    overriding
    function Initialize (
-     Options                     : in out GNOGA_Options_Type
+     Options                     : in out GNOGA_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
@@ -29,10 +30,8 @@ package Ada_Lib.Options.GNOGA is
    overriding
    function Process_Option (
       Options                    : in out GNOGA_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean;
 
    Debug                         : aliased Boolean := False;
@@ -52,7 +51,8 @@ private
 
    overriding
    procedure Trace_Parse (
-      Options                    : in out GNOGA_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class);
+      Options              : in out GNOGA_Options_Type;
+      Iterator             : in out Ada_Lib.Options.
+                                       Command_Line_Iterator_Interface'class);
 
 end Ada_Lib.Options.GNOGA;

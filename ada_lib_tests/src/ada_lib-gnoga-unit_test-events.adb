@@ -2,8 +2,8 @@ with Ada.Characters.Handling;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Interfaces;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Options_Interface;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.GUI.Window;
@@ -194,8 +194,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
       end case;
 
-      if Debug or else Ada_Lib.Options.Program_Options_Constant_Class_Access (
-            Ada_Lib.Options_Interface.Read_Only_Options).Verbose then
+      if Debug or else Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
+            Ada_Lib.Options.Read_Only_Options).Verbose then
          Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
       Log_Out (Debug);

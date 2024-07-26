@@ -1,11 +1,11 @@
 with Ada.Exceptions;
-with Ada_Lib.Options_Interface;
+with Ada_Lib.Options;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
 
 package Ada_Lib.Unit_Test.Test_Cases is
 
-   use type Ada_Lib.Options_Interface.Interface_Options_Constant_Class_Access;
+   use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
    Failed                        : exception;
 
@@ -67,7 +67,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
       Val                     : AUnit.Test_Cases.Routine_Spec
-   ) with pre => Ada_Lib.Options_Interface.Read_Only_Options/= Null;
+   ) with pre => Ada_Lib.Options.Read_Only_Options/= Null;
 
    procedure Set_Up_Exception (
       Test                       : in out Test_Case_Type;

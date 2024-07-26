@@ -1,4 +1,5 @@
 with Ada_Lib.Database.Connection;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Database;
 with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.Template;
@@ -26,7 +27,8 @@ package Ada_Lib.Options.AUnit_Lib is
    function New_Suite return Non_DBDamon_Test_Access;
 
    -- type used in application for unit testing;
-   type Aunit_Options_Type       is new Program_Options_Type with record
+   type Aunit_Options_Type       is new Ada_Lib.Options.Actual.
+                                    Program_Options_Type with record
       AUnit_Options              : AUnit.Ada_Lib.Options.AUnit_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
@@ -53,7 +55,8 @@ package Ada_Lib.Options.AUnit_Lib is
 
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type
+     Options                     : in out Aunit_Options_Type;
+     From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
@@ -72,9 +75,8 @@ private
    overriding
    function Process_Option (
       Options                    : in out Aunit_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.Abstract_Package.Abstract_Iterator_Type'class;
-      Option                     : in     Ada_Lib.Options_Interface.
-                                             Option_Type'class
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean
    with pre => Options.Initialized;
 
@@ -86,8 +88,6 @@ private
    overriding
    procedure Trace_Parse (
       Options                    : in out Aunit_Options_Type;
-      Iterator                   : in out Ada_Lib.Command_Line_Iterator.
-                                             Abstract_Package.
-                                                Abstract_Iterator_Type'class);
+      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class);
 
 end Ada_Lib.Options.AUnit_Lib;
