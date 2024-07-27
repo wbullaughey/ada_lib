@@ -23,16 +23,21 @@ package Ada_Lib.GNOGA is
    procedure Clear_Connection_Data
    with Pre => Has_Connection_Data;
 
-   function Get_Connection_Data return Connection_Data_Class_Access
-   with Pre => Has_Connection_Data;
+   function Get_Connection_Data (
+      From                       : in     String := GNAT.Source_Info.Source_Location
+   ) return Connection_Data_Class_Access
+   with Pre => Has_Connection_Data (From);
 
-   function Has_Connection_Data return Boolean;
+   function Has_Connection_Data (
+      From                       : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean;
 
    procedure Set_Connection_Data (
       Connection_Data            : in     Connection_Data_Class_Access;
       From                       : in     String := GNAT.Source_Info.Source_Location
    ) with Pre => Connection_Data /= Null and then
-                 not Has_Connection_Data;
+                 not Has_Connection_Data,
+          Post => Has_Connection_Data;
 
    Debug                         : Boolean := False;
 

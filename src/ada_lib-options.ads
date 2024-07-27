@@ -270,13 +270,16 @@ package Ada_Lib.Options is
 
    end Verification_Package;
 
-   function Ada_Lib_Options
-   return Interface_Options_Constant_Class_Access;
+-- function Ada_Lib_Options
+-- return Interface_Options_Constant_Class_Access;
 
    function Get_Modifiable_Options (
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Interface_Options_Class_Access;
 
+   function Get_Read_Only_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Interface_Options_Constant_Class_Access;
    procedure Set_Ada_Lib_Options (
       Options                    : in     Interface_Options_Class_Access);
 
@@ -296,7 +299,6 @@ package Ada_Lib.Options is
                                     Option   => No_Option);
    Null_Options                  : constant Options_Type (1 .. 0) :=
                                     (others => Null_Option);
-   Read_Only_Options             : Interface_Options_Constant_Class_Access := Null;
    Use_Options_Prefix            : constant Boolean := True;
 
 end Ada_Lib.Options;

@@ -21,8 +21,8 @@ package Ada_Lib.Database.Subscribe.Tests is
    overriding
    procedure Set_Up (
       Test                       : in out Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => not Test.Verify_Set_Up,
+          Post => Test.Verify_Set_Up;
 
    function Subscribe_Suite (
       Which_Host              : in    Ada_Lib.Database.Which_Host_Type

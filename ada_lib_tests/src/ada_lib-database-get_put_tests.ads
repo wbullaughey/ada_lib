@@ -67,8 +67,8 @@ private
    overriding
    procedure Set_Up (               -- opens database
       Test                       : in out Database_Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => not Test.Verify_Set_Up,
+          Post => Test.Verify_Set_Up;
 
    overriding
    procedure Tear_Down (

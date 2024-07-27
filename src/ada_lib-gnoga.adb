@@ -13,18 +13,22 @@ package body Ada_Lib.GNOGA is
    end Clear_Connection_Data;
 
    ---------------------------------------------------------------
-   function Get_Connection_Data return Connection_Data_Class_Access is
+   function Get_Connection_Data (
+      From                       : in     String := GNAT.Source_Info.Source_Location
+   ) return Connection_Data_Class_Access is
    ---------------------------------------------------------------
 
    begin
-      Log_Here (Debug, "Connection_Data " &
+      Log_Here (Debug, "Connection_Data from " & From & " " &
          Tag_Name (Program_Connection_Data.all'tag) &
          Image (Program_Connection_Data.all'address));
       return Program_Connection_Data;
    end Get_Connection_Data;
 
    ---------------------------------------------------------------
-   function Has_Connection_Data return Boolean is
+   function Has_Connection_Data (
+      From                       : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean is
    ---------------------------------------------------------------
 
       Result                     : constant Boolean :=
@@ -33,8 +37,8 @@ package body Ada_Lib.GNOGA is
       Log_Here (Debug, "result " & Result'img & " " & (if Result then
             Tag_Name (Program_Connection_Data.all'tag)
          else
-            "")
-         );
+            "") &
+         " from " & From);
       return Result;
    end Has_Connection_Data;
 
@@ -65,7 +69,7 @@ package body Ada_Lib.GNOGA is
    ---------------------------------------------------------------
 
 begin
---debug := True;
+debug := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 end Ada_Lib.GNOGA;
 

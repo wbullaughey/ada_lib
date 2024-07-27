@@ -11,7 +11,7 @@ with Debug_Options;
 
 package body Ada_Lib.Options.Unit_Test is
 
-   use type Ada_Lib.Options.Options_Type;
+-- use type Ada_Lib.Options.Options_Type;
 -- use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
    Driver_List_Option            : constant Character := 'd';
@@ -87,16 +87,16 @@ package body Ada_Lib.Options.Unit_Test is
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    if Ada_Lib.Options.Read_Only_Options = Null then
---       raise Failed with "Read_Only_Options not set called from " & From;
+--    if Ada_Lib.Options.Get_Read_Only_Options = Null then
+--       raise Failed with "Get_Read_Only_Options not set called from " & From;
 --    end if;
 --
 --    Log_Here (Debug, "from " & From &
---       " Read_Only_Options tag " & Tag_Name (
---          Ada_Lib.Options.Read_Only_Options.all'tag));
+--       " Get_Read_Only_Options tag " & Tag_Name (
+--          Ada_Lib.Options.Get_Read_Only_Options.all'tag));
 --
 --    return Unit_Test_Options_Constant_Class_Access (
---       Ada_Lib.Options.Read_Only_Options);
+--       Ada_Lib.Options.Get_Read_Only_Options);
 -- end Options;
 
    ----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ package body Ada_Lib.Options.Unit_Test is
       end Bad_Options;
       ----------------------------------------------------------------------------
 
-      use Standard.Ada_Lib.Options;
+--    use Standard.Ada_Lib.Options;
 
    begin
       Log_In_Checked (Recursed, Trace_Options or Debug, Option.Image &

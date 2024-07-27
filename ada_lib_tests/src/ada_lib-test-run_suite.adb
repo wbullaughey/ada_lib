@@ -12,7 +12,7 @@ with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Directory.Test;
 with Ada_Lib.Event.Unit_Test;
 with Ada_Lib.GNOGA.Unit_Test.Base;
-with Ada_Lib.Help.Tests;
+with Ada_Lib.Options.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Options.Unit_Test;
@@ -93,7 +93,7 @@ begin
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Parser.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
-         Ada_Lib.Help.Tests.Suite);
+         Ada_Lib.Options.Help.Tests.Suite);
 --       Non_DBDaemon_Test_Suite.Add_Test (
 --          Ada_Lib.GNATCOLLL.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (

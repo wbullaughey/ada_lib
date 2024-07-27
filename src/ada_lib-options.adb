@@ -36,14 +36,14 @@ package body Ada_Lib.Options is
    Modifiable_Options            : Interface_Options_Class_Access := Null;
    Parameter_Parsing_Failed      : Boolean := False;
 
-   ----------------------------------------------------------------------------
-   function Ada_Lib_Options
-   return Interface_Options_Constant_Class_Access is
-   ----------------------------------------------------------------------------
-
-   begin
-      return Read_Only_Options;
-   end Ada_Lib_Options;
+-- ----------------------------------------------------------------------------
+-- function Ada_Lib_Options
+-- return Interface_Options_Constant_Class_Access is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return Get_Read_Only_Options;
+-- end Ada_Lib_Options;
 
    ----------------------------------------------------------------------------
    function Create_Option (
@@ -169,6 +169,17 @@ package body Ada_Lib.Options is
    end Get_Modifiable_Options;
 
    ----------------------------------------------------------------------------
+   function Get_Read_Only_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Interface_Options_Constant_Class_Access is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Interface_Options_Constant_Class_Access (
+         Get_Modifiable_Options (From));
+   end Get_Read_Only_Options;
+
+   ----------------------------------------------------------------------------
    function Has_Option (
       Option                     : in     Option_Type;
       Options_With_Parameters    : in     Options_Type;
@@ -199,7 +210,7 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
 
    begin
-      return Read_Only_Options /= Null and then
+      return Get_Read_Only_Options /= Null and then
              Modifiable_Options /= Null;
    end Have_Options;
 
@@ -321,9 +332,8 @@ package body Ada_Lib.Options is
          Tag_History (Options.all'tag);
       end if;
       Modifiable_Options := Options;
-      Read_Only_Options := Interface_Options_Constant_Class_Access (Options);
       Log_Out (Debug or Trace_Options,
-         "Read_Only_Options " & Image (Read_Only_Options.all'address));
+         "Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
    end Set_Ada_Lib_Options;
 
    ----------------------------------------------------------------
@@ -376,8 +386,8 @@ package body Ada_Lib.Options is
       begin
          Log_In (Debug or Trace_Options, "options tag " & Tag_Name (Options_Type'class (
             Options)'tag) &
-            " Read_Only_Options " & Image (Read_Only_Options.all'address));
-         if Read_Only_Options = Null then
+            " Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
+         if Get_Read_Only_Options = Null then
             Put_Line ("Ada_Lib_Options not initialized at " & Here & " called from " & From);
          else
             if not Options.Initialized then
@@ -405,13 +415,13 @@ package body Ada_Lib.Options is
       begin
          Log_In (Debug or Trace_Options, "options tag " &
             Tag_Name (Options_Type'class (Options)'tag) &
-            " Read_Only_Options " & Image (Read_Only_Options.all'address));
+            " Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
          if Debug or Trace_Options then
             Tag_History (Options_Type'class (Options)'tag);
          end if;
 
-         if Read_Only_Options = Null then
-            Put_Line ("Read_Only_Options null " & Here);
+         if Get_Read_Only_Options = Null then
+            Put_Line ("Get_Read_Only_Options null " & Here);
          else
             if Options.Initialized then
                Put_Line ("Options.Initialized should be false");

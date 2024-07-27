@@ -13,7 +13,7 @@ with Debug_Options;
 
 package body Ada_Lib.Options.Help is
 
-   use type Ada_Lib.Options.Option_Type;
+-- use type Ada_Lib.Options.Option_Type;
 
    subtype Line_Type             is String;
 

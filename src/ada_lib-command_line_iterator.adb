@@ -23,6 +23,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raises No_Argument, Invalid_Option
       -------------------------------------------------------------------
+      overriding
       procedure Advance (
          Iterator          : in out Abstract_Iterator_Type) is
       -------------------------------------------------------------------
@@ -557,6 +558,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       -- raises No_Argument
       -------------------------------------------------------------------
+      overriding
       function Is_Option (
          Iterator          : in   Abstract_Iterator_Type
       ) return Boolean is

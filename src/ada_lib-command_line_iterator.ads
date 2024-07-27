@@ -3,7 +3,7 @@
 with Ada.Characters.Latin_1;
 --with Ada.Finalization;
 with Ada.Strings.Maps;
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with Interfaces;

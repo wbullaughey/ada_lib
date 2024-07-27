@@ -26,8 +26,8 @@ package Ada_Lib.Command_Line_Iterator.Tests is
    overriding
    procedure Set_Up (
       Test                       : in out Test_Type
-   ) with pre => Test.Verify_Presetup,
-          post => Test.Verify_Postsetup;
+   ) with pre => not Test.Verify_Set_Up,
+          post => Test.Verify_Set_Up;
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
 

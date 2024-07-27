@@ -167,13 +167,13 @@ package body Ada_Lib.Options.Actual is
 --             "not "
 --       ) & "null" &
 --       " Ada_Lib.Options " & (
---          if Read_Only_Options = Null then
+--          if Get_Read_Only_Options = Null then
 --             ""
 --          else
 --             "not "
 --          ) & "null");
 --    return Get_Modifiable_Options /= Null and then
---           Read_Only_Options /= Null;
+--           Get_Read_Only_Options /= Null;
 -- end Have_Options;
 --
    ----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ package body Ada_Lib.Options.Actual is
       if Message'length > 0 then
          Put_Line (Message);
       end if;
-      Read_Only_Options.Program_Help (Program);
+      Get_Read_Only_Options.Program_Help (Program);
 
       Ada_Lib.Options.Help.Display (Print_Help'access);
       New_Line;
@@ -243,7 +243,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
      Log_In_Checked (Initialize_Recursed, Debug or Trace_Options);
-     Read_Only_Options := Options'unchecked_access;
+--   Get_Read_Only_Options := Options'unchecked_access;
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
@@ -295,7 +295,7 @@ package body Ada_Lib.Options.Actual is
       exception
          when Fault: others =>
             Trace_Exception (Debug or Trace_Options, Fault);
-            Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault));
+            Get_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault));
       end;
 
       Options.Processed := True;
@@ -304,7 +304,7 @@ package body Ada_Lib.Options.Actual is
    exception
       when Fault: Ada_Lib.Options.Failed =>
          Trace_Exception (Debug or Trace_Options, Fault);
-         Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault), True);
+         Get_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault), True);
          raise;
 
       when Fault: others =>
@@ -395,7 +395,7 @@ package body Ada_Lib.Options.Actual is
                   Options.Trace_Parse (Iterator);
 
                when 'h' =>
-                     Read_Only_Options.Display_Help;
+                     Get_Read_Only_Options.Display_Help;
 
                when 'P' =>
                   Ada_Lib.Trace.Pause_Flag := True;
@@ -540,20 +540,20 @@ package body Ada_Lib.Options.Actual is
    end Program_Help;
 
    ----------------------------------------------------------------------------
--- function Read_Only_Options
+-- function Get_Read_Only_Options
 -- return Program_Options_Constant_Class_Access is
 -- ----------------------------------------------------------------------------
 --
 -- begin
 --    return Program_Options_Constant_Class_Access (
---       Ada_Lib.Options.Ada_Lib_Options);
+--       Ada_Lib.Options.Get_Read_Only_Options);
 -- exception
 --    when Fault: others =>
---       Trace_Message_Exception (Fault, "Ada_Lib_Options " & Tag_Name (
---          Ada_Lib.Options.Ada_Lib_Options.all'tag));
---       Tag_History (Ada_Lib.Options.Ada_Lib_Options.all'tag);
+--       Trace_Message_Exception (Fault, "Get_Read_Only_Options " & Tag_Name (
+--          Ada_Lib.Options.Get_Read_Only_Options.all'tag));
+--       Tag_History (Ada_Lib.Options.Get_Read_Only_Options.all'tag);
 --       raise;
--- end Read_Only_Options;
+-- end Get_Read_Only_Options;
 
    ----------------------------------------------------------------------------
    procedure Set_All is
@@ -839,5 +839,8 @@ package body Ada_Lib.Options.Actual is
       Not_Implemented;
    end Update_Filter;
 
+begin
+Trace_Options := True;
+   Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Options.Actual;
 

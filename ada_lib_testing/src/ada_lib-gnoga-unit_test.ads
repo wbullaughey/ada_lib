@@ -26,7 +26,7 @@ package Ada_Lib.GNOGA.Unit_Test is
    overriding
    procedure Set_Up (
       Test                       : in out GNOGA_Tests_Type
-   ) with Post => Test.Verify_Postsetup;
+   ) with Post => Test.Verify_Set_Up;
 
    Debug                         : aliased Boolean := False;
 -- Debug_Options                 : aliased Boolean := False;

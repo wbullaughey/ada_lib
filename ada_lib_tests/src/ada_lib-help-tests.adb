@@ -5,7 +5,7 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 
-package body Ada_Lib.Help.Tests is
+package body Ada_Lib.Options.Help.Tests is
 
    use Ada_Lib.Options;
 
@@ -222,5 +222,5 @@ begin
 --debug := True;
 --Trace_Options := True;
    Log_Here (Trace_Options or Debug);
-end Ada_Lib.Help.Tests;
+end Ada_Lib.Options.Help.Tests;
 

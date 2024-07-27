@@ -59,7 +59,7 @@ package body Ada_Lib.Unit_Test.Tests is
 
    begin
       Log_In (Debug);
-      return Log_Out (Ada_Lib.Options.Read_Only_Options /= Null,
+      return Log_Out (Ada_Lib.Options.Get_Read_Only_Options /= Null,
          Debug, "Test.Options is null");
    end Verify_Postsetup;
 

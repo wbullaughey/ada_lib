@@ -4,7 +4,7 @@ with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
 with Ada_Lib.Database.Server.Tests;
 with Ada_Lib.Directory.Test;
-with Ada_Lib.Help.Tests;
+with Ada_Lib.Options.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Options.Help;
@@ -262,7 +262,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Command_Line_Iterator.Tests.Debug := True;
                         Ada_Lib.Configuration.Tests.Debug := True;
                         Ada_Lib.Database.Server.Tests.Debug := True;
-                        Ada_Lib.Help.Tests.Debug := True;
+                        Ada_Lib.Options.Help.Tests.Debug := True;
                         Ada_Lib.Lock.Tests.Debug := True;
                         Ada_Lib.Mail.Tests.Debug := True;
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;
@@ -288,7 +288,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Directory.Test.Debug := True;
 
                      when 'h' =>
-                        Ada_Lib.Help.Tests.Debug := True;
+                        Ada_Lib.Options.Help.Tests.Debug := True;
 
                      when 'i' =>
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;

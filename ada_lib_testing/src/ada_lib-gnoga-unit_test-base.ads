@@ -39,8 +39,8 @@ package Ada_Lib.GNOGA.Unit_Test.Base is
    overriding
    procedure Set_Up (
       Test                       : in out Test_Type
-   ) with Pre => Test.Verify_Presetup,
-          Post => Test.Verify_Postsetup;
+   ) with Pre => not Test.Verify_Set_Up,
+          Post => Test.Verify_Set_Up;
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
 

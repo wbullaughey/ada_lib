@@ -89,8 +89,8 @@ private
    overriding
    procedure Set_Up (               -- allocates and opens database
       Test                       : in out Server_Test_Type)
-   with Pre => Test.Verify_Presetup,
-        Post => Test.Verify_Postsetup;
+   with Pre => not Test.Verify_Set_Up,
+        Post => Test.Verify_Set_Up;
 
    procedure Subscribe (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);

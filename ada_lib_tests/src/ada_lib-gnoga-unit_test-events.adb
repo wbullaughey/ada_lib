@@ -195,7 +195,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
       end case;
 
       if Debug or else Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
-            Ada_Lib.Options.Read_Only_Options).Verbose then
+            Ada_Lib.Options.Get_Read_Only_Options).Verbose then
          Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
       Log_Out (Debug);

@@ -3,7 +3,7 @@
 --with Ada_Lib.Command_Line_Iterator; -- needed for pragma Elaborate_All
 with Ada_Lib.GNOGA.Base;
 --with Ada_Lib.GNOGA.Unit_Test;
---with Ada_Lib.Help;
+--with Ada_Lib.Options.Help;
 with Ada_Lib.Options;
 with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Unit_Test;
