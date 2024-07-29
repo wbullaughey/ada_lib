@@ -17,3 +17,7 @@ list
 /config/
 /save/
 GNAT*
+/obj/
+/lib/
+/alire/
+/config/

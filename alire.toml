@@ -22,4 +22,6 @@ gnoga  = { path = "../vendor/github.com/gnoga" }
 [[depends-on]]
 gnatcoll = "*"
 
+[[pins]]
+gnatcoll = { path = "../vendor/github.com/AdaCore/gnatcoll-core" }
 
