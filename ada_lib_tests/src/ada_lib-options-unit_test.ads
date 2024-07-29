@@ -1,6 +1,7 @@
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.GNOGA;
 with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Options.AUnit_Lib;
 with AUnit.Test_Filters.Ada_Lib;
 
 --with Ada_Lib.Database.Connection;
@@ -22,6 +23,7 @@ package Ada_Lib.Options.Unit_Test is
                                             -- execution of test program
                                     ) is new Ada_Lib.Options.Actual.
                                        Program_Options_Type with record
+      AUnit_Options              : Ada_Lib.Options.AUnit_Lib.AUnit_Options_Type;
       Debug                      : Boolean := False;  -- debug unit test application
       Debug_Options              : Boolean := False;  -- debug unit test application options
       Exit_On_Done               : Boolean := False;  -- exit test application after all unit tests complete

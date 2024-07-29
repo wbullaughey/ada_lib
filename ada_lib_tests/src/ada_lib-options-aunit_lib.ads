@@ -51,7 +51,7 @@ package Ada_Lib.Options.AUnit_Lib is
    function Get_Modifiable_AUnit_Options (
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Aunit_Options_Class_Access
-   with pre => AUnit_Lib_Options /= Null;
+   with pre => Ada_Lib.Options.Have_Options;
 
    overriding
    function Initialize (

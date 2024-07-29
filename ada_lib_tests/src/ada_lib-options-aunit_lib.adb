@@ -34,7 +34,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Null_Options;
-   Protected_Options             : aliased Aunit_Options_Type;
+-- Protected_Options             : aliased Aunit_Options_Type;
                                     -- multiple Ada_Lib unit tests can be run
                                     -- by the same instance of the tester
 
@@ -45,8 +45,8 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------
 
       Modifiable_Options         : constant Interface_Options_Type :=
-                                    Get_Modifiable_Options.all;
-      Unit_Test_Options          : Ada_Lib_Unit_Test_Options_Type renames
+                                    Ada_Lib.Options.Get_Modifiable_Options.all;
+      Aunit_Options              : AUnit_Options_Type renames
                                        Ada_Lib_Unit_Test_Options_Type (
                                     Modifiable_Options);
    begin
