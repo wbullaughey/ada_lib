@@ -2,7 +2,7 @@
 with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.GNOGA.Base;
 with Ada_Lib.GNOGA.Unit_Test.Events;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 --with Ada_Lib.Options;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Unit_Test;
@@ -85,7 +85,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Standard.Ada_Lib.Options.Help.Add_Option ('g', "trace options",
+         Standard.Ada_Lib.Help.Add_Option ('g', "trace options",
             "GNOGA Unit Test traces", Component);
 
       when Ada_Lib.Options.Traces =>

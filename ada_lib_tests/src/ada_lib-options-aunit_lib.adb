@@ -4,10 +4,10 @@ with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
 with Ada_Lib.Database.Server.Tests;
 with Ada_Lib.Directory.Test;
-with Ada_Lib.Options.Help.Tests;
+with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Template;
@@ -44,10 +44,15 @@ package body Ada_Lib.Options.AUnit_Lib is
    ) return Aunit_Options_Class_Access is
    ----------------------------------------------------------------
 
+      Modifiable_Options         : constant Interface_Options_Type :=
+                                    Get_Modifiable_Options.all;
+      Unit_Test_Options          : Ada_Lib_Unit_Test_Options_Type renames
+                                       Ada_Lib_Unit_Test_Options_Type (
+                                    Modifiable_Options);
    begin
-      Log_Here (Debug or Trace_Options, Image (Protected_Options'address) & " from " & From &
-         " verbose " & Protected_Options.Verbose'img);
-      return Protected_Options'access;
+      Log_Here (Debug or Trace_Options,
+         " verbose " & Unit_Test_Options.Verbose'img & " from " & From);
+      return Unit_Test_Options'access;
    end Get_Modifiable_AUnit_Options;
 
    -------------------------------------------------------------------------
@@ -84,7 +89,7 @@ package body Ada_Lib.Options.AUnit_Lib is
             Include_Options      => True,
             Include_Non_Options  => False,
             Modifiers            => String'(
-               1 => Ada_Lib.Options.Help.Modifier)),
+               1 => Ada_Lib.Help.Modifier)),
          Debug or Trace_Options);
    end Initialize;
 
@@ -169,10 +174,10 @@ package body Ada_Lib.Options.AUnit_Lib is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
---       Ada_Lib.Options.Help.Add_Option ('d', "seed", "set random seed");
---       Ada_Lib.Options.Help.Add_Option ('D', "", "report random seed");
-         Ada_Lib.Options.Help.Add_Option ('t', "", "ada_lib unit tests");
---       Ada_Lib.Options.Help.Add_Option ('x', "", "exit on tests complete");
+--       Ada_Lib.Help.Add_Option ('d', "seed", "set random seed");
+--       Ada_Lib.Help.Add_Option ('D', "", "report random seed");
+         Ada_Lib.Help.Add_Option ('t', "", "ada_lib unit tests");
+--       Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete");
 
       when Ada_Lib.Options.Traces =>
          Put_Line (Ada.Command_Line.Command_Name & " trace options (-" &
@@ -262,7 +267,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Command_Line_Iterator.Tests.Debug := True;
                         Ada_Lib.Configuration.Tests.Debug := True;
                         Ada_Lib.Database.Server.Tests.Debug := True;
-                        Ada_Lib.Options.Help.Tests.Debug := True;
+                        Ada_Lib.Help.Tests.Debug := True;
                         Ada_Lib.Lock.Tests.Debug := True;
                         Ada_Lib.Mail.Tests.Debug := True;
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;
@@ -288,7 +293,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Directory.Test.Debug := True;
 
                      when 'h' =>
-                        Ada_Lib.Options.Help.Tests.Debug := True;
+                        Ada_Lib.Help.Tests.Debug := True;
 
                      when 'i' =>
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;

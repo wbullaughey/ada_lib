@@ -9,7 +9,7 @@ with Ada_Lib.Directory;
 with Ada_Lib.EMail;
 with Ada_Lib.Event;
 with Ada_Lib.GNOGA;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Interrupt;
 with Ada_Lib.Lock;
 with Ada_Lib.Mail;
@@ -46,7 +46,7 @@ package body Ada_Lib.Options.Actual is
                                           Ada_Lib.Options.Create_Options (
                                              "hPv" & Test_Condition_Flag) &
                                           Ada_Lib.Options.Create_Options (
-                                             "iptx", Ada_Lib.Options.Help.Modifier);
+                                             "iptx", Ada_Lib.Help.Modifier);
 -- Parameter_Parsing_Failed      : Boolean := False;
 
 
@@ -224,7 +224,7 @@ package body Ada_Lib.Options.Actual is
       end if;
       Get_Read_Only_Options.Program_Help (Program);
 
-      Ada_Lib.Options.Help.Display (Print_Help'access);
+      Ada_Lib.Help.Display (Print_Help'access);
       New_Line;
 
       Interface_Options_Type'class (Options).Program_Help (Traces);
@@ -479,20 +479,20 @@ package body Ada_Lib.Options.Actual is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Ada_Lib.Options.Help.Add_Option ('a', "trace options", "Ada_Lib library trace options", Component);
-         Ada_Lib.Options.Help.Add_Option ('h', "", "this message", Component);
-         Ada_Lib.Options.Help.Add_Option ('P', "", "pause", Component);
-         Ada_Lib.Options.Help.Add_Option ('v', "", "verbose", Component);
-         Ada_Lib.Options.Help.Add_Option (Test_Condition_Flag, "", "trace test condition",
-            Component, Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('i', "", "indent trace", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('p', "", "include program in trace", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('t', "", "include task in trace", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('x', "", "exclude time in trace", Component,
-            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('a', "trace options", "Ada_Lib library trace options", Component);
+         Ada_Lib.Help.Add_Option ('h', "", "this message", Component);
+         Ada_Lib.Help.Add_Option ('P', "", "pause", Component);
+         Ada_Lib.Help.Add_Option ('v', "", "verbose", Component);
+         Ada_Lib.Help.Add_Option (Test_Condition_Flag, "", "trace test condition",
+            Component, Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('i', "", "indent trace", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('p', "", "include program in trace", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('t', "", "include task in trace", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('x', "", "exclude time in trace", Component,
+            Ada_Lib.Help.Modifier);
 
       when Ada_Lib.Options.Traces =>
          Put_Line ("CAC ada_lib trace library options (-a)");
@@ -522,17 +522,17 @@ package body Ada_Lib.Options.Actual is
 --       Put_Line ("      x               Ada_Lib.Trace.Detail");
 --       Put_Line ("      @               Ada_Lib.Strings");
          Put_Line ("      -               Ada_Lib.Text");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "c              Template Compile");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "d              Template Detail");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "D              Ada_Lib.Directory trace");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "e              Template Evaluate");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "E              Template Expand");
-         Put_Line ("      " & Ada_Lib.Options.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "l              Template Load");
 
       end case;
@@ -566,7 +566,7 @@ package body Ada_Lib.Options.Actual is
       Ada_Lib.Database.Connection.Debug := True;
       Ada_Lib.Database.Set_Trace (True, True);
       Ada_Lib.Database.Trace_Get_Post := True;
-      Ada_Lib.Options.Help.Debug := True;
+      Ada_Lib.Help.Debug := True;
       Ada_Lib.Lock.Debug := True;
       Ada_Lib.EMail.Debug := True;
       Ada_Lib.Mail.Debug := True;
@@ -626,7 +626,7 @@ package body Ada_Lib.Options.Actual is
                      Ada_Lib.GNOGA.Debug := True;
 
                   when 'h' =>
-                     Ada_Lib.Options.Help.Debug := True;
+                     Ada_Lib.Help.Debug := True;
 
                   when 'i' =>
                      Ada_Lib.Interrupt.Debug := True;
@@ -675,7 +675,7 @@ package body Ada_Lib.Options.Actual is
                   when 'T' =>
                      Ada_Lib.Trace_Tasks.Debug := True;
 
-                  when Ada_Lib.Options.Help.Modifier =>
+                  when Ada_Lib.Help.Modifier =>
                      Extended := True;
 
                   when '-' =>

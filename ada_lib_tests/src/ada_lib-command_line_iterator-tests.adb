@@ -1,7 +1,7 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
@@ -26,14 +26,14 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       B                          : constant Character := 'b';
       B_Option                   : constant Option_Type :=
-                                    Create_Option (B, Ada_Lib.Options.Help.Modifier);
+                                    Create_Option (B, Ada_Lib.Help.Modifier);
       Options_With_Modifiers     : constant String := "b";
       Options_Without_Modifiers  : constant String := "ac";
       Options                    : constant Options_Type :=
                                     Create_Options (Options_With_Modifiers,
-                                       Ada_Lib.Options.Help.Modifier) &
+                                       Ada_Lib.Help.Modifier) &
                                     Create_Options (Options_Without_Modifiers);
-      Expected_All_Options       : constant String := Ada_Lib.Options.Help.
+      Expected_All_Options       : constant String := Ada_Lib.Help.
                                     Modifier & "bac";
    begin
       Log_In (Debug);

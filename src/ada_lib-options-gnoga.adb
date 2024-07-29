@@ -1,8 +1,8 @@
 with Ada.Text_IO; use Ada.Text_IO;
--- with Ada_Lib.Options.Help;
+-- with Ada_Lib.Help;
 ----with Ada_Lib.Database.Server;
 --with Ada_Lib.GNOGA;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Options.Runstring;
 --with Debug_Options;
@@ -98,9 +98,9 @@ package body Ada_Lib.Options.GNOGA is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-            Ada_Lib.Options.Help.Add_Option (Create_Option ('G'), "trace options",
+            Ada_Lib.Help.Add_Option (Create_Option ('G'), "trace options",
                "GNOGA traces", "GNOGA library");
-            Ada_Lib.Options.Help.Add_Option (Create_Option ('w'), "",
+            Ada_Lib.Help.Add_Option (Create_Option ('w'), "",
                "Web server port", "GNOGA library");
 
       when Ada_Lib.Options.Traces =>

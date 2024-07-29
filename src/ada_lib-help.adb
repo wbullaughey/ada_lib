@@ -11,9 +11,9 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 with Debug_Options;
 
-package body Ada_Lib.Options.Help is
+package body Ada_Lib.Help is
 
--- use type Ada_Lib.Options.Option_Type;
+   use type Ada_Lib.Options.Option_Type;
 
    subtype Line_Type             is String;
 
@@ -268,4 +268,4 @@ begin
 --    Ada_Lib.Options.Runstring.With_Parameters,
 --    Ada_Lib.Options.Create_Options (
 --       Ada_Lib.Options.Options_Prefix));
-end  Ada_Lib.Options.Help;
+end  Ada_Lib.Help;

@@ -1,6 +1,6 @@
 with Ada.Exceptions;
 --with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
@@ -237,13 +237,13 @@ package body Ada_Lib.Options.Database is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Ada_Lib.Options.Help.Add_Option ('l', "", "local dbdaemon.", Component);
-         Ada_Lib.Options.Help.Add_Option ('L', "path", "local dbdaemon path.", Component);
-         Ada_Lib.Options.Help.Add_Option ('p', "port number", "remote DBDaemon port number", Component);
---       Ada_Lib.Options.Help.Add_Option ('P', "browser port", Component);
-         Ada_Lib.Options.Help.Add_Option ('r', "", "remote dbdaemon.", Component);
-         Ada_Lib.Options.Help.Add_Option ('R', "path", "remote dbdaemon path.", Component);
-         Ada_Lib.Options.Help.Add_Option ('u', "user", "remote user.", Component);
+         Ada_Lib.Help.Add_Option ('l', "", "local dbdaemon.", Component);
+         Ada_Lib.Help.Add_Option ('L', "path", "local dbdaemon path.", Component);
+         Ada_Lib.Help.Add_Option ('p', "port number", "remote DBDaemon port number", Component);
+--       Ada_Lib.Help.Add_Option ('P', "browser port", Component);
+         Ada_Lib.Help.Add_Option ('r', "", "remote dbdaemon.", Component);
+         Ada_Lib.Help.Add_Option ('R', "path", "remote dbdaemon path.", Component);
+         Ada_Lib.Help.Add_Option ('u', "user", "remote user.", Component);
 
       when Ada_Lib.Options.Traces =>
          Null;

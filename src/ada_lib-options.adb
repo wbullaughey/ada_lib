@@ -9,7 +9,7 @@ with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.EMail;
 --with Ada_Lib.Event;
 --with Ada_Lib.GNOGA;
---with Ada_Lib.Options.Help;
+--with Ada_Lib.Help;
 --with Ada_Lib.Interrupt;
 --with Ada_Lib.Lock;
 --with Ada_Lib.Mail;
@@ -157,7 +157,7 @@ package body Ada_Lib.Options is
    begin
       Log_Here (Debug or Trace_Options, "from " & From);
       if Debug or Trace_Options then
-         Tag_History (Modifiable_Options.all'tag);
+         Tag_History (Modifiable_Options.all'tag, From);
       end if;
       return Modifiable_Options;
 

@@ -1,7 +1,7 @@
 with AUnit.Test_Suites;
 with Ada_Lib.Unit_Test.Tests;
 
-package Ada_Lib.Options.Help.Tests is
+package Ada_Lib.Help.Tests is
 
    type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with null record;
 
@@ -26,5 +26,5 @@ private
 
    Suite_Name                    : constant String := "Help";
 
-end Ada_Lib.Options.Help.Tests;
+end Ada_Lib.Help.Tests;
 

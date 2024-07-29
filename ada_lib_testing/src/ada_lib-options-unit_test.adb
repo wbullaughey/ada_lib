@@ -1,6 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.GNOGA.Unit_Test;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 --with Ada_Lib.Options.GNOGA;
 with Ada_Lib.OS;
 with Ada_Lib.Options.Runstring;
@@ -22,14 +22,14 @@ package body Ada_Lib.Options.Unit_Test is
                                           Ada_Lib.Options.Create_Options (
                                              "esSU") &
                                           Ada_Lib.Options.Create_Options (
-                                             "RS", Ada_Lib.Options.Help.Modifier);
+                                             "RS", Ada_Lib.Help.Modifier);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
                                              "x") &
                                           Ada_Lib.Options.Create_Options (
                                              Driver_List_Option & "lmP",
-                                             Ada_Lib.Options.Help.Modifier);
+                                             Ada_Lib.Help.Modifier);
 
    Recursed                      : Boolean := False;
 
@@ -74,7 +74,7 @@ package body Ada_Lib.Options.Unit_Test is
 
       return Log_Out_Checked (Recursed,
          Options.GNOGA_Options.Initialize and then
-         Actual.Nested_Options_Type (Options).Initialize,
+         Actual.Program_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
 
@@ -279,27 +279,27 @@ package body Ada_Lib.Options.Unit_Test is
 
       when Ada_Lib.Options.Program =>
          -- options without modifier
-         Ada_Lib.Options.Help.Add_Option ('e', "routine", "test routine.", Component);
-         Ada_Lib.Options.Help.Add_Option ('s', "test suite", "select test suite to run.",
+         Ada_Lib.Help.Add_Option ('e', "routine", "test routine.", Component);
+         Ada_Lib.Help.Add_Option ('s', "test suite", "select test suite to run.",
             Component);
-         Ada_Lib.Options.Help.Add_Option ('S', "suites", "enable default disabled suites.",
+         Ada_Lib.Help.Add_Option ('S', "suites", "enable default disabled suites.",
             Component);
-         Ada_Lib.Options.Help.Add_Option ('U', "unit test trace Ada_Lib.",
+         Ada_Lib.Help.Add_Option ('U', "unit test trace Ada_Lib.",
             "select trace", Component);
-         Ada_Lib.Options.Help.Add_Option ('x', "", "exit on tests complete", Component);
+         Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete", Component);
          -- options with modifier
-         Ada_Lib.Options.Help.Add_Option ('d', "", "driver suites", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('l', "", "List test suites", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('m', "", "manual operations.", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('P', "", "Print test suites.", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('S', "", "report random seed", Component,
-            Ada_Lib.Options.Help.Modifier);
-         Ada_Lib.Options.Help.Add_Option ('R', "seed", "set random seed", Component,
-            Ada_Lib.Options.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('d', "", "driver suites", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('l', "", "List test suites", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('m', "", "manual operations.", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('P', "", "Print test suites.", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('S', "", "report random seed", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('R', "seed", "set random seed", Component,
+            Ada_Lib.Help.Modifier);
 
       when Ada_Lib.Options.Traces =>
          Put_Line ("Ada_Lib unit test library trace options (-U)");

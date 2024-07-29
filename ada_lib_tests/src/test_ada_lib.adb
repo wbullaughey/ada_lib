@@ -31,7 +31,7 @@ begin
          Ada_Lib.Test.Run_Suite (Aunit_Options.all);
          Gnoga.Application.Multi_Connect.End_Application;
          Log_Here (Debug);
-         if Aunit_Options.Unit_Test.Exit_On_Done then
+         if Aunit_Options.Exit_On_Done then
             Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
          end if;
 

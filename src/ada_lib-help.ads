@@ -1,7 +1,7 @@
-
+with Ada_Lib.Options;
 with Ada_Lib.Trace;
 
-package Ada_Lib.Options.Help is
+package Ada_Lib.Help is
 
    Failed                        : exception;
 
@@ -33,5 +33,5 @@ package Ada_Lib.Options.Help is
    Modifier                      : constant Character := '@';
    Modifiers                     : constant String := "@";
 
-end  Ada_Lib.Options.Help;
+end  Ada_Lib.Help;
 

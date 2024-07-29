@@ -21,7 +21,7 @@ package Ada_Lib.Options.Unit_Test is
       Multi_Test                 : Boolean -- perform multiple tests in one
                                             -- execution of test program
                                     ) is new Ada_Lib.Options.Actual.
-                                       Nested_Options_Type with record
+                                       Program_Options_Type with record
       Debug                      : Boolean := False;  -- debug unit test application
       Debug_Options              : Boolean := False;  -- debug unit test application options
       Exit_On_Done               : Boolean := False;  -- exit test application after all unit tests complete

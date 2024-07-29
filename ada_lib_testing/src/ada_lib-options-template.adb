@@ -1,5 +1,5 @@
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada_Lib.Options.Help;
+with Ada_Lib.Help;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Template;
@@ -102,7 +102,7 @@ package body Ada_Lib.Options.Template is
 
          when Ada_Lib.Options.Program =>
             New_Line;
-            Ada_Lib.Options.Help.Add_Option (Trace_Option, "options", -- t
+            Ada_Lib.Help.Add_Option (Trace_Option, "options", -- t
                "enables trace template unit tests", Component);
 
          when Ada_Lib.Options.Traces =>

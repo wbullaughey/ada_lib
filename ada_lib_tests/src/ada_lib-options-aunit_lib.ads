@@ -27,8 +27,8 @@ package Ada_Lib.Options.AUnit_Lib is
    function New_Suite return Non_DBDamon_Test_Access;
 
    -- type used in application for unit testing;
-   type Aunit_Options_Type       is new Ada_Lib.Options.Actual.
-                                    Program_Options_Type with record
+   type Aunit_Options_Type       is new Ada_Lib.Options.Unit_Test.
+                                    Ada_Lib_Unit_Test_Options_Type with record
       AUnit_Options              : AUnit.Ada_Lib.Options.AUnit_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
@@ -37,8 +37,8 @@ package Ada_Lib.Options.AUnit_Lib is
                                     GNOGA_Unit_Test_Options_Type;
       Template                   : Ada_Lib.Options.Template.Template_Options_Type;
       Tester_Debug               : Boolean := False;
-      Unit_Test                  : Ada_Lib.Options.Unit_Test.
-                                    Unit_Test_Options_Type (True);
+--    Unit_Test                  : Ada_Lib.Options.Unit_Test.
+--                                  Unit_Test_Options_Type (True);
    end record;
 
    type Aunit_Options_Class_Access
@@ -62,7 +62,7 @@ package Ada_Lib.Options.AUnit_Lib is
 
    procedure Set_Options;
 
-   AUnit_Lib_Options             : Aunit_Options_Constant_Class_Access := Null;
+-- AUnit_Lib_Options             : Aunit_Options_Constant_Class_Access := Null;
    Debug                         : aliased Boolean := False;
 
 private
