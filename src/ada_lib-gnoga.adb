@@ -69,7 +69,7 @@ package body Ada_Lib.GNOGA is
    ---------------------------------------------------------------
 
 begin
-debug := True;
+--debug := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 end Ada_Lib.GNOGA;
 

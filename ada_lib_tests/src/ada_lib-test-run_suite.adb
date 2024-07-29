@@ -43,7 +43,7 @@ procedure Ada_Lib.Test.Run_Suite (
                                     Options.Unit_Test.Mode =
                                        Ada_Lib.Options.List_Suites;
 begin
---Debug := True;
+Debug := True;
    Log_In (Debug, "list suites " & List_Suites'img);
 
    declare
@@ -179,5 +179,8 @@ begin
    end;
    Log_Out (Debug);
 
+begin
+Debug := True;
+   Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Test.Run_Suite;
 

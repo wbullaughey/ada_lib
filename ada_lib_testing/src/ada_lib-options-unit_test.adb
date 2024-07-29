@@ -35,7 +35,7 @@ package body Ada_Lib.Options.Unit_Test is
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
-      Options                    : in     Unit_Test_Options_Type) is
+      Options                    : in     Ada_Lib_Unit_Test_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin
@@ -56,14 +56,13 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Unit_Test_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
      Log_In_Checked (Recursed, Debug or Trace_Options);
-     Unit_Test_Options_Constant := Options'unchecked_access;
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
@@ -103,7 +102,7 @@ package body Ada_Lib.Options.Unit_Test is
    -- processes options it knows about and calls parent for others
    overriding
    function Process_Option (
-      Options                    : in out Unit_Test_Options_Type;
+      Options                    : in out Ada_Lib_Unit_Test_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
       Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
@@ -255,7 +254,7 @@ package body Ada_Lib.Options.Unit_Test is
          end case;
 
          return Log_Out_Checked (Recursed, True, Trace_Options or Debug,
-            " option" & Option.Image & " handled");
+            " option" & Option.Image & " handled mode " & Options.Mode'img);
       else
          return Log_Out_Checked (Recursed,
             Options.GNOGA_Options.Process_Option (Iterator, Option),
@@ -267,7 +266,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Program_Help (
-      Options                    : in      Unit_Test_Options_Type;  -- only used for dispatch
+      Options                    : in      Ada_Lib_Unit_Test_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
@@ -385,7 +384,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Unit_Test_Options_Type;
+      Options                    : in out Ada_Lib_Unit_Test_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
@@ -446,7 +445,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Update_Filter (
-      Options                    : in out Unit_Test_Options_Type) is
+      Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin

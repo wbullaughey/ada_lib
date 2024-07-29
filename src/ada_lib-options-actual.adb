@@ -840,7 +840,7 @@ package body Ada_Lib.Options.Actual is
    end Update_Filter;
 
 begin
-Trace_Options := True;
+--Trace_Options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Options.Actual;
 

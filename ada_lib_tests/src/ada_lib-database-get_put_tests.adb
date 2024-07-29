@@ -454,10 +454,11 @@ package body Ada_Lib.Database.Get_Put_Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Read_Only_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=

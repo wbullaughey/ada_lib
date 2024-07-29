@@ -223,10 +223,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       Window_Name                : in     String) is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.Unit_Test.
-                                    Unit_Test_Options_Constant_Class_Access renames
-                                       Ada_Lib.Options.Unit_Test.
-                                          Unit_Test_Options_Constant;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type'class renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Read_Only_Options).all;
    begin
       Log_In (Debug);
       Standard.GNOGA.Application.Open_URL;

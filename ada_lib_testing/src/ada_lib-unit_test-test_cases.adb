@@ -15,10 +15,11 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Val                     : AUnit.Test_Cases.Routine_Spec) is
    ----------------------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type'class renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Read_Only_Options).all;
    begin
       Log_In (Debug, Quote ("routine", Val.Routine_Name.all) &
          " mode " & Options.Mode'img);
