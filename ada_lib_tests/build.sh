@@ -1,2 +1,2 @@
 source ~/.zshrc
-alr -v build -- -j10 -s -k -gnatE
+alr -vv build -- -j10 -s -k -gnatE
