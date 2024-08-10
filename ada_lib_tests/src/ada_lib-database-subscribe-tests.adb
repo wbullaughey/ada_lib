@@ -2,6 +2,7 @@
 with AUnit.Assertions; use AUnit.Assertions;
 -- with Ada_Lib.Database.Server.State;
 with Ada_Lib.Database.Subscription.Tests;
+with Ada_Lib.Database.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 with Ada_Lib.Test; -- .Tests;
@@ -27,6 +28,8 @@ package body Ada_Lib.Database.Subscribe.Tests is
 
 -- type Ada_Lib.Database.Subscription.Abstract_Subscription_Type is new Ada_Lib.Database.Subscription.Abstract_Subscription_Type with null record;
 
+   Debug                         : Boolean renames
+                                    Ada_Lib.Database.Unit_Test.Debug;
    Index_1                       : constant := 5;
    Index_2                       : constant := -1;
    Load_Subdirectory             : constant String := "tests/data/load_subscriptions/";

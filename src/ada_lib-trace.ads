@@ -181,7 +181,7 @@ package Ada_Lib.Trace is
       Who                        : in     String := GNAT.Source_Info.Enclosing_Entity);
 
    function Log_Out_Checked (
-      Recursed                   : in out Boolean;
+      Recursed                   : in     Boolean;
       Result                     : in     Boolean;
       Enable                     : in     Boolean := True;
       Message                    : in     String := "";

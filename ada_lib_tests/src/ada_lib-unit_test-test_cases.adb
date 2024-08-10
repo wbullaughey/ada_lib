@@ -19,7 +19,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                      Ada_Lib_Unit_Test_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Options_Type'class (
-                           Ada_Lib.Options.Get_Read_Only_Options.all);
+                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all);
    begin
       Log_In (Debug, Quote ("routine", Val.Routine_Name.all) &
          " mode " & Options.Mode'img);
@@ -221,6 +221,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       begin
          Log_Here (Debug);
+         Test.Set_Up := False;
          Test.Torn_Down := True;
       end Tear_Down;
 

@@ -15,20 +15,18 @@ procedure Test_Ada_Lib is
 
 begin
    Put_Line ("test_ada_lib");
-   Ada_Lib.Options.AUnit_Lib.Set_Options;
    declare
-      Aunit_Options                 : constant Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Class_Access :=
-                                             Ada_Lib.Options.AUnit_Lib.
-                                                Get_Modifiable_AUnit_Options;
-      Debug                         : Boolean renames
-                                       AUnit_Options.Tester_Debug;
+      Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type (
+                        Multi_Test => True);
+      Debug          : Boolean renames AUnit_Options.Tester_Debug;
+
    begin
 --Debug := True;
+      Ada_Lib.Options.Set_Ada_Lib_Options (Aunit_Options'unchecked_access);
       if Aunit_Options.Initialize then
          Log_Here (Debug);
          Ada_Lib.Trace_Tasks.Start ("main");
-         Ada_Lib.Test.Run_Suite (Aunit_Options.all);
+         Ada_Lib.Test.Run_Suite (Aunit_Options);
          Gnoga.Application.Multi_Connect.End_Application;
          Log_Here (Debug);
          if Aunit_Options.Exit_On_Done then

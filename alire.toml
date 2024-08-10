@@ -13,15 +13,11 @@ applications = "*"
 [[pins]]
 applications  = { path = ".." }
 
+#[[depends-on]]
+#gnoga = "*"
+#
+#[[pins]]
+#gnoga  = { path = "../vendor/github.com/gnoga" }
+#
 [[depends-on]]
-gnoga = "*"
-
-[[pins]]
-gnoga  = { path = "../vendor/github.com/gnoga" }
-
-[[depends-on]]
-gnatcoll = "*"
-
-[[pins]]
-gnatcoll = { path = "../vendor/github.com/AdaCore/gnatcoll-core" }
-
+gnatcoll = "^23.0.0"

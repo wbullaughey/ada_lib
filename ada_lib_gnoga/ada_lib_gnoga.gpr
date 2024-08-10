@@ -1,22 +1,21 @@
-with "applications.gpr";
 with "default_config.gpr";
---with "config/ada_lib_config.gpr";
-with "gnatcoll.gpr";
---with "gnoga.gpr";
+with "Ada_Lib";
+with "Gnatcoll";
+with "GNOGA";
 
-library project Ada_Lib is
+project Ada_lib_GNOGA is
 
-   for Library_Name use "Ada_Lib";
-   for Library_Version use Project'Library_Name & ".so."; -- & Ada_Lib_Config.Crate_Version;
+   for Library_Name use "Ada_lib_GNOGA";
+   for Library_Version use Project'Library_Name;
 
-   for Source_Dirs use ("src/", "src/macosx", "config/");
-   for Object_Dir use "obj/"; -- & Ada_Lib_Config.Build_Profile;
+   for Source_Dirs use ("src/");
+   for Object_Dir use "obj/";
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib";
 
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=
-     external ("ADA_LIB_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+     external ("GNOGA_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
    for Library_Kind use Library_Type;
 
    package Compiler is
@@ -31,4 +30,4 @@ library project Ada_Lib is
       for Artifacts (".") use ("share");
    end Install;
 
-end Ada_Lib;
+end Ada_lib_GNOGA;

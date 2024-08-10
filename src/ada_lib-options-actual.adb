@@ -8,7 +8,7 @@ with Ada_Lib.Database.Connection;
 with Ada_Lib.Directory;
 with Ada_Lib.EMail;
 with Ada_Lib.Event;
-with Ada_Lib.GNOGA;
+--with Ada_Lib.GNOGA;
 with Ada_Lib.Help;
 with Ada_Lib.Interrupt;
 with Ada_Lib.Lock;
@@ -145,7 +145,7 @@ package body Ada_Lib.Options.Actual is
 --   begin
 ----log_here;
 --      return Program_Options_Class_Access (
---         Ada_Lib.Options.Get_Modifiable_Options);
+--         Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options);
 --
 --   exception
 --      when Fault: others =>
@@ -167,13 +167,13 @@ package body Ada_Lib.Options.Actual is
 --             "not "
 --       ) & "null" &
 --       " Ada_Lib.Options " & (
---          if Get_Read_Only_Options = Null then
+--          if Get_Ada_Lib_Read_Only_Options = Null then
 --             ""
 --          else
 --             "not "
 --          ) & "null");
 --    return Get_Modifiable_Options /= Null and then
---           Get_Read_Only_Options /= Null;
+--           Get_Ada_Lib_Read_Only_Options /= Null;
 -- end Have_Options;
 --
    ----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ package body Ada_Lib.Options.Actual is
       if Message'length > 0 then
          Put_Line (Message);
       end if;
-      Get_Read_Only_Options.Program_Help (Program);
+      Get_Ada_Lib_Read_Only_Options.Program_Help (Program);
 
       Ada_Lib.Help.Display (Print_Help'access);
       New_Line;
@@ -241,9 +241,12 @@ package body Ada_Lib.Options.Actual is
    ) return Boolean is
    ----------------------------------------------------------------------------
 
+      Message        : constant String := " from " & From &
+         " options with parameters " & Image (Options_With_Parameters) &
+         " with out " & Image (Options_Without_Parameters);
+
    begin
-     Log_In_Checked (Initialize_Recursed, Debug or Trace_Options);
---   Get_Read_Only_Options := Options'unchecked_access;
+     Log_In_Checked (Initialize_Recursed, Debug or Trace_Options, Message);
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
@@ -254,7 +257,7 @@ package body Ada_Lib.Options.Actual is
 
       return Log_Out_Checked (Initialize_Recursed,
          Program_Options_Package.Options_Type (Options).Initialize,
-         Debug or Trace_Options);
+         Debug or Trace_Options, Message);
    end Initialize;
 
 -- ----------------------------------------------------------------------------
@@ -295,7 +298,7 @@ package body Ada_Lib.Options.Actual is
       exception
          when Fault: others =>
             Trace_Exception (Debug or Trace_Options, Fault);
-            Get_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault));
+            Get_Ada_Lib_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault));
       end;
 
       Options.Processed := True;
@@ -304,7 +307,7 @@ package body Ada_Lib.Options.Actual is
    exception
       when Fault: Ada_Lib.Options.Failed =>
          Trace_Exception (Debug or Trace_Options, Fault);
-         Get_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault), True);
+         Get_Ada_Lib_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault), True);
          raise;
 
       when Fault: others =>
@@ -395,7 +398,7 @@ package body Ada_Lib.Options.Actual is
                   Options.Trace_Parse (Iterator);
 
                when 'h' =>
-                     Get_Read_Only_Options.Display_Help;
+                     Get_Ada_Lib_Read_Only_Options.Display_Help;
 
                when 'P' =>
                   Ada_Lib.Trace.Pause_Flag := True;
@@ -502,7 +505,7 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      C               Ada_Lib.Configuration Trace");
          Put_Line ("      e               Event");
          Put_Line ("      g               GNOGA.Debug");
-         Put_Line ("      G               Ada_Lib.GNOGA.Debug");
+--       Put_Line ("      G               Ada_Lib.GNOGA.Debug");
          Put_Line ("      h               Help");
          Put_Line ("      i               interrupt");
          Put_Line ("      I               Ada_Lib.interface");
@@ -534,26 +537,30 @@ package body Ada_Lib.Options.Actual is
                            "E              Template Expand");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "l              Template Load");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "o              Trace_Options");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "s              Strings");
 
       end case;
       Log_Out (Debug or Trace_Options);
    end Program_Help;
 
    ----------------------------------------------------------------------------
--- function Get_Read_Only_Options
+-- function Get_Ada_Lib_Read_Only_Options
 -- return Program_Options_Constant_Class_Access is
 -- ----------------------------------------------------------------------------
 --
 -- begin
 --    return Program_Options_Constant_Class_Access (
---       Ada_Lib.Options.Get_Read_Only_Options);
+--       Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options);
 -- exception
 --    when Fault: others =>
---       Trace_Message_Exception (Fault, "Get_Read_Only_Options " & Tag_Name (
---          Ada_Lib.Options.Get_Read_Only_Options.all'tag));
---       Tag_History (Ada_Lib.Options.Get_Read_Only_Options.all'tag);
+--       Trace_Message_Exception (Fault, "Get_Ada_Lib_Read_Only_Options " & Tag_Name (
+--          Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all'tag));
+--       Tag_History (Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all'tag);
 --       raise;
--- end Get_Read_Only_Options;
+-- end Get_Ada_Lib_Read_Only_Options;
 
    ----------------------------------------------------------------------------
    procedure Set_All is
@@ -570,7 +577,7 @@ package body Ada_Lib.Options.Actual is
       Ada_Lib.Lock.Debug := True;
       Ada_Lib.EMail.Debug := True;
       Ada_Lib.Mail.Debug := True;
-      Ada_Lib.GNOGA.Debug := True;
+--    Ada_Lib.GNOGA.Debug := True;
       Ada_Lib.Options.Runstring.Debug := True;
       Ada_Lib.Options.Debug := True;
       Ada_Lib.OS.Trace := True;
@@ -619,11 +626,11 @@ package body Ada_Lib.Options.Actual is
                   when 'e' =>
                      Ada_Lib.Event.Debug := True;
 
-                  when 'g' =>
-                     Ada_Lib.GNOGA.Debug := True;
+--                when 'g' =>
+--                   Ada_Lib.GNOGA.Debug := True;
 
-                  when 'G' =>
-                     Ada_Lib.GNOGA.Debug := True;
+--                when 'G' =>
+--                   Ada_Lib.GNOGA.Debug := True;
 
                   when 'h' =>
                      Ada_Lib.Help.Debug := True;
@@ -708,6 +715,9 @@ package body Ada_Lib.Options.Actual is
 
                   when 'l' =>
                      Ada_Lib.Template.Trace_Load := True;
+
+                  when 'o' =>
+                     Trace_Options := True;
 
                   when 's' =>
                      Ada_Lib.Strings.Debug := True;
@@ -840,7 +850,7 @@ package body Ada_Lib.Options.Actual is
    end Update_Filter;
 
 begin
---Trace_Options := True;
+Trace_Options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Options.Actual;
 

@@ -273,13 +273,16 @@ package Ada_Lib.Options is
 -- function Ada_Lib_Options
 -- return Interface_Options_Constant_Class_Access;
 
-   function Get_Modifiable_Options (
+   function Get_Ada_Lib_Modifiable_Options (
       From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Class_Access;
+   ) return Interface_Options_Class_Access
+   with pre => Have_Options;
 
-   function Get_Read_Only_Options (
+   function Get_Ada_Lib_Read_Only_Options (
       From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Constant_Class_Access;
+   ) return Interface_Options_Constant_Class_Access
+   with pre => Have_Options;
+
    procedure Set_Ada_Lib_Options (
       Options                    : in     Interface_Options_Class_Access);
 

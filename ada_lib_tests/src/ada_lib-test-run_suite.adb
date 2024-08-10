@@ -40,10 +40,9 @@ procedure Ada_Lib.Test.Run_Suite (
    use type Ada_Lib.Options.Mode_Type;
 
    List_Suites                   : constant Boolean :=
-                                    Options.Unit_Test.Mode =
-                                       Ada_Lib.Options.List_Suites;
+                                    Options.Mode = Ada_Lib.Options.List_Suites;
 begin
-Debug := True;
+--Debug := True;
    Log_In (Debug, "list suites " & List_Suites'img);
 
    declare
@@ -62,7 +61,7 @@ Debug := True;
                                     AUnit.Test_Suites.New_Suite);
 
    begin
-      AUnit_Options.Filter := Options.Unit_Test.Filter'unchecked_access;
+      AUnit_Options.Filter := Options.Filter'unchecked_access;
 
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Curl.Tests.Suite);
@@ -119,7 +118,7 @@ Debug := True;
 
                when Ada_Lib.Database.Local =>
                   Options.Database_Options.Has_Local_DBDaemon or else
-                  Options.Unit_Test.Mode = Ada_Lib.Options.List_Suites,
+                  Options.Mode = Ada_Lib.Options.List_Suites,
 
                when Ada_Lib.Database.Remote =>
                   Options.Database_Options.Has_Remote_Host
@@ -161,7 +160,7 @@ Debug := True;
       end if;
       Test_Suite.Run (AUnit_Options, Results, Outcome);
 
-      case Options.Unit_Test.Mode is
+      case Options.Mode is
 
          when Ada_Lib.Options.Driver_Suites |
               Ada_Lib.Options.List_Suites |
@@ -169,7 +168,7 @@ Debug := True;
             Ada_Lib.Unit_Test.Iterate_Suites (
                Ada_Lib.Options.Unit_Test.Suite_Action'access,
                Ada_Lib.Options.Unit_Test.Routine_Action'access,
-               Options.Unit_Test.Mode);
+               Options.Mode);
 
          when Ada_Lib.Options.Run_Tests =>
             Put_Line ("report Ada_Lib test results");

@@ -1,4 +1,4 @@
-with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options;
 -- with Ada_Lib.Options.GNOGA.Database.AUnit;
 with AUnit.Test_Suites.Optional;
 with Ada_Lib.Unit_Test.Tests;
@@ -127,8 +127,8 @@ private
 
    type Test_Suite_Type is new AUnit.Test_Suites.Optional.Test_Suite_Type with record
       Database                : Database_Class_Access := Null;
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Constant_Class_Access := Null;
+--    Options                 : Ada_Lib.Options.
+--                               Unit_Test_Options_Constant_Class_Access := Null;
    end record;
 
    -- this test setup spawns a dbdaemon application and terminates it in the tear down

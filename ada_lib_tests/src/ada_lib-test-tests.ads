@@ -1,4 +1,4 @@
-with AUnit.Test_Suites.Optional;
+with AUnit.Test_Suites; -- .Optional;
 --with Ada_Lib.Database.Unit_Test;
 with Ada_Lib.Unit_Test.Test_Cases;
 
@@ -10,7 +10,7 @@ package Ada_Lib.Test.Tests is
 
    type Test_Suite_Type is new AUnit.Test_Suites.Test_Suite with null record;
 
-   overriding
+-- overriding
    function Test (
       Suite                      : in     Test_Suite_Type
    ) return Boolean;       -- return true if test can be run

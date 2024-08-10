@@ -1,10 +1,10 @@
 -- with Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with GNATCOLL.Templates;
-with Runtime_Options;
 
 package body Ada_Lib.GNATCOLL.Tests is
 
@@ -38,7 +38,6 @@ package body Ada_Lib.GNATCOLL.Tests is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
---    Local_Test                 : Template_Test_Type renames Template_Test_Type (Test);
       Source                     : constant String :=
                                     "before variable %{abc}after variable %{xyz}";
       Parameters                 : constant Standard.GNATCOLL.Templates.Substitution_Array := (
@@ -56,11 +55,16 @@ package body Ada_Lib.GNATCOLL.Tests is
    begin
       Log_In (Debug);
       declare
+         Options     : Ada_Lib.Options.Unit_Test.
+                        Ada_Lib_Unit_Test_Options_Type'class renames
+                           Ada_Lib.Options.Unit_Test.
+                              Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
          Expansion               : constant String := Standard.GNATCOLL.Templates.Substitute (
                                     Str         => Source,
                                     Substrings  => Parameters);
       begin
-         if Runtime_Options.Get_Options.Verbose then
+         if Options.Verbose then
             Put_Line (Source & " => " & Expansion);
          end if;
          Assert (Expansion = Expected, "template replacement failed");

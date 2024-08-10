@@ -5,7 +5,7 @@ with Ada_Lib.Strings;
 -- with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Gnoga.Gui.Base;
 
-package body Ada_Lib.Interfaces is
+package body Ada_Lib.GNOGA.Interfaces is
 
    use type Ada_Lib.Strings.String_Access;
 
@@ -23,7 +23,7 @@ package body Ada_Lib.Interfaces is
                                     );
    ---------------------------------------------------------------
    procedure Dump_Keyboard_Event (
-      Keyboard_Event                : in     Gnoga.Gui.Base.Keyboard_Event_Record) is
+      Keyboard_Event                : in     Standard.gnoga.Gui.Base.Keyboard_Event_Record) is
    ---------------------------------------------------------------
 
       Code                          : constant Natural := Keyboard_Event.Key_Code;
@@ -91,7 +91,7 @@ package body Ada_Lib.Interfaces is
 
    ---------------------------------------------------------------
    function Keyboard_Event_Image (
-      Keyboard_Event                : in     Gnoga.Gui.Base.Keyboard_Event_Record
+      Keyboard_Event                : in     Standard.gnoga.Gui.Base.Keyboard_Event_Record
    ) return String is
    ---------------------------------------------------------------
 
@@ -104,7 +104,7 @@ package body Ada_Lib.Interfaces is
 
    ---------------------------------------------------------------
    procedure Dump_Mouse_Event (
-      Mouse_Event                : in     Gnoga.Gui.Base.Mouse_Event_Record) is
+      Mouse_Event                : in     Standard.gnoga.Gui.Base.Mouse_Event_Record) is
    ---------------------------------------------------------------
 
    begin
@@ -126,7 +126,7 @@ package body Ada_Lib.Interfaces is
 
    ---------------------------------------------------------------
    function Mouse_Event_Image (
-      Mouse_Event                : in     Gnoga.Gui.Base.Mouse_Event_Record
+      Mouse_Event                : in     Standard.gnoga.Gui.Base.Mouse_Event_Record
    ) return String is
    ---------------------------------------------------------------
 
@@ -136,4 +136,4 @@ package body Ada_Lib.Interfaces is
             " " & Mouse_Event.Message'img;
    end Mouse_Event_Image;
 
-end Ada_Lib.Interfaces;
+end Ada_Lib.GNOGA.Interfaces;

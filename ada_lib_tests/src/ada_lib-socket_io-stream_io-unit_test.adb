@@ -636,7 +636,7 @@ put_Line (here);
          Options                 : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                                     Ada_Lib.Options.AUnit_Lib.
                                        Aunit_Options_Constant_Class_Access (
-                                          Ada_Lib.Options.Get_Read_Only_Options).all;
+                                          Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
          Seconds                 : Ada.Real_Time.Seconds_Count;
          Seed                    : Integer;
          Client_Socket           : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
@@ -658,14 +658,14 @@ put_Line (here);
             " delay time " & Delay_Time'img &
             " socket " & Image (Client_Socket'address) &
             " new seed " & Seed'img & " entered seed " &
-               Options.Unit_Test.Random_Seed'img &
+               Options.Random_Seed'img &
             " Test " & Image (Local_Test.all'address));
-         if Options.Unit_Test.Report_Random then
+         if Options.Report_Random then
             Put_Line ("random seed " & Seed'img);
          end if;
-         if Options.Unit_Test.Set_Random_Seed then
+         if Options.Set_Random_Seed then
             Random_Number_Offset_Generator.Reset (Generator,
-               Options.Unit_Test.Random_Seed);
+               Options.Random_Seed);
          else
             Random_Number_Offset_Generator.Reset (Generator, Seed);
          end if;
@@ -799,7 +799,7 @@ put_Line (here);
 
                         if Ada_Lib.Options.Actual.
                               Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Read_Only_Options).Verbose and then
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
                                     Count mod Notify_Frequency = 0 then
                            Put_Line (Count'img & " records received");
                         end if;
@@ -1015,7 +1015,7 @@ put_Line (here);
                   else
                      if Ada_Lib.Options.Actual.
                            Program_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Read_Only_Options).Verbose and then
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
                            Count mod Notify_Frequency = 0 then
                         Put_Line ("records" & Count'img);
                      end if;

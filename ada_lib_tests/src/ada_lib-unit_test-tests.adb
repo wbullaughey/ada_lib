@@ -16,7 +16,7 @@ package body Ada_Lib.Unit_Test.Tests is
    begin
       Log_In (Debug);
       Test.Options := Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
-            Ada_Lib.Options.Get_Modifiable_Options);
+            Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options);
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug);
    end Set_Up;
@@ -59,7 +59,7 @@ package body Ada_Lib.Unit_Test.Tests is
 
    begin
       Log_In (Debug);
-      return Log_Out (Ada_Lib.Options.Get_Read_Only_Options /= Null,
+      return Log_Out (Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options /= Null,
          Debug, "Test.Options is null");
    end Verify_Postsetup;
 

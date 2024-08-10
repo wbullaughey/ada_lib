@@ -31,7 +31,7 @@ package body Ada_Lib.Options.Unit_Test is
                                              Driver_List_Option & "lmP",
                                              Ada_Lib.Help.Modifier);
 
-   Recursed                      : Boolean := False;
+   Initialized_Recursed          : Boolean := False;
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
@@ -61,8 +61,12 @@ package body Ada_Lib.Options.Unit_Test is
    ) return Boolean is
    ----------------------------------------------------------------------------
 
+      Message        : constant String := " from " & From &
+         " options with parameters " & Image (Options_With_Parameters) &
+         " with out " & Image (Options_Without_Parameters);
+
    begin
-     Log_In_Checked (Recursed, Debug or Trace_Options);
+     Log_In_Checked (Initialized_Recursed, Debug or Trace_Options, Message);
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
@@ -72,10 +76,10 @@ package body Ada_Lib.Options.Unit_Test is
          Options_Without_Parameters);
 --    Unit_Test_Options := Options'unchecked_access;
 
-      return Log_Out_Checked (Recursed,
+      return Log_Out_Checked (Initialized_Recursed,
          Options.GNOGA_Options.Initialize and then
          Actual.Program_Options_Type (Options).Initialize,
-         Debug or Trace_Options);
+         Debug or Trace_Options, Message);
    end Initialize;
 
 -- ----------------------------------------------------------------------------
@@ -86,16 +90,16 @@ package body Ada_Lib.Options.Unit_Test is
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    if Ada_Lib.Options.Get_Read_Only_Options = Null then
---       raise Failed with "Get_Read_Only_Options not set called from " & From;
+--    if Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options = Null then
+--       raise Failed with "Get_Ada_Lib_Read_Only_Options not set called from " & From;
 --    end if;
 --
 --    Log_Here (Debug, "from " & From &
---       " Get_Read_Only_Options tag " & Tag_Name (
---          Ada_Lib.Options.Get_Read_Only_Options.all'tag));
+--       " Get_Ada_Lib_Read_Only_Options tag " & Tag_Name (
+--          Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all'tag));
 --
 --    return Unit_Test_Options_Constant_Class_Access (
---       Ada_Lib.Options.Get_Read_Only_Options);
+--       Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options);
 -- end Options;
 
    ----------------------------------------------------------------------------
@@ -123,8 +127,7 @@ package body Ada_Lib.Options.Unit_Test is
 --    use Standard.Ada_Lib.Options;
 
    begin
-      Log_In_Checked (Recursed, Trace_Options or Debug, Option.Image &
-         " mode " & Options.Mode'img);
+      Log_In (Trace_Options or Debug, Option.Image & " mode " & Options.Mode'img);
 
       if Has_Option (Option, Options_With_Parameters,
             Options_Without_Parameters) then
@@ -253,11 +256,13 @@ package body Ada_Lib.Options.Unit_Test is
 
          end case;
 
-         return Log_Out_Checked (Recursed, True, Trace_Options or Debug,
+         return Log_Out (True, Trace_Options or Debug,
             " option" & Option.Image & " handled mode " & Options.Mode'img);
       else
-         return Log_Out_Checked (Recursed,
-            Options.GNOGA_Options.Process_Option (Iterator, Option),
+         return Log_Out (Options.GNOGA_Options.Process_Option (
+               Iterator, Option) or else
+            Ada_Lib.Options.Actual.Program_Options_Type (
+               Options).Process_Option (Iterator, Option),
             Trace_Options or Debug,
             "other option" & " Option" & Option.Image);
       end if;
@@ -275,6 +280,9 @@ package body Ada_Lib.Options.Unit_Test is
    begin
       Log_In (Debug or Trace_Options, "mode " & Help_Mode'img);
       Options.GNOGA_Options.Program_Help (Help_Mode);
+      Ada_Lib.Options.Actual.Program_Options_Type (
+         Options).Program_Help (Help_Mode);
+
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>

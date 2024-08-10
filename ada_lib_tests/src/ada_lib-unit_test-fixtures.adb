@@ -91,6 +91,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
    end Set_Async_Failure_Message;
 
    ----------------------------------------------------------------------------
+   overriding
    procedure Set_Up (
       Test                       : in out Base_Test_Fixtures_Type) is
    ----------------------------------------------------------------------------
@@ -133,7 +134,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
       New_Line;
       Flush;
 --    Pause ("Set_Up_Exception exit",  Here);
-      Ada_Lib.OS.Immediate_Halt (-1);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
    end Set_Up_Exception;
 
    ----------------------------------------------------------------------------
@@ -159,6 +160,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
    end Set_Up_Failure;
 
    ----------------------------------------------------------------------------
+   overriding
    procedure Tear_Down (
       Test                       : in out Base_Test_Fixtures_Type) is
    ----------------------------------------------------------------------------
@@ -192,7 +194,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
          Put (" " & Message);
       end if;
       New_Line;
-      Ada_Lib.OS.Immediate_Halt (-1);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
    end Tear_Down_Exception;
 
    ----------------------------------------------------------------------------
@@ -212,7 +214,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
             Put (" " & Message);
          end if;
          New_Line;
-         Ada_Lib.OS.Immediate_Halt (-1);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
       end if;
    end Tear_Down_Failure;
 

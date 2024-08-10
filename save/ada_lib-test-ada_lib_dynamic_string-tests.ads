@@ -19,8 +19,10 @@ package Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
    procedure Basic_Operations (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
+   overriding
    function Name (Test : Test_Type) return AUnit.Message_String;
 
+   overriding
    procedure Register_Tests (Test : in out Test_Type);
 
    overriding

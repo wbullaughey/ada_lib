@@ -1,4 +1,5 @@
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
+with Ada_Lib.Strings.Unlimited;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
@@ -34,9 +35,9 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
       Appendix                   : constant String := "xyz";
       Source                     : constant String := "abc";
       Padded                     : constant String := "  " & Source & " ";
-      Coerce_Target              : constant String_Type := Coerce (Source);
-      Append_Target              : String_Type := Coerce (Source);
-      Padded_Target              : constant String_Type := Coerce (Padded);
+      Coerce_Target              : constant String_Type := Ada_Lib.Strings.Unlimited.Construct (Source);
+      Append_Target              : String_Type := Ada_Lib.Strings.Unlimited.Construct (Source);
+      Padded_Target              : constant String_Type := Ada_Lib.Strings.Unlimited.Construct (Padded);
 
    begin
       Put_Line ("Basic Operations");
@@ -49,10 +50,11 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
       Assert (Source & Appendix & Source = Append_Target.Coerce, "string class append works");
       Append_Target.Append ('x');
       Assert (Source & Appendix & Source & 'x' = Append_Target.Coerce, "character append works");
-      Assert (Padded_Target.Trim (Ada.Strings.Both) = Source, "timming works");
+      Assert (Padded_Target.Trim (Ada.Strings.Both).Coerce = Source, "timming works");
    end Basic_Operations;
 
    ---------------------------------------------------------------
+   overriding
    function Name (Test : Test_Type) return AUnit.Message_String is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
@@ -62,6 +64,7 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
    end Name;
 
    ---------------------------------------------------------------
+   overriding
    procedure Register_Tests (Test : in out Test_Type) is
    ---------------------------------------------------------------
 
@@ -79,6 +82,7 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
    end Register_Tests;
 
    ---------------------------------------------------------------
+   overriding
    procedure Set_Up (Test : in out Test_Type) is
    ---------------------------------------------------------------
 
@@ -151,6 +155,7 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
    end Suite;
 
    ---------------------------------------------------------------
+   overriding
    procedure Tear_Down (Test : in out Test_Type) is
    ---------------------------------------------------------------
 
@@ -187,10 +192,10 @@ package body Ada_Lib.Test.Ada_Lib_Dynamic_String.Tests is
                                           Words (Count));
 
             begin
-               Log (Debug or Expected /= Found, Here, Who & " expected '" & Expected & "' got '" & Found & "'");
+               Log (Debug or else Expected /= Found, Here, Who & " expected '" & Expected & "' got '" & Found & "'");
                Assert (Expected = Found, "words match");
 
-               Log (Debug or Test_Seperators (Count) /= Seperator,
+               Log (Debug or else Test_Seperators (Count) /= Seperator,
                     Here, Who & " expected '" & Test_Seperators (Count) &
                      "' got '" & Seperator & "'");
                Assert (Test_Seperators (Count) = Seperator, "seperators match");

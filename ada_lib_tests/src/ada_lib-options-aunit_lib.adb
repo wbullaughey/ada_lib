@@ -8,6 +8,7 @@ with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Help;
+--with Ada_Lib.Options; -- .Actual;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Template;
@@ -38,30 +39,29 @@ package body Ada_Lib.Options.AUnit_Lib is
                                     -- multiple Ada_Lib unit tests can be run
                                     -- by the same instance of the tester
 
-   ----------------------------------------------------------------
-   function Get_Modifiable_AUnit_Options (
-      From                       : in  String := Ada_Lib.Trace.Here
-   ) return Aunit_Options_Class_Access is
-   ----------------------------------------------------------------
-
-      Modifiable_Options         : constant Interface_Options_Type :=
-                                    Ada_Lib.Options.Get_Modifiable_Options.all;
-      Aunit_Options              : AUnit_Options_Type renames
-                                       Ada_Lib_Unit_Test_Options_Type (
-                                    Modifiable_Options);
-   begin
-      Log_Here (Debug or Trace_Options,
-         " verbose " & Unit_Test_Options.Verbose'img & " from " & From);
-      return Unit_Test_Options'access;
-   end Get_Modifiable_AUnit_Options;
+-- ----------------------------------------------------------------
+-- function Get_Modifiable_AUnit_Options (
+--    From                       : in  String := Ada_Lib.Trace.Here
+-- ) return Aunit_Options_Class_Access is
+-- ----------------------------------------------------------------
+--
+-- begin
+--    Log_Here (Debug or Trace_Options,
+--       " verbose " & Unit_Test_Options.Verbose'img & " from " & From);
+--    return Unit_Test_Options'access;
+-- end Get_Modifiable_AUnit_Options;
 
    -------------------------------------------------------------------------
    function Has_Database return Boolean is
    -------------------------------------------------------------------------
 
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                           renames Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Log_Here (Debug or Trace_Options);
-      return Protected_Options.Database_Options.Has_Database;
+      return Options.Database_Options.Has_Database;
    end Has_Database;
 
    ----------------------------------------------------------------------------
@@ -83,8 +83,9 @@ package body Ada_Lib.Options.AUnit_Lib is
          Options.Database_Options.Initialize and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
          Options.Template.Initialize and then
-         Options.Unit_Test.Initialize and then
-         Actual.Program_Options_Type (Options).Initialize and then
+--       Options.Initialize and then
+         Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+            Options).Initialize and then
          Options.Process (
             Include_Options      => True,
             Include_Non_Options  => False,
@@ -156,8 +157,9 @@ package body Ada_Lib.Options.AUnit_Lib is
             Options.Database_Options.Process_Option (Iterator, Option) or else
             Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
             Options.Template.Process_Option (Iterator, Option) or else
-            Options.Unit_Test.Process_Option (Iterator, Option) or else
-            Actual.Program_Options_Type (Options).Process_Option (Iterator, Option),
+--          Options.Unit_Test.Process_Option (Iterator, Option) or else
+            Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+               Options).Process_Option (Iterator, Option),
             Trace_Options or Debug, Option.Image & " processed");
       end if;
    end Process_Option;
@@ -207,8 +209,9 @@ package body Ada_Lib.Options.AUnit_Lib is
       Options.Database_Options.Program_Help (Help_Mode);
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
       Options.Template.Program_Help (Help_Mode);
-      Options.Unit_Test.Program_Help (Help_Mode);
-      Actual.Program_Options_Type (Options).Program_Help (Help_Mode);
+--    Options.Unit_Test.Program_Help (Help_Mode);
+      Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+         Options).Program_Help (Help_Mode);
       Log_Out (Debug or Trace_Options);
    end Program_Help;
 
@@ -227,16 +230,16 @@ package body Ada_Lib.Options.AUnit_Lib is
       Log_Out (Debug);
    end Register_Tests;
 
-   ----------------------------------------------------------------------------
-   procedure Set_Options is
-   ----------------------------------------------------------------------------
-
-   begin
-      Log_Here (Debug, Tag_Name (Aunit_Options_Type'class (Protected_Options)'tag));
-
-      Ada_Lib.Options.Set_Ada_Lib_Options (
-         Protected_Options'access);
-   end Set_Options;
+-- ----------------------------------------------------------------------------
+-- procedure Set_Options is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    Log_Here (Debug, Tag_Name (Aunit_Options_Type'class (Protected_Options)'tag));
+--
+--    Ada_Lib.Options.Set_Ada_Lib_Options (
+--       Protected_Options'access);
+-- end Set_Options;
 
    ----------------------------------------------------------------------------
    overriding
@@ -360,7 +363,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    end Trace_Parse;
 
 begin
-   AUnit_Lib_Options := Protected_Options'access;
+-- AUnit_Lib_Options := Protected_Options'access;
 -- Elaborate := True;
    Debug := Debug_Options.Debug_All;
 --Trace_Options := True;

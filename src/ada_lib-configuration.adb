@@ -295,6 +295,7 @@ package body Ada_Lib.Configuration is
    procedure Store (
       Configuration              :    out Configuration_Type;
       Path                       : in     String) is
+   pragma Unreferenced (Configuration);
    ---------------------------------------------------------------
 
       File                       : Ada.Text_IO.File_Type;

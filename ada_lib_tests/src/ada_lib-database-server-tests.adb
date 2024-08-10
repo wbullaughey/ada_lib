@@ -611,10 +611,10 @@ package body Ada_Lib.Database.Server.Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                           renames Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=
@@ -884,9 +884,10 @@ package body Ada_Lib.Database.Server.Tests is
       Test                          : in out Server_Test_Type) is
    ---------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.AUnit_Lib.
-                                 Aunit_Options_Type'class renames
-                                    Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.all;
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                           renames Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
                                     Table_Class_Access := new Ada_Lib.Database.
                                        Subscription.Tests.Subscription_Table_Type;

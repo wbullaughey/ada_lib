@@ -36,15 +36,6 @@ package body Ada_Lib.Options is
    Modifiable_Options            : Interface_Options_Class_Access := Null;
    Parameter_Parsing_Failed      : Boolean := False;
 
--- ----------------------------------------------------------------------------
--- function Ada_Lib_Options
--- return Interface_Options_Constant_Class_Access is
--- ----------------------------------------------------------------------------
---
--- begin
---    return Get_Read_Only_Options;
--- end Ada_Lib_Options;
-
    ----------------------------------------------------------------------------
    function Create_Option (
       Option                     : in     Character;
@@ -149,7 +140,7 @@ package body Ada_Lib.Options is
    end Create_Options;
 
    ----------------------------------------------------------------
-   function Get_Modifiable_Options (
+   function Get_Ada_Lib_Modifiable_Options (
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Interface_Options_Class_Access is
    ----------------------------------------------------------------
@@ -166,18 +157,19 @@ package body Ada_Lib.Options is
          Trace_Exception (Fault);
          raise;
 
-   end Get_Modifiable_Options;
+   end Get_Ada_Lib_Modifiable_Options;
 
    ----------------------------------------------------------------------------
-   function Get_Read_Only_Options (
+   function Get_Ada_Lib_Read_Only_Options (
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Interface_Options_Constant_Class_Access is
    ----------------------------------------------------------------------------
 
    begin
+      Log_Here (Debug or Trace_Options, "from " & From);
       return Interface_Options_Constant_Class_Access (
-         Get_Modifiable_Options (From));
-   end Get_Read_Only_Options;
+         Modifiable_Options);
+   end Get_Ada_Lib_Read_Only_Options;
 
    ----------------------------------------------------------------------------
    function Has_Option (
@@ -210,8 +202,7 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
 
    begin
-      return Get_Read_Only_Options /= Null and then
-             Modifiable_Options /= Null;
+      return Modifiable_Options /= Null;
    end Have_Options;
 
    ----------------------------------------------------------------------------
@@ -285,6 +276,20 @@ package body Ada_Lib.Options is
    end Less;
 
    ----------------------------------------------------------------------------
+   function Modifiable_Options_Address
+   return String is
+   ----------------------------------------------------------------------------
+
+   begin
+      return "Modifiable_Options address is " &
+         (if Modifiable_Options = Null then
+            "null "
+         else
+            Image (Modifiable_Options.all'address));
+
+   end Modifiable_Options_Address;
+
+   ----------------------------------------------------------------------------
    function Modified (
       Option                     : in     Option_Type
    ) return Boolean is
@@ -332,8 +337,8 @@ package body Ada_Lib.Options is
          Tag_History (Options.all'tag);
       end if;
       Modifiable_Options := Options;
-      Log_Out (Debug or Trace_Options,
-         "Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
+      Log_Out (Debug or Trace_Options, Modifiable_Options_Address);
+
    end Set_Ada_Lib_Options;
 
    ----------------------------------------------------------------
@@ -349,14 +354,16 @@ package body Ada_Lib.Options is
       ---------------------------------------------------------------
 
       begin
-         Log_In (Debug or Trace_Options, "options address " &
+         Log_In_Checked (Options.Initialized, Debug or Trace_Options,
+            "options address " &
             Image (Options'address) &" options tag " &
             Tag_Name (Options_Type'class (Options)'tag));
          if Debug or Trace_Options then
             Tag_History (Options_Type'class (Options)'tag);
          end if;
          Options.Initialized := True;
-         return Log_Out (True, Debug or Trace_Options);
+         return Log_Out_Checked (Options.Initialized, True,
+            Debug or Trace_Options);
       end Initialize;
 
       ---------------------------------------------------------------
@@ -384,11 +391,13 @@ package body Ada_Lib.Options is
       ---------------------------------------------------------------
 
       begin
-         Log_In (Debug or Trace_Options, "options tag " & Tag_Name (Options_Type'class (
-            Options)'tag) &
-            " Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
-         if Get_Read_Only_Options = Null then
-            Put_Line ("Ada_Lib_Options not initialized at " & Here & " called from " & From);
+         Log_In (Debug or Trace_Options, "options tag " &
+            Tag_Name (Options_Type'class (Options)'tag) &
+            Modifiable_Options_Address);
+
+         if Modifiable_Options = Null then
+            Put_Line ("Modifiable_Options not initialized at " & Here &
+            " called from " & From);
          else
             if not Options.Initialized then
                Put_Line ("Options.Initialized not initialized at " & Here &
@@ -415,13 +424,13 @@ package body Ada_Lib.Options is
       begin
          Log_In (Debug or Trace_Options, "options tag " &
             Tag_Name (Options_Type'class (Options)'tag) &
-            " Get_Read_Only_Options " & Image (Get_Read_Only_Options.all'address));
+            " Get_Ada_Lib_Read_Only_Options " & Image (Get_Ada_Lib_Read_Only_Options.all'address));
          if Debug or Trace_Options then
             Tag_History (Options_Type'class (Options)'tag);
          end if;
 
-         if Get_Read_Only_Options = Null then
-            Put_Line ("Get_Read_Only_Options null " & Here);
+         if Get_Ada_Lib_Read_Only_Options = Null then
+            Put_Line ("Get_Ada_Lib_Read_Only_Options null " & Here);
          else
             if Options.Initialized then
                Put_Line ("Options.Initialized should be false");

@@ -1,7 +1,6 @@
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.GNOGA;
 with Ada_Lib.Strings.Unlimited;
-with Ada_Lib.Options.AUnit_Lib;
 with AUnit.Test_Filters.Ada_Lib;
 
 --with Ada_Lib.Database.Connection;
@@ -16,27 +15,27 @@ package Ada_Lib.Options.Unit_Test is
 
    type Suite_Set_Type           is array (Suites_Type) of Boolean;
 
-   -- base type for all unit test programs
-   type Ada_Lib_Unit_Test_Options_Type ( -- Type to be used by all unit tests which
-                                 -- include ada_lib
-      Multi_Test                 : Boolean -- perform multiple tests in one
-                                            -- execution of test program
-                                    ) is new Ada_Lib.Options.Actual.
-                                       Program_Options_Type with record
-      AUnit_Options              : Ada_Lib.Options.AUnit_Lib.AUnit_Options_Type;
-      Debug                      : Boolean := False;  -- debug unit test application
-      Debug_Options              : Boolean := False;  -- debug unit test application options
-      Exit_On_Done               : Boolean := False;  -- exit test application after all unit tests complete
-      Filter                     : aliased AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
-      GNOGA_Options              : Ada_Lib.Options.GNOGA.GNOGA_Options_Type;
-      Mode                       : Mode_Type := Run_Tests;  -- run unit tests
-      Manual                     : Boolean := False;  -- GUI interactions must be performed manually
-      Random_Seed                : Integer;
-      Report_Random              : Boolean := False;
-      Routine                    : Ada_Lib.Strings.Unlimited.String_Type;
-      Set_Random_Seed            : Boolean := False;
-      Suite_Name                 : Ada_Lib.Strings.Unlimited.String_Type;
-      Suite_Set                  : Suite_Set_Type := (others => False);
+   -- base type for all unit test programs which -- include ada_lib
+   type Ada_Lib_Unit_Test_Options_Type (
+      Multi_Test        : Boolean -- perform multiple tests in one
+                                   -- execution of test program
+                           ) is new Ada_Lib.Options.Actual.
+                              Program_Options_Type with record
+      Debug             : Boolean := False;  -- debug unit test application
+      Debug_Options     : Boolean := False;  -- debug unit test options
+      Exit_On_Done      : Boolean := False;  -- exit test application after
+                                             -- all unit tests complete
+      Filter            : aliased AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
+      GNOGA_Options     : Ada_Lib.Options.GNOGA.GNOGA_Options_Type;
+      Mode              : Mode_Type := Run_Tests;  -- run unit tests
+      Manual            : Boolean := False;  -- GUI interactions must be
+                                             -- performed manually
+      Random_Seed       : Integer;
+      Report_Random     : Boolean := False;
+      Routine           : Ada_Lib.Strings.Unlimited.String_Type;
+      Set_Random_Seed   : Boolean := False;
+      Suite_Name        : Ada_Lib.Strings.Unlimited.String_Type;
+      Suite_Set         : Suite_Set_Type := (others => False);
    end record;
 
    type Ada_Lib_Unit_Test_Options_Class_Access
@@ -82,7 +81,7 @@ package Ada_Lib.Options.Unit_Test is
       First                      : in out Boolean;
       Mode                       : in     Mode_Type);
 
--- Unit_Test_Options_Constant    : Unit_Test_Options_Constant_Class_Access := Null;
+-- Ada_Lib_Unit_Test_Options_Constant_Class_Access    : Unit_Test_Options_Constant_Class_Access := Null;
 private
 
    overriding

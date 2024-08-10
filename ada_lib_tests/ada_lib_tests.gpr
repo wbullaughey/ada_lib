@@ -1,9 +1,10 @@
 --with "ada_lib_testing.gpr";
 with "aunit.gpr";
 with "ada_lib.gpr";
+with "ada_lib_gnoga.gpr";
 with "default_config.gpr";
 --with "config/ada_lib_tests_config.gpr";
---with "gnatcoll.gpr";
+with "gnatcoll.gpr";
 
 project Ada_Lib_Tests is
 

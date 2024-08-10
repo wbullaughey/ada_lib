@@ -2,7 +2,7 @@ with Gnoga.Gui.Base;
 -- with Gnoga.Gui.Element.Common;
 -- with Gnoga.Types;
 
-package Ada_Lib.Interfaces is
+package Ada_Lib.GNOGA.Interfaces is
 
    Fault                         : exception;
 
@@ -12,10 +12,10 @@ package Ada_Lib.Interfaces is
    Up_Arrow                      : constant := 38;
 
    procedure Dump_Keyboard_Event (
-      Keyboard_Event                : in     Gnoga.Gui.Base.Keyboard_Event_Record);
+      Keyboard_Event                : in     Standard.gnoga.Gui.Base.Keyboard_Event_Record);
 
    procedure Dump_Mouse_Event (
-      Mouse_Event                : in     Gnoga.Gui.Base.Mouse_Event_Record);
+      Mouse_Event                : in     Standard.gnoga.Gui.Base.Mouse_Event_Record);
 
    function Image (
       Code                       : in     Natural
@@ -26,11 +26,11 @@ package Ada_Lib.Interfaces is
    ) return String;
 
    function Keyboard_Event_Image (
-      Keyboard_Event                : in     Gnoga.Gui.Base.Keyboard_Event_Record
+      Keyboard_Event                : in     Standard.gnoga.Gui.Base.Keyboard_Event_Record
    ) return String;
 
    function Mouse_Event_Image (
-      Mouse_Event                : in     Gnoga.Gui.Base.Mouse_Event_Record
+      Mouse_Event                : in     Standard.gnoga.Gui.Base.Mouse_Event_Record
    ) return String;
 
-end Ada_Lib.Interfaces;
+end Ada_Lib.GNOGA.Interfaces;

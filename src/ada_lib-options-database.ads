@@ -15,7 +15,7 @@ package Ada_Lib.Options.Database is
                                     Ada_Lib.Database.Default_Port;
       Remote_User                : Ada_Lib.Strings.Unlimited.String_Type;
       Remote_DBDaemon_Path       : Ada_Lib.Strings.Unlimited.String_Type;   -- dbdaemon executable program path on remote host or null
-      Has_Local_DBDaemon         : Boolean;
+      Has_Local_DBDaemon         : Boolean := False;
       Local_DBDaemon_Path        : Ada_Lib.Strings.Unlimited.String_Type;   -- dbdaemon executable program path on local machine or null
    end record;
 

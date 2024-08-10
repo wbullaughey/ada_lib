@@ -14,7 +14,14 @@ package Ada_Lib.Unit_Test.Fixtures is
    type Base_Test_Fixtures_Access
                                  is access Base_Test_Fixtures_Type'class;
 
--- subtype Which_Host_Type          is (Local, Foreign, Unset);
+   function Verify_Set_Up (
+      Test                       : in     Base_Test_Fixtures_Type
+   ) return Boolean is abstract;
+
+   function Verify_Torn_Down (
+      Test                       : in     Base_Test_Fixtures_Type
+   ) return Boolean is abstract;
+
 
    procedure Exception_Assert (
       Fault                      : Ada.Exceptions.Exception_Occurrence;
@@ -46,8 +53,8 @@ package Ada_Lib.Unit_Test.Fixtures is
    overriding
    procedure Set_Up (
       Test                       : in out Base_Test_Fixtures_Type
-   ) with Pre => not Test.Verify_Set_Up,
-          Post => Test.Verify_Set_Up;
+   ) with Pre => not Base_Test_Fixtures_Type'class (Test).Verify_Set_Up,
+          Post => Base_Test_Fixtures_Type'class (Test).Verify_Set_Up;
 
    procedure Set_Up_Exception (
       Test                       : in out Base_Test_Fixtures_Type;

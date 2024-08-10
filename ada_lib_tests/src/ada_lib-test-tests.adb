@@ -3,7 +3,7 @@ package body Ada_Lib.Test.Tests is
 
 
    ---------------------------------------------------------------
-   overriding
+-- overriding
    function Test (
       Suite                      : in     Test_Suite_Type
    ) return Boolean is       -- return true if test can be run

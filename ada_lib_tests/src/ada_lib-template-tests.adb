@@ -26,19 +26,27 @@ package body Ada_Lib.Template.Tests is
       Path                       : in     String) is
    ---------------------------------------------------------------
 
-      Full_Source_Path           : constant String := Global_Path & Path;
-      Full_Parameter_Path        : constant String := Global_Path & Path & ".parameters";
-      Template                   : Ada_Lib.Template.Compile.Template_Type;
-      Raw                        : constant String := Ada_Lib.Template.Compile.Load (Full_Source_Path);
-      Parameters                 : constant Ada_Lib.Template.Parameters.Parameter_Array :=
-                                    Ada_Lib.Template.Parameters.Load (Full_Parameter_Path);
-      Processed                  : constant String := Template.Compile (Raw, Parameters);
+      Full_Source_Path     : constant String := Global_Path & Path;
+      Full_Parameter_Path  : constant String := Global_Path & Path &
+                              ".parameters";
+      Options              : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                              renames Ada_Lib.Options.AUnit_Lib.
+                                 Aunit_Options_Constant_Class_Access (
+                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+      Template             : Ada_Lib.Template.Compile.Template_Type;
+      Raw                  : constant String := Ada_Lib.Template.Compile.Load (
+                              Full_Source_Path);
+      Parameters           : constant Ada_Lib.Template.Parameters.
+                              Parameter_Array := Ada_Lib.Template.Parameters.
+                                 Load (Full_Parameter_Path);
+      Processed            : constant String := Template.Compile (Raw,
+                              Parameters);
 
    begin
       Log_In (Trace_Test, Quote ("source", Full_Source_Path) &
          Quote ("parameters", Full_Parameter_Path) &
          Quote ("parameters", Raw));
-      if Ada_Lib.Options.AUnit_Lib.AUnit_Lib_Options.Verbose then
+      if Options.Verbose then
          Put_Line ("---------------------------------------");
          Put_Line (Processed);
          Put_Line ("---------------------------------------");

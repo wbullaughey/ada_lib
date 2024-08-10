@@ -8,4 +8,4 @@ echo shell $SHELL
 echo path $PATH
 which alr
 which gprbuild
-alr build
+alr -v build -- -j10 -s -k -gnatE

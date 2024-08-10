@@ -81,5 +81,6 @@ package body Ada_Lib.Test is
 
 begin
 --Debug := True;
-   Log_Here (Elaborate);
+--Trace_Options := True;
+   Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Test;

@@ -1,8 +1,9 @@
 test_ada_lib
+option: 'h' not defined
 
 test_ada_lib command line options:
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
-    -A <trace options>             : AUnit traces                      (AUnit library)
+    -A <trace options>             : AUnit library traces              (AUnit library)
     -e <routine>                   : test routine.                     (test_ada_lib)
     -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
     -G <trace options>             : GNOGA traces                      (GNOGA library)
@@ -79,6 +80,36 @@ Ada_Lib.Options.GNOGA library trace options (-G)
       m               GNOGA.Ada_Lib
       o               GNOGA options
 
+CAC ada_lib trace library options (-a)
+      a               all
+      b               database subscribe
+      c               Ada_Lib.Command_Line Trace
+      C               Ada_Lib.Configuration Trace
+      e               Event
+      g               GNOGA.Debug
+      h               Help
+      i               interrupt
+      I               Ada_Lib.interface
+      l               lock
+      m               timer
+      M               mail
+      o               os
+      O               Ada_Lib.Options
+      p               parser
+      P               database post
+      r               run remote, database connect
+      R               Ada_Lib.Options.Runstring.Debug
+      s               socket
+      S               socket Stream
+      t               Ada_Lib.Trace
+      T               Ada_Lib.Trace_Tasks
+      -               Ada_Lib.Text
+      @c              Template Compile
+      @d              Template Detail
+      @D              Ada_Lib.Directory trace
+      @e              Template Evaluate
+      @E              Template Expand
+      @l              Template Load
 Ada_Lib unit test library trace options (-U)
       a               all
       A               all unit tests
@@ -94,34 +125,3 @@ Enable suites disabled by default (-S)
       d               database server
       t               text
 
-CAC ada_lib trace library options (-a)
-      a               all
-      b               database subscribe
-      c               Ada_Lib.Command_Line Trace
-      C               Ada_Lib.Configuration Trace
-      e               Event
-      g               GNOGA.Debug
-      G               Ada_Lib.GNOGA.Debug
-      h               Help
-      i               interrupt
-      I               Ada_Lib.interface
-      l               lock
-      m               timer
-      M               mail
-      o               os
-      O               Ada_Lib.Options
-      p               parser
-      P               database post
-      r               run remote, database connect
-      R               Ada_Lib.Runstring_Options.Debug
-      s               socket
-      S               socket Stream
-      t               Ada_Lib.Trace
-      T               Ada_Lib.Trace_Tasks
-      -               Ada_Lib.Text
-      @c              Template Compile
-      @d              Template Detail
-      @D              Ada_Lib.Directory trace
-      @e              Template Evaluate
-      @E              Template Expand
-      @l              Template Load

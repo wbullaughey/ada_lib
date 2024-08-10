@@ -30,10 +30,10 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+                           renames Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=
@@ -64,7 +64,7 @@ package body Ada_Lib.Text.Textbelt.Tests is
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Read_Only_Options).all;
+                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Send ("9999999999", "hello", Options.Verbose);
       Assert (False, "send did not fail but should have");
@@ -88,7 +88,7 @@ package body Ada_Lib.Text.Textbelt.Tests is
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Read_Only_Options).all;
+                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Send (Phone_Number, "hello", Options.Verbose);
 

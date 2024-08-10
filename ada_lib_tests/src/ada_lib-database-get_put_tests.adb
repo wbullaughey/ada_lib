@@ -3,6 +3,7 @@ with Ada.Text_IO;use Ada.Text_IO;
 -- with Ada_Lib.Options.GNOGA.Database.AUnit;
 with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Database.Common;
+--with Ada_Lib.Database.Unit_Test;
 with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options;
 with Ada_Lib.Options.Unit_Test;
@@ -26,6 +27,8 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Append                     : in     Ada_Lib.Strings.Unlimited.String_Type
    ) return String renames Ada_Lib.Strings.Unlimited.Construct;
 
+   Debug                         : Boolean renames
+                                    Ada_Lib.Database.Unit_Test.Debug;
    Value                         : constant String := "xyz";
    Value_Name                          : constant String := "abc";
    Name_Value                    : constant String := Value_Name & "=" & Value;
@@ -455,10 +458,10 @@ package body Ada_Lib.Database.Get_Put_Tests is
    use Ada_Lib.Options.Unit_Test;
 
       Options     : Ada_Lib.Options.Unit_Test.
-                     Ada_Lib_Unit_Test_Options_Type renames
+                     Ada_Lib_Unit_Test_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Read_Only_Options).all;
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=

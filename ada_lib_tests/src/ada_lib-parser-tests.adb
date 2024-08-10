@@ -9,8 +9,6 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Parser.Tests is
 
--- function Near is new Ada_Lib.Test.Near (Float);
-
    ---------------------------------------------------------------
    function Debug
    return Boolean is
@@ -19,9 +17,9 @@ package body Ada_Lib.Parser.Tests is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Read_Only_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
-      return Options.Unit_Test.Debug;
+      return Options.Debug;
    end Debug;
 
    ---------------------------------------------------------------

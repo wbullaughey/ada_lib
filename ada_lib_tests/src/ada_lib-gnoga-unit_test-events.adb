@@ -1,7 +1,7 @@
 with Ada.Characters.Handling;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Interfaces;
+with Ada_Lib.GNOGA.Interfaces;
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
@@ -82,7 +82,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --       begin
 --          Data.Mouse_Move_Count := Data.Mouse_Move_Count + 1;
 --          Put_Line ("mouse moved");
---          Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+--          Ada_Lib.GNOGA.Interfaces.Dump_Mouse_Event (Mouse_Event);
 --       end;
 --       Log_Out (Debug);
 --    end Move_Handler;
@@ -133,14 +133,15 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    ---------------------------------------------------------------
    procedure Click_Event_Handler (
-      Object                     : in out Standard.Gnoga.Gui.Base.Base_Type'Class;
-      Mouse_Event                : in     Standard.Gnoga.Gui.Base.Mouse_Event_Record) is
+      Object         : in out Standard.Gnoga.Gui.Base.Base_Type'Class;
+      Mouse_Event    : in     Standard.Gnoga.Gui.Base.Mouse_Event_Record) is
    ---------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options        : Ada_Lib.Options.Unit_Test.
+                        Ada_Lib_Unit_Test_Options_Type'class renames
+                           Ada_Lib.Options.Unit_Test.
+                              Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Log_In (Debug, "object type " & Tag_Name (Object'tag) &
          " connection data " & (if Object.Connection_Data = Null then
@@ -164,7 +165,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
          Log_Out (Debug, "got click " & Data.Got_Click'img);
       end;
       Put_Line ("mouse event occured");
-      Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+      Ada_Lib.GNOGA.Interfaces.Dump_Mouse_Event (Mouse_Event);
    end Click_Event_Handler;
 
    ---------------------------------------------------------------
@@ -195,8 +196,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
       end case;
 
       if Debug or else Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
-            Ada_Lib.Options.Get_Read_Only_Options).Verbose then
-         Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
+            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose then
+         Ada_Lib.GNOGA.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
       Log_Out (Debug);
    end Keyboard_Event_Handler;
@@ -207,10 +208,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ) with Pre => Ada_Lib.GNOGA.Has_Connection_Data is
    ---------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type'class renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Data                       : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (Local_Test.Connection_Data);
@@ -291,10 +293,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type'class renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Data                      : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (Local_Test.Connection_Data);
@@ -365,10 +368,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      Options                 : Ada_Lib.Options.Unit_Test.
-                                 Unit_Test_Options_Type'class renames
-                                    Ada_Lib.Options.Unit_Test.
-                                       Unit_Test_Options_Constant.all;
+      Options     : Ada_Lib.Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Options_Type'class renames
+                        Ada_Lib.Options.Unit_Test.
+                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
       Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : Event_Connection_Data_Type renames
                                     Event_Connection_Data_Access (
@@ -415,7 +419,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, Ada_Lib.Interfaces.Mouse_Event_Image (Mouse_Event));
+      Log_In (Debug, Ada_Lib.GNOGA.Interfaces.Mouse_Event_Image (Mouse_Event));
 
       declare
          Data                    : constant Event_Connection_Data_Access :=
@@ -429,7 +433,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                Delta_Y           : constant Integer := Mouse_Event.Y - Data.Last_Y;
 
             begin
-               Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+               Ada_Lib.GNOGA.Interfaces.Dump_Mouse_Event (Mouse_Event);
                Data.Delta_X := Data.Delta_X + Delta_X;
                Data.Delta_Y := Data.Delta_Y + Delta_Y;
                Put_Line ("move" & Data.Mouse_Move_Count'img &

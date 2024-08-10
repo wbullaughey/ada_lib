@@ -741,7 +741,7 @@ put_Line (here);
 
    -------------------------------------------------------------------
    function Log_Out_Checked (
-      Recursed                   : in out Boolean;
+      Recursed                   : in     Boolean;
       Result                     : in     Boolean;
       Enable                     : in     Boolean := True;
       Message                    : in     String := "";
@@ -752,7 +752,7 @@ put_Line (here);
 
    begin
       if Recursed then
-         Recursed := False;
+--       Recursed := False;
          Log_Out (Enable, "result " & Result'img & " " & Message, Where, Who);
          return Result;
       else

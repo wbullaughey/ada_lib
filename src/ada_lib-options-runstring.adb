@@ -122,7 +122,7 @@ package body Ada_Lib.Options.Runstring is
          Cursor          : Registrations_Package.Cursor := First (Registrations);
 
       begin
-         Log_In (Debug, Option.Image &
+         Log_In (Debug or trace_options, Option.Image &
             " registrations" & Registrations.Length'img);
          while Has_Element (Cursor) loop
             declare
@@ -130,12 +130,12 @@ package body Ada_Lib.Options.Runstring is
                            Constant_Reference (Registrations, Cursor);
             begin
                if Element.Option = Option then
-                  return Log_Out (True, Debug, Element.Option.Image);
+                  return Log_Out (True, Debug or trace_options, Element.Option.Image);
                end if;
             end;
             Next (Cursor);
          end Loop;
-         return Log_Out (False, Debug, Quote ("options", Option.Option));
+         return Log_Out (False, Debug or trace_options, Quote ("options", Option.Option));
       end Is_Registered;
 
       -------------------------------------------------------------------
@@ -150,18 +150,18 @@ package body Ada_Lib.Options.Runstring is
          ------------------------------------------------------------
 
          begin
-            Log_In (Debug, "registrations" & Registrations.Length'img);
+            Log_In (Debug or Trace_Options, "registrations" & Registrations.Length'img);
             for Option of Options loop
-               Log_Here (Debug, Option.Image);
+               Log_Here (Debug or trace_options, Option.Image);
                if Is_Registered (Option) then
-                  Log_Exception (Debug);
+                  Log_Exception (Debug or trace_options);
                   raise Duplicate_Options with Option.Image &
                      " a parameter defined at " &
                      Registration (Option) &
                      " called from " & From;
                end if;
             end loop;
-            Log_Out (Debug);
+            Log_Out (Debug or trace_options);
          end Check_Duplicates;
          ------------------------------------------------------------
 
