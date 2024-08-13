@@ -198,6 +198,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       begin
          Log_In (Debug);
+         Ada_Lib.Unit_Testing := True;
          Test.Set_Up := True;
          Log_Out (Debug);
       end Set_Up;

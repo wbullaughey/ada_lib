@@ -240,38 +240,39 @@ exception
       Log_Out (Debug);
    end Routine;
 
-   ---------------------------------------------------------------
-   procedure Run_Tests is
-   ---------------------------------------------------------------
-
-      Test_Application           : constant String :=
-                                    "../unit_test/bin/canera_aunit";
-   begin
-      Log_In (Debug);
-      for Suite of Suites loop
-         Put_Line ("  " & Suite.Suite.all);
-         declare
-            Parameters        : Ada_Lib.Strings.Unlimited.String_Type;
-
-         begin
-            Parameters.Construct ("-s " & Suite.Suite.all);
-            if Suite.Routines.Length > 0 then
-               for Routine of Suite.Routines loop
-                  Put_Line ("    " & Routine);
-                  Parameters.Append (" -R " & Routine);
-                  Log_Here (Debug, Quote ("parameters", Parameters));
-                  Put_Line (Ada_Lib.OS.Run.Spawn (
-                        Test_Application, Parameters.Coerce));
-               end loop;
-            else
-               Log_Here (Debug, Quote ("parameters", Parameters));
-               Put_Line (Ada_Lib.OS.Run.Spawn (
-                     Test_Application, Parameters.Coerce));
-            end if;
-         end;
-      end loop;
-      Log_Out (Debug);
-   end Run_Tests;
+-- ---------------------------------------------------------------
+-- procedure Run_Tests is
+-- ---------------------------------------------------------------
+--
+--    Test_Application           : constant String :=
+--                                  "../unit_test/bin/canera_aunit";
+-- begin
+--    Log_In (Debug);
+--    Ada_Lib.Unit_Testing := True;
+--    for Suite of Suites loop
+--       Put_Line ("  " & Suite.Suite.all);
+--       declare
+--          Parameters        : Ada_Lib.Strings.Unlimited.String_Type;
+--
+--       begin
+--          Parameters.Construct ("-s " & Suite.Suite.all);
+--          if Suite.Routines.Length > 0 then
+--             for Routine of Suite.Routines loop
+--                Put_Line ("    " & Routine);
+--                Parameters.Append (" -R " & Routine);
+--                Log_Here (Debug, Quote ("parameters", Parameters));
+--                Put_Line (Ada_Lib.OS.Run.Spawn (
+--                      Test_Application, Parameters.Coerce));
+--             end loop;
+--          else
+--             Log_Here (Debug, Quote ("parameters", Parameters));
+--             Put_Line (Ada_Lib.OS.Run.Spawn (
+--                   Test_Application, Parameters.Coerce));
+--          end if;
+--       end;
+--    end loop;
+--    Log_Out (Debug);
+-- end Run_Tests;
 
    ----------------------------------------------------------------------------
    procedure Set_Failed (

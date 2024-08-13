@@ -344,15 +344,6 @@ package body Ada_Lib.Timer.Tests is
             Log_Here (Debug);
 
             for Index in 1 .. Number_Events loop
-log_here (index'img);
-if Events (Index) = Null then
-   raise failed with "at " & here;
-end if;
-log_here;
-log_here ("time " & Event_Times (Index)'img);
-log_here;
-log_here (" Schedule time " & From_Start (Schedule_Time, True));
-log_here;
                declare
                   Event          : Test_Timer_Type renames Events (Index).all;
                   Expected       : constant Ada_Lib.Time.Time_Type :=
@@ -370,7 +361,7 @@ log_here;
                   Assert (Offset < Criteria,
                      "event" & Index'img & " Occurred at wrong time. Offset " &
                         Offset'img);
-log_here;
+
                end;
             end loop;
             Log_Here (Debug);

@@ -1058,6 +1058,20 @@ put_Line (here);
    end Tag_History;
 
    --------------------------------------------------------------------
+   procedure Tag_History (
+      Enable                     : in     Boolean;
+      Tag_Value                  : in     Ada.Tags.Tag;
+      From                       : in     String := GNAT.Source_Info.
+                                             Source_Location) is
+   --------------------------------------------------------------------
+
+   begin
+      if Enable then
+         Tag_History (Tag_Value, From);
+      end if;
+   end Tag_History;
+
+   --------------------------------------------------------------------
    procedure Trace_Exception (
       Debug                      : in   Boolean;
       Fault                      : in   Ada.Exceptions.Exception_Occurrence;

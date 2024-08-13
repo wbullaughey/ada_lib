@@ -1,7 +1,6 @@
 with Ada.Exceptions;
 with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with GNAT.Source_Info;
 
 package Ada_Lib.Unit_Test is
 
@@ -38,7 +37,7 @@ package Ada_Lib.Unit_Test is
       Suite_Name                 : in     String;
       Routine_Name               : in     String);
 
-   procedure Run_Tests;
+-- procedure Run_Tests;
 
    procedure Set_Failed (
       From                       : in     String := Ada_Lib.Trace.Here);

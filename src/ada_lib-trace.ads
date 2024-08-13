@@ -272,9 +272,13 @@ package Ada_Lib.Trace is
    procedure Tag_History (
       Tag_Value                  : in     Ada.Tags.Tag;
       From                       : in     String := GNAT.Source_Info.
-                                             Source_Location
-   );
+                                             Source_Location);
 
+   procedure Tag_History (
+      Enable                     : in     Boolean;
+      Tag_Value                  : in     Ada.Tags.Tag;
+      From                       : in     String := GNAT.Source_Info.
+                                             Source_Location);
    function Tag_Name (
       Tag_Value                  : Ada.Tags.Tag
    ) return String renames Ada.Tags.Expanded_Name ;
