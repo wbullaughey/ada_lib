@@ -1,7 +1,7 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Options.AUnit_Lib;
-with Ada_Lib.Options.Unit_Test;
+--with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.GNOGA.Interfaces;
 with Ada_Lib.Trace; use Ada_Lib.Trace;

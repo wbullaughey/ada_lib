@@ -4,7 +4,7 @@ with Ada.Calendar;
 with Ada.Streams;
 with Ada.Task_Identification;
 with Ada_Lib.OS;
-with Ada_Lib.Time;
+--with Ada_Lib.Timer;
 with Ada_Lib.Trace;
 with GNAT.Sockets;
 
@@ -36,8 +36,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       -- get as much data as available up to size of data
       -- will wait if buffer was empty as long as state is ok
       entry Get (
-         Throw_Timeout           : in     Boolean;
-         Timeout_Length          : in     Duration;
+--       Throw_Timeout           : in     Boolean;
+--       Timeout_Length          : in     Duration;
          Data                    :    out Buffer_Type;
          Last                    :    out Index_Type;
          Event                   :    out Event_Type);
@@ -70,9 +70,14 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Primed_Output              : Index_Type := 0;
       State                      : Event_Type := Ok;
       Tail                       : Buffer_Index_Type := Buffer_Index_Type'first;
-      Timeout_Time               : Ada_Lib.Time.Time_Type := Ada_Lib.Time.No_Time;
+--    Timeout_Time               : Ada_Lib.Time.Time_Type := Ada_Lib.Time.No_Time;
 
    end Protected_Buffer_Type;
+
+   procedure Put (
+      Buffer                     : in out Protected_Buffer_Type;
+      Data                       : in     Buffer_Type;
+      Event                      :    out Event_Type);
 
 
    type Stream_Socket_Type       is new Socket_Type and
@@ -130,16 +135,6 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Socket                     : in   Stream_Socket_Type
    ) return Index_Type;
 
-   procedure Dump (
-      Description                : in   String;
-      Data                       : in   Buffer_Type;
-      From                       : in     String := Ada_Lib.Trace.Here);
-
-   procedure Put (
-      Buffer                     : in out Protected_Buffer_Type;
-      Data                       : in     Buffer_Type;
-      Event                      :    out Event_Type);
-
    -- throws timeout if timeout reached and Item array not filled
    overriding
    procedure Read (
@@ -162,8 +157,9 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Socket                     : in   Stream_Socket_Type
    ) return Boolean;
 
-   procedure Set_Trace (
-      State                      : in     Boolean);
+   function Socket_ID (
+      Socket                     : in   Stream_Socket_Type
+   ) return String;
 
    -- throws timeout if timeout reached and last Item array not written
    overriding
@@ -174,8 +170,13 @@ package Ada_Lib.Socket_IO.Stream_IO is
                  Buffer'length > 0;
 
    function Writer_Stopped (
-      Socket                     : in   Stream_Socket_Type
+      Socket                     : in     Stream_Socket_Type
    ) return Boolean;
+
+   procedure Dump (
+      Description                : in     String;
+      Data                       : in     Buffer_Type;
+      From                       : in     String := Ada_Lib.Trace.Here);
 
 private
    Never                         : constant Ada.Calendar.Time :=

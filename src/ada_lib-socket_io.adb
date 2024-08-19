@@ -9,6 +9,7 @@ with Ada_Lib.Trace;use Ada_Lib.Trace;
 package body Ada_Lib.Socket_IO is
 
    use type Ada_Lib.Strings.String_Constant_Access;
+   use type Ada_Lib.Strings.String_Access_All;
    use type GNAT.Sockets.Socket_Type;
 
    ---------------------------------------------------------------------------
@@ -209,6 +210,7 @@ package body Ada_Lib.Socket_IO is
       if Socket.Description /= Null then
          Put_Line (Quote ("rename socket from", Socket.Description.all) &
             Quote (" to", Description));
+         Ada_Lib.Strings.Free_All (Socket.Description);
       end if;
       Socket.Description := (if Description'length = 0 then
             Null

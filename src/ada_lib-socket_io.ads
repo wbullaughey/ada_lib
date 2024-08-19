@@ -8,6 +8,7 @@ with Hex_IO;
 package Ada_Lib.Socket_IO is
 
    Failed                        : exception;
+   Select_Timeout                : exception;
 
    subtype Data_Type             is Ada.Streams.Stream_Element;
    subtype Buffer_Type           is Ada.Streams.Stream_Element_Array;
@@ -78,7 +79,7 @@ package Ada_Lib.Socket_IO is
 
    type Socket_Type              is abstract new Ada.Finalization.Limited_Controlled and
                                     Socket_Interface with record
-      Description                : Ada_Lib.Strings.String_Constant_Access := Null;
+      Description                : Ada_Lib.Strings.String_Access_All := Null;
       GNAT_Socket                : aliased GNAT.Sockets.Socket_Type :=
                                     GNAT.Sockets.No_Socket;
       Open                       : Boolean := False;

@@ -43,10 +43,10 @@ package body Ada_Lib.Timer.Tests is
  ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, Quote ("description", Event.Description));
       Event.Occurred := True;
       Event.Occured_At := Ada_Lib.Time.Now;
-      Log_Out (Debug, "occured at " & From_Start (Event.Occured_At, True));
+      Log_Here (Debug, Quote ("description", Event.Description) &
+         " occured at " & From_Start (Event.Occured_At, True));
    end Callback;
 
    ---------------------------------------------------------------
@@ -112,7 +112,7 @@ package body Ada_Lib.Timer.Tests is
             end loop;
             declare
                All_Occured       : Boolean := False;
-                  Cancel_Event   : Test_Timer_Type renames
+               Cancel_Event      : Test_Timer_Type renames
                                     Active_Events (Cancel_Event_Index).all;
                Canceled          : Boolean := False;
                Schedule_Time     : constant Ada_Lib.Time.Time_Type :=
@@ -540,7 +540,7 @@ package body Ada_Lib.Timer.Tests is
          Description    => "wait event",
          Wait           => 0.2);
 
-      Wait_Event.Wait_For_Event;
+--    Wait_Event.Wait_For_Event;
       Log_Here (Debug);
       Assert (Timeout_Event.Cancel, "could not cancel timeout event");
       Assert (not Wait_Canceled, "wait event got canceled");

@@ -2,7 +2,7 @@ with Ada.Exceptions;
 --with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 --with Ada_Lib.Time;
-with Ada_Lib.Trace; use Ada_Lib.Trace;
+--with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
 
 package body Ada_Lib.Timer is
@@ -18,9 +18,9 @@ package body Ada_Lib.Timer is
       Name     => Ada_Lib.Strings.String_Access,
       Object   => String);
 
-   procedure Free is new Ada.Unchecked_Deallocation (
-      Name     => Ada_Lib.Event.Event_Access,
-      Object   => Ada_Lib.Event.Event_Type);
+-- procedure Free is new Ada.Unchecked_Deallocation (
+--    Name     => Ada_Lib.Event.Event_Access,
+--    Object   => Ada_Lib.Event.Event_Type);
 
    ---------------------------------------------------------------------------
    function Active (
@@ -39,14 +39,21 @@ package body Ada_Lib.Timer is
 
    ---------------------------------------------------------------------------
    function Cancel (
-      Event                      : in out Event_Type
+      Event                      : in out Event_Type;
+      From                       : in     String := Here
    ) return Boolean is
    ---------------------------------------------------------------------------
 
    begin
       Log_In (Trace, Quote ("description", Event.Description) &
-         " state " & Event.State'img);
-      if Event.State = Waiting then
+            " state " & Event.State'img & (
+            if Event.Timer_Task = Null then
+               " null task"
+            else
+               " have task") &
+            " called from " & From);
+      if    Event.State = Waiting and then
+            Event.Timer_Task /= Null then
          Event.Timer_Task.Cancel;
          return Log_Out (True, Trace);
       else
@@ -72,11 +79,12 @@ package body Ada_Lib.Timer is
 
             when Waiting =>
                Event.Timer_Task.Finalizing;
+               Event.Timer_Task := Null;
 
          end case;
       end if;
       Free (Event.Description);
-      Free (Event.Wait_Event);
+--    Free (Event.Wait_Event);
       Log_Out (Trace);
 
 exception
@@ -139,8 +147,8 @@ exception
       Event.Dynamic := Dynamic;
       Event.Repeating := Repeating;
       Event.Wait := Wait;
-      Event.Wait_Event := new Ada_Lib.Event.Event_Type (
-         Ada_Lib.Strings.String_Constant_Access (Event.Description));
+--    Event.Wait_Event := new Ada_Lib.Event.Event_Type (
+--       Ada_Lib.Strings.String_Constant_Access (Event.Description));
       Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
       Log_Out (Trace, "address " & Image (Event'address));
    end Initialize;
@@ -217,16 +225,16 @@ exception
 --    return Duration (Time) / Duration (Ratio);
 -- end To_Duration;
 
-   ---------------------------------------------------------------------------
-   procedure Wait_For_Event (
-      Event                   : in out Event_Type;
-      From                    : in     String :=
-                                          GNAT.Source_Info.Source_Location) is
-   ---------------------------------------------------------------------------
-
-   begin
-      Event.Wait_Event.Wait_For_Event;
-   end Wait_For_Event;
+-- ---------------------------------------------------------------------------
+-- procedure Wait_For_Event (
+--    Event                   : in out Event_Type;
+--    From                    : in     String :=
+--                                        GNAT.Source_Info.Source_Location) is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Event.Wait_Event.Wait_For_Event;
+-- end Wait_For_Event;
 
    ---------------------------------------------------------------------------
    task body Timer_Task_Type is
@@ -237,32 +245,32 @@ exception
 
 
       Log_Here (Trace, "wait " & Event.Wait'img &
-         Quote ("description", Event.Description) &
-         "state " & Event.State'img);
-
+         Quote ( " description", Event.Description) &
+         " repeating " & Event.Repeating'img &
+         " state " & Event.State'img);
       while Event.State = Waiting loop -- if null then canceled before set
          Log_Here (Trace, Quote ("description", Event.Description) &
-            " start loop delay time " & Event.Wait'img,
+            " start loop delay time " & Event.Wait'img &
             " address " & Image (Event.all'address));
          select
             accept Cancel do
-               Event.State := Canceled;
                Log_Here (Trace, Quote ("description", Event.Description));
+               Event.State := Canceled;
             end Cancel;
          or
             accept Finalizing do
-               Event.State := Finalized;
                Log_Here (Trace, Quote ("description", Event.Description));
+               Event.State := Finalized;
             end Finalizing;
          or
             accept Get_State (
                Return_State         :   out State_Type) do
 
-               Return_State := Event.State;
                Log_Here (Trace, Quote ("description", Event.Description));
+               Return_State := Event.State;
             end Get_State;
          or
-            delay Event.Wait;          -- delay until even Finalizing;;
+            delay Event.Wait;          -- delay until timeout
             Log_Here (Trace, Quote ("description", Event.Description));
             Event.Callback;
             if not Event.Repeating then
@@ -272,12 +280,9 @@ exception
                " repeating " & Event.Repeating'img);
          end select;
       end loop;
-      Log_Here (Trace, "event " & Quote (" description", Event.Description) &
-         " completed");
-      Event.Wait_Event.Set_Event;
 
-      Log_Here (Trace, "state " & Event.State'img &
-         Quote (" description", Event.Description) &
+      Log_Here (Trace, "event state " & Event.State'img
+         & Quote (" description", Event.Description) & " completed" &
          " dynamic " & Event.Dynamic'img);
 
       if Event.Dynamic and then Event.State/= Finalized then
@@ -289,6 +294,7 @@ exception
          end;
       end if;
 
+      Event.Timer_Task := Null;
       Ada_Lib.Trace_Tasks.Stop;
       Log_Out (Trace);
 

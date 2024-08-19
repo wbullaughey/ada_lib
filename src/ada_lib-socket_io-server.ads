@@ -52,6 +52,7 @@ package Ada_Lib.Socket_IO.Server is
    procedure Accept_Socket (
       Server_Socket              : in out Server_Socket_Type;
       Accepted_Socket            :    out Accepted_Socket_Type'class;
+      Accept_Timeout             : in     Duration := No_Timeout;
       Default_Read_Timeout       : in     Duration := No_Timeout;
       Default_Write_Timeout      : in     Duration := No_Timeout;
       Priority                   : in     Ada_Lib.OS.Priority_Type :=

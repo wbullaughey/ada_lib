@@ -1,7 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 -- with Ada_Lib.Help;
 ----with Ada_Lib.Database.Server;
---with Ada_Lib.GNOGA;
+with Ada_Lib.GNOGA;
 with Ada_Lib.Help;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Options.Runstring;
@@ -61,7 +61,7 @@ package body Ada_Lib.Options.GNOGA is
                when 'G' =>   -- options for GNOGA
                   Options.Trace_Parse (Iterator);
 
-               when 'w' =>   -- options for GNOGA
+               when 'w' =>   -- browser port number
                   Options.HTTP_Port := Ada_Lib.Socket_IO.Port_Type (
                      Iterator.Get_Integer);
 
@@ -106,6 +106,7 @@ package body Ada_Lib.Options.GNOGA is
       when Ada_Lib.Options.Traces =>
          Put_Line ("Ada_Lib.Options.GNOGA library trace options (-" & Trace_Option & ")");
          Put_Line ("      a               all");
+         Put_Line ("      g               Ada_Lib.GNOGA");
          Put_Line ("      m               GNOGA.Ada_Lib");
          Put_Line ("      o               GNOGA options");
          New_Line;
@@ -134,7 +135,11 @@ package body Ada_Lib.Options.GNOGA is
 
                when 'a' =>
                   Standard.GNOGA.Ada_Lib.Trace := True;
+                  Ada_Lib.GNOGA.Debug := True;
                   Debug := True;
+
+               when 'g' =>
+                  Ada_Lib.GNOGA.Debug := True;
 
                when 'm' =>
                   Standard.GNOGA.Ada_Lib.Trace := True;

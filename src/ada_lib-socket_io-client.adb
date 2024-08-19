@@ -1,6 +1,7 @@
    with Ada.Exceptions;
 -- with Ada.Streams;
 with Ada_Lib.Strings;
+--with Ada_Lib.Time;
 with Ada_Lib.Trace;use Ada_Lib.Trace;
 with GNAT.Sockets;
 -- with Hex_IO;
@@ -8,6 +9,8 @@ with GNAT.Sockets;
 package body Ada_Lib.Socket_IO.Client is
 
    use type Ada_Lib.Strings.String_Constant_Access;
+   use type Ada_Lib.Strings.String_Access_All;
+-- use type Ada_Lib.Time.Time_Type;
 -- use type Index_Type;
    use type GNAT.Sockets.Selector_Status;
 -- use type GNAT.Sockets.Stream_Access;
@@ -72,13 +75,17 @@ package body Ada_Lib.Socket_IO.Client is
 
       Host_Name                  : constant String := Server_Name & ":" &
                                        Ada_Lib.Strings.Trim (Port'img);
+--    Retry_Timeout              : constant := 3.0;
    begin
       if    Socket.Description /= Null and then
             Socket.Description.all /= Description then
-         Log_Here (Trace, Quote ("socket name changed from", Socket.Description) &
-            Quote (" to", Description));
+         Log_Here (Trace, Quote ("current socket description ", Socket.Description) &
+            Quote (" connect description", Description));
       end if;
-      Socket.Set_Description (Description);
+
+      if Description'length > 0 then
+         Socket.Set_Description (Description);
+      end if;
 
       Log_In (Trace, "preconnect socket " & Socket.Image &
          " open " & Socket.Open'img &
@@ -103,6 +110,9 @@ package body Ada_Lib.Socket_IO.Client is
                                           Port     => Port);
 --          GNAT_Socket                : GNAT.Sockets.Socket_Type renames
 --                                        Socket.GNAT_Socket;
+--          Retry_Count                : Natural := 0;
+--          Timeout_Time               : constant Ada_Lib.Time.Time_Type :=
+--                                        Ada_Lib.Time.Now + Retry_Timeout;
             Status                     : GNAT.Sockets.Selector_Status;
 
          begin
@@ -132,20 +142,38 @@ package body Ada_Lib.Socket_IO.Client is
       Log_Out (Trace, "connected " & Socket.Connected'img);
 
    exception
-      when Fault: GNAT.SOCKETS.HOST_ERROR | GNAT.SOCKETS.SOCKET_ERROR =>
+      when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
+         Trace_Exception (Trace, Fault);
+         Ada.Exceptions.Raise_Exception (
+            Ada.Exceptions.Exception_Identity (Fault),
+            (if Socket.Description = Null then
+               ""
+            else
+               " for " & Socket.Description.all));
+
+      when Fault: GNAT.SOCKETS.HOST_ERROR =>
          Trace_Exception (Trace, Fault);
          Socket.Connected := False;
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
-         raise Failed with "Could not open host " & Host_Name;
+         raise Failed with "Could not open host " & Host_Name &
+            (if Socket.Description = Null then
+               ""
+            else
+               " for " & Socket.Description.all);
 
       when Fault: others =>
          Trace_Exception (Trace, Fault);
          Socket.Connected := False;
-         Socket.Connected := False;
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
-         raise;
+         Ada.Exceptions.Raise_Exception (
+            Ada.Exceptions.Exception_Identity (Fault),
+            "Could not open host " & Host_Name &
+            (if Socket.Description = Null then
+               ""
+            else
+               " for " & Socket.Description.all));
 
    end Connect;
 

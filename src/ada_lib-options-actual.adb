@@ -8,7 +8,6 @@ with Ada_Lib.Database.Connection;
 with Ada_Lib.Directory;
 with Ada_Lib.EMail;
 with Ada_Lib.Event;
---with Ada_Lib.GNOGA;
 with Ada_Lib.Help;
 with Ada_Lib.Interrupt;
 with Ada_Lib.Lock;
@@ -16,25 +15,20 @@ with Ada_Lib.Mail;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.OS;
 with Ada_Lib.Parser;
---with Ada_Lib.Options.Runstring;
 with Ada_Lib.OS.Run;
-with Ada_Lib.Socket_IO.Stream_IO;
+with Ada_Lib.Socket_IO;
 with Ada_Lib.Strings;
 with Ada_Lib.Template;
 with Ada_Lib.Text;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
---with Debug_Options;
 
 pragma Elaborate_All (Ada_Lib.Lock);
---pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
 package body Ada_Lib.Options.Actual is
 
    use type Ada.Tags.Tag;
--- use type Ada_Lib.Options.Option_Kind_Type;
--- use type Ada_Lib.Options.Options_Type;
 
    Initialize_Recursed          : Boolean := False;
    Test_Condition_Flag           : constant Character := '?';
@@ -504,7 +498,7 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      c               Ada_Lib.Command_Line Trace");
          Put_Line ("      C               Ada_Lib.Configuration Trace");
          Put_Line ("      e               Event");
-         Put_Line ("      g               GNOGA.Debug");
+--       Put_Line ("      g               GNOGA.Debug");
 --       Put_Line ("      G               Ada_Lib.GNOGA.Debug");
          Put_Line ("      h               Help");
          Put_Line ("      i               interrupt");
@@ -674,7 +668,7 @@ package body Ada_Lib.Options.Actual is
                      Ada_Lib.Socket_IO.Trace := True;
 
                   when 'S' =>
-                     Ada_Lib.Socket_IO.Stream_IO.Set_Trace (True);
+                     Ada_Lib.Socket_IO.Tracing := True;
 
                   when 't' =>
                      Ada_Lib_Trace_Trace := True;

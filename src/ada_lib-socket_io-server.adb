@@ -8,6 +8,7 @@ package body Ada_Lib.Socket_IO.Server is
    procedure Accept_Socket (
       Server_Socket              : in out Server_Socket_Type;
       Accepted_Socket            :    out Accepted_Socket_Type'class;
+      Accept_Timeout             : in     Duration := No_Timeout;
       Default_Read_Timeout       : in     Duration := No_Timeout;
       Default_Write_Timeout      : in     Duration := No_Timeout;
       Priority                   : in     Ada_Lib.OS.Priority_Type :=
@@ -17,6 +18,7 @@ package body Ada_Lib.Socket_IO.Server is
    ---------------------------------------------------------------------------
 
       Client_Address             : GNAT.Sockets.Sock_Addr_Type;
+      Status                     : GNAT.Sockets.Selector_Status;
 
    begin
       Server_Socket.Set_Description (Server_Description);
@@ -28,21 +30,45 @@ package body Ada_Lib.Socket_IO.Server is
          " Default_Read_Timeout " & Format_Timeout (Default_Read_Timeout) &
          " Default_Write_Timeout " & Format_Timeout (Default_Write_Timeout));
       GNAT.Sockets.Accept_Socket (Server_Socket.GNAT_Socket,
-         Accepted_Socket.GNAT_Socket, Client_Address);
-      Accepted_Socket.Create_Stream (
-         Description    => Accepted_Description);
-      Accepted_Socket.Set_Connected;
-      Log_Out (Trace, "accepted socket " & Accepted_Socket.Image);
+         Accepted_Socket.GNAT_Socket, Client_Address, Accept_Timeout,
+         Selector    => Null,
+         Status      => Status);
 
-   exception
-      when Fault: others =>
-         declare
-            Message              : constant String := "Accept_Socket failed";
+      case Status is
 
-         begin
-            Trace_Message_Exception (Fault, Message);
-            raise Failed with Message;
-         end;
+         when GNAT.Sockets.Completed =>
+            begin
+               Accepted_Socket.Create_Stream (
+                  Description    => Accepted_Description);
+               Accepted_Socket.Set_Connected;
+               Log_Out (Trace, "accepted socket " & Accepted_Socket.Image);
+               return;
+
+            exception
+               when Fault: others =>
+                  declare
+                     Message              : constant String := "Accept_Socket failed";
+
+                  begin
+                     Trace_Message_Exception (Fault, Message);
+                     Log_Exception (Trace, Fault, "select failed");
+                     raise Failed with Message;
+                  end;
+            end;
+
+         when GNAT.Sockets.Expired =>
+            Log_Exception (Trace, "select expired");
+            raise Select_Timeout with "select timed out" & (
+               if Server_Description'length > 0 then
+                  " for server " & Server_Description
+               else
+                  "") & " at " & Here;
+
+         when GNAT.Sockets.Aborted =>
+            Log_Exception (Trace, "select failed");
+            raise Failed with "select failed";
+
+      end case;
    end Accept_Socket;
 
 -- ---------------------------------------------------------------------------

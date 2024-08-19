@@ -1306,14 +1306,14 @@ put_Line (here);
 
             begin
                Output_File.Output ("----------- exception --------------"& LF);
-               Output_File.Output ("Exception:" & Ada.Exceptions.Exception_Name (
-                  Fault)& LF);
+               Output_File.Output ("Exception name:" &
+                  Ada.Exceptions.Exception_Name (Fault)& LF);
                Output_File.Output ("Exception message:" &
                   Ada.Exceptions.Exception_Message (Fault)& LF);
                if Message'length > 0 then
-                  Output_File.Output ("message:" & Quote (Message) & LF);
+                  Output_File.Output ("handler message:" & Quote (Message) & LF);
                end if;
-               Format_Output (Output_File, "caught at " & From, From, "",
+               Format_Output (Output_File, "caught at " & From, "", "",
                   Task_Entry, True);
                Output_File.Output ("------------------------------------"& LF);
             end;

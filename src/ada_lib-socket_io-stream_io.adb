@@ -1,7 +1,8 @@
 -- package that provides stream IO for sockets with a timeout
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
---with Ada_Lib.Timer;
+--with Ada_Lib.Time;
+with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
 --with Hex_IO;
@@ -10,12 +11,14 @@ with Interfaces;
 package body Ada_Lib.Socket_IO.Stream_IO is
 
    use type Ada_Lib.Strings.String_Constant_Access;
-   use type Ada_Lib.Time.Time_Type;
+   use type Ada_Lib.Strings.String_Access_All;
+-- use type Ada_Lib.Time.Time_Type;
+-- use type Ada_Lib.Timer.Event_Class_Access;
    use type Index_Type;
    use type GNAT.Sockets.Error_Type;
    use type GNAT.Sockets.Socket_Type;
 
-   type Protected_Buffer_Access  is access all Protected_Buffer_Type;
+-- type Protected_Buffer_Access  is access all Protected_Buffer_Type;
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => GNAT.Sockets.Stream_Access,
@@ -53,9 +56,13 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Out (Trace);
          return;
       end if;
+log_here;
       Socket_Type (Socket).Close;
+log_here;
       Socket.Stream.Socket_Closed := True;
+log_here;
       Put (Socket.Stream.Output_Buffer, Close_Flag, Event);
+log_here;
       Log_Here (Tracing, "output buffer event " & Event'img);
       delay 0.2;     -- let task complete
 
@@ -66,6 +73,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          delay 0.1;
       end loop;
       Log_Here (Tracing, "wait for reader task to exit");
+log_here ("wait for Reader_Stopped value " & Socket.Stream.Reader_Stopped'img & " address " & Image (Socket.Stream.Reader_Stopped'address));
       while not Socket.Stream.Reader_Stopped loop
          delay 0.1;
       end loop;
@@ -182,9 +190,13 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Stream.GNAT_Stream :=  GNAT.Sockets.Stream (Socket.GNAT_Socket);
       Stream.Default_Read_Timeout := Default_Read_Timeout;
       Stream.Default_Write_Timeout := Default_Write_Timeout;
+log_here;
       Stream.Reader := new Input_Task (Reader_Task_Description);
+log_here;
       Stream.Reader.Open (Stream'unchecked_access, Priority);
+log_here;
       Stream.Writer := new Output_Task (Writer_Task_Description);
+log_here;
       Stream.Writer.Open (Stream'unchecked_access, Priority);
       Log_Out (Tracing, "was created " & Stream.Was_Created'img);
    end Create;
@@ -363,31 +375,46 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
          loop
             declare
+               type Timeout_Event_Type
+                                 is new Ada_Lib.Timer.Event_Type
+                                    with null record;
+               overriding
+               procedure Callback (
+                  Event          : in out Timeout_Event_Type);
+
                Buffer_Empty      : constant Boolean := Stream.Input_Buffer.Empty (
                                     Throw_Exception);
---             Timeout_Set       : constant Boolean := Timeout_Length /= No_Timeout;
---             Timeout_Event     : Timer_Event_Access := (
---                                  if Timeout_Set then
---                                     Allocate_Event (
---                                        Buffer   => Stream.Input_Buffer'
---                                           unchecked_access,
---                                        Description
---                                                 => "read",
---                                        Wait     => Timeout_Length)
---                                  else
---                                     Null);
+               Timeout_Event     : aliased Timeout_Event_Type;
+
+               --------------------------------------------------------------
+               overriding
+               procedure Callback (
+                  Event             : in out Timeout_Event_Type) is
+               pragma Unreferenced (Event);
+               --------------------------------------------------------------
+
+               begin
+                  Log_Here (Trace);
+                  Stream.Input_Buffer.Set_Event (Timed_Out);
+               end Callback;
+               --------------------------------------------------------------
+
             begin
                Log_Here (Trace, "Buffer_Empty " & Buffer_Empty'img &
                   " Timeout_Length " & Timeout_Length'img &
                   " buffer " & Image (Stream.Input_Buffer'address));
 
-               Stream.Input_Buffer.Get (Throw_Exception, Timeout_Length,
-                  Item (Start_Get .. Item'last), Get_Last, Event);
+               if Timeout_Length /= No_Timeout then
+                  Timeout_Event.Initialize (Timeout_Length,
+                  "stream " & Stream.Image & " read timeout",
+                     False, False);
+               end if;
 
-               Log_Here (Trace, "Get_Last" & Get_Last'img );
---             if Timeout_Event /= Null then
---                Free (Timeout_Event);
---             end if;
+               Stream.Input_Buffer.Get (Item (Start_Get .. Item'last),
+                  Get_Last, Event);
+
+               Log_Here (Trace, "Get_Last" & Get_Last'img &
+                  " event " & Event'img);
 
                case Event is
 
@@ -424,6 +451,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                         Log_Exception (Trace, "time out");
                         raise Timeout with "from " & here;
                      else
+                        Stream.Close;
+                        Log_Here (Trace);
                         exit;
                      end if;
 
@@ -440,7 +469,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end if;
       end if;
 
-      Log_Out (Trace, "last" & Last'img);
+      Log_Out (Trace, "socket " & Stream.Image & " last" & Last'img);
 
    exception
       when Fault: Timeout =>
@@ -579,18 +608,20 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    begin
       Log_Here (Tracing, Socket.Image & " reader stopped " & Socket.Stream.Reader_Stopped'img);
+log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped'img & " address " & Image (Socket.Stream.Reader_Stopped'address));
 
       return Socket.Stream.Reader_Stopped;
    end Reader_Stopped;
 
    ---------------------------------------------------------------------------
-   procedure Set_Trace (
-      State             : in   Boolean) is
+   function Socket_ID (
+      Socket                     : in   Stream_Socket_Type
+   ) return String is
    ---------------------------------------------------------------------------
 
    begin
-      Tracing := State;
-   end Set_Trace;
+      return GNAT.Sockets.Image (Socket.GNAT_Socket);
+   end Socket_ID;
 
    ---------------------------------------------------------------------------
    procedure Trace_Read (
@@ -787,30 +818,16 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       -- get as much data as available up to size of data
       -- will wait if buffer was empty as long as state is ok
       entry Get (
-         Throw_Timeout           : in     Boolean;
-         Timeout_Length          : in     Duration;
          Data                    :    out Buffer_Type;
          Last                    :    out Index_Type;
          Event                   :    out Event_Type
       ) when Buffer_Count > 0 or else State /= Ok is
       -----------------------------------------------------------------------
 
-
       begin
-         if Timeout_Length = No_Timeout then
-            Timeout_Time := Ada_Lib.Time.No_Time;
-         else
-            Timeout_Time := Ada_Lib.Time.Now + Timeout_Length;
-         end if;
-
          Log_In (Tracing, Kind'img & " State " & State'img &
             " Buffer_Count" & Buffer_Count'img &
-            " tail" & Tail'img & " data first" & Data'first'img &
-            " Throw_Timeout " & Throw_Timeout'img &
-            " Timeout_Length " & Format_Timeout (Timeout_Length) &
-            " timeout time " & From_Start (Timeout_Time));
---          " data " & Image (Data'address) &
---          " input buffer " & Image (Buffer'address));
+            " tail" & Tail'img & " data first" & Data'first'img);
 
          case State is
 
@@ -849,15 +866,10 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                end if;
             end loop;
 
---       when Buffer_Limit =>
---          State := Failed;
---          raise Aborted with "get should not be entered";
-
          when Timed_Out =>
-            if Throw_Timeout then
-               Log_Exception (Tracing, "time out");
-               raise Timeout;
-            end if;
+            Event := Timed_Out;
+            Log_Out (Tracing, "timed out");
+            return;
 
          when Failed =>
             Log_Exception (Tracing);
@@ -867,7 +879,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
          Event := State;
 
-         Log_OUt (Tracing, "Event " & Event'img & " Last" & Last'img &
+         Log_Out (Tracing, "Event " & Event'img & " Last" & Last'img &
             " tail" & Tail'img &
             " Buffer_Count" & Buffer_Count'img);
 --          " data " & Image (Data'address) &
@@ -928,7 +940,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          when Timed_Out =>
             Log_Here (Tracing, "timed out");
             State := Ok;      -- more data now availabl
-            Timeout_Time := Ada_Lib.Time.No_Time;
+--          Timeout_Time := Ada_Lib.Time.No_Time;
 --          return;
 
          when Closed =>
@@ -1009,7 +1021,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                                     )
                                  );
       begin
-         Log_Here (Tracing, Kind'img & " event " & Event'img & " old state " & State'img &
+         Log_In (Tracing, Kind'img & " event " & Event'img &
+            " old state " & State'img &
             " from " & From);
 
          case Valid_Transitions (State, Event) is
@@ -1025,6 +1038,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                   " to " & Event'img;
          end case;
 
+         Log_Out (Tracing, "state " & State'img);
       end Set_Event;
 
       -----------------------------------------------------------------------
@@ -1033,28 +1047,29 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       -----------------------------------------------------------------------
 
       begin
-         Log_In (Trace, Kind'img & " Timeout_Time " & From_Start (Timeout_Time));
-
-         declare
-            Now                     : constant Ada_Lib.Time.Time_Type := Ada_Lib.Time.Now;
-            Result                  : constant Boolean :=
-                                       (if Timeout_Time = Ada_Lib.Time.No_Time then
-                                             False
-                                          else
-                                             Now > Timeout_Time);
-         begin
-            Log_Out (Trace, "now " & From_Start (Now) &
-               " result " & Result'img);
-
-            return Result;
-         end;
-
-      exception
-         when Fault: others =>
-            Trace_Exception (Trace, Fault);
-            Log_Exception (Trace);
-            raise;
-
+         Log_In (Trace, "kind " & Kind'img & " state " & State'img);
+         return State = Timed_Out;
+--
+--       declare
+--          Now                     : constant Ada_Lib.Time.Time_Type := Ada_Lib.Time.Now;
+--          Result                  : constant Boolean :=
+--                                     (if Timeout_Time = Ada_Lib.Time.No_Time then
+--                                           False
+--                                        else
+--                                           Now > Timeout_Time);
+--       begin
+--          Log_Out (Trace, "now " & From_Start (Now) &
+--             " result " & Result'img);
+--
+--          return Result;
+--       end;
+--
+--    exception
+--       when Fault: others =>
+--          Trace_Exception (Trace, Fault);
+--          Log_Exception (Trace);
+--          raise;
+--
       end Timed_Out;
 
    end Protected_Buffer_Type;
@@ -1271,7 +1286,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                end if;
          end;
       end loop;
-      Log_Here (Trace, "loop exit ");
+      Log_Here (Trace, "loop exit " & Quote ("description", Description));
+log_here ("set Reader_Stopped normal exit " & Quote ("description", Description) & " address " & Image (Stream_Pointer.Reader_Stopped'address));
       Stream_Pointer.Reader_Stopped := True;
 
       Ada_Lib.Trace_Tasks.Stop;
@@ -1280,6 +1296,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    exception
       when Fault: others =>
          Trace_Message_Exception (Fault, Here, Stream_Pointer.Socket.Image);
+log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_Stopped'address));
          Stream_Pointer.Reader_Stopped := True;
          Stream_Pointer.Input_Buffer.Set_Event (Failed);
          Stream_Pointer.Output_Buffer.Set_Event (Failed);
@@ -1343,8 +1360,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Log_Here (Trace, "data " & Image (Data'address));
 
             begin
-               Stream_Pointer.Output_Buffer.Get (False, No_Timeout,
-                  Data, Last, Event);
+               Stream_Pointer.Output_Buffer.Get (Data, Last, Event);
 
             exception
                when Fault: Aborted =>     -- socket got closed

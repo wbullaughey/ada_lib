@@ -1,8 +1,9 @@
 with Ada.Calendar;
-with Ada_Lib.Event;
+--with Ada_Lib.Event;
 with Ada.Finalization;
 with Ada_Lib.Strings;
-with GNAT.Source_Info;
+--with GNAT.Source_Info;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package Ada_Lib.Timer is
 
@@ -18,13 +19,13 @@ package Ada_Lib.Timer is
 
    type Duration_Access    is access all Duration;
 
+   type State_Type               is (Canceled, Completed, Finalized, Waiting);
+
    type Event_Type         is abstract new Ada.Finalization.Limited_Controlled
                                  with private;
 
    type Event_Access          is access all Event_Type;
    type Event_Class_Access    is access all Event_Type'class;
-
-   type State_Type               is (Canceled, Completed, Finalized, Waiting);
 
    function Active (
       Event             : in   Event_Type
@@ -38,19 +39,13 @@ package Ada_Lib.Timer is
 
    -- cancel a scheduled event
    function Cancel (
-      Event             : in out Event_Type
+      Event             : in out Event_Type;
+      From              : in     String := Here
    ) return Boolean;
 
    function Get_Exception (
       Event             : in     Event_Type
    ) return Ada_Lib.Strings.String_Access;
-
--- function Create_Event (
---    Offset                  : in     Duration;
---    Dynamic                 : in     Boolean;
---    Repeating               : in     Boolean;
---    Description             : in  String
--- ) return Event_Type is abstract;
 
    function Description (
       Event             : in     Event_Type
@@ -79,11 +74,6 @@ package Ada_Lib.Timer is
    function State (
       Event                : in     Event_Type
    ) return State_Type;
-
-   procedure Wait_For_Event (
-      Event                      : in out Event_Type;
-      From                       : in     String :=
-                                             GNAT.Source_Info.Source_Location);
 
    procedure Set_Trace (
       State             : in   Boolean);
@@ -119,7 +109,7 @@ private
       Time                 : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;
       Wait                 : Duration;
-      Wait_Event           : Ada_Lib.Event.Event_Access := Null;
+--    Wait_Event           : Ada_Lib.Event.Event_Access := Null;
    end record;
 
 end Ada_Lib.Timer;
