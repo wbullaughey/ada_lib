@@ -10,7 +10,7 @@ with Interfaces;
 
 package body Ada_Lib.Socket_IO.Stream_IO is
 
-   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Constant_Access;
    use type Ada_Lib.Strings.String_Access_All;
 -- use type Ada_Lib.Time.Time_Type;
 -- use type Ada_Lib.Timer.Event_Class_Access;
@@ -68,12 +68,14 @@ log_here;
 
       Socket.Stream.Output_Buffer.Set_Event (Closed); -- signal output task to close
 
-      Log_Here (Tracing, "wait for write task to exit");
+      Log_Here (Tracing, "wait for write task to exit socket " &
+         Socket.Get_Description);
       while not Socket.Stream.Writer_Stopped loop
          delay 0.1;
-      end loop;
-      Log_Here (Tracing, "wait for reader task to exit");
-log_here ("wait for Reader_Stopped value " & Socket.Stream.Reader_Stopped'img & " address " & Image (Socket.Stream.Reader_Stopped'address));
+   end loop;
+
+      Log_Here (Tracing, "wait for reader task to exit socket " &
+         Socket.Get_Description);
       while not Socket.Stream.Reader_Stopped loop
          delay 0.1;
       end loop;

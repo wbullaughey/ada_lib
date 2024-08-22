@@ -97,6 +97,10 @@ package Ada_Lib.Socket_IO is
       Socket                     : in out Socket_Type;
       Description                : in     String);
 
+   function Get_Description (
+      Socket                     : in     Socket_Type
+   ) return String;
+
    function GNAT_Socket (
       Socket                     : in out Socket_Type
    ) return GNAT.Sockets.Socket_Type;

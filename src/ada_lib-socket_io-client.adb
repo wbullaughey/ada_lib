@@ -79,7 +79,8 @@ package body Ada_Lib.Socket_IO.Client is
    begin
       if    Socket.Description /= Null and then
             Socket.Description.all /= Description then
-         Log_Here (Trace, Quote ("current socket description ", Socket.Description) &
+         Log_Here (Trace,
+            Quote ("current socket description", Socket.Description) &
             Quote (" connect description", Description));
       end if;
 
@@ -143,13 +144,18 @@ package body Ada_Lib.Socket_IO.Client is
 
    exception
       when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
-         Trace_Exception (Trace, Fault);
-         Ada.Exceptions.Raise_Exception (
-            Ada.Exceptions.Exception_Identity (Fault),
-            (if Socket.Description = Null then
-               ""
-            else
-               " for " & Socket.Description.all));
+         declare
+            Message     : constant String :=
+                           (if Socket.Description = Null then
+                              ""
+                           else
+                              " for " & Socket.Description.all);
+         begin
+            Trace_Message_Exception (Trace, Fault, Message);
+
+            Ada.Exceptions.Raise_Exception (
+               Ada.Exceptions.Exception_Identity (Fault), Message);
+         end;
 
       when Fault: GNAT.SOCKETS.HOST_ERROR =>
          Trace_Exception (Trace, Fault);

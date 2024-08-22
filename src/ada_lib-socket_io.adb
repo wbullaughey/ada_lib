@@ -8,7 +8,7 @@ with Ada_Lib.Trace;use Ada_Lib.Trace;
 
 package body Ada_Lib.Socket_IO is
 
-   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Constant_Access;
    use type Ada_Lib.Strings.String_Access_All;
    use type GNAT.Sockets.Socket_Type;
 
@@ -73,6 +73,19 @@ package body Ada_Lib.Socket_IO is
          else
             Timeout'img);
    end Format_Timeout;
+
+   ---------------------------------------------------------------------------
+   function Get_Description (
+      Socket                     : in     Socket_Type
+   ) return String is
+   ---------------------------------------------------------------------------
+
+   begin
+      return (if Socket.Description = Null then
+            "no description"
+         else
+            Socket.Description.all);
+   end Get_Description;
 
    ---------------------------------------------------------------------------
    function Get_Host_By_Name (
