@@ -5,11 +5,13 @@ with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Options.Actual;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Server;
 --with Ada_Lib.Socket_IO.Stream_IO;
 with Ada_Lib.Strings;
+--with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
 with GNAT.Source_Info;
@@ -27,7 +29,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    type Length_Or_Answer_Type       is mod 2 ** 32;
 
-   task type Client_Task_Type is
+   task type Client_Task_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access) is
 
       entry Start (
          Test                    : in     Socket_Test_Access);
@@ -50,13 +53,27 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    package Random_Number_Data_Generator is
       new Ada.Numerics.Discrete_Random (Data_Type);
-   package Random_Number_Offset_Generator is new Ada.Numerics.Discrete_Random (
-      Index_Type);
+
+   package Random_Number_Offset_Generator is
+      new Ada.Numerics.Discrete_Random (Index_Type);
+
+   generic
+      type Generator_Type  is limited private;
+      type Offset_Type     is private;
+      with procedure Reset (
+         Generator         : in     Generator_Type;
+         Seed              : in     Integer);
+
+   procedure Reset_Generator (
+      Generator         : in     Generator_Type);
 
    procedure Socket_Open_Close (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
-   procedure Socket_Send_Receive (
+   procedure Socket_Send_Receive_Fixed_Record (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Socket_Send_Receive_Variable_Record (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    procedure Socket_Acknowledge_Send_Receive (
@@ -113,8 +130,12 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Routine_Name   => AUnit.Format ("Socket_Open_Close")));
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-         Routine        => Socket_Send_Receive'access,
-         Routine_Name   => AUnit.Format ("Socket_Send_Receive")));
+         Routine        => Socket_Send_Receive_Fixed_Record'access,
+         Routine_Name   => AUnit.Format ("Socket_Send_Receive_Fixed_Record")));
+
+      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+         Routine        => Socket_Send_Receive_Variable_Record'access,
+         Routine_Name   => AUnit.Format ("Socket_Send_Receive_Variable_Record")));
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
          Routine        => Socket_Acknowledge_Send_Receive'access,
@@ -134,6 +155,67 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
       Log_Out (Debug);
    end Register_Tests;
+
+   ---------------------------------------------------------------
+   procedure Reset_Generator (
+      Generator         : in     Generator_Type) is
+   ---------------------------------------------------------------
+
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+                           Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+      Seed              : Integer := Ada_Lib.Options.Unit_Test.Default_Random_Seed;
+
+   begin
+      Log_In (Debug,
+         (if Options.Use_Random_Seed then
+             "Use Random Seed "
+         else
+            (if Options.Set_Random_Seed then
+               "Use Seed" & Options.Random_Seed'img
+            else
+               "use default seed" & Seed'img)));
+
+      if Options.Use_Random_Seed then  -- use realtime clock
+         declare
+            Now         : constant Ada.Real_Time.Time :=
+                           Ada.Real_Time.Clock;
+            Offset      : Duration;
+            Seconds     : Ada.Real_Time.Seconds_Count;
+            Time_Span   : Ada.Real_Time.Time_Span;
+
+         begin
+            Ada.Real_Time.Split (Now, Seconds, Time_Span);
+            Offset := Ada.Real_Time.To_Duration (Time_Span);
+            Seed := Integer (Offset * 1000000);
+         end;
+      elsif Options.Set_Random_Seed then  -- use runstring option seed
+         Seed := Options.Random_Seed;
+      end if;
+
+      Reset (Generator, Seed);
+
+      if Options.Report_Random then
+         Put_Line ("random seed " & Seed'img);
+      end if;
+
+      Log_Out (Debug, "Seed" & Seed'img);
+   end Reset_Generator;
+
+   ---------------------------------------------------------------
+   procedure Data_Reset_Generator is new Reset_Generator (
+      Generator_Type    => Random_Number_Data_Generator.Generator,
+      Offset_Type       => Ada_Lib.Socket_IO.Data_Type,
+      Reset             => Random_Number_Data_Generator.Reset);
+   ---------------------------------------------------------------
+
+   ---------------------------------------------------------------
+   procedure Offset_Reset_Generator is new Reset_Generator (
+      Generator_Type    => Random_Number_Offset_Generator.Generator,
+      Offset_Type       => Ada_Lib.Socket_IO.Data_Type,
+      Reset             => Random_Number_Offset_Generator.Reset);
+   ---------------------------------------------------------------
 
    ---------------------------------------------------------------
    overriding
@@ -168,6 +250,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
       when Fault: others =>
          Trace_Exception (Fault);
+         Log_Exception (Trace, Fault);
          raise;
 
    end Set_Up;
@@ -178,29 +261,37 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       From                       : in     String := GNAT.Source_Info.Source_Location) is
    ---------------------------------------------------------------
 
-      Client                     : constant Client_Task_Access :=
-                                    new Client_Task_Type;
-      Description                : aliased constant String := "send receive";
-      Local_Test                 : Socket_Test_Type renames Socket_Test_Type (Test);
+      Client         : Client_Task_Access := Null;
+      Client_Description
+                     : constant Ada_Lib.Strings.String_Constant_Access :=
+                        new String'("client send receive");
+      Local_Test     : Socket_Test_Type renames Socket_Test_Type (Test);
 
-      Generator                  : Random_Number_Data_Generator.Generator;
-      Send_Started               : Boolean := True;
-      Server                     : constant Server_Task_Access :=
-                                    new Server_Task_Type (
-                                       Description'unchecked_access);
-      Server_Read_Timeout_Time   : Duration renames
-                                    Local_Test.Server_Read_Timeout_Time;
-
+      Generator      : Random_Number_Data_Generator.Generator;
+--    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+--                      Ada_Lib.Options.AUnit_Lib.
+--                         Aunit_Options_Constant_Class_Access (
+--                            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+      Send_Started   : Boolean := True;
+      Server         : Server_Task_Access := Null;
+      Server_Description
+                     : constant Ada_Lib.Strings.String_Constant_Access :=
+                        new String'("server send receive");
+      Server_Read_Timeout_Time
+                     : Duration renames
+                        Local_Test.Server_Read_Timeout_Time;
    begin
-      Log_In (Debug,  --, "Missmatch_Read_Length " &
---          Local_Test.Missmatch_Read_Length'img &
+      Log_In (Debug,
          " Client Read Timeout " & Local_Test.Client_Read_Timeout_Time'img &
          " Client Write Timeout " & Local_Test.Client_Write_Timeout_Time'img &
          " Client_Delay_Write_Time " & Local_Test.Client_Delay_Write_Time'img &
          " Server Read Timeout " & Local_Test.Server_Read_Timeout_Time'img &
          " Server Write Timeout " & Local_Test.Server_Write_Timeout_Time'img &
-            From);
+         " called from " & From);
 
+      Client := new Client_Task_Type (Client_Description);
+      delay 0.1;  -- client get initialized before starting server
+      Server := new Server_Task_Type (Server_Description);
       if Local_Test.Client_Failed then
          Log_Here (Debug, "client failed");
          Send_Started := False;
@@ -221,13 +312,13 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          raise Raise_Assert with "server or client not started";
       end if;
 
+      Data_Reset_Generator (Generator);
       -- initialize data buffer
       for Index in Local_Test.Send_Data'range loop
 
          Local_Test.Send_Data (Index) :=
             Random_Number_Data_Generator.Random (Generator);
       end loop;
-
       Log_Here (Debug, "start server task");
       Server.Start (    -- reads from client and then writes to client
          Test              => Local_Test'unchecked_access);
@@ -249,13 +340,11 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
       Log_Here (Debug, "wait for tasks to complete");
 
-      while not (
-            Local_Test.Client_Completed and then
-            Local_Test.Server_Completed
-         ) and then not (
-            Local_Test.Client_Failed or else
-            Local_Test.Server_Failed
-         ) loop
+      loop
+         if    Local_Test.Client_Completed and then
+               Local_Test.Server_Completed then
+            exit;
+         end if;
          delay 0.2;
       end loop;
 
@@ -289,9 +378,11 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       end if;
 
       if Local_Test.Send_Data = Local_Test.Received_Data then
+log_here;
          Local_Test.Answer := Success;    -- all sent and received
       elsif Local_Test.Client_Timed_Out and then
             not Local_Test.Server_Write_Response then
+log_here;
          Local_Test.Answer := Success;    -- expected timeout
       elsif Server_Read_Timeout_Time = 0.0 then
          Log_Here (Debug, "data missmach");
@@ -351,6 +442,7 @@ put_Line (here);
                " port" &
                " will fail on Repetition" & No_Server_Repetition'img);
             Local_Test.Repetition := Repetition;
+            Local_Test.Server_Completed := False;
             Local_Test.Select_Timeout_Expected := Repetition /= OK_Repetition;
             Local_Test.Server_Port := (if Repetition = Wrong_Port then
                   Default_Port
@@ -358,17 +450,17 @@ put_Line (here);
                   Port);
             Local_Test.Server_Started := False;
             declare
-               Description          : aliased constant String :=
-                                       "Repetition" & Repetition'img;
-               Server               : Server_Task_Access := Null;
-               Socket               : constant Ada_Lib.Socket_IO.Client.
-                                       Client_Socket_Access := new Ada_Lib.
-                                          Socket_IO.Client.Client_Socket_Type;
+               Description : constant Ada_Lib.Strings.String_Constant_Access :=
+                              new String'("Repetition" & Repetition'img);
+               Server      : Server_Task_Access := Null;
+               Socket      : constant Ada_Lib.Socket_IO.Client.
+                              Client_Socket_Access := new Ada_Lib.
+                                 Socket_IO.Client.Client_Socket_Type;
 
             begin
-               Socket.Set_Description ("client socket");
+               Socket.Set_Description ("client socket repetition" & Repetition'img);
                if Repetition /= No_Server_Repetition then
-                  Server := new Server_Task_Type (Description'unchecked_access);
+                  Server := new Server_Task_Type (Description);
                   delay 0.1;  -- let server get initialized
                   Server.Start (Local_Test'unchecked_access);
                   delay 0.1;  -- let server get initialized
@@ -392,7 +484,22 @@ put_Line (here);
                         else
                            "expected ") &
                      "exception");
-                     Assert (Repetition /= OK_Repetition, "unexpected failed exception");
+                     case Repetition is
+
+                        when No_Server_Repetition =>
+                           null;
+
+                        when OK_Repetition =>
+                           Assert (False, "unexpected failed exception");
+
+                        when Wrong_Port =>
+                           while not (Local_Test.Server_Completed) loop
+                              delay 0.2;
+                           end loop;
+
+                     end case;
+
+                     Socket.Close;
                      goto Loop_Repeat;
                end;
 
@@ -406,13 +513,13 @@ put_Line (here);
                Log_Here (Debug, "write buffer" &
                   Natural'(Send_Buffer'size/8)'img);
                Socket.Write (Send_Buffer);
-               -- read is done by server task
-               Log_Here (Debug);
---             Socket.Close;
-
                while not (Local_Test.Server_Completed) loop
                   delay 0.2;
                end loop;
+
+               -- read is done by server task
+               Log_Here (Debug, "close socket for repetition" & Repetition'img);
+               Socket.Close;
 
                Log_Here (Debug,  "Repetition" & Repetition'img &
                   " answer " & Local_Test.Answer'img &
@@ -453,19 +560,21 @@ put_Line (here);
 
    begin
       Log_In (Debug);
-
-      declare
-         Socket                  : Stream_Socket_Access := new Stream_Socket_Type;
-
-      begin
-         Log_Here (Debug, "socket address " & Image (Socket'address));
-         Socket.Set_Description ("test socket");
-         Record_Socket (Local_Test, Socket.all);
+      Local_Test.No_Data := True;
+      Send_Receive (Test);
+--    declare
+--       Socket                  : Stream_Socket_Access := new Stream_Socket_Type;
+--
+--    begin
+--       Log_Here (Debug, "socket address " & Image (Socket'address));
+--       Socket.Set_Description ("test socket");
+--       Record_Socket (Local_Test, Socket.all);
+--       Socket.Create_Stream (No_Timeout, No_Timeout, "test socket");
 --       delay 0.1;                 -- let tasks initialize
 --       Socket.Close;
 --       Log_Here (Debug);
 --       delay 0.1;                 -- let tasks exit
-      end;
+--    end;
 
       Log_Out (Debug);
 
@@ -476,16 +585,17 @@ put_Line (here);
 
    end Socket_Open_Close;
 
-   --------------------------------------------------------------
-   procedure Socket_Send_Receive (
+   ------------------------------------------------------------
+   procedure Socket_Send_Receive_Fixed_Record (
       Test                      : in out AUnit.Test_Cases.Test_Case'class) is
 -- pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
---    Local_Test                 : Socket_Test_Type renames Socket_Test_Type (Test);
+      Local_Test                 : Socket_Test_Type renames Socket_Test_Type (Test);
 
    begin
       Log_In (Debug);
+      Local_Test.Fixed_Buffer_Size := True;
       Send_Receive (Test);
 put_Line (here);
       Log_Out (Debug);
@@ -503,9 +613,39 @@ put_Line (here);
 put_Line (here);
          raise;
 
-   end Socket_Send_Receive;
+   end Socket_Send_Receive_Fixed_Record;
 
    --------------------------------------------------------------
+   procedure Socket_Send_Receive_Variable_Record (
+      Test                      : in out AUnit.Test_Cases.Test_Case'class) is
+-- pragma Unreferenced (Test);
+   ---------------------------------------------------------------
+
+      Local_Test                 : Socket_Test_Type renames Socket_Test_Type (Test);
+
+   begin
+      Log_In (Debug);
+      Local_Test.Fixed_Buffer_Size := False;
+      Send_Receive (Test);
+put_Line (here);
+      Log_Out (Debug);
+
+   exception
+
+      when Fault: Raise_Assert =>
+put_Line (here);
+         Log_Exception (Debug, "Assert in Send_Receive");
+         Assert (False, Ada.Exceptions.Exception_Message (Fault));
+
+      when Fault: others =>
+put_Line (here);
+         Log_Exception (Debug, Fault);
+put_Line (here);
+         raise;
+
+   end Socket_Send_Receive_Variable_Record;
+
+--------------------------------------
    --
    procedure Send_Receive_Missmatch_Read_Length (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
@@ -616,18 +756,14 @@ put_Line (here);
             " index" & Index'img);
 
          begin
-Log_Here;
             Test.Sockets (Index).Close;
-Log_Here;
 
          exception
             when Fault: others =>  -- unexpected, server may have failed
                Trace_Message_Exception (Fault, "socket " &
                   Test.Sockets (Index).Image, Here);
          end;
-Log_Here;
       end loop;
-Log_Here;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug);
    end Tear_Down;
@@ -640,8 +776,8 @@ Log_Here;
       Local_Test                 : Socket_Test_Access := Null;
 
    begin
-      Log_In (Debug);
-      Ada_Lib.Trace_Tasks.Start ("client");
+      Log_In (Debug, "client " & Description.all);
+      Ada_Lib.Trace_Tasks.Start ("client " & Description.all);
 
       accept Start (
          Test                    : in     Socket_Test_Access) do
@@ -654,27 +790,24 @@ Log_Here;
       Local_Test.Client_Failed := False;
 
       declare
-         Data_Left               : Index_Type := Data_Buffer_Type'length;
+         Data_Left               : Index_Type := (if Local_Test.No_Data then
+                                       0
+                                    else
+                                       Data_Buffer_Type'length); -- 5000
          Generator               : Random_Number_Offset_Generator.Generator;
-         Now                     : constant Ada.Real_Time.Time := Ada.Real_Time.Clock;
-         Offset                  : Duration;
+--       Now                     : constant Ada.Real_Time.Time := Ada.Real_Time.Clock;
          Options                 : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                                     Ada_Lib.Options.AUnit_Lib.
                                        Aunit_Options_Constant_Class_Access (
                                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-         Seconds                 : Ada.Real_Time.Seconds_Count;
-         Seed                    : Integer;
+--       Seconds                 : Ada.Real_Time.Seconds_Count;
          Client_Socket           : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
                                     new Ada_Lib.Socket_IO.Client.Client_Socket_Type;
          Start_Offset            : Index_Type :=
                                     Local_Test.Send_Data'first;
-         Time_Span               : Ada.Real_Time.Time_Span;
          Written                 : Index_Type := 0;
 
       begin
-         Ada.Real_Time.Split (Now, Seconds, Time_Span);
-         Offset := Ada.Real_Time.To_Duration (Time_Span);
-         Seed := Integer (Offset * 1000000);
          Log_Here (Debug,
             "client socket " & Client_Socket.Image &
 --          " response socket " & Response_Socket.Image &
@@ -682,18 +815,10 @@ Log_Here;
 --          " Do_Acknowledgement " & Local_Test.Do_Acknowledgement'img &
             " delay time " & Delay_Time'img &
             " socket " & Image (Client_Socket'address) &
-            " new seed " & Seed'img & " entered seed " &
-               Options.Random_Seed'img &
+            " entered seed " & Options.Random_Seed'img &
             " Test " & Image (Local_Test.all'address));
-         if Options.Report_Random then
-            Put_Line ("random seed " & Seed'img);
-         end if;
-         if Options.Set_Random_Seed then
-            Random_Number_Offset_Generator.Reset (Generator,
-               Options.Random_Seed);
-         else
-            Random_Number_Offset_Generator.Reset (Generator, Seed);
-         end if;
+
+         Offset_Reset_Generator (Generator);
 
          Client_Socket.Connect (
             Connection_Timeout=> 1.0,
@@ -806,7 +931,8 @@ Log_Here;
                      pragma Assert (Answer'size = Sum'size);
 
                      begin
-                        Client_Socket.Read (Answer);
+                        Client_Socket.Read (Answer,
+                           Timeout_Length => Local_Test.Client_Read_Timeout_Time);
 
                      exception
                         when Fault: Timeout =>  -- unexpected, server may have failed
@@ -848,6 +974,10 @@ Log_Here;
                end;
             end;
          end loop;
+         if Client_Socket.Is_Open then
+            Client_Socket.Close;
+         end if;
+
          Local_Test.Client_Completed := True;
 
       exception
@@ -856,7 +986,6 @@ Log_Here;
             Local_Test.Client_Failed := True;
             Put_Line ("Client task failed with " &
                Ada.Exceptions.Exception_Message (Fault));
---          Client_Socket.Close;
       end;
 
       Ada_Lib.Trace_Tasks.Stop;
@@ -912,7 +1041,7 @@ Log_Here;
          End_Offset              : Index_Type :=
                                     Local_Test.Received_Data'last;
          Generator               : Random_Number_Offset_Generator.Generator;
-         Process_Data            : Boolean := True;
+         Process_Data            : Boolean := not Local_Test.No_Data;
          Server_Socket           : constant Ada_Lib.Socket_IO.Server.
                                     Server_Socket_Access := new Ada_Lib.
                                        Socket_IO.Server.Server_Socket_Type (
@@ -939,16 +1068,21 @@ Log_Here;
                Accepted_Socket      => Accepted_Socket.all,
                Accept_Timeout       => Accept_Timeout,
                Server_Description   => "unit test server",
-               Accepted_Description => "unit test client accepted");
+               Accepted_Description => "unit test server accepted");
 
          exception
             when Fault: Select_Timeout =>
                Trace_Message_Exception (Debug, Fault,
-                  "server " & Description.all &
-                  " timeout expected " & Local_Test.Select_Timeout_Expected'img);
+                  (if Local_Test.Select_Timeout_Expected then
+                     ""
+                  else
+                     "not ") &
+                  "expected exception for server " & Description.all);
 
                Process_Data := False;
+               Server_Socket.Close;
                if Local_Test.Select_Timeout_Expected then  -- expected timeout
+log_here;
                   Local_Test.Answer := Success;
                else
                   Local_Test.Answer := Timeout_Answer;
@@ -1000,7 +1134,6 @@ Log_Here;
                      end if;
 
                      declare
-                        Last              : Index_Type;
                         Received          : Index_Type;
 
                      begin
@@ -1008,18 +1141,34 @@ Log_Here;
                         Log_Here (Debug, "start " & Start_Offset'img &
                            " End_Offset" & End_Offset'img);
 
-                        Accepted_Socket.Read (
-                           Buffer            => Local_Test.Received_Data (
-                                                   Start_Offset .. End_Offset),
-                           Last              => Last,    -- index in Received_Data
-                           Timeout_Length    => Local_Test.
-                                                   Server_Read_Timeout_Time);
+                        if Local_Test.Fixed_Buffer_Size then
+                           Accepted_Socket.Read (
+                              Buffer            => Local_Test.Received_Data (
+                                                      Start_Offset .. End_Offset),
+                              Timeout_Length    => Local_Test.
+                                                      Server_Read_Timeout_Time);
+                              Received := Index_Type (Request_Buffer);
 
-                        Received := Last - Start_Offset + 1;
-                        Log_Here (Debug, "expected" & Request_Buffer'img &
-                           " Received" & Received'img &
-                           " last" & Last'img & " end offset" &
-                           End_Offset'img);
+                           Log_Here (Debug, "expected" & Request_Buffer'img &
+                              " Received" & Received'img);
+                        else
+                           declare
+                              Last              : Index_Type;
+
+                           begin
+                              Accepted_Socket.Read (
+                                 Buffer            => Local_Test.Received_Data (
+                                                         Start_Offset .. End_Offset),
+                                 Last              => Last,    -- index in Received_Data
+                                 Timeout_Length    => Local_Test.
+                                                         Server_Read_Timeout_Time);
+                              Received := Last - Start_Offset + 1;
+
+                              Log_Here (Debug, "expected" & Request_Buffer'img &
+                                 " Received" & Received'img &
+                                 " last" & Last'img);
+                           end;
+                        end if;
 
                         Data_Left := Data_Left - Received;
                         Log_Here (Debug, "Received" & Received'img & " left" & Data_Left'img);
@@ -1072,6 +1221,7 @@ Log_Here;
                   end;
                end loop;
 
+log_here;
                Local_Test.Answer := Success;
 
                Log_Here (Debug, "server " & Description.all &
@@ -1083,6 +1233,7 @@ Log_Here;
                when Fault: Timeout =>
                   if Do_Timeout then
                      Local_Test.Server_Failed := False;
+log_here;
                      Local_Test.Answer := Success;
                   else
                      Trace_Message_Exception (Fault, "server " & Description.all &
@@ -1104,7 +1255,18 @@ Log_Here;
       --          Log_Here (Debug, "close sockets");
       --          Close_Sockets;
             end;
+
+         end if;      -- Process_Data
+         Log_Here (Debug, "close sockets for " & Description.all);
+
+         if Accepted_Socket.Is_Open then
+            Accepted_Socket.Close;
          end if;
+
+         if Server_Socket.Is_Open then
+            Server_Socket.Close;
+         end if;
+         Log_Here (Debug, "sockets closed");
       end;
 
       Log_Here (Debug, "server " & Description.all);

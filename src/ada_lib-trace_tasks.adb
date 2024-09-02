@@ -76,6 +76,7 @@ package body Ada_Lib.Trace_Tasks is
    ---------------------------------------------------------------
 
    begin
+      Log_In (Debug);
       declare
          Timeout                 : constant Ada.Calendar.Time := Ada.Calendar.Clock + 5.0;
 
@@ -86,8 +87,10 @@ package body Ada_Lib.Trace_Tasks is
             end if;
             delay 0.1;
          end loop;
+         Log_Here (Debug, "all stopped " & All_Stopped'img);
          Map.Report;
       end;
+      Log_Out (Debug);
    end Report;
 
    ---------------------------------------------------------------
@@ -258,14 +261,20 @@ package body Ada_Lib.Trace_Tasks is
             Cursor                  : in     Map_Package.Cursor) is
          ------------------------------------------------------------
 
-            Element                 : constant Element_Access := Map_Package.Element (Cursor);
-
+            Element     : constant Element_Access :=
+                           Map_Package.Element (Cursor);
+            Description : constant String :=
+                           Quote ("description", Element.Description) &
+                           " from " & Element.From &
+                           " task id " & Element.Task_Id;
          begin
+            Log_Here (Debug, "first " & First_Task'img);
             if First_Task then
                Put_Line ("tasks left running:");
                First_Task := False;
             end if;
-            Put_Line (Element.Description & ":" & Element.From & "." & Element.Task_Id);
+            Log_Here (Debug, Description);
+            Put_Line (Description);
          end Process;
          ------------------------------------------------------------
 
@@ -290,7 +299,8 @@ package body Ada_Lib.Trace_Tasks is
          ID                         : constant String := Ada.Task_Identification.Image (
                                        Ada.Task_Identification.Current_Task);
       begin
-         Log_In (Debug, "" & ID & " '" & Description & "' '" & From & "'");
+         Log_In (Debug, Quote ("Description", Description) &
+            " ID " & ID & "from " & From);
 
          declare
             Element                    : constant Element_Access :=
@@ -320,13 +330,14 @@ package body Ada_Lib.Trace_Tasks is
          ID                         : constant String := Ada.Task_Identification.Image (Task_Id);
 
       begin
-         Log_In (Debug, "" & Id);
+         Log_In (Debug, Quote ("task id", Id));
          if Map.Contains (Id) then
             declare
                Cursor               : Map_Package.Cursor := Map.Find (Id);
                Element              : Element_Access := Map_Package.Element (Cursor);
             begin
-               Log (Debug, Here, Who & " '" & Element.Description & "' '" & Element.From & "'");
+               Log_Here (Debug, Quote ("Description", Element.Description) &
+                  " from " & Element.From);
                Map.Delete (Cursor);
                Free (Element);
             end;

@@ -8,7 +8,7 @@ with GNAT.Sockets;
 
 package body Ada_Lib.Socket_IO.Client is
 
-   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Constant_Access;
    use type Ada_Lib.Strings.String_Access_All;
 -- use type Ada_Lib.Time.Time_Type;
 -- use type Index_Type;
@@ -352,7 +352,7 @@ package body Ada_Lib.Socket_IO.Client is
    begin
       Log_In (Trace, "socket address " & Image (Socket'address));
       Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Initialize;
-      Log_Out (Trace, Here, Who & " exit");
+      Log_Out (Trace, " exit");
    end Initialize;
 
    ---------------------------------------------------------------------------

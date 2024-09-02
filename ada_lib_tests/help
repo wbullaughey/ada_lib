@@ -30,7 +30,6 @@ test_ada_lib command line options:
     -@m                            : manual operations.                (test_ada_lib)
     -@p                            : include program in trace          (Ada_Lib)
     -@P                            : Print test suites.                (test_ada_lib)
-    -@R <seed>                     : set random seed                   (test_ada_lib)
     -@S                            : report random seed                (test_ada_lib)
     -@t                            : include task in trace             (Ada_Lib)
     -@x                            : exclude time in trace             (Ada_Lib)

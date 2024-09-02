@@ -235,11 +235,24 @@ package body Ada_Lib.Options.Unit_Test is
                      Options.Report_Random := True;
 
                   when 'R' =>
+                     if Options.Use_Random_Seed then
+                        raise Failed with "options " &
+                           Ada_Lib.Help.Modifier & "R and " &
+                           Ada_Lib.Help.Modifier & "u are incompatable";
+                     end if;
                      Options.Set_Random_Seed := True;
                      Options.Random_Seed := Iterator.Get_Integer;
 
                   when 'S' =>
                      Options.Report_Random := True;
+
+                  when 'u' =>
+                     if Options.Set_Random_Seed then
+                        raise Failed with "options " &
+                           Ada_Lib.Help.Modifier & "R and " &
+                           Ada_Lib.Help.Modifier & "u are incompatable";
+                     end if;
+                     Options.Use_Random_Seed := True;
 
                   when 'x' =>
                      Options.Exit_On_Done := True;
@@ -307,6 +320,8 @@ package body Ada_Lib.Options.Unit_Test is
          Ada_Lib.Help.Add_Option ('S', "", "report random seed", Component,
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Add_Option ('R', "seed", "set random seed", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('u', "", "use random seed", Component,
             Ada_Lib.Help.Modifier);
 
       when Ada_Lib.Options.Traces =>

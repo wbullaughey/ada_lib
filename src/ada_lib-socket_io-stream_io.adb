@@ -1,24 +1,18 @@
 -- package that provides stream IO for sockets with a timeout
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
---with Ada_Lib.Time;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
---with Hex_IO;
 with Interfaces;
 
 package body Ada_Lib.Socket_IO.Stream_IO is
 
--- use type Ada_Lib.Strings.String_Constant_Access;
    use type Ada_Lib.Strings.String_Access_All;
--- use type Ada_Lib.Time.Time_Type;
--- use type Ada_Lib.Timer.Event_Class_Access;
+   use type Data_Type;
    use type Index_Type;
    use type GNAT.Sockets.Error_Type;
    use type GNAT.Sockets.Socket_Type;
-
--- type Protected_Buffer_Access  is access all Protected_Buffer_Type;
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => GNAT.Sockets.Stream_Access,
@@ -36,15 +30,17 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Line                 : in   Buffer_Type;
       Last                 : in   Index_Type);
 
+-- Close_Flag              : constant Data_Type := Data_Type (Character'Pos (
+--                            Character'last));
+
    ---------------------------------------------------------------------------
    overriding
    procedure Close (
       Socket                     : in out Stream_Socket_Type) is
    ---------------------------------------------------------------------------
 
-      Close_Flag                 : constant Buffer_Type (1 .. 1) := (
-                                    1 => Data_Type (Character'Pos (
-                                       Character'last)));
+--    Close_Buffer               : constant Buffer_Type (1 .. 1) := (
+--                                  1 => Close_Flag);
       Event                      : Event_Type;
 
    begin
@@ -56,17 +52,15 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Out (Trace);
          return;
       end if;
-log_here;
-      Socket_Type (Socket).Close;
-log_here;
-      Socket.Stream.Socket_Closed := True;
-log_here;
-      Put (Socket.Stream.Output_Buffer, Close_Flag, Event);
-log_here;
+      Socket.Stream.Input_Buffer.Set_Event (Closed); -- signal input task to close
+--    Put (Socket.Stream.Input_Buffer, Close_Buffer, Event);
+--    Put (Socket.Stream.Output_Buffer, Close_Buffer, Event);
       Log_Here (Tracing, "output buffer event " & Event'img);
       delay 0.2;     -- let task complete
 
       Socket.Stream.Output_Buffer.Set_Event (Closed); -- signal output task to close
+      Socket_Type (Socket).Close;
+      Socket.Stream.Socket_Closed := True;
 
       Log_Here (Tracing, "wait for write task to exit socket " &
          Socket.Get_Description);
@@ -75,16 +69,17 @@ log_here;
    end loop;
 
       Log_Here (Tracing, "wait for reader task to exit socket " &
-         Socket.Get_Description);
+         Socket.Get_Description &
+         " Reader_Stopped " & Socket.Stream.Reader_Stopped'img);
       while not Socket.Stream.Reader_Stopped loop
          delay 0.1;
       end loop;
       Socket.Stream.Close;
       Log_Out (Trace);
-
    exception
       when Fault: others =>
          Trace_Exception (Trace, Fault);
+         Log_Exception (Trace, Fault);
          raise;
 
    end Close;
@@ -96,6 +91,8 @@ log_here;
 
    begin
       Log_In (Tracing, Stream.Image &
+         " reader stopped " & Stream.Reader_Stopped'img &
+         " writer stopped " & Stream.Writer_Stopped'img &
          " address stream " & Image (Stream'address));
 
       Stream.Input_Buffer.Set_Event (Closed);
@@ -105,7 +102,15 @@ log_here;
          Log_Here (Tracing);
          Socket_Type (Stream.Socket.all).Close;
       end if;
+      if not Stream.Reader_Stopped then
+         Log_Exception (True, "reader task freed while running");
+         raise Task_Running with "reader task from " & Here;
+      end if;
       Free (Stream.Reader);
+      if not Stream.Writer_Stopped then
+         Log_Exception (True, "writer task freed while running");
+         raise Task_Running with "writer task freed from " & Here;
+      end if;
       Free (Stream.Writer);
       Log_Out (Tracing);
    end Close;
@@ -179,7 +184,6 @@ log_here;
                                              "undescribed socket"
                                           else
                                              Socket.Description.all & " write task"));
-
    begin
       Log_In (Tracing, Socket.Image &
          Quote (" reader description", Reader_Task_Description) &
@@ -192,13 +196,10 @@ log_here;
       Stream.GNAT_Stream :=  GNAT.Sockets.Stream (Socket.GNAT_Socket);
       Stream.Default_Read_Timeout := Default_Read_Timeout;
       Stream.Default_Write_Timeout := Default_Write_Timeout;
-log_here;
       Stream.Reader := new Input_Task (Reader_Task_Description);
-log_here;
       Stream.Reader.Open (Stream'unchecked_access, Priority);
-log_here;
+      delay 0.1;  -- lett read initialize before write starts for debugging
       Stream.Writer := new Output_Task (Writer_Task_Description);
-log_here;
       Stream.Writer.Open (Stream'unchecked_access, Priority);
       Log_Out (Tracing, "was created " & Stream.Was_Created'img);
    end Create;
@@ -319,6 +320,7 @@ log_here;
    exception
       when Fault: others =>
          Trace_Exception (Fault, Here);
+         Log_Exception (Trace, Fault);
          raise;
 
    end Initialize;
@@ -333,6 +335,9 @@ log_here;
    begin
       Log_In (Tracing, "length" & Data'length'img );
       Buffer.Prime_Output (Data'length);
+      if Tracing then
+         Buffer.Trace_State;
+      end if;
       Buffer.Put (Data, Event);
       Log_Out (Tracing);
    end Put;
@@ -372,8 +377,7 @@ log_here;
          Start_Get               : Index_Type := Item'first;
 
       begin
-         Log_Here (Trace, "Timeout_Length " & Timeout_Length'img &
-            " input buffer " & Image (Stream.Input_Buffer'address));
+         Log_Here (Tracing);
 
          loop
             declare
@@ -421,13 +425,13 @@ log_here;
                case Event is
 
                   when OK =>
-                     if Get_Last = Item'last then
+                     if Get_Last = Item'last then  -- buffer full
                         Last := Item'last;
                         Log_Here (Trace);
                         exit;
                      end if;
 
-                     if not Wait then
+                     if not Wait then        -- return data current in buffer
                         Last := Get_Last;
                         Log_Here (Trace);
                         exit;
@@ -484,8 +488,8 @@ log_here;
          raise;
 
       when Fault: others =>
-         Trace_Message_Exception (Trace, Fault, "read failed");
-         Log_Exception (Trace);
+--       Trace_Message_Exception (Trace, Fault, "read failed");
+         Log_Exception (Trace, Fault, "read failed");
          raise;
    end Read;
 
@@ -546,6 +550,8 @@ log_here;
    end Read;
 
    ---------------------------------------------------------------------------
+   -- throws timeout if timeout reached and Item array not filled
+   -- waits forever if Timeout_Length = No_Timeout
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
@@ -558,6 +564,9 @@ log_here;
    end Read;
 
    ---------------------------------------------------------------------------
+   -- returns all bytes in buffer limited by length of buffer
+   -- raises timeout exception if Timeout_Length is not No_Timeout
+   -- and no data received by Timeout_Length
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
@@ -571,8 +580,8 @@ log_here;
          " timeout " & Format_Timeout (Timeout_Length));
 
       Socket.Stream.Read (Buffer, Last,
-         Wait              => True,
-         Throw_Exception   => False,
+         Wait              => False,
+         Throw_Exception   => True,
          Timeout_Length    => Timeout_Length);
 
       if Tracing then
@@ -610,7 +619,6 @@ log_here;
 
    begin
       Log_Here (Tracing, Socket.Image & " reader stopped " & Socket.Stream.Reader_Stopped'img);
-log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped'img & " address " & Image (Socket.Stream.Reader_Stopped'address));
 
       return Socket.Stream.Reader_Stopped;
    end Reader_Stopped;
@@ -816,6 +824,15 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
          end case;
       end Empty;
 
+--    -----------------------------------------------------------------------
+--    function Full
+--    return Boolean is
+--    -----------------------------------------------------------------------
+--
+--    begin
+--       return Buffer_Length - Buffer_Count >= Primed_Output;
+--    end Full;
+--
       -----------------------------------------------------------------------
       -- get as much data as available up to size of data
       -- will wait if buffer was empty as long as state is ok
@@ -840,7 +857,7 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
          when OK =>
             if Buffer_Count = 0 then
                State := Failed;
-               Log_Exception (Tracing, "time out");
+               Log_Exception (Trace, "time out");
                raise Timeout with "buffer empty and state ok called from " & Here;
             end if;
 
@@ -848,6 +865,7 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
 
             for Index in Data'range loop
                Data (Index) := Buffer (Tail);
+               Last := Index;
 
                if Tail = Buffer'last then
                   Tail := Buffer'first;
@@ -858,15 +876,14 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
                Buffer_Count := Buffer_Count - 1;
 
                if Buffer_Count = 0 then
---                State := Buffer_Limit;
-                  Last := Index;
-                  if Tracing then
-                     Dump ("got", Data (Data'first .. Last));
-                  end if;
-
+                  Log_Here (Tracing);
                   exit;
                end if;
             end loop;
+
+            if Tracing then
+               Dump ("got", Data (Data'first .. Last));
+            end if;
 
          when Timed_Out =>
             Event := Timed_Out;
@@ -874,7 +891,7 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
             return;
 
          when Failed =>
-            Log_Exception (Tracing);
+            Log_Exception (Trace);
             raise Aborted with "unexpected state " & State'img & " in get";
 
          end case;
@@ -906,6 +923,7 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
             " state " & State'img);
 
          if State /= Ok then
+            Log_Exception (Trace);
             raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
          end if;
          return Buffer_Count;
@@ -1036,6 +1054,7 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
                null;
 
             when Raise_Exception =>
+               Log_Exception (Trace);
                raise Aborted with "invalid state transition from " & State'img &
                   " to " & Event'img;
          end case;
@@ -1073,6 +1092,17 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
 --          raise;
 --
       end Timed_Out;
+
+      -----------------------------------------------------------------------
+      procedure Trace_State is
+      -----------------------------------------------------------------------
+
+      begin
+         Log_Here ("kind " & Kind'img & " Buffer_Count" & Buffer_Count'img &
+            " head" & Head'img & " tail" & Tail'img &
+            " Primed_Output" & Primed_Output'img &
+            " state " & State'img);
+      end Trace_State;
 
    end Protected_Buffer_Type;
 
@@ -1201,31 +1231,44 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
                exit;
             end if;
 
+--          if Data (Data'first) = Close_Flag then
+--             Log_Here (Trace, "close flag");
+--          end if;
+--
             Put (Stream_Pointer.Input_Buffer, Data, Event);
-            if Event /= Ok then
-               raise IO_Failed with "put failed at " & Here &
-                  " event " & Event'img;
-            end if;
+            case Event is
+
+               when Ok | Closed =>
+                  null;
+
+               when others =>
+                  Log_Exception (Trace, "select expired");
+                  raise IO_Failed with "put failed at " & Here &
+                     " event " & Event'img;
+            end case;
 
          exception
             when Fault: GNAT.Sockets.Socket_Error =>
---             declare
---                Flag           : Buffer_Type (1 .. 1) := (others =>
---                                  Data_Type (
---                                     Character'Pos (Character'last)));
---                Event          : Event_Type;
-
+               declare
+                  Socket_Closed  : constant Boolean :=
+                                    Stream_Pointer.Input_Buffer.Get_State = Closed;
                begin
-                  Trace_Message_Exception (Trace, Fault,
+                  Trace_Message_Exception (Trace and not Socket_Closed, Fault,
+                     (if Socket_Closed then
+                        ""
+                     else
+                        "not ") &
                      "expected exception Socket closed " & Stream_Pointer.Image);
-                  Stream_Pointer.Input_Buffer.Set_Event (Closed);
+                  if not Socket_Closed then
+                     Stream_Pointer.Input_Buffer.Set_Event (Closed);
+                  end if;
                   exit;
                end;
          end;
 
          if Stream_Pointer.Socket_Closed then      -- socket closed
             Stream_Pointer.Input_Buffer.Set_Event (Closed);
-            Log_Here (Tracing, "closing socket");
+            Log_Here (Trace, "closing socket");
             exit;
          end if;
 
@@ -1289,7 +1332,6 @@ log_here ("get Reader_Stopped normal exit value " & Socket.Stream.Reader_Stopped
          end;
       end loop;
       Log_Here (Trace, "loop exit " & Quote ("description", Description));
-log_here ("set Reader_Stopped normal exit " & Quote ("description", Description) & " address " & Image (Stream_Pointer.Reader_Stopped'address));
       Stream_Pointer.Reader_Stopped := True;
 
       Ada_Lib.Trace_Tasks.Stop;
@@ -1297,13 +1339,12 @@ log_here ("set Reader_Stopped normal exit " & Quote ("description", Description)
 
    exception
       when Fault: others =>
-         Trace_Message_Exception (Fault, Here, Stream_Pointer.Socket.Image);
-log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_Stopped'address));
+         Trace_Message_Exception (Fault, Stream_Pointer.Socket.Image);
          Stream_Pointer.Reader_Stopped := True;
          Stream_Pointer.Input_Buffer.Set_Event (Failed);
          Stream_Pointer.Output_Buffer.Set_Event (Failed);
          Ada_Lib.Trace_Tasks.Stop;
-         Log_Out (Tracing);
+         Log_Out (Trace);
 
    end Input_Task;
 
@@ -1312,14 +1353,14 @@ log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_St
       Stream_Pointer             : Stream_Access;
 
    begin
-      Log_In (Tracing, Quote ("description", Description));
-      Ada_Lib.Trace_Tasks.Start ("output task", Here);
+      Log_In (Trace, Quote ("description", Description));
 
       accept Open (
          Stream                  : in   Stream_Access;
          Priority                : in   Ada_Lib.OS.Priority_Type;
          From                    : in   String := Ada_Lib.Trace.Here) do
 
+         Ada_Lib.Trace_Tasks.Start ("output task " & Stream.Socket.Image, Here);
          Stream_Pointer := Stream;
          Stream_Pointer.Writer_Task_Id := Ada.Task_Identification.Current_Task;
          Ada_Lib.OS.Set_Priority (Priority);
@@ -1331,24 +1372,25 @@ log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_St
       end Open;
 
       loop  -- loop getting buffers to write
-         Log_Here (Tracing,
+         Log_Here (Trace,
+            Quote ("descritpion", Stream_Pointer.Socket.Description) & " " &
             Stream_Pointer.Socket.Image);
 --          GNAT.Sockets.Image (Stream_Pointer.Socket.GNAT_Socket));
          case Stream_Pointer.Output_Buffer.Get_State is
 
             when Closed =>
-               Log_Here (Tracing, "output buffer closed");
+               Log_Here (Trace, "output buffer closed");
                exit;
 
             when Failed =>
-               Log_Here (Tracing, "output buffer failed");
+               Log_Here (Trace, "output buffer failed");
                exit;
 
             when Ok =>  -- | Buffer_Limit =>
                null;
 
             when Timed_Out =>
-               Log_Here (Tracing, "output buffer timed out");
+               Log_Here (Trace, "output buffer timed out");
                exit;
 
          end case;
@@ -1359,7 +1401,7 @@ log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_St
             Last        : Index_Type;
 
          begin
-            Log_Here (Trace, "data " & Image (Data'address));
+            Log_Here (Trace, Stream_Pointer.Image);
 
             begin
                Stream_Pointer.Output_Buffer.Get (Data, Last, Event);
@@ -1375,7 +1417,7 @@ log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_St
 
             end;
 
-            Log_Here (Tracing, "event " & Event'img & " last" & Last'img &
+            Log_Here (Trace, "event " & Event'img & " last" & Last'img &
                " closed " & Stream_Pointer.Socket_Closed'img);
 
             if Stream_Pointer.Socket_Closed then
@@ -1388,7 +1430,7 @@ log_here ("set Reader_Stopped exception exit " & Image (Stream_Pointer.Reader_St
 --                raise Aborted with "buffer limit after get";
 
                when OK =>
-                  Log_Here (Tracing);
+                  Log_Here (Trace);
                   declare
                      Start_Send  : Index_Type := Data'first;
                      Send_Last   : Index_Type;
@@ -1421,7 +1463,7 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
 
                         exception
                            when Fault: GNAT.Sockets.Socket_Error =>
-                              Trace_Exception (Trace, Fault,
+                              Trace_Message_Exception (Trace, Fault,
                                  "stream " & Image (Stream_Pointer.all'address));
 
                               if GNAT.Sockets.Resolve_Exception (Fault) /=
@@ -1436,7 +1478,7 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
                   end;
 
                when Closed =>
-                  Log_Here (Tracing);
+                  Log_Here (Trace);
                   exit;
 
                when Failed | Timed_Out =>
@@ -1445,18 +1487,24 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
             end case;
          end;
       end loop;
-      Log_Here (Tracing, "socket " & Image (Stream_Pointer.Socket'address));
+      Log_Here (Trace, "socket " & Image (Stream_Pointer.Socket'address));
+
+      if    Stream_Pointer.Socket /= Null and then
+            Stream_Pointer.Socket.Is_Open then
+         Log_Here (Trace);
+         Stream_Pointer.Close;
+      end if;
       Stream_Pointer.Writer_Stopped := True;
 
       Ada_Lib.Trace_Tasks.Stop;
-      Log_Out (Tracing);
+      Log_Out (Trace);
 
    exception
       when Fault: others =>
          Trace_Exception (Fault, Here);
          Stream_Pointer.Writer_Stopped := True;
          Ada_Lib.Trace_Tasks.Stop;
-         Log_Out (Tracing);
+         Log_Out (Trace);
 
    end Output_Task;
 

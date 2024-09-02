@@ -176,10 +176,7 @@ package body Ada_Lib.Options.AUnit_Lib is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
---       Ada_Lib.Help.Add_Option ('d', "seed", "set random seed");
---       Ada_Lib.Help.Add_Option ('D', "", "report random seed");
          Ada_Lib.Help.Add_Option ('t', "", "ada_lib unit tests");
---       Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete");
 
       when Ada_Lib.Options.Traces =>
          Put_Line (Ada.Command_Line.Command_Name & " trace options (-" &

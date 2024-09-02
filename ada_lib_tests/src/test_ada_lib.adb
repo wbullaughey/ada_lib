@@ -26,7 +26,9 @@ begin
       if Aunit_Options.Initialize then
          Log_Here (Debug);
          Ada_Lib.Trace_Tasks.Start ("main");
+log_here;
          Ada_Lib.Test.Run_Suite (Aunit_Options);
+log_here;
          Gnoga.Application.Multi_Connect.End_Application;
          Log_Here (Debug);
          if Aunit_Options.Exit_On_Done then

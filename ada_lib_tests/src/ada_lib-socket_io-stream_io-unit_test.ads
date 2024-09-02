@@ -70,6 +70,8 @@ private
       Client_Timed_Out           : Boolean := False;
       Client_Write_Timeout_Time  : Duration := No_Timeout;
 --    Do_Acknowledgement         : Boolean := False;
+      Fixed_Buffer_Size          : Boolean := False;
+      No_Data                    : Boolean := False;
       Read_Write_Mode            : Read_Write_Mode_Type := Matching_Record_Length;
       Received_Data              : Data_Buffer_Type;
       Repetition                 : Positive;

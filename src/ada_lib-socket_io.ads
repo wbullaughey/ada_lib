@@ -159,11 +159,16 @@ package Ada_Lib.Socket_IO is
       Socket                     : in   Socket_Stream_Interface
    ) return Index_Type is abstract;
 
+   -- throws timeout if timeout reached and Item array not filled
+   -- waits forever if Timeout_Length = No_Timeout
    procedure Read (
       Socket                     : in out Socket_Stream_Interface;
       Buffer                     :    out Buffer_Type;
       Timeout_Length             : in     Duration := No_Timeout) is abstract;
 
+   -- returns all bytes in buffer limited by length of buffer
+   -- raises timeout exception if Timeout_Length is not No_Timeout
+   -- and no data received by Timeout_Length
    procedure Read (
       Socket                     : in out Socket_Stream_Interface;
       Buffer                     :    out Buffer_Type;

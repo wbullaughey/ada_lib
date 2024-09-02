@@ -15,6 +15,8 @@ package Ada_Lib.Options.Unit_Test is
 
    type Suite_Set_Type           is array (Suites_Type) of Boolean;
 
+   Default_Random_Seed           : constant := 0;
+
    -- base type for all unit test programs which -- include ada_lib
    type Ada_Lib_Unit_Test_Options_Type (
       Multi_Test        : Boolean -- perform multiple tests in one
@@ -30,12 +32,13 @@ package Ada_Lib.Options.Unit_Test is
       Mode              : Mode_Type := Run_Tests;  -- run unit tests
       Manual            : Boolean := False;  -- GUI interactions must be
                                              -- performed manually
-      Random_Seed       : Integer;
+      Random_Seed       : Integer := Default_Random_Seed;
       Report_Random     : Boolean := False;
       Routine           : Ada_Lib.Strings.Unlimited.String_Type;
       Set_Random_Seed   : Boolean := False;
       Suite_Name        : Ada_Lib.Strings.Unlimited.String_Type;
       Suite_Set         : Suite_Set_Type := (others => False);
+      Use_Random_Seed   : Boolean := False;
    end record;
 
    type Ada_Lib_Unit_Test_Options_Class_Access

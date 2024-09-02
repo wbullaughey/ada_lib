@@ -179,6 +179,7 @@ package body Ada_Lib.Socket_IO.Server is
                                     " server socket " & Socket.Image;
          begin
             Trace_Message_Exception (Fault, Message);
+            Log_Exception (Trace, Fault);
             raise Failed with Message;
          end;
    end Initialize;

@@ -1,5 +1,17 @@
 command: bin/test_ada_lib -@l
 test_ada_lib
+main_task_00007FF768008800: [00:00:00.00] test_ada_lib.adb:29 Test_Ada_Lib (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-test-run_suite.adb:102 Ada_Lib.Test.Run_Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-database-get_put_tests.adb:205 Ada_Lib.Database.Get_Put_Tests.No_Database_Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-database-get_put_tests.adb:208 Ada_Lib.Database.Get_Put_Tests.No_Database_Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-test-run_suite.adb:105 Ada_Lib.Test.Run_Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:214 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:218 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:223 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:225 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:227 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-mail-tests.adb:229 Ada_Lib.Mail.Tests.Suite (0)
+main_task_00007FF768008800: [00:00:00.00] ada_lib-test-run_suite.adb:108 Ada_Lib.Test.Run_Suite (0)
 Ask Basic_Operations
 Client_Socket_IO Test_Connect
 Command_Line_Iterator Options
@@ -74,7 +86,8 @@ Socket_Stream Send_Receive_Missmatch_Read_Length
 Socket_Stream Server_Failure
 Socket_Stream Socket_Acknowledge_Send_Receive
 Socket_Stream Socket_Open_Close
-Socket_Stream Socket_Send_Receive
+Socket_Stream Socket_Send_Receive_Fixed_Record
+Socket_Stream Socket_Send_Receive_Variable_Record
 Socket_Stream Socket_Timeout_Send_Receive
 Subscribe Load_Subscription
 Subscribe Store_Subscription
@@ -97,3 +110,4 @@ Trace Parsed_Time
 Trace Simple
 
 Routines with a * are disabled by default
+main_task_00007FF768008800: [00:00:00.01] test_ada_lib.adb:31 Test_Ada_Lib (0)

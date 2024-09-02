@@ -31,7 +31,8 @@ package body Ada_Lib.Socket_IO is
    begin
       Log_In (Trace, "socket " & Socket.Image &
          " Open " & Socket.Is_Open'img &
-         " addresses socket " & Image (Socket'address) );
+         " tag " & Tag_Name (Socket_Type'class (Socket)'tag) &
+         " addresses socket " & Image (Socket'address));
 
       if not Socket.Is_Open then
          Log_Out (Trace);

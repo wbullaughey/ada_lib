@@ -14,6 +14,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
    Different_Description         : exception;
    IO_Failed                     : exception;
    Peer_Closed                   : exception;
+   Task_Running                  : exception;
    Timeout                       : exception;
 
    type Buffer_Kind_Type            is (Input, Output);
@@ -62,6 +63,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
          From                    : in     String := Ada_Lib.Trace.Here);
 
       function Timed_Out return Boolean;
+
+      procedure Trace_State;
 
    private
       Buffer                     : Stream_Buffer_Type;
@@ -136,6 +139,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
    ) return Index_Type;
 
    -- throws timeout if timeout reached and Item array not filled
+   -- waits forever if Timeout_Length = No_Timeout
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
@@ -144,6 +148,9 @@ package Ada_Lib.Socket_IO.Stream_IO is
    ) with pre => Socket.Is_Open and then
                  Buffer'length > 0;
 
+   -- returns all bytes in buffer limited by length of buffer
+   -- raises timeout exception if Timeout_Length is not No_Timeout
+   -- and no data received by Timeout_Length
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
@@ -177,6 +184,9 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Description                : in     String;
       Data                       : in     Buffer_Type;
       From                       : in     String := Ada_Lib.Trace.Here);
+
+   type Task_State_Type          is (Idle, Running, Started, Stopped);
+   type Task_State_Access        is access all Task_State_Type;
 
 private
    Never                         : constant Ada.Calendar.Time :=
@@ -224,11 +234,13 @@ private
       Input_Buffer               : aliased Protected_Buffer_Type (Input);
       Output_Buffer              : aliased Protected_Buffer_Type (Output);
       Reader                     : Input_Task_Access := Null;
+--    Reader_State               : aliased Task_State_Type := Idle;
       Reader_Task_Id             : Ada.Task_Identification.Task_Id;
       Reader_Stopped             : Boolean := True;
       Socket                     : Socket_Class_Access := Null;
       Socket_Closed              : Boolean := False;
       Writer                     : Output_Task_Access := Null;
+--    Writer_State               : aliased Task_State_Type := Idle;
       Writer_Task_Id             : Ada.Task_Identification.Task_Id;
       Writer_Stopped             : Boolean := True;
    end record;
@@ -262,6 +274,8 @@ private
    ) with pre => Stream.Was_Created and then
                  Item'length > 0;
 
+   -- throws timeout if timeout reached and Item array not filled
+   -- waits forever if Timeout_Length = No_Timeout
    procedure Read (
       Stream                     : in out Stream_Type;
       Item                       :    out Buffer_Type;
