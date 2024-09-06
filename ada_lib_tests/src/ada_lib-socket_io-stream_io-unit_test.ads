@@ -47,12 +47,13 @@ private
    Default_Port                  : constant := 12345;
 
    type Read_Write_Mode_Type        is (
-      Matching_Record_Length,       -- client and server use same record lengths
-      Unmatched_Record_Length,      -- server fixed length reads, client random
-                                    -- server has short read timeout and polls
-      Read_Timeout,                 -- client sends short write, server times out
-      Write_Timeout,               -- server reads slower then client writes
-      Connect_Timeout);             -- server doesn't to accept
+      Matching_Record_Length,    -- client and server use same record lengths
+      No_Data,
+      Polling_Read,              -- server has short read timeout and polls
+      Unmatched_Record_Length,   -- server fixed length reads, client delays and reads available
+      Read_Timeout,              -- client sends short write, server times out
+      Write_Timeout,             -- server reads slower then client writes
+      Connect_Timeout);          -- server doesn't to accept
 
    type Sockets_Type             is array (1 .. 10) of Socket_Class_Access;
 
@@ -70,8 +71,6 @@ private
       Client_Timed_Out           : Boolean := False;
       Client_Write_Timeout_Time  : Duration := No_Timeout;
 --    Do_Acknowledgement         : Boolean := False;
-      Fixed_Buffer_Size          : Boolean := False;
-      No_Data                    : Boolean := False;
       Read_Write_Mode            : Read_Write_Mode_Type := Matching_Record_Length;
       Received_Data              : Data_Buffer_Type;
       Repetition                 : Positive;
@@ -83,7 +82,8 @@ private
       Server_Read_Timeout_Time   : Duration := No_Timeout;
       Server_Started             : Boolean := False;
       Server_Timedout            : Boolean := False;
-      Server_Write_Response      : Boolean := True;
+      Server_Write_Buffer        : Boolean := False; -- true write buffer else ack
+      Server_Write_Response      : Boolean := True; -- false for testing read timeout by client
       Server_Write_Timeout_Time  : Duration := No_Timeout;
       Sockets                    : Sockets_Type := (others => Null);
       Socket_Count               : Natural := 0;

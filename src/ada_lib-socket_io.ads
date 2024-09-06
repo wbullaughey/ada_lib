@@ -166,14 +166,15 @@ package Ada_Lib.Socket_IO is
       Buffer                     :    out Buffer_Type;
       Timeout_Length             : in     Duration := No_Timeout) is abstract;
 
-   -- returns all bytes in buffer limited by length of buffer
-   -- raises timeout exception if Timeout_Length is not No_Timeout
-   -- and no data received by Timeout_Length
+   -- if Wait is true will wait until Buffer is full
+   -- if Timeout_Length is not No_Timeout Timeout exception will be raised
+   -- if time is exceeded without filling the buffer
+   -- when false it returns all bytes in buffer currently in the buffer
    procedure Read (
       Socket                     : in out Socket_Stream_Interface;
       Buffer                     :    out Buffer_Type;
       Last                       :    out Index_Type;
-      Timeout_Length             : in     Duration) is abstract;
+      Wait                       : in     Duration := 0.0) is abstract;
 
    procedure Write (
       Socket                     : in out Socket_Stream_Interface;

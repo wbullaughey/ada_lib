@@ -129,7 +129,7 @@ package body Ada_Lib.Mail.SMTP is
       begin
          Log_In (Debug, Quote ("Request", Request));
          Credential.Socket.Write (Send_Buffer);
-         Credential.Socket.Read (Receive_Buffer, Last, Timeout_Length => 0.5);
+         Credential.Socket.Read (Receive_Buffer, Last, Wait => 0.5);
 
          declare
             Response             : String (1 .. Natural (Last));

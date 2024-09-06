@@ -146,19 +146,26 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Buffer                     :    out Buffer_Type;
       Timeout_Length             : in     Duration := No_Timeout
    ) with pre => Socket.Is_Open and then
-                 Buffer'length > 0;
+                 Buffer'length > 0 and then
+                 Timeout_Length > 0.0;
 
-   -- returns all bytes in buffer limited by length of buffer
-   -- raises timeout exception if Timeout_Length is not No_Timeout
-   -- and no data received by Timeout_Length
+   -- after wait time returns what ever is in buffer
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
       Buffer                     :    out Buffer_Type;
       Last                       :    out Index_Type; -- index in Buffer
-      Timeout_Length             : in     Duration := No_Timeout
+      Wait                       : in     Duration := 0.0
    ) with pre => Socket.Is_Open and then
                  Buffer'length > 0;
+
+-- -- returns just data available without wait
+-- procedure Read (
+--    Stream                     : in out Stream_Type;
+--    Item                       : out Buffer_Type;
+--    Last                       : out Index_Type     -- index in Item
+-- ) with pre => Stream.Was_Created and then
+--               Item'length > 0;
 
    function Reader_Stopped (
       Socket                     : in   Stream_Socket_Type
@@ -266,24 +273,24 @@ private
 
    procedure Read (
       Stream                     : in out Stream_Type;
-      Item                       :    out Buffer_Type;
+      Buffer                     :    out Buffer_Type;
       Last                       :    out Index_Type;    -- index in Item
-      Wait                       : in     Boolean;
       Throw_Exception            : in     Boolean;
-      Timeout_Length             : in     Duration := No_Timeout
+      Timeout_Length             : in     Duration
    ) with pre => Stream.Was_Created and then
-                 Item'length > 0;
+                 Buffer'length > 0 and then
+                 Timeout_Length > 0.0;
 
    -- throws timeout if timeout reached and Item array not filled
    -- waits forever if Timeout_Length = No_Timeout
-   procedure Read (
-      Stream                     : in out Stream_Type;
-      Item                       :    out Buffer_Type;
-      Timeout_Length             : in     Duration := No_Timeout
-   ) with pre => Stream.Was_Created and then
-                 Item'length > 0;
-
-   -- returns Last when default timeout reached
+-- procedure Read (
+--    Stream                     : in out Stream_Type;
+--    Item                       :    out Buffer_Type;
+--    Timeout_Length             : in     Duration := No_Timeout
+-- ) with pre => Stream.Was_Created and then
+--               Item'length > 0;
+--
+-- -- returns Last when timeout reached
    overriding
    procedure Read (
       Stream                     : in out Stream_Type;
@@ -293,21 +300,13 @@ private
                  Item'length > 0;
 
    -- returns Last when timeout reached
-   procedure Read (
-      Stream                     : in out Stream_Type;
-      Buffer                     :    out Buffer_Type;
-      Last                       :    out Index_Type;    -- index in Buffer
-      Timeout_Length             : in     Duration := No_Timeout
-   ) with pre => Stream.Was_Created and then
-                 Buffer'length > 0;
-
-   -- returns just data available without wait
-   procedure Read_Immediate (
-      Stream                     : in out Stream_Type;
-      Item                       : out Buffer_Type;
-      Last                       : out Index_Type     -- index in Item
-   ) with pre => Stream.Was_Created and then
-                 Item'length > 0;
+--   procedure Read (
+--      Stream                     : in out Stream_Type;
+--    Buffer                     :    out Buffer_Type;
+--    Last                       :    out Index_Type;    -- index in Buffer
+--    Timeout_Length             : in     Duration := No_Timeout
+-- ) with pre => Stream.Was_Created and then
+--               Buffer'length > 0;
 
    function Was_Created (
       Stream                     : in     Stream_Type
@@ -324,7 +323,8 @@ private
       Stream                     : in out Stream_Type;
       Item                       : in     Buffer_Type;
       Timeout_Length             : in     Duration
-   ) with pre => Item'length > 0;
+   ) with pre => Item'length > 0 and then
+                 Timeout_Length > 0.0;
 
    type Stream_Socket_Type       is new Socket_Type and
                                        Client_Socket_Interface and

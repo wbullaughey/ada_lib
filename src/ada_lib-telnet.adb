@@ -99,7 +99,10 @@ package body Ada_Lib.Telnet is
 
    begin
       Log_In (Trace);
-      Telnet.Socket.Read (Item, Last, Wait_Time);
+      Telnet.Socket.Read (
+         Buffer      => Item,
+         Last        => Last,
+         Wait        => Wait_Time);
 
       declare
          Line     : String (1 .. Natural (Last));

@@ -165,7 +165,7 @@ package body Ada_Lib.EMail is
       begin
          Log_In (Debug, Quote ("Request", Request));
          Emailer.Socket.Write (Send_Buffer);
-         Emailer.Socket.Read (Receive_Buffer, Last, Timeout_Length => 0.5);
+         Emailer.Socket.Read (Receive_Buffer, Last, Wait => 0.5);
 
          declare
             Response             : String (1 .. Natural (Last));
