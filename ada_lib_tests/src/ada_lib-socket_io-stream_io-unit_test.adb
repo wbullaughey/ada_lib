@@ -25,8 +25,6 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    use type Ada.Streams.Stream_Element_Offset;
    use type Port_Type;
 
-   Raise_Assert                     : Exception;
-
    type Length_Or_Answer_Type       is mod 2 ** 32;
 
    task type Client_Task_Type (
@@ -315,24 +313,23 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       end if;
 
       if not Send_Started then
-         Log_Exception (Debug);
-         raise Raise_Assert with "server or client not started";
+         Assert (False, "server or client not started");
       end if;
 
       Data_Reset_Generator (Generator);
       -- initialize data buffer
       for Index in Local_Test.Send_Data'range loop
-
          Local_Test.Send_Data (Index) :=
             Random_Number_Data_Generator.Random (Generator);
       end loop;
+      Dump (Local_Test.Send_Data'address, Local_Test.Send_Data'length,32,Width_8,"send data", Here);
       Log_Here (Debug, "start server task");
       Server.Start (    -- reads from client and then writes to client
          Test              => Local_Test'unchecked_access);
       delay 0.1;  -- let server start
       if not Local_Test.Server_Started then
          Log_Exception (Debug);
-         raise Raise_Assert with "server did not start";
+         Assert (False, "server did not start");
       end if;
 
       Log_Here (Debug, "start client task");
@@ -341,8 +338,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
       delay 0.1;  -- let client start
       if not Local_Test.Client_Started then
-         Log_Exception (Debug);
-         raise Raise_Assert with "client did not start";
+         Assert (False, "client did not start");
       end if;
 
       Log_Here (Debug, "wait for tasks to complete");
@@ -350,54 +346,42 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       loop
          if    Local_Test.Client_Completed and then
                Local_Test.Server_Completed then
+            Log_Here (Debug, "tasks completed");
             exit;
          end if;
          delay 0.2;
       end loop;
 
-      Log_Here (Debug, "tasks completed" & " answer " & Local_Test.Answer'img &
-         (if Local_Test.Server_Timedout then " server timedout" else "") &
-         (if Local_Test.Server_Failed then " server failed" else "") &
-         (if Local_Test.Client_Failed then " client failed" else "") &
-         (if Local_Test.Client_Timed_Out then " client timed out" else ""));
-
-      if Local_Test.Answer /= Success then
-         Log_Exception (Debug, "bad answer " & Local_Test.Answer'img);
-         raise Raise_Assert with (if Local_Test.Server_Timedout then
-               "server unexpectedly time out"
-            else
-               "server return answer false") & " at " & Here;
-      end if;
-
-      if Local_Test.Client_failed then
-         Log_Exception (Debug);
-         raise Raise_Assert with "Client failed";
-      end if;
-      if Local_Test.Server_failed then
-         Log_Exception (Debug);
-         raise Raise_Assert with "server failed";
-      end if;
-
-      if    Local_Test.Server_Write_Timeout_Time = No_Timeout and then
-            Local_Test.Server_Timedout then
-         Log_Exception (Debug);
-         raise Raise_Assert with "server timed out";
-      end if;
+      declare
+         Why      : constant String :=
+            (if Local_Test.Server_Timedout then " server timedout" else "") &
+            (if Local_Test.Server_Failed then " server failed" else "") &
+            (if Local_Test.Client_Failed then " client failed" else "") &
+            (if Local_Test.Client_Timed_Out then " client timed out" else "");
+         Message  : constant String := " answer " & Local_Test.Answer'img &
+                     (if Why'length > 0 then
+                        " and " & Why
+                     else
+                        "");
+      begin
+         Log_Here (Debug, Message);
+         Dump (Local_Test.Received_Data'address,
+            Local_Test.Received_Data'length, 32, Width_8, "send data", Here);
+         Assert (Local_Test.Answer = Success, Message);
+      end;
 
       if Local_Test.Send_Data = Local_Test.Received_Data then
 log_here;
-         Local_Test.Answer := Success;    -- all sent and received
       elsif Local_Test.Client_Timed_Out and then
             not Local_Test.Server_Write_Response then
 log_here;
-         Local_Test.Answer := Success;    -- expected timeout
       elsif Server_Read_Timeout_Time = 0.0 then
          Log_Here (Debug, "data missmach");
          Hex_IO.Dump_8 (Local_Test.Send_Data'address, Local_Test.Send_Data'size, 32, "sent data");
          Hex_IO.Dump_8 (Local_Test.Received_Data'address, Local_Test.Received_Data'size, 32, "received data");
-         Local_Test.Answer := Bad_DAta;
+         Local_Test.Set_Answer (Bad_Data);
       else
-         Local_Test.Answer := Timeout_Answer;
+         Local_Test.Set_Answer (Timeout_Answer);
          Log_Here (Debug, "Server_Read_Timeout");
       end if;
       Log_Out (Debug);
@@ -602,23 +586,11 @@ put_Line (here);
 
    begin
       Log_In (Debug);
+--    Local_Test.Server_Wait_Time := 0.2;
       Local_Test.Read_Write_Mode := Matching_Record_Length;
       Send_Receive (Test);
 put_Line (here);
       Log_Out (Debug);
-
-   exception
-
-      when Fault: Raise_Assert =>
-put_Line (here);
-         Log_Exception (Debug, "Assert in Send_Receive");
-         Assert (False, Ada.Exceptions.Exception_Message (Fault));
-
-      when Fault: others =>
-put_Line (here);
-         Log_Exception (Debug, Fault);
-put_Line (here);
-         raise;
 
    end Socket_Send_Receive_Fixed_Record;
 
@@ -636,20 +608,6 @@ put_Line (here);
       Send_Receive (Test);
 put_Line (here);
       Log_Out (Debug);
-
-   exception
-
-      when Fault: Raise_Assert =>
-put_Line (here);
-         Log_Exception (Debug, "Assert in Send_Receive");
-         Assert (False, Ada.Exceptions.Exception_Message (Fault));
-
-      when Fault: others =>
-put_Line (here);
-         Log_Exception (Debug, Fault);
-put_Line (here);
-         raise;
-
    end Socket_Send_Receive_Poll;
 
    --------------------------------------------------------------
@@ -662,25 +620,12 @@ put_Line (here);
 
    begin
       Log_In (Debug);
+      Local_Test.Server_Wait_Time := 0.2;
       Local_Test.Read_Write_Mode := Unmatched_Record_Length;
       Local_Test.Server_Write_Buffer := True; -- write buffer back to client
       Send_Receive (Test);
 put_Line (here);
       Log_Out (Debug);
-
-   exception
-
-      when Fault: Raise_Assert =>
-put_Line (here);
-         Log_Exception (Debug, "Assert in Send_Receive");
-         Assert (False, Ada.Exceptions.Exception_Message (Fault));
-
-      when Fault: others =>
-put_Line (here);
-         Log_Exception (Debug, Fault);
-put_Line (here);
-         raise;
-
    end Socket_Send_Receive_Variable_Record;
 
 --------------------------------------
@@ -709,13 +654,6 @@ put_Line (here);
       Assert (Local_Test.Answer = Success,
          "Answers failed " & Local_Test.Answer'img);
       Log_Out (Debug);
-
-   exception
-
-      when Fault: others =>
-         Log_Exception (Debug, Fault);
-         raise;
-
    end Send_Receive_Missmatch_Read_Length;
 
    --------------------------------------------------------------
@@ -734,13 +672,6 @@ put_Line (here);
       Assert (Local_Test.Answer = Success,
          "Answers failed " & Local_Test.Answer'img);
       Log_Out (Debug);
-
-   exception
-
-      when Fault: others =>
-         Log_Exception (Debug, Fault);
-         raise;
-
    end Socket_Timeout_Send_Receive;
 
    --------------------------------------------------------------
@@ -807,6 +738,22 @@ put_Line (here);
    end Tear_Down;
 
    ---------------------------------------------------------------
+   procedure Set_Answer (
+      Test                       : in out Socket_Test_Type;
+      Answer                     : in     Answer_Type) is
+   ---------------------------------------------------------------
+
+   begin
+      if Test.Answer = Success then
+         Test.Answer := Answer;
+         Log_Here (Debug, "set answer " & Answer'img);
+      else
+         Log_Here (Debug, "anser alread set " & Test.Answer'img &
+            " new answer " & Answer'img);
+      end if;
+   end Set_Answer;
+
+   ---------------------------------------------------------------
    task body Client_Task_Type is
    ---------------------------------------------------------------
 
@@ -871,169 +818,100 @@ put_Line (here);
 
          while Data_Left > 0 and then not (
                Local_Test.Server_Failed or else Local_Test.Server_Timedout) loop
+            Log_Here (Debug, " left" & Data_Left'img);
+
             declare
                End_Offset        : Index_Type;
-               Request_Buffer    : Length_Or_Answer_Type :=
-                                    Length_Or_Answer_Type(Data_Left);
-
+               Random_Length     : constant Index_Type :=
+                                    Random_Number_Offset_Generator.Random (
+                                       Generator);
+               Mod_Length        : constant Index_Type :=
+                                    Random_Length mod (Buffer_Length / 2);
+               Short_Length      : Index_Type := Mod_Length + 1;
+                                 -- make sure never zero
             begin
-               case Local_Test.Read_Write_Mode is
+               if Short_Length > Data_Left then
+                  Short_Length := Data_Left;
+               end if;
 
-                  when Matching_Record_Length => -- send buffer length
-                     declare
-                        Write_Buffer   : Buffer_Type (1 ..
-                                          Buffer_Bytes (Request_Buffer'size));
-                        for Write_Buffer'address use Request_Buffer'address;
-                        Short_Length      : Index_Type;
-
-                     begin
-                        pragma Assert (Request_Buffer'size = Write_Buffer'size,
-                           "buffer size missmatch at " & Here);
-                        Log_Here (Debug, " left" & Data_Left'img);
-
-                        Short_Length := Random_Number_Offset_Generator.Random (
-                                          Generator) mod (Data_Buffer_Type'length - 1) + 1;
-                                          -- make sure never zero
-                        if Short_Length > Data_Left then
-                           Short_Length := Data_Left;
-                        end if;
-                        Request_Buffer  := Length_Or_Answer_Type (Short_Length);
-
-                        Log_Here (Debug, "short length" &
-                           " Request_Buffer" & Request_Buffer'img );
-
-                        End_Offset := Start_Offset + Index_Type (Request_Buffer) - 1;
-                        Log_Here (Debug, "write length" & Request_Buffer'img &
-                           " start " & Start_Offset'img & " end " & End_Offset'img &
-                           " to client socket " & Client_Socket.Image);
-                        Client_Socket.Write (Write_Buffer);     -- request length
-
-                        declare
-                           Answer   : Buffer_Type (1 ..
-                                       Buffer_Bytes (Length_Or_Answer_Type'size));
-                           Ack      : Length_Or_Answer_Type;
-                           for Ack'address use Answer'address;
-
-                        begin
-                           Client_Socket.Read (
-                              Buffer         => Answer,
-                              Timeout_Length => Local_Test.Client_Read_Timeout_Time);
-                           Log_Here (Debug, "ack" & Ack'img);
-
-                           if Ack /= Request_Buffer then
-                              Local_Test.Answer := Wrong_Length;
-                              Log_Here (Debug, "ack bad for lenth" & Ack'img);
-                              exit;
-                           end if;
-
-                        exception
-                           when Fault: Timeout =>
-                              Trace_Message_Exception (Debug, Fault,
-                                 "server timed out " &
-                                    Local_Test.Server_Timedout'img &
-                                 (if Local_Test.Server_Write_Response then
-                                       ""
-                                  else
-                                       " expected") &
-                                 " client read time out " &
-                                    Local_Test.Client_Read_Timeout_Time'img &
-                                 " write response " &
-                                    Local_Test.Server_Write_Response'img);
-                              if Local_Test.Server_Write_Response then
-                                 Local_Test.Client_Failed := True;
-                                 -- did not expect timeout
-                              else -- timeout expected
-                                 Local_Test.Client_Timed_Out := True;
-                              end if;
-                              exit;    -- quit testing
-
-                        end;
-
-                     end;
-
-                  when Unmatched_Record_Length =>
-                        End_Offset := Local_Test.Send_Data'last;  -- send whole buffer
-
-                  when  others =>
-                     null;
-               end case;
-
-               Log_Here (Debug, "write" & Request_Buffer'img &
-                  " Start_Offset" & Start_Offset'img & " End_Offset" & End_Offset'img);
-               Client_Socket.Write (Local_Test.Send_Data (  -- send data buffer
-                  Start_Offset .. End_Offset));
-                                                -- variable length records
-               Written := Written + Index_Type (Request_Buffer);
-
-               if Local_Test.Server_Write_Buffer then  -- server will send whole data back
-                  pragma Assert (Local_Test.Read_Write_Mode = Unmatched_Record_Length,
-                     "mode " & Local_Test.Read_Write_Mode'img & " not supported at " & Here);
+               End_Offset := Start_Offset + Short_Length - 1;
+               if Local_Test.Read_Write_Mode = Matching_Record_Length then
+                  -- send buffer length
                   declare
-                     Count    : Index_Type := Index_Type (Request_Buffer);
-                     First    : Boolean := True;
-                     Last     : Index_Type;
-                     Receive_Buffer
-                              : Buffer_Type (1 .. Index_Type (Request_Buffer));
+                     Length_Request_Buffer
+                                    : Length_Or_Answer_Type :=
+                                     Length_Or_Answer_Type(Data_Left);
+                     Write_Buffer   : Buffer_Type (1 ..
+                                       Buffer_Bytes (Length_Request_Buffer'size));
+                     for Write_Buffer'address use Length_Request_Buffer'address;
                   begin
-                     while Count > 0 loop
-                        if First then
-                           delay 0.1;
-                           First := False;
-                        end if;
+                     Length_Request_Buffer := Length_Or_Answer_Type (Short_Length);
 
-                        Client_Socket.Read (Receive_Buffer,     -- read the length
-                           Wait     => 0.0,
-                           Last     => Last);
-
-                        Count := Count - Last;
-                     end loop;
-                  end;
-               else
-                  declare
-                     Answer   : Buffer_Type (1 ..
-                                 Buffer_Bytes (Length_Or_Answer_Type'size));
-                     Ack      : Length_Or_Answer_Type;
-                     for Ack'address use Answer'address;
-                     Sum               : Length_Or_Answer_Type := 0;
-
-                  begin
-                     Log_Here (Debug, "Answer size" &
-                        Answer'size'img & " ack" & Ack'size'img);
-                     pragma Assert (Answer'size = Sum'size);
-
-                     begin
-                        Client_Socket.Read (Answer,
-                           Timeout_Length => Local_Test.Client_Read_Timeout_Time);
-
-                     exception
-                        when Fault: Timeout =>  -- unexpected, server may have failed
-                           Trace_Exception (Fault, Here);
-                           exit;
-
-                     end;
-                     for Index in Start_Offset .. End_Offset loop
-                        Sum := Sum +
-                           Length_Or_Answer_Type (Local_Test.Send_Data (Index));
-                     end loop;
-
-                     if Sum /= Ack then
-                        Local_Test.Answer := Bad_Ack;
-                     end if;
-
-                     Log_Here (Debug, "answer " & Local_Test.Answer'img &
-                        " sum" & Sum'img & " ack" & Ack'img);
-
-                     if Ada_Lib.Options.Actual.
-                           Program_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
-                                 Count mod Notify_Frequency = 0 then
-                        Put_Line (Count'img & " records received");
-                     end if;
+                     Log_Here (Debug, "Random_Length" & Random_Length'img &
+                        " mod length" & Mod_Length'img &
+                        " short length" & " Length_Request_Buffer" &
+                           Length_Request_Buffer'img &
+                        " end offset" & End_Offset'img);
+                     Client_Socket.Write (Write_Buffer);     -- send request length
                   end;
                end if;
 
-               Start_Offset := Start_Offset + Index_Type (Request_Buffer);
-               Data_Left := Data_Left - Index_Type (Request_Buffer);
+               Log_Here (Debug, "write length" & Short_Length'img &
+                  " Start_Offset" & Start_Offset'img & " end " & End_Offset'img &
+                  " to client socket " & Client_Socket.Image);
+               Client_Socket.Write (Local_Test.Send_Data (
+                   Start_Offset .. End_Offset));     -- write data
+               Written := Written + Short_Length;
+
+               declare     -- get answer
+                  Answer   : Buffer_Type (1 ..
+                              Buffer_Bytes (Length_Or_Answer_Type'size));
+                  Ack      : Length_Or_Answer_Type;
+                  for Ack'address use Answer'address;
+                  Sum               : Length_Or_Answer_Type := 0;
+
+               begin
+                  Log_Here (Debug, "Answer size" &
+                     Answer'size'img & " ack" & Ack'size'img);
+
+                  begin
+                     Client_Socket.Read (Answer,
+                        Timeout_Length => Local_Test.Client_Read_Timeout_Time);
+
+                  exception
+                     when Fault: Timeout =>  -- unexpected, server may have failed
+                        Trace_Exception (Debug, Fault, Here);
+                        Local_Test.Client_Timed_Out := True;
+                        Local_Test.Set_Answer (Timeout_Answer);
+                        exit;
+                  end;
+                  -- calculate what answer should be
+Log_Here ("client start" & Start_Offset'img & " .." & End_Offset'img & " first byte" & Length_Or_Answer_Type (Local_Test.Send_Data (1))'img & " last byte" & Length_Or_Answer_Type (Local_Test.Send_Data (End_Offset))'img);
+Dump (Local_Test.Send_Data (Start_Offset)'address, Positive (End_Offset - Start_Offset + 1), 32,Width_8,"client sent data", Here);
+Dump (Local_Test.Received_Data (Start_Offset)'address, Positive (End_Offset - Start_Offset + 1), 32,Width_8,"client received data", Here);
+                  for Index in Start_Offset .. End_Offset loop
+                     Sum := Sum +
+                        Length_Or_Answer_Type (Local_Test.Send_Data (Index));
+                  end loop;
+
+                  Log_Here (Debug, " sum" & Sum'img & " ack" & Ack'img);
+
+                  if Sum /= Ack then
+                     Local_Test.Set_Answer (Bad_Ack);
+                     Log_here (Debug, "bad ack");
+                     exit;
+                  end if;
+
+                  if Ada_Lib.Options.Actual.
+                        Program_Options_Constant_Class_Access (
+                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
+                              Count mod Notify_Frequency = 0 then
+                     Put_Line (Count'img & " records received");
+                  end if;
+               end;
+
+               Start_Offset := Start_Offset + Short_Length;
+               Data_Left := Data_Left - Short_Length;
 
                Count := Count + 1;
                if Count mod 10 = 0 and then Options.Verbose then
@@ -1041,10 +919,11 @@ put_Line (here);
                end if;
 
                Log_Here (Debug, "left" & Data_Left'img &
-                  " start " & Start_Offset'img & " length" & Request_Buffer'img &
+                  " start " & Start_Offset'img & " length" & Short_Length'img &
                   " written" & Written'img);
             end;
          end loop;
+         Log_Here (Debug);
          if Client_Socket.Is_Open then
             Client_Socket.Close;
          end if;
@@ -1086,8 +965,29 @@ put_Line (here);
    ---------------------------------------------------------------
 
       Accept_Timeout             : constant := 0.5;
-      Count                      : Natural := 0;
       Local_Test                 : Socket_Test_Access := Null;
+
+      ------------------------------------------------------------
+      procedure Close_Sockets (
+         Accepted_Socket         : in      Ada_Lib.Socket_IO.Server.
+                                    Accepted_Socket_Access;
+         Server_Socket           : in      Ada_Lib.Socket_IO.Server.
+                                    Server_Socket_Access) is
+      ------------------------------------------------------------
+
+      begin
+         Log_in (Debug, "close sockets for " & Description.all);
+
+         if Accepted_Socket.Is_Open then
+            Accepted_Socket.Close;
+         end if;
+
+         if Server_Socket.Is_Open then
+            Server_Socket.Close;
+         end if;
+         Log_Out (Debug, "sockets closed");
+      end Close_Sockets;
+      ------------------------------------------------------------
 
    begin
       Log_In (Debug, "server " & Description.all);
@@ -1103,24 +1003,163 @@ put_Line (here);
       Local_Test.Server_Failed := False;
 
       declare
-         Accepted_Socket         : constant Ada_Lib.Socket_IO.Server.
+      Accepted_Socket            : constant Ada_Lib.Socket_IO.Server.
                                     Accepted_Socket_Access := new Ada_Lib.
                                        Socket_IO.Server.Accepted_Socket_Type;
-         Data_Left               : Index_Type := Data_Buffer_Type'length;
-         End_Offset              : Index_Type :=
-                                    Local_Test.Received_Data'last;
-         Generator               : Random_Number_Offset_Generator.Generator;
-         Process_Data            : Boolean := Local_Test.Read_Write_Mode /= No_Data;
-         Server_Socket           : constant Ada_Lib.Socket_IO.Server.
+      Server_Socket              : constant Ada_Lib.Socket_IO.Server.
                                     Server_Socket_Access := new Ada_Lib.
                                        Socket_IO.Server.Server_Socket_Type (
                                           Local_Test.Server_Port);
+
+      -----------------------------------------------------------------
+      procedure Send_Ack (
+         Data                    : in     Buffer_Type) is
+      -----------------------------------------------------------------
+
+         Sum            : Length_Or_Answer_Type;
+         Answer         : Buffer_Type (1 .. Sum'size / Data_Type'size);
+         for Answer'address use Sum'address;
+
+      begin
+         Log_Here (Debug, "Answer size" & Answer'size'img &
+            " sum" & Sum'size'img);
+         pragma Assert (Answer'size = Sum'size);
+         Sum := 0;
+         for Byte of Data loop
+            Sum := Sum + Length_Or_Answer_Type (Byte);
+         end loop;
+         Log_Here (Debug, "Sum" & Sum'img );
+
+         Accepted_Socket.Write (
+            Buffer            => Answer);
+      end Send_Ack;
+
+-----------------------------------------------------------------
+      procedure Received_Fixed_Record is
+      -----------------------------------------------------------------
+
+         Count                   : Natural := 0;
+         Data_Left               : Index_Type := Data_Buffer_Type'length;
          Start_Offset            : Index_Type :=
                                     Local_Test.Received_Data'first;
 
       begin
+         Log_In (Debug,  "Description " & Description.all &
+            " timeout " & Local_Test.Server_Read_Timeout_Time'img);
+
+         while Data_Left > 0 and then  -- loop until all data received
+               not Local_Test.Client_Failed and then
+               not Local_Test.Server_Failed loop
+            -- keep reading until all data received
+            declare
+               Request_Length : Length_Or_Answer_Type;
+
+            begin
+               declare
+                  Read_Buffer    : Buffer_Type (1 ..
+                                    Buffer_Bytes (Request_Length'size));
+                  for Read_Buffer'address use Request_Length'address;
+
+               begin
+                  Accepted_Socket.Read (Read_Buffer,     -- read the request length
+                     Local_Test.Server_Read_Timeout_Time);
+
+                  Log_Here (Debug,  "Description " & Description.all &
+                     " read length" & Request_Length'img);
+               end;
+
+               -- read the data
+               declare
+                  End_Offset        : constant Index_Type := Start_Offset +
+                                       Index_Type (Request_Length) - 1;
+               begin
+                  Log_Here (Debug, "Request_Length" & Request_Length'img &
+                     " start " & Start_Offset'img &
+                     " End_Offset" & End_Offset'img);
+
+                  Accepted_Socket.Read (  -- read the data
+                     Buffer            => Local_Test.Received_Data (
+                                             Start_Offset .. End_Offset),
+                     Timeout_Length    => Local_Test.
+                                             Server_Read_Timeout_Time);
+                  Data_Left := Data_Left - Index_Type (Request_Length);
+                  Log_Here (Debug, "left" & Data_Left'img &
+                     " Start_Offset" & Start_Offset'img &
+                     " End_Offset" & End_Offset'img);
+
+                  Send_Ack (Local_Test.Received_Data (
+                     Start_Offset .. End_Offset));
+               end;
+
+               Count := Count + 1;
+               Start_Offset := Start_Offset + Index_Type (Request_Length);
+               Log_Here (Debug, "left" & Data_Left'img &
+                  " Request_Length" & Request_Length'img);
+
+            exception
+               when Fault: Timeout =>
+                  Trace_Message_Exception (Debug, Fault,
+                     "client delayed " & Local_Test.Client_Delayed'img);
+                  Local_Test.Set_Answer (Timeout_Answer);
+                  Local_Test.Server_Timedout := True;
+                  exit;                   -- expected
+            end;
+         end loop;   -- while Data_Left > 0 and then
+                     --       not Local_Test.Client_Failed and then
+                     --       not Local_Test.Server_Failed loop
+
+         Log_Out (Debug);
+      end Received_Fixed_Record;
+
+      -----------------------------------------------------------------
+      procedure Received_Variable_Record is
+      -----------------------------------------------------------------
+
+         Count                : Natural := 0;
+         Data_Left            : Index_Type := Data_Buffer_Type'length;
+         Start_Offset         : Index_Type :=
+                                 Local_Test.Received_Data'first;
+      begin
+         Log_In (Debug);
+         while Data_Left > 0 and then
+               not Local_Test.Client_Failed and then
+               not Local_Test.Server_Failed loop
+            -- keep reading until all data Last
+            declare
+               Last           : Index_Type;
+               Received       : Index_Type;
+
+            begin
+               Log_Here (Debug, "start " & Start_Offset'img &
+                  " Server_Wait_Time" & Local_Test.Server_Wait_Time'img);
+
+               if Local_Test.Server_Wait_Time > 0.0 then
+                  delay Local_Test.Server_Wait_Time;
+               end if;
+               Accepted_Socket.Read (
+                  Buffer   => Local_Test.Received_Data (Start_Offset ..
+                                 Local_Test.Received_Data'last),
+                  Last     => Last);
+
+               Send_Ack (Local_Test.Received_Data (Start_Offset .. Last));
+
+               Received := Last - Start_Offset;
+               Data_Left := Data_Left - Received;
+               Log_Here (Debug, "Received" & Received'img &
+                  " last" & Last'img & " left" & Data_Left'img);
+               Count := Count + 1;
+               Start_Offset := Start_Offset + Received;
+            end;
+         end loop;   -- while Data_Left > 0 and then
+                     --       not Local_Test.Client_Failed and then
+                     --       not Local_Test.Server_Failed loop
+
+         Log_Out (Debug);
+      end Received_Variable_Record;
+      -----------------------------------------------------------------
+
+   begin
          Log_Here (Debug, "server " & Description.all &
-            " data left" & Data_Left'img &
             " unaccepted socket " & Accepted_Socket.Image & " no description expected " &
             " server socket " & Server_Socket.Image & " no description expected " &
 --          " accepted socket " & Image (Accepted_Socket'address) &
@@ -1129,8 +1168,6 @@ put_Line (here);
             " Read_Write_Mode " & Local_Test.Read_Write_Mode'img &
             " timeout duration " & Local_Test.Server_Read_Timeout_Time'img &
             " Test " & Image (Local_Test.all'address));
-
-         Random_Number_Offset_Generator.Reset (Generator);
 
          begin
             Server_Socket.Accept_Socket (
@@ -1148,207 +1185,64 @@ put_Line (here);
                      "not ") &
                   "expected exception for server " & Description.all);
 
-               Process_Data := False;
                Server_Socket.Close;
                if Local_Test.Select_Timeout_Expected then  -- expected timeout
-log_here;
-                  Local_Test.Answer := Success;
+                  Log_Here (Debug);
                else
-                  Local_Test.Answer := Timeout_Answer;
+                  Local_Test.Set_Answer (Timeout_Answer);
                   Put_Line ("Server task failed with " &
                      Ada.Exceptions.Exception_Message (Fault));
                end if;
          end;
 
+         Log_Here (Debug, "server " & Description.all);
+
+         Record_Socket (Local_Test.all, Server_Socket.all);
+         Record_Socket (Local_Test.all, Accepted_Socket.all);
+         Log_Here (Debug, "server socket " & Server_Socket.Image &
+            " accepted socket " & Accepted_Socket.Image);
+
+         case Local_Test.Read_Write_Mode is
+
+            when Matching_Record_Length => -- read buffer length
+               Received_Fixed_Record;
+
+            when Unmatched_Record_Length =>  -- try to read whole buffer
+               Received_Variable_Record;
+
+            when  others =>
+               null;
+         end case;
+
          Log_Here (Debug, "server " & Description.all &
-            " Process_Data " & Process_Data'img);
-         if Process_Data then
-            begin
-               Record_Socket (Local_Test.all, Server_Socket.all);
-               Record_Socket (Local_Test.all, Accepted_Socket.all);
-               Log_Here (Debug, "server socket " & Server_Socket.Image &
-                  " accepted socket " & Accepted_Socket.Image);
+            " wait for client to complete Client_Completed " &
+            Local_Test.Client_Completed'img &
+            " Test " & Image (Local_Test.all'address));
+         Close_Sockets (Accepted_Socket, Server_Socket);
 
-               while Data_Left > 0 and then
-                     not Local_Test.Client_Failed and then
-                     not Local_Test.Server_Failed loop
-                  -- keep reading until all data received
-                  declare
-                     Request_Buffer    : Length_Or_Answer_Type;
-                     Read_Buffer       : Buffer_Type (1 ..
-                                          Buffer_Bytes (Request_Buffer'size));
-                     for Read_Buffer'address use Request_Buffer'address;
+      exception
+         when Fault: Timeout =>
+            if Local_Test.Read_Write_Mode = Read_Timeout then
+               Local_Test.Server_Failed := False;
+               Trace_Message_Exception (Fault, "server " & Description.all &
+                  "timeout expected");
+            else
+               Trace_Message_Exception (Fault, "server " & Description.all &
+                  "timeout not expected");
+               Put_Line ("Server task failed with unexpected timeout " &
+                  Ada.Exceptions.Exception_Message (Fault));
+               Local_Test.Server_Failed := True;
+               Local_Test.Set_Answer (Timeout_Answer);
+            end if;
+            Close_Sockets (Accepted_Socket, Server_Socket);
 
-                  begin
-                     pragma Assert (Request_Buffer'size = Read_Buffer'size,
-                        "buffer size missmatch at " & Here);
-                     Log_Here (Debug,  "Description " & Description.all &
-                        " timeout " & Local_Test.Server_Read_Timeout_Time'img);
-                     Accepted_Socket.Read (Read_Buffer,     -- read the length
-                        Local_Test.Server_Read_Timeout_Time);
-
-                     Log_Here (Debug,  "Description " & Description.all &
-                        " read length" & Request_Buffer'img &
-                        " Server_Write_Response " &
-                        Local_Test.Server_Write_Response'img);
-                     if Local_Test.Server_Write_Response then
-                        Accepted_Socket.Write (Read_Buffer);
-                     else
-                        exit; -- don't read anymore records
-                     end if;
-
-                     if Index_Type (Request_Buffer) > Data_Left then
-                        Log_Here (Debug, "read length" & Request_Buffer'img &
-                           " > data left" & Data_Left'img);
-                        exit;
-                     end if;
-
-                     declare
-                        Received          : Index_Type;
-
-                     begin
-                        End_Offset := Start_Offset + Index_Type (Request_Buffer) - 1;
-                        Log_Here (Debug, "start " & Start_Offset'img &
-                           " End_Offset" & End_Offset'img);
-
-                        case Local_Test.Read_Write_Mode is
-
-                           when Matching_Record_Length |
-                                Unmatched_Record_Length =>
-                              Accepted_Socket.Read (
-                                 Buffer            => Local_Test.Received_Data (
-                                                         Start_Offset .. End_Offset),
-                                 Timeout_Length    => Local_Test.
-                                                         Server_Read_Timeout_Time);
-                                 Received := Index_Type (Request_Buffer);
-
-                              Log_Here (Debug, "expected" & Request_Buffer'img &
-                                 " Received" & Received'img);
-
-                           when No_Data =>
-                              null;
-                              pragma Assert (false, "should never happen");
-
---                         when Unmatched_Record_Length =>
---                            declare
---                               Last              : Index_Type;
---
---                            begin
---                               Accepted_Socket.Read (
---                                  Buffer            => Local_Test.Received_Data (
---                                                          Start_Offset .. End_Offset),
---                                  Last              => Last,    -- index in Received_Data
---                                  Timeout_Length    => Local_Test.
---                                                          Server_Read_Timeout_Time);
---                               Received := Last - Start_Offset + 1;
---
---                               Log_Here (Debug, "expected" & Request_Buffer'img &
---                                  " Received" & Received'img &
---                                  " last" & Last'img);
---                            end;
-                           when others =>
-not_implemented;
-
-                        end case;
-
-                        Data_Left := Data_Left - Received;
-                        Log_Here (Debug, "Received" & Received'img & " left" & Data_Left'img);
-
-                        if Received = Index_Type (Request_Buffer) then
-                           declare     -- got the full chunk
-                              Answer   : Buffer_Type (1 ..
-                                          Buffer_Bytes (Length_Or_Answer_Type'size));
-                              Sum               : Length_Or_Answer_Type;
-                              for Sum'address use Answer'address;
-
-                           begin
-                              Log_Here (Debug, "Answer size" &
-                                 Answer'size'img & " sum" & Sum'size'img);
-                              pragma Assert (Answer'size = Sum'size);
-                              Sum := 0;
-                              for Index in Start_Offset .. End_Offset loop
-                                 Sum := Sum +
-                                    Length_Or_Answer_Type (Local_Test.Received_Data (Index));
-                              end loop;
-                              Log_Here (Debug, "Sum" & Sum'img &
-                                 " Server_Write_Response " &
-                                 Local_Test.Server_Write_Response'img);
-                              if Local_Test.Server_Write_Response then
-                                 Accepted_Socket.Write (Answer);
-                              end if;
-      --                      Request_Buffer.Response_Socket.Write (Answer);
-                           end;
-                        else
-                           if Ada_Lib.Options.Actual.
-                                 Program_Options_Constant_Class_Access (
-                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
-                                 Count mod Notify_Frequency = 0 then
-                              Put_Line ("records" & Count'img);
-                           end if;
-                        end if;
-                        Count := Count + 1;
-                        Start_Offset := Start_Offset + Index_Type (Request_Buffer);
-                        Log_Here (Debug, "left" & Data_Left'img &
-                           " Request_Buffer" & Request_Buffer'img &
-                           " start " & Start_Offset'img & " received" & Received'img);
-                        exception
-                           when Fault: Timeout =>
-                              Trace_Message_Exception (Debug, Fault,
-                                 "client delayed " & Local_Test.Client_Delayed'img);
-                              Local_Test.Answer := Timeout_Answer;
-                              Local_Test.Server_Timedout := True;
-                              exit;                   -- expected
-                     end;
-                  end;
-               end loop;
-
-log_here;
-               Local_Test.Answer := Success;
-
-               Log_Here (Debug, "server " & Description.all &
-                  " wait for client to complete Client_Completed " &
-                  Local_Test.Client_Completed'img &
-                  " Test " & Image (Local_Test.all'address));
-
-            exception
-               when Fault: Timeout =>
-                  if Local_Test.Read_Write_Mode = Read_Timeout then
-                     Local_Test.Server_Failed := False;
-                     Trace_Message_Exception (Fault, "server " & Description.all &
-                        "timeout expected");
-                     Local_Test.Answer := Success;
-                  else
-                     Trace_Message_Exception (Fault, "server " & Description.all &
-                        "timeout not expected");
-                     Put_Line ("Server task failed with unexpected timeout " &
-                        Ada.Exceptions.Exception_Message (Fault));
-                     Local_Test.Server_Failed := True;
-                     Local_Test.Answer := Timeout_Answer;
-                  end if;
-      --          Log_Here (Debug, "close sockets");
-      --          Close_Sockets;
-
-               when Fault: others =>
-                  Trace_Message_Exception (Debug, Fault, "server " & Description.all);
-                  Local_Test.Server_Failed := True;
-                  Local_Test.Answer := Unexpected;
-                  Put_Line ("Server task failed with " &
-                     Ada.Exceptions.Exception_Message (Fault));
-      --          Log_Here (Debug, "close sockets");
-      --          Close_Sockets;
-            end;
-
-         end if;      -- Process_Data
-         Log_Here (Debug, "close sockets for " & Description.all);
-
-         if Accepted_Socket.Is_Open then
-            Accepted_Socket.Close;
-         end if;
-
-         if Server_Socket.Is_Open then
-            Server_Socket.Close;
-         end if;
-         Log_Here (Debug, "sockets closed");
+         when Fault: others =>
+            Trace_Message_Exception (Debug, Fault, "server " & Description.all);
+            Local_Test.Server_Failed := True;
+            Local_Test.Set_Answer (Unexpected);
+            Put_Line ("Server task failed with " &
+               Ada.Exceptions.Exception_Message (Fault));
+            Close_Sockets (Accepted_Socket, Server_Socket);
       end;
 
       Log_Here (Debug, "server " & Description.all);

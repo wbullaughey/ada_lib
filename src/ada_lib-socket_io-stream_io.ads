@@ -34,14 +34,14 @@ package Ada_Lib.Socket_IO.Stream_IO is
          Throw_Expression        : in     Boolean
       ) return Boolean;
 
-      -- get as much data as available up to size of data
-      -- will wait if buffer was empty as long as state is ok
+      function Free
+      return Index_Type;
+
+      -- return everything in buffer
       entry Get (
---       Throw_Timeout           : in     Boolean;
---       Timeout_Length          : in     Duration;
          Data                    :    out Buffer_Type;
-         Last                    :    out Index_Type;
-         Event                   :    out Event_Type);
+         Event                   :    out Event_Type;
+         Last                    :    out Index_Type);
 
       function Get_State return Event_Type;
 
@@ -49,7 +49,6 @@ package Ada_Lib.Socket_IO.Stream_IO is
       return Index_Type;
 
       -- set length next Put wants to put in buffer
-
       procedure Prime_Output (
          Length                  : in     Index_Type);
 
@@ -70,6 +69,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Buffer                     : Stream_Buffer_Type;
       Buffer_Count               : Index_Type := 0;
       Head                       : Buffer_Index_Type := Buffer_Index_Type'first;
+      Primed_Input               : Index_Type := 0;
       Primed_Output              : Index_Type := 0;
       State                      : Event_Type := Ok;
       Tail                       : Buffer_Index_Type := Buffer_Index_Type'first;
@@ -79,8 +79,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
 
    procedure Put (
       Buffer                     : in out Protected_Buffer_Type;
-      Data                       : in     Buffer_Type;
-      Event                      :    out Event_Type);
+      Data                       : in     Buffer_Type);
 
 
    type Stream_Socket_Type       is new Socket_Type and
@@ -138,6 +137,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Socket                     : in   Stream_Socket_Type
    ) return Index_Type;
 
+   -- reads Buffer amout of data from Socket
    -- throws timeout if timeout reached and Item array not filled
    -- waits forever if Timeout_Length = No_Timeout
    overriding
@@ -147,25 +147,16 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Timeout_Length             : in     Duration := No_Timeout
    ) with pre => Socket.Is_Open and then
                  Buffer'length > 0 and then
-                 Timeout_Length > 0.0;
+                 Timeout_Length >= 0.0;
 
-   -- after wait time returns what ever is in buffer
+   -- returns current contents of socket buffer
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
       Buffer                     :    out Buffer_Type;
-      Last                       :    out Index_Type; -- index in Buffer
-      Wait                       : in     Duration := 0.0
+      Last                       :    out Index_Type
    ) with pre => Socket.Is_Open and then
                  Buffer'length > 0;
-
--- -- returns just data available without wait
--- procedure Read (
---    Stream                     : in out Stream_Type;
---    Item                       : out Buffer_Type;
---    Last                       : out Index_Type     -- index in Item
--- ) with pre => Stream.Was_Created and then
---               Item'length > 0;
 
    function Reader_Stopped (
       Socket                     : in   Stream_Socket_Type
@@ -275,22 +266,11 @@ private
       Stream                     : in out Stream_Type;
       Buffer                     :    out Buffer_Type;
       Last                       :    out Index_Type;    -- index in Item
-      Throw_Exception            : in     Boolean;
       Timeout_Length             : in     Duration
    ) with pre => Stream.Was_Created and then
-                 Buffer'length > 0 and then
-                 Timeout_Length > 0.0;
+                 Buffer'length > 0;
 
-   -- throws timeout if timeout reached and Item array not filled
-   -- waits forever if Timeout_Length = No_Timeout
--- procedure Read (
---    Stream                     : in out Stream_Type;
---    Item                       :    out Buffer_Type;
---    Timeout_Length             : in     Duration := No_Timeout
--- ) with pre => Stream.Was_Created and then
---               Item'length > 0;
---
--- -- returns Last when timeout reached
+   -- returns current contents of socket buffer
    overriding
    procedure Read (
       Stream                     : in out Stream_Type;
@@ -298,15 +278,6 @@ private
       Last                       : out Index_Type        -- index in Item
    ) with pre => Stream.Was_Created and then
                  Item'length > 0;
-
-   -- returns Last when timeout reached
---   procedure Read (
---      Stream                     : in out Stream_Type;
---    Buffer                     :    out Buffer_Type;
---    Last                       :    out Index_Type;    -- index in Buffer
---    Timeout_Length             : in     Duration := No_Timeout
--- ) with pre => Stream.Was_Created and then
---               Buffer'length > 0;
 
    function Was_Created (
       Stream                     : in     Stream_Type

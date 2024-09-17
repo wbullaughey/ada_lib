@@ -1207,9 +1207,9 @@ put_Line (here);
          ---------------------------------------------------------------
          procedure Dump (
             Address                 : in     System.Address;
-            Length                  : in     Natural;
-            Width                   : in     Positive;
-            Dump_Width              : in     Dump_Width_Type;
+            Length                  : in     Natural;          -- in bytes
+            Width                   : in     Positive;         -- line to print
+            Dump_Width              : in     Dump_Width_Type;  -- format
             Description             : in     String;
             From                    : in     String) is
          ---------------------------------------------------------------

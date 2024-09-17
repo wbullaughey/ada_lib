@@ -1,6 +1,7 @@
 -- package that provides stream IO for sockets with a timeout
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada_Lib.Time;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
@@ -9,10 +10,11 @@ with Interfaces;
 package body Ada_Lib.Socket_IO.Stream_IO is
 
    use type Ada_Lib.Strings.String_Access_All;
-   use type Data_Type;
+-- use type Data_Type;
    use type Index_Type;
    use type GNAT.Sockets.Error_Type;
    use type GNAT.Sockets.Socket_Type;
+   use type Ada_Lib.Time.Time_Type;
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => GNAT.Sockets.Stream_Access,
@@ -49,17 +51,17 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          return;
       end if;
       Socket.Stream.Input_Buffer.Set_Event (Closed); -- signal input task to close
-      delay 0.2;     -- let task complete
-
       Socket.Stream.Output_Buffer.Set_Event (Closed); -- signal output task to close
-      Socket_Type (Socket).Close;
       Socket.Stream.Socket_Closed := True;
+      delay 0.2;     -- let tasks complete
+
+      Socket_Type (Socket).Close;
 
       Log_Here (Tracing, "wait for write task to exit socket " &
          Socket.Get_Description);
       while not Socket.Stream.Writer_Stopped loop
          delay 0.1;
-   end loop;
+      end loop;
 
       Log_Here (Tracing, "wait for reader task to exit socket " &
          Socket.Get_Description &
@@ -95,15 +97,29 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Here (Tracing);
          Socket_Type (Stream.Socket.all).Close;
       end if;
-      if not Stream.Reader_Stopped then
-         Log_Exception (True, "reader task freed while running");
-         raise Task_Running with "reader task from " & Here;
-      end if;
+      Log_Here (Tracing, "reader stopped " &Stream.Reader_Stopped'img &
+         " writer stopped " &Stream.Writer_Stopped'img);
+      declare
+         Timeout           : constant Ada_Lib.Time.Time_Type :=
+                              Ada_Lib.Time.Now + 0.5;
+      begin
+         while not (Stream.Reader_Stopped and then
+                    Stream.Writer_Stopped) loop
+            if Ada_Lib.Time.Now > Timeout then
+               declare
+                  Message  : constant String :=
+                              "reader stopped " &Stream.Reader_Stopped'img &
+                              " writer stopped " &Stream.Writer_Stopped'img;
+               begin
+                  Log_Exception (Debug, Message);
+                  raise Task_Running with Message & " " & Here;
+               end;
+            end if;
+            delay 0.1;
+         end loop;
+      end;
+      Log_Here (Debug);
       Free (Stream.Reader);
-      if not Stream.Writer_Stopped then
-         Log_Exception (True, "writer task freed while running");
-         raise Task_Running with "writer task freed from " & Here;
-      end if;
       Free (Stream.Writer);
       Log_Out (Tracing);
    end Close;
@@ -265,6 +281,35 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Log_Out (Trace);
    end Finalize;
 
+-- -----------------------------------------------------------------------
+-- procedure Get (
+--    Buffer                     : in out Protected_Buffer_Type;
+--    Data                       :    out Buffer_Type;
+--    Event                      :    out Event_Type) is
+-- -----------------------------------------------------------------------
+--
+--    Left                       : Index_Type := Data'length;
+--    Start                      : Index_Type := 1;
+--
+-- begin
+--    Log_In (Tracing, "length" & Left'img);
+--    if Tracing then
+--       Buffer.Trace_State;
+--    end if;
+--    while Left > 0 loop
+--       declare
+--          Last                 : Index_Type;
+--
+--       begin
+--          Buffer.Get (Data (Start .. Data'last), Event, Last);
+--             -- will block when buffer empty
+--          Left := Data'last - Last;
+--          Start := Last + 1;
+--       end;
+--    end loop;
+--    Log_Out (Tracing);
+-- end Get;
+
    ---------------------------------------------------------------------------
    function Image (
       Stream                     : in   Stream_Type
@@ -320,29 +365,52 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    -----------------------------------------------------------------------
    procedure Put (
-      Buffer                     : in out Protected_Buffer_Type;
-      Data                    : in     Buffer_Type;
-      Event                   :    out Event_Type) is
+      Buffer            : in out Protected_Buffer_Type;
+      Data              : in     Buffer_Type) is
    -----------------------------------------------------------------------
 
+      Event             : Event_Type := Ok;
+      Left              : Index_Type := Data'length;
+      Start             : Index_Type := Data'first;
+
    begin
-      Log_In (Tracing, "length" & Data'length'img );
-      Buffer.Prime_Output (Data'length);
+      Log_In (Tracing, "start" & Start'img & " length" & Left'img);
       if Tracing then
          Buffer.Trace_State;
       end if;
-      Buffer.Put (Data, Event);
+      while Left > 0 and then Event = Ok loop
+         declare
+            Length               : constant Index_Type :=
+                                    (if Left > Buffer_Length then
+                                       Buffer_Length
+                                    else
+                                       Left);
+         begin
+            Buffer.Prime_Output (Length);
+log_here ("start" & start'img & " length" & length'img);
+            Buffer.Put (Data (Start .. Start + Length - 1), Event);
+            if Event /= Ok then
+               raise IO_Failed with "event " & Event'img;
+            end if;
+            Left := Left - Length;
+            Start := Start + Length;
+         end ;
+      end loop;
       Log_Out (Tracing);
    end Put;
 
    ---------------------------------------------------------------------------
+   -- if Timeout_Length > 0 then timeout exception raised if do not get
+   -- the full Buffer
    procedure Read (
       Stream                     : in out Stream_Type;
       Buffer                     :    out Buffer_Type;
       Last                       :    out Index_Type; -- in Buffer
-      Throw_Exception            : in     Boolean;
       Timeout_Length             : in     Duration) is
    ---------------------------------------------------------------------------
+
+      Throw_Exception   : constant Boolean := Timeout_Length > 0.0 and then
+                                              Timeout_Length /= No_Timeout;
 
    begin
       Ada_Lib.Trace.Log_In (Trace,
@@ -351,27 +419,22 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          " socket " & Stream.Image &
 --       " input buffer " & Image (Stream.Input_Buffer'address) &
          " state " & Stream.Input_Buffer.Get_State'img &
-         " buffer last" & Buffer'last'img &
          " Timeout_Length " & Format_Timeout (Timeout_Length) &
+         " Throw_Exception " & Throw_Exception'img &
          " throw " & Throw_Exception'img);
 
       Last := 0;
       Stream.Input_Buffer.Set_Event (OK);
-      if    Timeout_Length = 0.0 and then
-            Stream.Input_Buffer.Empty (Throw_Exception) then
-         Log_Out (Trace);
-         return;
-      end if;
 
       declare
          Event                   : Event_Type;
-         Get_Last                : Index_Type;
+         Failure                 : Boolean := False;
          Start_Get               : Index_Type := Buffer'first;
 
       begin
          Log_Here (Tracing);
 
-         loop
+         while not Failure loop
             declare
                type Timeout_Event_Type
                                  is new Ada_Lib.Timer.Event_Type
@@ -393,7 +456,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
                begin
                   Log_Here (Trace);
-                  Stream.Input_Buffer.Set_Event (Timed_Out);
+                  Failure := True;
+                  Stream.Input_Buffer.Set_Event (Timed_Out);   -- triger buffer
                end Callback;
                --------------------------------------------------------------
 
@@ -402,35 +466,34 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                   " Timeout_Length " & Timeout_Length'img &
                   " buffer " & Image (Stream.Input_Buffer'address));
 
-               if Timeout_Length /= No_Timeout then
+               if Throw_Exception then
                   Timeout_Event.Initialize (Timeout_Length,
                   "stream " & Stream.Image & " read timeout",
                      False, False);
                end if;
 
                Stream.Input_Buffer.Get (Buffer (Start_Get .. Buffer'last),
-                  Get_Last, Event);
+                  Event, Last);
 
-               Log_Here (Trace, "Get_Last" & Get_Last'img &
+               Log_Here (Trace, "Last" & Last'img &
                   " event " & Event'img);
 
                case Event is
 
                   when OK =>
-                     if Get_Last = Buffer'last then  -- buffer full
+                     if Last = Buffer'last then  -- buffer full
                         Last := Buffer'last;
                         Log_Here (Trace);
                         exit;
                      end if;
 
-                     if Timeout_Length = 0.0 then        -- return data current in buffer
-                        Last := Get_Last;
+                     if Timeout_Length = 0.0 then  -- return data current in buffer
                         Log_Here (Trace);
                         exit;
                      end if;
 
-                     Start_Get := Get_Last + 1;
-                     Last := Get_Last;
+                     -- wait for more data
+                     Start_Get := Last + 1;
 
                   when Closed =>
                      if Last > 0 then
@@ -446,7 +509,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
                   when Timed_Out =>
                      if Throw_Exception then
-                        Log_Exception (Trace, "time out");
+                        Log_Exception (Trace, "timeout");
                         raise Timeout with "from " & here;
                      else
                         Stream.Close;
@@ -459,10 +522,10 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end loop;
       end;
 
-      if Trace then
-         if Last = 0  then
-            Log_Here ("zero length read");
-         else
+      if Last = 0  then
+         Log_Here (Trace, "zero length read");
+      else
+         if Tracing then
             Dump ("read", Buffer (Buffer'first .. Last));
          end if;
       end if;
@@ -471,12 +534,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    exception
       when Fault: Timeout =>
-         Log_Exception (Trace, Fault, (if Throw_Exception then
-               "expected"
-            else
-               "unexpected") &
-            " exception. read timed out" &
-            " Throw_Exception " & Throw_Exception'img);
+         Log_Exception (Trace, Fault);
          raise;
 
       when Fault: others =>
@@ -486,44 +544,74 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    end Read;
 
    ---------------------------------------------------------------------------
+   -- reads Buffer amout of data from Socket
    -- throws timeout if timeout reached and Item array not filled
+   -- waits forever if Timeout_Length = No_Timeout
    overriding
    procedure Read(
-      Socket                     : in out Stream_Socket_Type;
-      Buffer                     :    out Buffer_Type;
+      Socket               : in out Stream_Socket_Type;
+      Buffer               :    out Buffer_Type;
       Timeout_Length       : in     Duration := No_Timeout) is
    ---------------------------------------------------------------------------
 
       Last                 : Index_Type;
-
+      Start                : Index_Type := Buffer'first;
+      Timeout_Time         : constant Ada.Calendar.Time :=
+                              Ada.Calendar.Clock +
+                                 (if Timeout_Length = No_Timeout then
+                                    0.0
+                                 else
+                                    Timeout_Length);
    begin
---    Log_In (Tracing, Stream.Image & " length" & Item'length'img);
-      Read (Socket.Stream, Buffer, Last,
-         Throw_Exception   => True,
-         Timeout_Length    => Timeout_Length);
---    Log_Out (Tracing, "last" & Last'img);
+      Log_In (Tracing, " length" & Buffer'length'img &
+         " timeout " & Timeout_Length'img);
+      loop
+         declare
+            This_Timeout   : Duration := No_Timeout;
+
+         begin
+            if Timeout_Length /= No_Timeout then
+               This_Timeout := Timeout_Time - Ada.Calendar.Clock;
+               Log_Here (Tracing, "This_Timeout " & This_Timeout'img);
+
+               if This_Timeout <= 0.0 then
+                  declare
+                     Message     : constant String :=
+                                    "timeout befor buffer filled at " & Here;
+                  begin
+                     Log_Exception (Tracing, Message);
+                     raise Timeout with Message;
+                  end;
+               end if;
+            end if;
+            Read (Socket.Stream, Buffer (Start .. Buffer'last), Last,
+               Timeout_Length    => This_Timeout);
+            Log_Here (Tracing, "last" & Last'img);
+         end;
+
+         if Last = Buffer'last then -- got whole buffer
+            exit;
+         end if;
+
+         Start := Last + 1;
+      end loop;
+      Log_Out (Tracing, "last" & Last'img);
    end Read;
 
    ---------------------------------------------------------------------------
-   -- after wait time returns what ever is in buffer
+   -- returns current contents of socket buffer
    overriding
    procedure Read (
       Socket                     : in out Stream_Socket_Type;
       Buffer                     :    out Buffer_Type;
-      Last                       :    out Index_Type; -- index in Buffer
-      Wait                       : in     Duration := 0.0) is
+      Last                       :    out Index_Type) is
    ---------------------------------------------------------------------------
 
    begin
       Log_In (Tracing, Socket.Stream.Image & " length" & BUFFER'length'img);
 
-      if Wait > 0.0 then
-         delay Wait;
-         Log_Here (Tracing);
-      end if;
       Read (Socket.Stream, Buffer, Last,
-         Throw_Exception   => False,
-         Timeout_Length    => No_Timeout);
+         Timeout_Length    => 0.0);    -- no timeout,don't wait for data
 
       if Tracing then
          Dump ("read", Buffer);
@@ -532,7 +620,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    end Read;
 
    ---------------------------------------------------------------------------
-   -- returns Last when default timeout reached
+   -- returns current contents of socket buffer
    overriding
    procedure Read(
       Stream               : in out Stream_Type;
@@ -542,70 +630,12 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    begin
       Log_In (Tracing, Stream.Image & " length" & Item'length'img);
-      Read (Stream, Item, Last, False, 0.0);
+      Read (Stream, Item, Last, 0.0);
       if Tracing then
          Trace_Read (Item, Last);
       end if;
       Log_Out (Tracing, "last" & Last'img);
    end Read;
-
-   ---------------------------------------------------------------------------
-   -- throws timeout if timeout reached and Item array not filled
-   -- waits forever if Timeout_Length = No_Timeout
--- overriding
--- procedure Read (
---    Socket                     : in out Stream_Socket_Type;
---    Buffer                     :    out Buffer_Type;
---    Timeout_Length             : in     Duration := No_Timeout) is
--- ---------------------------------------------------------------------------
---
--- begin
---    Socket.Stream.Read (Buffer, Timeout_Length);
--- end Read;
-
--- ---------------------------------------------------------------------------
--- procedure Read (
---    Stream                     : in out Stream_Type;
---    Buffer                     :    out Buffer_Type;
---    Last                       :    out Index_Type;    -- index in Buffer
---    Throw_Exception            : in     Boolean;
---    Timeout_Length             : in     Duration) is
--- ---------------------------------------------------------------------------
---
--- begin
---    Log_In (Tracing, Stream.Image & " length" & Buffer'length'img &
---       " timeout " & Format_Timeout (Timeout_Length));
---
---    Read (Stream, Buffer, Last,
---       Throw_Exception   => Throw_Exception,
---       Timeout_Length    => Timeout_Length);
---
---    if Tracing then
---       if Last = 0  then
---          Log_Here ("zero length read");
---       else
---          Dump ("read", Buffer (Buffer'first .. Last));
---       end if;
---    end if;
---    Log_Out (Tracing, "last" & Last'img);
--- end Read;
-
--- ---------------------------------------------------------------------------
--- -- returns just data available without wait
--- procedure Read_Immediate (
---    Stream               : in out Stream_Type;
---    Item                 : out Buffer_Type;
---    Last                 : out Index_Type) is -- index in Buffer
--- ---------------------------------------------------------------------------
---
--- begin
---    Log_In (Tracing, Stream.Image);
---    Read (Stream, Item, Last, False, False, 0.0);
---    if Tracing then
---       Trace_Read (Item, Last);
---    end if;
---    Log_Out (Tracing, "last" & Last'img);
--- end Read_Immediate;
 
    ---------------------------------------------------------------------------
    function Reader_Stopped (
@@ -693,77 +723,11 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Index_Type'image (Item'last) & " timeout " &
             Format_Timeout (Timeout_Length));
 --       " output buffer " & Image (Stream.Output_Buffer'address));
-      if Trace then
+      if Tracing then
          Dump ("write", Item);
       end if;
 
-      declare
-         Event                   : Event_Type;
-         Left                    : Index_Type := Item'length;
-         Start_Put               : Index_Type := Item'first;
---       Timeout_Set             : constant Boolean := Timeout_Length /= No_Timeout;
---       Timeout_Event           : constant Timer_Event_Access := (
---                                  if Timeout_Set then
---                                     Allocate_Event (
---                                        Buffer   => Stream.Input_Buffer'unchecked_access,
---                                        Description
---                                                 => "write",
---                                        Wait     => Timeout_Length)
---                                  else
---                                     Null);
---
-      begin
-         loop
-            declare
-               Length            : constant Index_Type := (
-                                    if Left > Buffer_Length then
-                                       Buffer_Length
-                                    else
-                                       Left);
-            begin
-               Log_Here (Trace, "start_put" & Start_Put'img &
-                  " Length" & Length'img );
-               Put (Stream.Output_Buffer, Item (Start_Put .. Start_Put + Length - 1),
-                  Event); -- will block until room
-
-               Start_Put := Start_Put + Length;
-               Left := Left - Length;
-               case Event is
-
-                  when OK =>  -- | Buffer_Limit =>
-                     if Left = 0 then   -- last buffer
-                        exit;
-                     end if;
-
-                  when Closed =>
-                     Log_Exception (Trace, "peer closed");
-                     raise Peer_Closed;
-
-                  when Failed =>
-                     Log_Exception (Trace, "io failed");
-                     raise IO_Failed;
-
-                  when Timed_Out =>
-                     Log_Exception (Trace, "time out");
-                     raise Timeout with "from " & here;
-
-               end case;
-            end;
-         end loop;
---log_here("Timeout_Set " & Timeout_Set'img);
---         if Timeout_Set then
---            declare
---               Canceled : Boolean;
---
---            begin
---log_here;
---               Canceled := Timeout_Event.Cancel;
---log_here("canceled " & canceled'img);
-----             pragma Unreferenced (Canceled);
---            end;
---         end if;
-
-      end;
+      Put (Stream.Output_Buffer, Item); -- will block until room
       Log_out (Trace);
 
    exception
@@ -820,27 +784,36 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end case;
       end Empty;
 
---    -----------------------------------------------------------------------
---    function Full
---    return Boolean is
---    -----------------------------------------------------------------------
---
---    begin
---       return Buffer_Length - Buffer_Count >= Primed_Output;
---    end Full;
---
       -----------------------------------------------------------------------
-      -- get as much data as available up to size of data
-      -- will wait if buffer was empty as long as state is ok
+      function Free
+      return Index_Type is
+      -----------------------------------------------------------------------
+
+         Result      : constant Index_Type := Buffer_Length - Buffer_Count;
+
+      begin
+         Log_Here (Tracing, Kind'img & " Result" & Result'img &
+            " state " & State'img);
+
+         if State /= Ok then
+            Log_Exception (Trace);
+            raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
+         end if;
+         return Result;
+      end Free;
+
+      -----------------------------------------------------------------------
+      -- return everything in buffer
       entry Get (
          Data                    :    out Buffer_Type;
-         Last                    :    out Index_Type;
-         Event                   :    out Event_Type
+         Event                   :    out Event_Type;
+         Last                    :    out Index_Type
       ) when Buffer_Count > 0 or else State /= Ok is
       -----------------------------------------------------------------------
 
       begin
          Log_In (Tracing, Kind'img & " State " & State'img &
+            " primmed" & Primed_Input'img &
             " Buffer_Count" & Buffer_Count'img &
             " tail" & Tail'img & " data first" & Data'first'img);
 
@@ -851,35 +824,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             raise Aborted with "Get called with closed socket at " & Here;
 
          when OK =>
-            if Buffer_Count = 0 then
-               State := Failed;
-               Log_Exception (Trace, "time out");
-               raise Timeout with "buffer empty and state ok called from " & Here;
-            end if;
-
-            Last := Data'last;
-
-            for Index in Data'range loop
-               Data (Index) := Buffer (Tail);
-               Last := Index;
-
-               if Tail = Buffer'last then
-                  Tail := Buffer'first;
-               else
-                  Tail := Tail + 1;
-               end if;
-
-               Buffer_Count := Buffer_Count - 1;
-
-               if Buffer_Count = 0 then
-                  Log_Here (Tracing);
-                  exit;
-               end if;
-            end loop;
-
-            if Tracing then
-               Dump ("got", Data (Data'first .. Last));
-            end if;
+            null;
 
          when Timed_Out =>
             Event := Timed_Out;
@@ -893,6 +838,28 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end case;
 
          Event := State;
+         Last := 0;
+
+         for Index in Data'range loop
+            Data (Index) := Buffer (Tail);
+            Last := Index;
+
+            if Tail = Buffer'last then
+               Tail := Buffer'first;
+            else
+               Tail := Tail + 1;
+            end if;
+
+            Buffer_Count := Buffer_Count - 1;
+
+            if Buffer_Count = 0 then   -- buffer empty
+               exit;
+            end if;
+         end loop;
+
+         if Tracing then
+            Dump ("got", Data (Data'first .. Last));
+         end if;
 
          Log_Out (Tracing, "Event " & Event'img & " Last" & Last'img &
             " tail" & Tail'img &
@@ -946,7 +913,14 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_In (Tracing, Kind'img & " primed" & Primed_Output'img &
             " head" & Head'img &
             " buffer count" & Buffer_Count'img & " state " & State'img);
-         pragma Assert (Primed_Output > 0, "not primed for put");
+         if Primed_Output = 0 then
+            raise IO_Failed with "not primed for put";
+         end if;
+
+         if Buffer_Length - Buffer_Count < Primed_Output then
+            raise IO_Failed with "not room in buffer for primmed output";
+         end if;
+
          Event := State;
          case State is
 
@@ -979,14 +953,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
             Buffer_Count := Buffer_Count + 1;
 
-            if Buffer_Count = Buffer'length then -- buffer is full, block until there is room
-               if Tracing then
-                  Dump ("put full ", Buffer);
-               end if;
-
-               Log_Out (Trace, "Buffer_Count" & Buffer_Count'img &
-                  " head" & Head'img & " event " & Event'img);
-               return;
+            if Buffer_Count > Buffer'length then
+               raise IO_Failed with "buffer overflow";
             end if;
          end loop;
 
@@ -1173,6 +1141,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    -----------------------------------------------------------------------
    task body Input_Task is
+   ---------------------------------------------------------------
 
       Stream_Pointer             : Stream_Access;
 
@@ -1205,43 +1174,88 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end if;
 
          declare
-            Data              : Buffer_Type (1 .. 1);
-            Event             : Event_Type;
+            Poll_Byte         : Buffer_Type (1 .. 1);
+--          Event             : Event_Type;
             Last_Read         : Index_Type;
 
          begin
             GNAT.Sockets.Receive_Socket (Stream_Pointer.Socket.GNAT_Socket,
-               Data, Last_Read, GNAT.Sockets.Wait_For_A_Full_Reception);
+               Poll_Byte, Last_Read, GNAT.Sockets.Wait_For_A_Full_Reception);
                -- block on one byte read if no data in socet
             Log_Here (Trace, "Last_Read" & Last_Read'img &
-               " poll byte " & Hex_IO.Hex (Interfaces.Unsigned_8 (Data (1))) &
+               " poll byte " & Hex_IO.Hex (
+                  Interfaces.Unsigned_8 (Poll_Byte (1))) &
                " closed " & Stream_Pointer.Socket_Closed'img);
 
             if Last_Read = 0 then   -- socket was closed
                Log_Here (Trace, "GNAT socket closed");
                exit;
             end if;
+
             if Stream_Pointer.Socket_Closed then      -- socket closed
                Stream_Pointer.Input_Buffer.Set_Event (Closed);
                Log_Here (Trace, "loop exit ");
                exit;
             end if;
 
---          if Data (Data'first) = Close_Flag then
---             Log_Here (Trace, "close flag");
---          end if;
---
-            Put (Stream_Pointer.Input_Buffer, Data, Event);
-            case Event is
+            if Stream_Pointer.Socket_Closed then      -- socket closed
+               Stream_Pointer.Input_Buffer.Set_Event (Closed);
+               Log_Here (Trace, "closing socket");
+               exit;
+            end if;
 
-               when Ok | Closed =>
-                  null;
+            declare
+               Last_Read         : Index_Type;
+               Size_Request      : GNAT.Sockets.Request_Type := (
+                                    Name  => GNAT.Sockets.N_Bytes_To_Read,
+                                    Size  => 0);
+            begin
+               -- find out how many more bytes are available to read
+               GNAT.Sockets.Control_Socket (Stream_Pointer.Socket.GNAT_Socket,
+                  Size_Request);
 
-               when others =>
-                  Log_Exception (Trace, "select expired");
-                  raise IO_Failed with "put failed at " & Here &
-                     " event " & Event'img;
-            end case;
+               if Size_Request.Size = 0 then    -- no moredata available
+                  Log_Here (Tracing, "only 1 byte in input");
+                     -- put will block until room for whole buffer is available
+                  Put (Stream_Pointer.Input_Buffer, Poll_Byte);
+               else                             --  read it
+                  Log_Here (Tracing, "request size" & Size_Request.Size'img);
+                  -- read exact number of bytes available limited by size of buffer
+                  declare
+                     Expected_Length   : constant Index_Type :=
+                                          Index_Type (Size_Request.Size + 1);
+                     Data              : Buffer_Type (1 .. Expected_Length);
+
+                  begin
+                     Data (1) := Poll_Byte (1);
+                     GNAT.Sockets.Receive_Socket (
+                        Stream_Pointer.Socket.GNAT_Socket,
+                        Data (2 .. Expected_Length),
+                        Last_Read);
+                     Log_Here (Tracing, "Last_Read" & Last_Read'img );
+
+                     if Last_Read /= Index_Type (Size_Request.Size + 1) then
+                        Log_Exception (Trace, "short read");
+                        raise IO_Failed with "short read at " & Here &
+                           " read" & Last_Read'img &
+                           " expected" & Expected_Length'img;
+                     end if;
+
+                        -- put will block until room for whole buffer is available
+                     Put (Stream_Pointer.Input_Buffer, Data);
+                  end;
+               end if;
+
+            exception
+               when Fault: GNAT.Sockets.Socket_Error =>
+                  Trace_Exception (Fault);
+                  if GNAT.Sockets.Resolve_Exception (Fault) /=
+                        GNAT.Sockets.Resource_Temporarily_Unavailable then
+                     Stream_Pointer.Input_Buffer.Set_Event (Failed);
+                  else
+                     delay 0.05;
+                  end if;
+            end;
 
          exception
             when Fault: GNAT.Sockets.Socket_Error =>
@@ -1262,70 +1276,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                end;
          end;
 
-         if Stream_Pointer.Socket_Closed then      -- socket closed
-            Stream_Pointer.Input_Buffer.Set_Event (Closed);
-            Log_Here (Trace, "closing socket");
-            exit;
-         end if;
-
-         declare
-            Data              : Buffer_Type (1 .. 1024);
-            Last_Read         : Index_Type;
-            Size_Request      : GNAT.Sockets.Request_Type := (
-                                 Name  => GNAT.Sockets.N_Bytes_To_Read,
-                                 Size  => 0);
-            Trace_Buffer      : String (1 .. Data'length);
-            for Trace_Buffer'Address use Data'Address;
-
-         begin
-            -- find out how many more bytes are available to read
-            GNAT.Sockets.Control_Socket (Stream_Pointer.Socket.GNAT_Socket,
-               Size_Request);
-
-            if Size_Request.Size > 0 then   -- data available, read it
-               Log_Here (Tracing, "request size" & Size_Request.Size'img);
-               -- read exact number of bytes available limited by size of buffer
-               declare
-                  Read_Length    : constant Index_Type := Index_Type'min (
-                                    Index_Type (Size_Request.Size), Data'length);
-               begin
-                  GNAT.Sockets.Receive_Socket (Stream_Pointer.Socket.GNAT_Socket,
-                     Data (Data'first .. Read_Length), Last_Read);
-                  Log_Here (Tracing, "Read_Length" & Read_Length'img &
-                     " Last_Read" & Last_Read'img );
-
-                  if Last_Read /= Read_Length then
-                     Log_Exception (Trace, "short read");
-                     raise IO_Failed with "short read at " & Here &
-                        " read" & Last_Read'img & " expected" & Read_Length'img;
-                  end if;
-
-                  declare
-                     Event       : Event_Type;
-
-                  begin
-                     -- put will block until room for whole buffer is available
-                     Put (Stream_Pointer.Input_Buffer,
-                        Data (Data'first .. Read_Length), Event);
-                     if Event /= Ok then
-                        Log_Exception (Trace, "put failed");
-                        raise IO_Failed with "put failed at " & Here &
-                           " event " & Event'img;
-                     end if;
-                  end;
-               end;
-            end if;
-
-         exception
-            when Fault: GNAT.Sockets.Socket_Error =>
-               Trace_Exception (Fault);
-               if GNAT.Sockets.Resolve_Exception (Fault) /=
-                     GNAT.Sockets.Resource_Temporarily_Unavailable then
-                  Stream_Pointer.Input_Buffer.Set_Event (Failed);
-               else
-                  delay 0.05;
-               end if;
-         end;
       end loop;
       Log_Here (Trace, "loop exit " & Quote ("description", Description));
       Stream_Pointer.Reader_Stopped := True;
@@ -1344,7 +1294,9 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    end Input_Task;
 
+   ---------------------------------------------------------------
    task body Output_Task is
+   ---------------------------------------------------------------
 
       Stream_Pointer             : Stream_Access;
 
@@ -1382,7 +1334,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                Log_Here (Trace, "output buffer failed");
                exit;
 
-            when Ok =>  -- | Buffer_Limit =>
+            when Ok =>
                null;
 
             when Timed_Out =>
@@ -1400,11 +1352,16 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Log_Here (Trace, Stream_Pointer.Image);
 
             begin
-               Stream_Pointer.Output_Buffer.Get (Data, Last, Event);
+               Stream_Pointer.Output_Buffer.Get (Data, Event, Last);
 
             exception
                when Fault: Aborted =>     -- socket got closed
-                  Trace_Message_Exception (Trace, Fault, "expected");
+                  if Stream_Pointer.Socket_Closed then
+                     Log_Here (Trace, "closed " &
+                        Stream_Pointer.Socket_Closed'img);
+                  else
+                     Trace_Exception (Tracing, Fault);
+                  end if;
                   exit;
 
                when Fault: others =>
@@ -1426,7 +1383,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 --                raise Aborted with "buffer limit after get";
 
                when OK =>
-                  Log_Here (Trace);
+                  Log_Here (Trace, Stream_Pointer.Image);
                   declare
                      Start_Send  : Index_Type := Data'first;
                      Send_Last   : Index_Type;
@@ -1488,7 +1445,8 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
       if    Stream_Pointer.Socket /= Null and then
             Stream_Pointer.Socket.Is_Open then
          Log_Here (Trace);
-         Stream_Pointer.Close;
+--       Stream_Pointer.Close;
+         Stream_Pointer.Input_Buffer.Set_Event (Closed);
       end if;
       Stream_Pointer.Writer_Stopped := True;
 

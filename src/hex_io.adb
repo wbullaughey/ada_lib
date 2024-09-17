@@ -103,8 +103,10 @@ package body Hex_IO is
       pragma Pack (Buffer_Type);
 
       Values               : constant Positive := (Size - 1) / Data_Type'size + 1;
+                              -- in bytes
       Buffer               : Buffer_Type (1 .. Values);
-      Last_Line            : Buffer_Type (1 .. Values);
+      Last_Line            : Buffer_Type (1 .. Values) := (
+                                             others => Data_Type'first);
       This_Line            : Buffer_Type (1 .. Values);
 
       for Buffer'address use Source;
@@ -155,12 +157,14 @@ Put_Line ("size" & Size'img & " Values" & Values'img & " limit" & Line_Limit'img
                Skipping := Skipping + 1;
             else     -- print the value
                Put (Hex (Interfaces.Unsigned_64 (Buffer (Index)), Width) & " ");
+--Put (Index'img & ":" &Hex (Interfaces.Unsigned_64 (Buffer (Index)), Width) & " ");
             end if;
 
             if    Line_Index = Line_Limit or else  -- last of line
                   Index = Buffer'last then         -- end of buffer
                if Last_Line = This_Line then
                   Do_Skipping := True;
+--put_line ("start skipping");
                else
                   if Do_Skipping then
                      Put (Skipping'img);
@@ -183,6 +187,9 @@ Put_Line ("size" & Size'img & " Values" & Values'img & " limit" & Line_Limit'img
                   " Line_Limit" & Line_Limit'img);
                raise;
          end;
+--if index = buffer'last then
+--put_line ("end of buffer" & index'img);
+--end if;
       end loop;
 
 --         if Skipping = 0 then
