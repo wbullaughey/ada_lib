@@ -45,7 +45,7 @@ package Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
 private
 
-   Buffer_Length                 : constant := 2000; -- 5000;
+   Buffer_Length                 : constant := 5000;
 
    subtype Data_Buffer_Type      is Ada_Lib.Socket_IO.Buffer_Type (1 ..
                                     Buffer_Length);

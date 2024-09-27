@@ -322,7 +322,9 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Local_Test.Send_Data (Index) :=
             Random_Number_Data_Generator.Random (Generator);
       end loop;
-      Dump (Local_Test.Send_Data'address, Local_Test.Send_Data'length,32,Width_8,"send data", Here);
+      if Debug then
+         Dump (Local_Test.Send_Data'address, Local_Test.Send_Data'length,32,Width_8,"send data", Here);
+      end if;
       Log_Here (Debug, "start server task");
       Server.Start (    -- reads from client and then writes to client
          Test              => Local_Test'unchecked_access);
@@ -365,16 +367,18 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                         "");
       begin
          Log_Here (Debug, Message);
-         Dump (Local_Test.Received_Data'address,
-            Local_Test.Received_Data'length, 32, Width_8, "send data", Here);
+         if Debug then
+            Dump (Local_Test.Received_Data'address,
+               Local_Test.Received_Data'length, 32, Width_8, "send data", Here);
+         end if;
          Assert (Local_Test.Answer = Success, Message);
       end;
 
       if Local_Test.Send_Data = Local_Test.Received_Data then
-log_here;
+         Log_Here (Debug);
       elsif Local_Test.Client_Timed_Out and then
             not Local_Test.Server_Write_Response then
-log_here;
+         Log_Here (Debug);
       elsif Server_Read_Timeout_Time = 0.0 then
          Log_Here (Debug, "data missmach");
          Hex_IO.Dump_8 (Local_Test.Send_Data'address, Local_Test.Send_Data'size, 32, "sent data");
@@ -382,19 +386,15 @@ log_here;
          Local_Test.Set_Answer (Bad_Data);
       else
          Local_Test.Set_Answer (Timeout_Answer);
-         Log_Here (Debug, "Server_Read_Timeout");
       end if;
       Log_Out (Debug);
 
    exception
 
       when Fault: others =>
-put_Line (here);
---       Stop_Tasks;
-         Log_Exception (Debug, Fault);
-put_Line (here);
+Log_Exception (true or Debug, Fault);
          raise;
---
+
    end Send_Receive;
 
    --------------------------------------------------------------
@@ -620,11 +620,10 @@ put_Line (here);
 
    begin
       Log_In (Debug);
-      Local_Test.Server_Wait_Time := 0.2;
+      Local_Test.Server_Wait_Time := 0.1; -- wait for client to write data
       Local_Test.Read_Write_Mode := Unmatched_Record_Length;
       Local_Test.Server_Write_Buffer := True; -- write buffer back to client
       Send_Receive (Test);
-put_Line (here);
       Log_Out (Debug);
    end Socket_Send_Receive_Variable_Record;
 
@@ -778,14 +777,12 @@ put_Line (here);
          Data_Left      : Index_Type := (if Local_Test.Read_Write_Mode = No_Data then
                               0
                            else
-                              Data_Buffer_Type'length); -- 5000
+                              Data_Buffer_Type'length);
          Generator      : Random_Number_Offset_Generator.Generator;
---       Now            : constant Ada.Real_Time.Time := Ada.Real_Time.Clock;
          Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                            Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
---       Seconds        : Ada.Real_Time.Seconds_Count;
          Client_Socket  : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
                            new Ada_Lib.Socket_IO.Client.Client_Socket_Type;
          Start_Offset   : Index_Type :=
@@ -795,9 +792,7 @@ put_Line (here);
       begin
          Log_Here (Debug,
             "client socket " & Client_Socket.Image &
---          " response socket " & Response_Socket.Image &
             " data left" & Data_Left'img &
---          " Do_Acknowledgement " & Local_Test.Do_Acknowledgement'img &
             " delay time " & Delay_Time'img &
             " socket " & Image (Client_Socket'address) &
             " entered seed " & Options.Random_Seed'img &
@@ -886,9 +881,6 @@ put_Line (here);
                         exit;
                   end;
                   -- calculate what answer should be
-Log_Here ("client start" & Start_Offset'img & " .." & End_Offset'img & " first byte" & Length_Or_Answer_Type (Local_Test.Send_Data (1))'img & " last byte" & Length_Or_Answer_Type (Local_Test.Send_Data (End_Offset))'img);
-Dump (Local_Test.Send_Data (Start_Offset)'address, Positive (End_Offset - Start_Offset + 1), 32,Width_8,"client sent data", Here);
-Dump (Local_Test.Received_Data (Start_Offset)'address, Positive (End_Offset - Start_Offset + 1), 32,Width_8,"client received data", Here);
                   for Index in Start_Offset .. End_Offset loop
                      Sum := Sum +
                         Length_Or_Answer_Type (Local_Test.Send_Data (Index));
@@ -1134,7 +1126,9 @@ Dump (Local_Test.Received_Data (Start_Offset)'address, Positive (End_Offset - St
                   " Server_Wait_Time" & Local_Test.Server_Wait_Time'img);
 
                if Local_Test.Server_Wait_Time > 0.0 then
+log_here;
                   delay Local_Test.Server_Wait_Time;
+log_here;
                end if;
                Accepted_Socket.Read (
                   Buffer   => Local_Test.Received_Data (Start_Offset ..
@@ -1143,7 +1137,7 @@ Dump (Local_Test.Received_Data (Start_Offset)'address, Positive (End_Offset - St
 
                Send_Ack (Local_Test.Received_Data (Start_Offset .. Last));
 
-               Received := Last - Start_Offset;
+               Received := Last - Start_Offset + 1;
                Data_Left := Data_Left - Received;
                Log_Here (Debug, "Received" & Received'img &
                   " last" & Last'img & " left" & Data_Left'img);

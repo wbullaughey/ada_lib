@@ -22,7 +22,7 @@ package body Ada_Lib.Options.Unit_Test is
                                           Ada_Lib.Options.Create_Options (
                                              "esSU") &
                                           Ada_Lib.Options.Create_Options (
-                                             "RS", Ada_Lib.Help.Modifier);
+                                             "RSu", Ada_Lib.Help.Modifier);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
@@ -494,7 +494,7 @@ begin
 --Elaborate := True;
    Debug := Debug_Options.Debug_All;
 --Debug := True;
---Trace_Options := True;
+Trace_Options := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 
 exception

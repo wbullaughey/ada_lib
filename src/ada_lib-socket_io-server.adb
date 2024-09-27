@@ -26,7 +26,7 @@ package body Ada_Lib.Socket_IO.Server is
 
       Log_In (Trace,
          "server socket " & Server_Socket.Image &
-         " unaccepted socket " & Accepted_Socket.Image &
+         " accepted socket " & Accepted_Socket.Image &
          " Default_Read_Timeout " & Format_Timeout (Default_Read_Timeout) &
          " Default_Write_Timeout " & Format_Timeout (Default_Write_Timeout));
       GNAT.Sockets.Accept_Socket (Server_Socket.GNAT_Socket,
@@ -184,17 +184,17 @@ package body Ada_Lib.Socket_IO.Server is
          end;
    end Initialize;
 
-   ---------------------------------------------------------------------------
-   overriding
-   procedure Initialize (
-      Socket                     : in out Accepted_Socket_Type) is
-   ---------------------------------------------------------------------------
-
-   begin
-      Log_In (Trace, "socket address " & Image (Socket'address));
-      Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Initialize;
-      Log_Out (Trace);
-   end Initialize;
+-- ---------------------------------------------------------------------------
+-- overriding
+-- procedure Initialize (
+--    Socket                     : in out Accepted_Socket_Type) is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Log_In (Trace, "socket " & Socket.Image);
+--    Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Initialize;
+--    Log_Out (Trace);
+-- end Initialize;
 
    ---------------------------------------------------------------------------
    function Is_Connected (

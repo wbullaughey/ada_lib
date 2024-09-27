@@ -202,10 +202,8 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Tests                      : constant No_Database_Test_Access := new No_Database_Test_Type;
 
    begin
-log_here;
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
       Test_Suite.Add_Test (Tests);
-log_here;
       return Test_Suite;
    end No_Database_Suite;
 

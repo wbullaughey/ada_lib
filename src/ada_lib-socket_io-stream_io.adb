@@ -58,17 +58,18 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Socket_Type (Socket).Close;
 
       Log_Here (Tracing, "wait for write task to exit socket " &
-         Socket.Get_Description);
+         Socket.Image & " writer stopped " & Socket.Stream.Writer_Stopped'img);
       while not Socket.Stream.Writer_Stopped loop
          delay 0.1;
       end loop;
 
       Log_Here (Tracing, "wait for reader task to exit socket " &
-         Socket.Get_Description &
+         Socket.Image &
          " Reader_Stopped " & Socket.Stream.Reader_Stopped'img);
       while not Socket.Stream.Reader_Stopped loop
          delay 0.1;
       end loop;
+      Log_Here (Tracing);
       Socket.Stream.Close;
       Log_Out (Trace);
    exception
@@ -387,7 +388,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                                        Left);
          begin
             Buffer.Prime_Output (Length);
-log_here ("start" & start'img & " length" & length'img);
             Buffer.Put (Data (Start .. Start + Length - 1), Event);
             if Event /= Ok then
                raise IO_Failed with "event " & Event'img;
@@ -464,7 +464,13 @@ log_here ("start" & start'img & " length" & length'img);
             begin
                Log_Here (Trace, "Buffer_Empty " & Buffer_Empty'img &
                   " Timeout_Length " & Timeout_Length'img &
-                  " buffer " & Image (Stream.Input_Buffer'address));
+                  " last" & Last'img);
+
+               if    Buffer_Empty and then
+                     Timeout_Length = 0.0 then  -- return data current in buffer
+                  Log_Here (Trace);
+                  exit;
+               end if;
 
                if Throw_Exception then
                   Timeout_Event.Initialize (Timeout_Length,
@@ -487,10 +493,10 @@ log_here ("start" & start'img & " length" & length'img);
                         exit;
                      end if;
 
-                     if Timeout_Length = 0.0 then  -- return data current in buffer
-                        Log_Here (Trace);
-                        exit;
-                     end if;
+--                   if Timeout_Length = 0.0 then  -- return data current in buffer
+--                      Log_Here (Trace);
+--                      exit;
+--                   end if;
 
                      -- wait for more data
                      Start_Get := Last + 1;
@@ -534,7 +540,7 @@ log_here ("start" & start'img & " length" & length'img);
 
    exception
       when Fault: Timeout =>
-         Log_Exception (Trace, Fault);
+Log_Exception (true or Trace, Fault);
          raise;
 
       when Fault: others =>

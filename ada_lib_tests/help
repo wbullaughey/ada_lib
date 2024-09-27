@@ -1,5 +1,4 @@
 test_ada_lib
-option: 'h' not defined
 
 test_ada_lib command line options:
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
@@ -30,8 +29,10 @@ test_ada_lib command line options:
     -@m                            : manual operations.                (test_ada_lib)
     -@p                            : include program in trace          (Ada_Lib)
     -@P                            : Print test suites.                (test_ada_lib)
+    -@R <seed>                     : set random seed                   (test_ada_lib)
     -@S                            : report random seed                (test_ada_lib)
     -@t                            : include task in trace             (Ada_Lib)
+    -@u                            : use random seed                   (test_ada_lib)
     -@x                            : exclude time in trace             (Ada_Lib)
 
 bin/test_ada_lib trace options (-t)
@@ -76,6 +77,7 @@ Ada_Lib.Template.Tests (-T)
 
 Ada_Lib.Options.GNOGA library trace options (-G)
       a               all
+      g               Ada_Lib.GNOGA
       m               GNOGA.Ada_Lib
       o               GNOGA options
 
@@ -85,7 +87,6 @@ CAC ada_lib trace library options (-a)
       c               Ada_Lib.Command_Line Trace
       C               Ada_Lib.Configuration Trace
       e               Event
-      g               GNOGA.Debug
       h               Help
       i               interrupt
       I               Ada_Lib.interface
@@ -109,6 +110,8 @@ CAC ada_lib trace library options (-a)
       @e              Template Evaluate
       @E              Template Expand
       @l              Template Load
+      @o              Trace_Options
+      @s              Strings
 Ada_Lib unit test library trace options (-U)
       a               all
       A               all unit tests

@@ -603,7 +603,7 @@ package body Ada_Lib.Trace is
                         "caught at " & Where & LF,
          Where       => Where,
          Who         => Who);
-put_Line (here);
+put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    end Log_Exception;
 
    -------------------------------------------------------------------

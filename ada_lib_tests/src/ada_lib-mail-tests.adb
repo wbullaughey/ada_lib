@@ -210,26 +210,14 @@ null;
 
       Test_Suite                 : constant AUnit.Test_Suites.Access_Test_Suite :=
                                     new AUnit.Test_Suites.Test_Suite;
-begin
-log_here;
-declare
       CURL_Tests                 : constant CURL_Test_Access := new CURL_Test_Type;
-begin
-log_here;
-declare
       SMTP_Tests                 : constant SMTP_Test_Access := new SMTP_Test_Type;
 
    begin
-log_here;
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
-log_here;
       Test_Suite.Add_Test (CURL_Tests);
-log_here;
       Test_Suite.Add_Test (SMTP_Tests);
-log_here;
       return Test_Suite;
-end;
-end;
    end Suite;
 
    ---------------------------------------------------------------

@@ -157,7 +157,8 @@ package body Ada_Lib.Socket_IO is
             " no socket"
          else
             GNAT.Sockets.Image (Socket.GNAT_Socket)) &
-         Quote (" description", Socket.Description);
+         Quote (" description", Socket.Description) &
+         " address " & Image (Socket'address);
    end Image;
 
    ---------------------------------------------------------------------------
@@ -182,7 +183,7 @@ package body Ada_Lib.Socket_IO is
    ---------------------------------------------------------------------------
 
    begin
-        Log_In (Tracing, "socket address " & Image (Socket'address));
+        Log_In (Tracing, "socket " & Socket.Image);
         GNAT.Sockets.Create_Socket (Socket.GNAT_Socket, GNAT.Sockets.Family_Inet,
            GNAT.Sockets.Socket_Stream);
         Socket.Open := True;

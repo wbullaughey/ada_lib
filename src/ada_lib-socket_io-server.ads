@@ -103,10 +103,10 @@ private
       Server_Closed              : Boolean := False;
    end record;
 
-   overriding
-   procedure Initialize (           -- creates stream
-      Socket                     : in out Accepted_Socket_Type
-   ) with Pre => not Socket.Is_Open;
+-- overriding
+-- procedure Initialize (           -- creates stream
+--    Socket                     : in out Accepted_Socket_Type
+-- ) with Pre => not Socket.Is_Open;
 
 -- procedure Set_Option (
 --    Socket                     : in out Accepted_Socket_Type;

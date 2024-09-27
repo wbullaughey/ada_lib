@@ -99,13 +99,10 @@ begin
          Ada_Lib.GNOGA.Unit_Test.Base.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Command_Line_Iterator.Tests.Suite);
-log_here;
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Database.Get_Put_Tests.No_Database_Suite );
-log_here;
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Mail.Tests.Suite);
-log_here;
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Text.Textbelt.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
