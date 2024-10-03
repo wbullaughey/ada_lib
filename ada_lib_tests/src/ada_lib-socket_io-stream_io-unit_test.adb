@@ -87,9 +87,9 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    Default_Client_Read_Timeout_Time
-                                 : constant Duration := 0.2;
+                                 : constant Duration := 1.0;
    Default_Server_Read_Timeout_Time
-                                 : constant Duration := 0.2;
+                                 : constant Duration := 1.0;
    Delay_Time                    : constant Duration := 0.5;   -- time to delay second part of write to test timeout
 -- Limit_Length                  : constant := 128;
    Notify_Frequency              : constant := 10;
@@ -866,8 +866,9 @@ put_Line (here);
                   Sum               : Length_Or_Answer_Type := 0;
 
                begin
-                  Log_Here (Debug, "Answer size" &
-                     Answer'size'img & " ack" & Ack'size'img);
+                  Log_Here (Debug, "wrote" & Short_Length'img &
+                     " Answer size" & Answer'size'img &
+                     " ack" & Ack'size'img);
 
                   begin
                      Client_Socket.Read (Answer,
@@ -886,7 +887,8 @@ put_Line (here);
                         Length_Or_Answer_Type (Local_Test.Send_Data (Index));
                   end loop;
 
-                  Log_Here (Debug, " sum" & Sum'img & " ack" & Ack'img);
+                  Log_Here (Debug, "count" & Count'img &
+                     " sum" & Sum'img & " ack" & Ack'img);
 
                   if Sum /= Ack then
                      Local_Test.Set_Answer (Bad_Ack);
@@ -1026,7 +1028,7 @@ put_Line (here);
             Buffer            => Answer);
       end Send_Ack;
 
------------------------------------------------------------------
+      -----------------------------------------------------------------
       procedure Received_Fixed_Record is
       -----------------------------------------------------------------
 

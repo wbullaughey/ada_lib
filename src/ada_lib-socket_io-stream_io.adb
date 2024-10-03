@@ -44,13 +44,19 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    begin
       Log_In (Trace, Socket.Image & " Open " & Socket.Is_Open'img &
          " addresses socket " & Image (Socket'address) &
-         " stream " & Image (Socket.Stream'address));
+         " stream " & Image (Socket.Stream'address) &
+         " output buffer empty " &
+            Socket.Stream.Output_Buffer.Empty (False)'img);
 
       if not Socket.Is_Open then
          Log_Out (Trace);
          return;
       end if;
       Socket.Stream.Input_Buffer.Set_Event (Closed); -- signal input task to close
+      while not Socket.Stream.Output_Buffer.Empty (False) loop
+         delay 0.1;
+      end loop;
+      Log_Here (Trace);
       Socket.Stream.Output_Buffer.Set_Event (Closed); -- signal output task to close
       Socket.Stream.Socket_Closed := True;
       delay 0.2;     -- let tasks complete

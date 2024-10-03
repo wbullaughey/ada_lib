@@ -4,16 +4,19 @@ handles
    6 unit test client connect - gets closed
    7 unit test client accepted
 
-variable record test record length 5000
+fixed record
 
-client sent 1956
+client writes 3 data blocks 1956, 1621, 1423 data
+client timed out
+client exits test loop
+client exits test task
 
-server server 1st read
-waits for .1 second
-gets 2 blocks from buffer
+server reads 2 lengths 1956, 1621
+server reads 2 blocks of data 1956, 1621
+sent 2nd ack
 
-idle time for tasks to complete
-server read loop
-gets 1024 block
+ack put in buffer
+server closes socket with data in buffer
 
-main waits for all tasks to complete
+server ends normally
+
