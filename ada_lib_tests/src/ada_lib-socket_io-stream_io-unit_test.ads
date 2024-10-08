@@ -1,3 +1,5 @@
+--with Ada.Numerics.Discrete_Random;
+--with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test.Tests;
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;

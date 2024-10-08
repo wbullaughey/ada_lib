@@ -11,6 +11,19 @@ package Ada_Lib.Options.Unit_Test is
 
    Failed                        : exception;
 
+   Maximum_Random_Generators     : constant := 5;
+   type Random_Generator_Number_Type
+                                 is new Natural range 0 ..
+                                    Maximum_Random_Generators;
+   subtype Random_Generator_Index_Type
+                                 is Random_Generator_Number_Type range 1 ..
+                                    Maximum_Random_Generators;
+   type Random_Seed_Mode_Type   is (Default_Seed, Random_Seed,
+                                    Seed_Not_Set, Specified_Seed);
+
+   type Random_Seeds_Type        is array (Random_Generator_Index_Type) of
+                                    Integer;
+
    type Suites_Type              is (Database_Server, Textbelt);
 
    type Suite_Set_Type           is array (Suites_Type) of Boolean;
@@ -32,13 +45,14 @@ package Ada_Lib.Options.Unit_Test is
       Mode              : Mode_Type := Run_Tests;  -- run unit tests
       Manual            : Boolean := False;  -- GUI interactions must be
                                              -- performed manually
-      Random_Seed       : Integer := Default_Random_Seed;
+      Number_Random_Generators
+                        : Random_Generator_Number_Type := 0;
+      Random_Seeds      : Random_Seeds_Type := (others => Default_Random_Seed);
+      Random_Seed_Mode  : Random_Seed_Mode_Type := Seed_Not_Set;
       Report_Random     : Boolean := False;
       Routine           : Ada_Lib.Strings.Unlimited.String_Type;
-      Set_Random_Seed   : Boolean := False;
       Suite_Name        : Ada_Lib.Strings.Unlimited.String_Type;
       Suite_Set         : Suite_Set_Type := (others => False);
-      Use_Random_Seed   : Boolean := False;
    end record;
 
    type Ada_Lib_Unit_Test_Options_Class_Access

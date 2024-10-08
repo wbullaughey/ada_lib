@@ -22,13 +22,13 @@ package body Ada_Lib.Options.Unit_Test is
                                           Ada_Lib.Options.Create_Options (
                                              "esSU") &
                                           Ada_Lib.Options.Create_Options (
-                                             "RSu", Ada_Lib.Help.Modifier);
+                                             "nR", Ada_Lib.Help.Modifier);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
                                              "x") &
                                           Ada_Lib.Options.Create_Options (
-                                             Driver_List_Option & "lmP",
+                                             Driver_List_Option & "lmPSu",
                                              Ada_Lib.Help.Modifier);
 
    Initialized_Recursed          : Boolean := False;
@@ -127,7 +127,9 @@ package body Ada_Lib.Options.Unit_Test is
 --    use Standard.Ada_Lib.Options;
 
    begin
-      Log_In (Trace_Options or Debug, Option.Image & " mode " & Options.Mode'img);
+      Log_In (Trace_Options or Debug, Option.Image &
+         " mode " & Options.Mode'img &
+         Quote (" option", Option.Option));
 
       if Has_Option (Option, Options_With_Parameters,
             Options_Without_Parameters) then
@@ -223,6 +225,12 @@ package body Ada_Lib.Options.Unit_Test is
                   when 'm' =>    -- manual operation
                      Options.Manual := True;
 
+                  when 'n' =>
+                     Options.Number_Random_Generators :=
+                        Random_Generator_Index_Type (Iterator.Get_Integer);
+                     Log_Here (Trace_Options, "Number_Random_Generators" &
+                        Options.Number_Random_Generators'img);
+
                   when 'P' => -- print test suites
                      if Options.Routine.Length > 0 or else
                            Options.Suite_Name.Length > 0 then
@@ -231,28 +239,36 @@ package body Ada_Lib.Options.Unit_Test is
                      Options.Mode := Print_Suites;
 --                   Options.Update_Filter;   -- sets filter name
 
-                  when 'r' =>
-                     Options.Report_Random := True;
-
-                  when 'R' =>
-                     if Options.Use_Random_Seed then
-                        raise Failed with "options " &
-                           Ada_Lib.Help.Modifier & "R and " &
-                           Ada_Lib.Help.Modifier & "u are incompatable";
+                  when 'R' => -- set random seed to argument
+                     if Options.Random_Seed_Mode /= Seed_Not_Set then
+                        raise Failed with "random seed mode already set";
                      end if;
-                     Options.Set_Random_Seed := True;
-                     Options.Random_Seed := Iterator.Get_Integer;
+
+                     if Options.Number_Random_Generators = 0 then
+                        raise Failed with
+                           "number randoom number generators not set";
+                     end if;
+                     Options.Random_Seed_Mode := Specified_Seed;
+                     Log_Here (Trace_Options, "number seeds" &
+                        Options.Number_Random_Generators'img);
+                     for Index in Random_Generator_Index_Type'first ..
+                           Options.Number_Random_Generators loop
+                        Options.Random_Seeds (Index) := Iterator.Get_Integer;
+                        Iterator.Advance;
+                     end loop;
 
                   when 'S' =>
                      Options.Report_Random := True;
 
-                  when 'u' =>
-                     if Options.Set_Random_Seed then
-                        raise Failed with "options " &
-                           Ada_Lib.Help.Modifier & "R and " &
-                           Ada_Lib.Help.Modifier & "u are incompatable";
+                  when 'u' => -- generator uses time based seed
+                     if Options.Random_Seed_Mode /= Seed_Not_Set then
+                        raise Failed with "random seed mode already set";
                      end if;
-                     Options.Use_Random_Seed := True;
+                     if Options.Number_Random_Generators = 0 then
+                        raise Failed with
+                           "number randoom number generators not set";
+                     end if;
+                     Options.Random_Seed_Mode := Random_Seed;
 
                   when 'x' =>
                      Options.Exit_On_Done := True;
@@ -314,6 +330,9 @@ package body Ada_Lib.Options.Unit_Test is
          Ada_Lib.Help.Add_Option ('l', "", "List test suites", Component,
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Add_Option ('m', "", "manual operations.", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('n', "number of random seeds", "number seeds.",
+            Component,
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Add_Option ('P', "", "Print test suites.", Component,
             Ada_Lib.Help.Modifier);
@@ -493,7 +512,7 @@ begin
 --Ada_Lib.Trace.Trace_Tests := True;
 --Elaborate := True;
    Debug := Debug_Options.Debug_All;
---Debug := True;
+Debug := True;
 Trace_Options := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 

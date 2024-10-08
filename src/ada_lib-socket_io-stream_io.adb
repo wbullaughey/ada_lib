@@ -490,6 +490,10 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                Log_Here (Trace, "Last" & Last'img &
                   " event " & Event'img);
 
+               if not Timeout_Event.Cancel then
+                  Log_Here (Trace, "cancel timeout event failed");
+               end if;
+
                case Event is
 
                   when OK =>

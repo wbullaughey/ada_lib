@@ -1,6 +1,5 @@
 with Ada.Exceptions;
-with Ada.Numerics.Discrete_Random;
-with Ada.Real_Time;
+--with Ada.Real_Time;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Options.Actual;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -14,6 +13,7 @@ with Ada_Lib.Strings;
 --with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
+with Ada_Lib.Unit_Test.Test_Cases;
 with GNAT.Source_Info;
 with Hex_IO;
 --with Runtime_Options;
@@ -23,6 +23,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    use type Ada.Streams.Stream_Element_Array;
    use type Ada.Streams.Stream_Element_Offset;
+   use type Ada_Lib.Options.Unit_Test.Random_Generator_Number_Type;
    use type Port_Type;
 
    type Length_Or_Answer_Type       is mod 2 ** 32;
@@ -49,21 +50,6 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    type Server_Task_Access       is access Server_Task_Type;
 
-   package Random_Number_Data_Generator is
-      new Ada.Numerics.Discrete_Random (Data_Type);
-
-   package Random_Number_Offset_Generator is
-      new Ada.Numerics.Discrete_Random (Index_Type);
-
-   generic
-      type Generator_Type  is limited private;
-      type Offset_Type     is private;
-      with procedure Reset (
-         Generator         : in     Generator_Type;
-         Seed              : in     Integer);
-
-   procedure Reset_Generator (
-      Generator         : in     Generator_Type);
 
    procedure Socket_Open_Close (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
@@ -86,6 +72,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    procedure Socket_Timeout_Send_Receive (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
+   Data_Generator_Index          : constant := 2;
    Default_Client_Read_Timeout_Time
                                  : constant Duration := 1.0;
    Default_Server_Read_Timeout_Time
@@ -93,6 +80,9 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    Delay_Time                    : constant Duration := 0.5;   -- time to delay second part of write to test timeout
 -- Limit_Length                  : constant := 128;
    Notify_Frequency              : constant := 10;
+   Offset_Generator_Index        : constant := 1;
+   Required_Random_Number_Generators
+                                 : constant := Data_Generator_Index;
    Server_Name                   : constant String := "localhost";
 
    ---------------------------------------------------------------
@@ -162,74 +152,22 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    end Register_Tests;
 
    ---------------------------------------------------------------
-   procedure Reset_Generator (
-      Generator         : in     Generator_Type) is
-   ---------------------------------------------------------------
-
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                           Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Seed              : Integer := Ada_Lib.Options.Unit_Test.Default_Random_Seed;
-
-   begin
-      Log_In (Debug,
-         (if Options.Use_Random_Seed then
-             "Use Random Seed "
-         else
-            (if Options.Set_Random_Seed then
-               "Use Seed" & Options.Random_Seed'img
-            else
-               "use default seed" & Seed'img)));
-
-      if Options.Use_Random_Seed then  -- use realtime clock
-         declare
-            Now         : constant Ada.Real_Time.Time :=
-                           Ada.Real_Time.Clock;
-            Offset      : Duration;
-            Seconds     : Ada.Real_Time.Seconds_Count;
-            Time_Span   : Ada.Real_Time.Time_Span;
-
-         begin
-            Ada.Real_Time.Split (Now, Seconds, Time_Span);
-            Offset := Ada.Real_Time.To_Duration (Time_Span);
-            Seed := Integer (Offset * 1000000);
-         end;
-      elsif Options.Set_Random_Seed then  -- use runstring option seed
-         Seed := Options.Random_Seed;
-      end if;
-
-      Reset (Generator, Seed);
-
-      if Options.Report_Random then
-         Put_Line ("random seed " & Seed'img);
-      end if;
-
-      Log_Out (Debug, "Seed" & Seed'img);
-   end Reset_Generator;
-
-   ---------------------------------------------------------------
-   procedure Data_Reset_Generator is new Reset_Generator (
-      Generator_Type    => Random_Number_Data_Generator.Generator,
-      Offset_Type       => Ada_Lib.Socket_IO.Data_Type,
-      Reset             => Random_Number_Data_Generator.Reset);
-   ---------------------------------------------------------------
-
-   ---------------------------------------------------------------
-   procedure Offset_Reset_Generator is new Reset_Generator (
-      Generator_Type    => Random_Number_Offset_Generator.Generator,
-      Offset_Type       => Ada_Lib.Socket_IO.Data_Type,
-      Reset             => Random_Number_Offset_Generator.Reset);
-   ---------------------------------------------------------------
-
-   ---------------------------------------------------------------
    overriding
    procedure Set_Up (
       Test                       : in out Socket_Test_Type) is
    ---------------------------------------------------------------
 
+      Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+                     Ada_Lib.Options.AUnit_Lib.
+                        Aunit_Options_Constant_Class_Access (
+                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Log_In (Debug);
+      if Options.Number_Random_Generators /=
+            Required_Random_Number_Generators then
+         raise Fault with "wrong number random number generators" &
+            Options.Number_Random_Generators'img;
+      end if;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Answer := Success;
       Test.Client_Completed := False;
@@ -249,6 +187,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Test.Server_Timedout            := False;
       Test.Server_Write_Timeout_Time  := No_Timeout;
       Test.Socket_Count := 0;
+
       Log_Out (Debug);
 
    exception
@@ -272,7 +211,6 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                         new String'("client send receive");
       Local_Test     : Socket_Test_Type renames Socket_Test_Type (Test);
 
-      Generator      : Random_Number_Data_Generator.Generator;
 --    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
 --                      Ada_Lib.Options.AUnit_Lib.
 --                         Aunit_Options_Constant_Class_Access (
@@ -316,12 +254,23 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Assert (False, "server or client not started");
       end if;
 
-      Data_Reset_Generator (Generator);
       -- initialize data buffer
-      for Index in Local_Test.Send_Data'range loop
-         Local_Test.Send_Data (Index) :=
-            Random_Number_Data_Generator.Random (Generator);
-      end loop;
+      declare
+         Generator      : Ada_Lib.Unit_Test.Test_Cases.Random_Number_Generator.
+                           Generator renames
+                              Local_Test.Random_Generators (Data_Generator_Index);
+      begin
+         for Index in Local_Test.Send_Data'range loop
+            declare
+               Random   : constant Integer := Ada_Lib.Unit_Test.Test_Cases.
+                           Random_Number_Generator.Random (Generator);
+            begin
+               Local_Test.Send_Data (Index) := Data_Type (
+                  Random mod Integer (Data_Type'last));
+            end;
+         end loop;
+      end;
+
       if Debug then
          Dump (Local_Test.Send_Data'address, Local_Test.Send_Data'length,32,Width_8,"send data", Here);
       end if;
@@ -778,7 +727,6 @@ put_Line (here);
                               0
                            else
                               Data_Buffer_Type'length);
-         Generator      : Random_Number_Offset_Generator.Generator;
          Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                            Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
@@ -795,10 +743,11 @@ put_Line (here);
             " data left" & Data_Left'img &
             " delay time " & Delay_Time'img &
             " socket " & Image (Client_Socket'address) &
-            " entered seed " & Options.Random_Seed'img &
+            " entered offset seed " &
+               Options.Random_Seeds (Offset_Generator_Index)'img &
+            " entered data seed " &
+               Options.Random_Seeds (Data_Generator_Index)'img &
             " Test " & Image (Local_Test.all'address));
-
-         Offset_Reset_Generator (Generator);
 
          Client_Socket.Connect (
             Connection_Timeout=> 1.0,
@@ -817,9 +766,11 @@ put_Line (here);
 
             declare
                End_Offset        : Index_Type;
-               Random_Length     : constant Index_Type :=
-                                    Random_Number_Offset_Generator.Random (
-                                       Generator);
+               Random_Length     : constant Index_Type := Index_Type (
+                                    Ada_Lib.Unit_Test.Test_Cases.
+                                       Random_Number_Generator.Random (
+                                          Local_Test.Random_Generators (
+                                             Data_Generator_Index)));
                Mod_Length        : constant Index_Type :=
                                     Random_Length mod (Buffer_Length / 2);
                Short_Length      : Index_Type := Mod_Length + 1;
@@ -1067,7 +1018,8 @@ put_Line (here);
                   End_Offset        : constant Index_Type := Start_Offset +
                                        Index_Type (Request_Length) - 1;
                begin
-                  Log_Here (Debug, "Request_Length" & Request_Length'img &
+                  Log_Here (Debug, "count" & Count'img &
+                     " Request_Length" & Request_Length'img &
                      " start " & Start_Offset'img &
                      " End_Offset" & End_Offset'img);
 
@@ -1264,7 +1216,7 @@ begin
 if Trace_Tests then
       Debug := Trace_Tests;
    end if;
---Debug := True;
+Debug := True;
    Log_Here (Trace_Options or Elaborate);
 end Ada_Lib.Socket_IO.Stream_IO.Unit_Test;
 

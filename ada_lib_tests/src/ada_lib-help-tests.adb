@@ -1,5 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Help;
+--with Ada_Lib.Help;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;

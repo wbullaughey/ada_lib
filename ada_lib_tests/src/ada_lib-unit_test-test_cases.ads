@@ -1,5 +1,6 @@
 with Ada.Exceptions;
-with Ada_Lib.Options;
+with Ada.Numerics.Discrete_Random;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
 
@@ -9,6 +10,13 @@ package Ada_Lib.Unit_Test.Test_Cases is
 
    Failed                        : exception;
 
+   package Random_Number_Generator is
+      new Ada.Numerics.Discrete_Random (Integer);
+
+   type Random_Generators_Type   is array (Ada_Lib.Options.Unit_Test.
+                                    Random_Generator_Index_Type) of
+                                       Random_Number_Generator.Generator;
+
    package Root_Test is
       type Test_Type is abstract new AUnit.Test_Cases.Test_Case with private;
 
@@ -16,13 +24,10 @@ package Ada_Lib.Unit_Test.Test_Cases is
          Test                       : in     Test_Type
       ) return Boolean;
 
---    overriding
---    procedure Register_Tests (
---       Test                       : in out Test_Type);
-
       overriding
       procedure Set_Up (
          Test                       : in out Test_Type);
+
 
       procedure Set_Up_Failed (
          Test                       : in out Test_Type;
@@ -58,6 +63,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    type Test_Case_Type is abstract new Root_Test.Test_Type with record
       Async_Failure_Message      : Ada_Lib.Strings.Unlimited.String_Type;
       Failure_From               : Ada_Lib.Strings.Unlimited.String_Type;
+      Random_Generators          : Random_Generators_Type;
       Suite_Name                 : Ada_Lib.Strings.Unlimited.String_Type;
    end record;
 
@@ -68,6 +74,10 @@ package Ada_Lib.Unit_Test.Test_Cases is
       Test                    : in out Test_Case_Type;
       Val                     : AUnit.Test_Cases.Routine_Spec
    ) with pre => Ada_Lib.Options.Have_Options;
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Case_Type);
 
    procedure Set_Up_Exception (
       Test                       : in out Test_Case_Type;

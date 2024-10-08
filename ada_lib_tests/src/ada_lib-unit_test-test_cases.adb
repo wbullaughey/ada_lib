@@ -1,8 +1,7 @@
---with AUnit.Assertions;
+with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.Test.Suites;
---with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Trace;
 
 package body Ada_Lib.Unit_Test.Test_Cases is
 
@@ -31,6 +30,94 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Routine (Test_Case_Type'class (Test).Name.all, Val.Routine_Name.all);
       Log_Out (Debug);
    end Add_Routine;
+
+   ---------------------------------------------------------------
+   procedure Reset_Generator (
+      Test              : in     Test_Case_Type;
+      Generator_Index   : in     Ada_Lib.Options.Unit_Test.
+                                    Random_Generator_Index_Type) is
+   ---------------------------------------------------------------
+
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+                           Ada_Lib.Options.AUnit_Lib.
+                              Aunit_Options_Constant_Class_Access (
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+   begin
+      Log_In (Debug, "random seed mode " &
+         Options.Random_Seed_Mode'img &
+         " seed" & Generator_Index' img & ":" &
+         Options.Random_Seeds (Generator_Index)'img);
+
+      Random_Number_Generator.Reset (Test.Random_Generators (Generator_Index),
+         Options.Random_Seeds (Generator_Index));
+
+      if Options.Report_Random then
+         Put_Line ("random seed " & Options.Random_Seeds (Generator_Index)'img);
+      end if;
+
+      Log_Out (Debug, "Seed" & Options.Random_Seeds (Generator_Index)'img);
+   end Reset_Generator;
+
+   ----------------------------------------------------------------------------
+   overriding
+   procedure Set_Up (
+      Test     : in out Test_Case_Type) is
+   ----------------------------------------------------------------------------
+
+   Options     : Ada_Lib.Options.Unit_Test.
+                  Ada_Lib_Unit_Test_Options_Type'class renames
+                     Ada_Lib.Options.Unit_Test.
+                        Ada_Lib_Unit_Test_Options_Class_Access (
+                           Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options).all;
+   begin
+      Log_In (Debug, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      case Options.Random_Seed_Mode is
+
+         when Ada_Lib.Options.Unit_Test.Default_Seed =>
+            Options.Random_Seeds := (others =>
+               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+
+         when Ada_Lib.Options.Unit_Test.Seed_Not_Set =>
+            Options.Random_Seeds := (others =>
+               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+            Options.Random_Seed_Mode :=
+               Ada_Lib.Options.Unit_Test.Default_Seed;
+
+         when Ada_Lib.Options.Unit_Test.Specified_Seed =>
+            null; -- should already be set
+
+         when Ada_Lib.Options.Unit_Test.Random_Seed =>
+            declare
+               Now         : constant Ada.Real_Time.Time :=
+                              Ada.Real_Time.Clock;
+               Offset      : Duration;
+               Seconds     : Ada.Real_Time.Seconds_Count;
+               Seed        : Integer;
+               for Seed'address use Offset'address;
+               Time_Span   : Ada.Real_Time.Time_Span;
+
+            begin
+               Ada.Real_Time.Split (Now, Seconds, Time_Span);
+               Offset := Ada.Real_Time.To_Duration (Time_Span);
+               Log_Here (Debug, "offset " & Image (Offset, True));
+
+               for Index in 1 .. Options.Number_Random_Generators loop
+                  Options.Random_Seeds (Index) := Seed;
+                  Seed := Seed / 2;
+                  Log_Here (Debug, "seed" & Index'img & ":" &
+                     Options.Random_Seeds (Index)'img);
+               end loop;
+            end;
+      end case;
+
+      for Index in 1 .. Options.Number_Random_Generators loop
+         Reset_Generator (Test, Index);
+      end loop;
+
+      Ada_Lib.Unit_Testing := True;
+      Root_Test.Test_Type (Test).Set_Up;
+      Log_Out (Debug);
+   end Set_Up;
 
    ----------------------------------------------------------------------------
    procedure Set_Up_Exception (
@@ -247,7 +334,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
          Log_Here (Debug, "Set_Up " & Test.Set_Up'img &
             " Set_Up_FAiled " & Test.Set_Up_FAiled'img);
 
-         return Test.Set_Up and then not Test.Set_Up_FAiled;
+         return Test.Set_Up and then not Test.Set_Up_Failed;
       end Verify_Set_Up;
 
       ----------------------------------------------------------------------------
@@ -270,7 +357,7 @@ begin
    if Trace_Tests then
       Debug := Trace_Tests;
    end if;
---Debug := True;
+Debug := True;
    Log_Here (Trace_Options or Elaborate);
 
 end Ada_Lib.Unit_Test.Test_Cases;

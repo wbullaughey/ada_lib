@@ -4,16 +4,14 @@ handles
    6 unit test client connect - gets closed
    7 unit test client accepted
 
+gets 2 random seeds should only set generator once
+
 fixed record
 
-client writes 3 data blocks 1956, 1621, 1423 data
-client timed out
-client exits test loop
-client exits test task
-
-server reads 2 lengths 1956, 1621
-server reads 2 blocks of data 1956, 1621
-sent 2nd ack
+server
+reads 1st buffer
+waits for 2nd read buffer
+got data from buffer
 
 ack put in buffer
 server closes socket with data in buffer

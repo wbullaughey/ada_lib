@@ -80,14 +80,14 @@ package Ada_Lib.Trace is
    return String;
 
    function Image (
-      Time                 : in   Ada.Calendar.Time;
-      Hundreds            : in   Boolean := False
+      Time              : in   Ada.Calendar.Time;
+      Hundreds          : in   Boolean := False
    ) return String;
 
    function Image (
-      Time                       : in   Duration;
-      Hundreds                  : in   Boolean := False;
-      Show_Days                  : in   Boolean := False
+      Time              : in   Duration;
+      Hundreds          : in   Boolean := False;
+      Show_Days         : in   Boolean := False
    ) return String;
 
    function Image (

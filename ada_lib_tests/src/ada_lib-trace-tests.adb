@@ -14,7 +14,7 @@ package body Ada_Lib.Trace.Tests is
 
    Test_Exception                : exception;
 
-   use type Ada_Lib.Time.Time_Type;
+-- use type Ada_Lib.Time.Time_Type;
 
    type Output_Type              is record
       Level                      : Level_Type;
@@ -314,8 +314,8 @@ package body Ada_Lib.Trace.Tests is
          Hundreds               : Natural;
       end record;
 
-      Start_Time                 : constant Ada_Lib.Time.Time_Type :=
-                                    Ada_Lib.Time.Now;
+--    Start_Time                 : constant Ada_Lib.Time.Time_Type :=
+--                                  Ada_Lib.Time.Now;
 
       Tests          : constant array (Positive range <>) of Test_Type := (
                         (

@@ -31,7 +31,7 @@ package body Ada_Lib.Options.Actual is
    use type Ada.Tags.Tag;
 
    Initialize_Recursed          : Boolean := False;
-   Test_Condition_Flag           : constant Character := '?';
+   Test_Condition_Flag           : constant Character := 'c';
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Create_Options ('a');
@@ -292,7 +292,8 @@ package body Ada_Lib.Options.Actual is
       exception
          when Fault: others =>
             Trace_Exception (Debug or Trace_Options, Fault);
-            Get_Ada_Lib_Read_Only_Options.Display_Help (Ada.Exceptions.Exception_Message (Fault));
+            Get_Ada_Lib_Read_Only_Options.Display_Help (
+               Ada.Exceptions.Exception_Message (Fault));
       end;
 
       Options.Processed := True;
@@ -313,7 +314,7 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
 -- overriding
    procedure Process (
-     Options                     : in out Program_Options_Type;
+      Options                    : in out Program_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 

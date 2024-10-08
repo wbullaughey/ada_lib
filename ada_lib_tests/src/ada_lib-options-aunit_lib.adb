@@ -35,21 +35,6 @@ package body Ada_Lib.Options.AUnit_Lib is
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Null_Options;
--- Protected_Options             : aliased Aunit_Options_Type;
-                                    -- multiple Ada_Lib unit tests can be run
-                                    -- by the same instance of the tester
-
--- ----------------------------------------------------------------
--- function Get_Modifiable_AUnit_Options (
---    From                       : in  String := Ada_Lib.Trace.Here
--- ) return Aunit_Options_Class_Access is
--- ----------------------------------------------------------------
---
--- begin
---    Log_Here (Debug or Trace_Options,
---       " verbose " & Unit_Test_Options.Verbose'img & " from " & From);
---    return Unit_Test_Options'access;
--- end Get_Modifiable_AUnit_Options;
 
    -------------------------------------------------------------------------
    function Has_Database return Boolean is
