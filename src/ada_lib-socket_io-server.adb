@@ -12,18 +12,16 @@ package body Ada_Lib.Socket_IO.Server is
       Default_Read_Timeout       : in     Duration := No_Timeout;
       Default_Write_Timeout      : in     Duration := No_Timeout;
       Priority                   : in     Ada_Lib.OS.Priority_Type :=
-                                             Ada_Lib.OS.Default_Priority;
-      Server_Description         : in     String := "";
-      Accepted_Description       : in     String := "") is
+                                             Ada_Lib.OS.Default_Priority) is
    ---------------------------------------------------------------------------
 
       Client_Address             : GNAT.Sockets.Sock_Addr_Type;
       Status                     : GNAT.Sockets.Selector_Status;
 
    begin
-      Server_Socket.Set_Description (Server_Description);
-      Accepted_Socket.Set_Description (Accepted_Description);
-
+--    Server_Socket.Set_Description (Server_Description);
+--    Accepted_Socket.Set_Description (Accepted_Description);
+--
       Log_In (Trace,
          "server socket " & Server_Socket.Image &
          " accepted socket " & Accepted_Socket.Image &
@@ -38,8 +36,8 @@ package body Ada_Lib.Socket_IO.Server is
 
          when GNAT.Sockets.Completed =>
             begin
-               Accepted_Socket.Create_Stream (
-                  Description    => Accepted_Description);
+               Accepted_Socket.Create_Stream;
+--                Description    => Accepted_Description);
                Accepted_Socket.Set_Connected;
                Log_Out (Trace, "accepted socket " & Accepted_Socket.Image);
                return;
@@ -58,11 +56,9 @@ package body Ada_Lib.Socket_IO.Server is
 
          when GNAT.Sockets.Expired =>
             Log_Exception (Trace, "select expired");
-            raise Select_Timeout with "select timed out" & (
-               if Server_Description'length > 0 then
-                  " for server " & Server_Description
-               else
-                  "") & " at " & Here;
+            raise Select_Timeout with "select timed out" &
+               " for server " & Server_Socket.Description.all &
+               " at " & Here;
 
          when GNAT.Sockets.Aborted =>
             Log_Exception (Trace, "select failed");

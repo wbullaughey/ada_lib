@@ -357,7 +357,7 @@ begin
    if Trace_Tests then
       Debug := Trace_Tests;
    end if;
-Debug := True;
+--Debug := True;
    Log_Here (Trace_Options or Elaborate);
 
 end Ada_Lib.Unit_Test.Test_Cases;

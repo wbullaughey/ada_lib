@@ -48,6 +48,7 @@ package Ada_Lib.Options.Unit_Test is
       Number_Random_Generators
                         : Random_Generator_Number_Type := 0;
       Random_Seeds      : Random_Seeds_Type := (others => Default_Random_Seed);
+      Random_Seed_Count : Random_Generator_Number_Type := 0;
       Random_Seed_Mode  : Random_Seed_Mode_Type := Seed_Not_Set;
       Report_Random     : Boolean := False;
       Routine           : Ada_Lib.Strings.Unlimited.String_Type;

@@ -38,8 +38,11 @@ package Ada_Lib.Mail.Tests is
    ) with Pre => not Test.Verify_Set_Up,
           Post => Test.Verify_Set_Up;
 
-   type SMTP_Test_Type           is new Test_Type with record
-      Credential                 : Ada_Lib.Mail.SMTP.SMTP_Credentials_Type;
+   type SMTP_Test_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is new Test_Type with record
+      Credential     : Ada_Lib.Mail.SMTP.SMTP_Credentials_Type (
+                        Description);
    end record;
 
    type  SMTP_Test_Access is access SMTP_Test_Type;

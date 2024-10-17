@@ -44,8 +44,11 @@ package Ada_Lib.Socket_IO.Server is
 --    Buffer                     : in     Buffer_Type);
 
    type Server_Socket_Type (
-      Port                       : GNAT.Sockets.Port_Type
-   ) is new Socket_Type and Socket_Interface with null record;
+      Description    : Ada_Lib.Strings.String_Constant_Access;
+      Port           : GNAT.Sockets.Port_Type
+                        ) is new Socket_Type (
+                           Description) and
+                        Socket_Interface with null record;
 
    type Server_Socket_Access     is access Server_Socket_Type;
 
@@ -56,9 +59,7 @@ package Ada_Lib.Socket_IO.Server is
       Default_Read_Timeout       : in     Duration := No_Timeout;
       Default_Write_Timeout      : in     Duration := No_Timeout;
       Priority                   : in     Ada_Lib.OS.Priority_Type :=
-                                             Ada_Lib.OS.Default_Priority;
-      Server_Description         : in     String := "";
-      Accepted_Description       : in     String := ""
+                                             Ada_Lib.OS.Default_Priority
    ) with Pre => Server_Socket.Is_Open;
 
 -- procedure Bind_Socket (

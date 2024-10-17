@@ -102,7 +102,8 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 --trace := true;
       Log_In (Debug);
       declare
-         Socket                  : Client_Socket_Type;
+         Description             : aliased constant String := "client";
+         Socket                  : Client_Socket_Type (Description'unchecked_access);
 
       begin
          Socket.Connect (URL_Address, URL_Port);
@@ -116,7 +117,8 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
       end;
       declare
-         Socket                  : Client_Socket_Type;
+         Description             : aliased constant String := "client";
+         Socket                  : Client_Socket_Type (Description'unchecked_access);
 
       begin
          Socket.Connect (IP_Address, IP_Address_Port);

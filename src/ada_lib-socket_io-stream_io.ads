@@ -27,7 +27,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
    No_Timeout                       : constant Duration := Duration'last;
 
    protected type Protected_Buffer_Type (
-      Kind                       : Buffer_Kind_Type) is
+      Kind                       : Buffer_Kind_Type;
+      Description                : Ada_Lib.Strings.String_Constant_Access) is
 
 
       function Empty(
@@ -82,7 +83,9 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Data                       : in     Buffer_Type);
 
 
-   type Stream_Socket_Type       is new Socket_Type and
+   type Stream_Socket_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Socket_Type and
                                     Client_Socket_Interface and
                                     Socket_Interface and
                                     Socket_Stream_Interface with private;
@@ -99,7 +102,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null);
 
@@ -109,7 +112,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) with Pre => Socket.Is_Open;
@@ -120,7 +123,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null);
 
@@ -129,8 +132,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
    procedure Create_Stream (
       Socket                     : in out Stream_Socket_Type;
       Default_Read_Timeout       : in     Duration := No_Timeout;
-      Default_Write_Timeout      : in     Duration := No_Timeout;
-      Description                : in     String := "");
+      Default_Write_Timeout      : in     Duration := No_Timeout);
 
    overriding
    function In_Buffer (
@@ -225,12 +227,16 @@ private
 
    type Output_Task_Access       is access Output_Task;
 
-   type Stream_Type              is new Ada.Streams.Root_Stream_Type with record
+   type Stream_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+         ) is new Ada.Streams.Root_Stream_Type with record
       Default_Read_Timeout       : Duration;
       Default_Write_Timeout      : Duration;
       GNAT_Stream                : GNAT.Sockets.Stream_Access;
-      Input_Buffer               : aliased Protected_Buffer_Type (Input);
-      Output_Buffer              : aliased Protected_Buffer_Type (Output);
+      Input_Buffer               : aliased Protected_Buffer_Type (
+                                    Input, Description);
+      Output_Buffer              : aliased Protected_Buffer_Type (
+                                    Output, Description);
       Reader                     : Input_Task_Access := Null;
 --    Reader_State               : aliased Task_State_Type := Idle;
       Reader_Task_Id             : Ada.Task_Identification.Task_Id;
@@ -297,11 +303,13 @@ private
    ) with pre => Item'length > 0 and then
                  Timeout_Length > 0.0;
 
-   type Stream_Socket_Type       is new Socket_Type and
+   type Stream_Socket_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Socket_Type (Description) and
                                        Client_Socket_Interface and
                                        Socket_Interface and
                                        Socket_Stream_Interface with record
-      Stream                     : Stream_Type;
+      Stream                     : Stream_Type (Description);
    end record;
 
    overriding

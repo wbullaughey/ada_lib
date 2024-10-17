@@ -41,13 +41,15 @@ package Ada_Lib.EMail is
    Debug                         : Boolean := False;
 
 private
+   Description                   : aliased constant String := "email";
    type Emailer_Type               is new  Ada.Finalization.
                                     Limited_Controlled with record
       Email                      : Ada_Lib.Strings.Unlimited.String_Type;
       Name                       : Ada_Lib.Strings.Unlimited.String_Type;
       Password                   : Ada_Lib.Strings.Unlimited.String_Type;
       Port                       : Ada_Lib.Socket_IO.Port_Type;
-      Socket                     : Ada_Lib.Socket_IO.Client.Client_Socket_Type;
+      Socket                     : Ada_Lib.Socket_IO.Client.Client_Socket_Type (
+                                    Description'access);
       URL                        : Ada_Lib.Strings.Unlimited.String_Type;
    end record;
 

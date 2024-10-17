@@ -6,15 +6,20 @@ handles
 
 gets 2 random seeds should only set generator once
 
-fixed record
+unmatched record
+
+
+client task
+writes 5000
+exits loop
+check_answer correct start, end, length
+reads answer write length wrong answer
 
 server
-reads 1st buffer
-waits for 2nd read buffer
-got data from buffer
-
-ack put in buffer
-server closes socket with data in buffer
-
-server ends normally
+does read of 5000
+enters read loop
+buffer not empty
+calls get of 1024
+get returns 1024
+good buffer contents
 

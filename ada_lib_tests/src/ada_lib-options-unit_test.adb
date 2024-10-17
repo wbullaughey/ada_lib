@@ -240,10 +240,6 @@ package body Ada_Lib.Options.Unit_Test is
 --                   Options.Update_Filter;   -- sets filter name
 
                   when 'R' => -- set random seed to argument
-                     if Options.Random_Seed_Mode /= Seed_Not_Set then
-                        raise Failed with "random seed mode already set";
-                     end if;
-
                      if Options.Number_Random_Generators = 0 then
                         raise Failed with
                            "number randoom number generators not set";
@@ -251,11 +247,16 @@ package body Ada_Lib.Options.Unit_Test is
                      Options.Random_Seed_Mode := Specified_Seed;
                      Log_Here (Trace_Options, "number seeds" &
                         Options.Number_Random_Generators'img);
-                     for Index in Random_Generator_Index_Type'first ..
-                           Options.Number_Random_Generators loop
-                        Options.Random_Seeds (Index) := Iterator.Get_Integer;
-                        Iterator.Advance;
-                     end loop;
+
+                     Options.Random_Seed_Count := Options.Random_Seed_Count + 1;
+                     if Options.Random_Seed_Count > Options.Number_Random_Generators then
+                        raise Failed with "too many random seeds";
+                     end if;
+
+                     Options.Random_Seeds (Options.Random_Seed_Count) :=
+                        Iterator.Get_Integer;
+                     Log_Here (Trace_Options, "random seed " &
+                        Options.Random_Seeds (Options.Random_Seed_Count)'img);
 
                   when 'S' =>
                      Options.Report_Random := True;
@@ -512,8 +513,8 @@ begin
 --Ada_Lib.Trace.Trace_Tests := True;
 --Elaborate := True;
    Debug := Debug_Options.Debug_All;
-Debug := True;
-Trace_Options := True;
+--Debug := True;
+--Trace_Options := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 
 exception

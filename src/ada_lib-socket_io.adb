@@ -1,4 +1,4 @@
-with Ada.Text_IO; use Ada.Text_IO;
+--with Ada.Text_IO; use Ada.Text_IO;
 -- with Ada.Streams;
 -- with Ada.Unchecked_Deallocation;
 -- with Socket_Stream_IO;
@@ -8,8 +8,8 @@ with Ada_Lib.Trace;use Ada_Lib.Trace;
 
 package body Ada_Lib.Socket_IO is
 
--- use type Ada_Lib.Strings.String_Constant_Access;
-   use type Ada_Lib.Strings.String_Access_All;
+   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Access_All;
    use type GNAT.Sockets.Socket_Type;
 
    ---------------------------------------------------------------------------
@@ -214,24 +214,24 @@ package body Ada_Lib.Socket_IO is
      return Socket.Open;
    end Is_Open;
 
-   ---------------------------------------------------------------------------
-   overriding
-   procedure Set_Description (
-      Socket                     : in out Socket_Type;
-      Description                : in     String) is
-   ---------------------------------------------------------------------------
-
-   begin
-      if Socket.Description /= Null then
-         Put_Line (Quote ("rename socket from", Socket.Description.all) &
-            Quote (" to", Description));
-         Ada_Lib.Strings.Free_All (Socket.Description);
-      end if;
-      Socket.Description := (if Description'length = 0 then
-            Null
-         else
-            new String'(Description));
-   end Set_Description;
+-- ---------------------------------------------------------------------------
+-- overriding
+-- procedure Set_Description (
+--    Socket                     : in out Socket_Type;
+--    Description                : in     String) is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    if Socket.Description /= Null then
+--       Put_Line (Quote ("rename socket from", Socket.Description.all) &
+--          Quote (" to", Description));
+--       Ada_Lib.Strings.Free_All (Socket.Description);
+--    end if;
+--    Socket.Description := (if Description'length = 0 then
+--          Null
+--       else
+--          new String'(Description));
+-- end Set_Description;
 
    ---------------------------------------------------------------------------
    procedure Set_Socket (

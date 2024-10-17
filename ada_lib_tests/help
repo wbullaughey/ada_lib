@@ -1,4 +1,5 @@
 test_ada_lib
+main_task_00007F9BAA008800: [00:00:00.00] ada_lib-options-runstring.adb:107 Ada_Lib.Options.Runstring.Registration_Type.Has_Parameter (0) option: 'h' kind WITHOUT_PARAMETERS
 
 test_ada_lib command line options:
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
@@ -22,11 +23,12 @@ test_ada_lib command line options:
     -v                             : verbose                           (Ada_Lib)
     -w                             : Web server port                   (GNOGA library)
     -x                             : exit on tests complete            (test_ada_lib)
-    -@?                            : trace test condition              (Ada_Lib)
+    -@c                            : trace test condition              (Ada_Lib)
     -@d                            : driver suites                     (test_ada_lib)
     -@i                            : indent trace                      (Ada_Lib)
     -@l                            : List test suites                  (test_ada_lib)
     -@m                            : manual operations.                (test_ada_lib)
+    -@n <number of random seeds>   : number seeds.                     (test_ada_lib)
     -@p                            : include program in trace          (Ada_Lib)
     -@P                            : Print test suites.                (test_ada_lib)
     -@R <seed>                     : set random seed                   (test_ada_lib)

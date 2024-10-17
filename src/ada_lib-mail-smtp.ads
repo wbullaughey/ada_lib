@@ -6,8 +6,10 @@ package Ada_Lib.Mail.SMTP is
 
    Failed                        : exception;
 
-   type SMTP_Credentials_Type    is new Ada_Lib.Mail.GMail.GMail_Credentials_Type and
-                                    Protocol_Interface with private;
+   type SMTP_Credentials_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is new Ada_Lib.Mail.GMail.GMail_Credentials_Type and
+                        Protocol_Interface with private;
 
    overriding
    procedure Close (
@@ -38,9 +40,14 @@ package Ada_Lib.Mail.SMTP is
 
 private
 
-   type SMTP_Credentials_Type    is new Ada_Lib.Mail.GMail.GMail_Credentials_Type and
-                                    Protocol_Interface with record
-      Socket                     : Ada_Lib.Socket_IO.Client.Client_Socket_Type;
+   Description                   : aliased constant String := "SMTP";
+
+   type SMTP_Credentials_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is new Ada_Lib.Mail.GMail.GMail_Credentials_Type and
+                        Protocol_Interface with record
+      Socket         : Ada_Lib.Socket_IO.Client.Client_Socket_Type (
+                        Description);
    end record;
 
    overriding

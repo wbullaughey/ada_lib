@@ -101,10 +101,10 @@ package body Ada_Lib.Options.Runstring is
       begin
          if Is_Registered (Option) then
             declare
-               Prameter          : constant Constant_Reference_Type :=
+               Parameter          : constant Constant_Reference_Type :=
                                     Find_Registration (Registrations, Option);
             begin
-               return Prameter.Kind = With_Parameters;
+               return Parameter.Kind = With_Parameters;
             end;
          end if;
 
@@ -150,7 +150,8 @@ package body Ada_Lib.Options.Runstring is
          ------------------------------------------------------------
 
          begin
-            Log_In (Debug or Trace_Options, "registrations" & Registrations.Length'img);
+            Log_In (Debug or Trace_Options,
+               "registrations" & Registrations.Length'img);
             for Option of Options loop
                Log_Here (Debug or trace_options, Option.Image);
                if Is_Registered (Option) then
@@ -161,19 +162,19 @@ package body Ada_Lib.Options.Runstring is
                      " called from " & From;
                end if;
             end loop;
-            Log_Out (Debug or trace_options);
+            Log_Out (Debug or Trace_Options);
          end Check_Duplicates;
          ------------------------------------------------------------
 
       begin
-         Log_In (Debug, "Kind " & Kind'img &
+         Log_In (Debug or Trace_Options, "Kind " & Kind'img &
             " registrations" & Registrations.Length'img &
 --          " address " & Image (Registrations'address) &
             " called from " & From);
 
          Check_Duplicates;
          for Option of Options loop
-            Log_Here (Debug, Option.Image & " kind " & Kind'img);
+            Log_Here (Debug or Trace_Options, Option.Image & " kind " & Kind'img);
             declare
                Element           : Element_Type;
 
@@ -185,7 +186,8 @@ package body Ada_Lib.Options.Runstring is
             end;
          end loop;
 
-         Log_Out (Debug, "registrations" & Registrations.Length'img);
+         Log_Out (Debug or Trace_Options,
+            "registrations" & Registrations.Length'img);
       end Register;
 
       -------------------------------------------------------------------

@@ -8,8 +8,8 @@ with GNAT.Sockets;
 
 package body Ada_Lib.Socket_IO.Client is
 
--- use type Ada_Lib.Strings.String_Constant_Access;
-   use type Ada_Lib.Strings.String_Access_All;
+   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Access_All;
 -- use type Ada_Lib.Time.Time_Type;
 -- use type Index_Type;
    use type GNAT.Sockets.Selector_Status;
@@ -68,7 +68,7 @@ package body Ada_Lib.Socket_IO.Client is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -77,16 +77,16 @@ package body Ada_Lib.Socket_IO.Client is
                                        Ada_Lib.Strings.Trim (Port'img);
 --    Retry_Timeout              : constant := 3.0;
    begin
-      if    Socket.Description /= Null and then
-            Socket.Description.all /= Description then
-         Log_Here (Trace,
-            Quote ("current socket description", Socket.Description) &
-            Quote (" connect description", Description));
-      end if;
-
-      if Description'length > 0 then
-         Socket.Set_Description (Description);
-      end if;
+--    if    Socket.Description /= Null and then
+--          Socket.Description.all /= Description then
+--       Log_Here (Trace,
+--          Quote ("current socket description", Socket.Description) &
+--          Quote (" connect description", Description));
+--    end if;
+--
+--    if Description'length > 0 then
+--       Socket.Set_Description (Description);
+--    end if;
 
       Log_In (Trace, "preconnect socket " & Socket.Image &
          " open " & Socket.Open'img &
@@ -145,11 +145,8 @@ package body Ada_Lib.Socket_IO.Client is
    exception
       when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
          declare
-            Message     : constant String :=
-                           (if Socket.Description = Null then
-                              ""
-                           else
-                              " for " & Socket.Description.all);
+            Message     : constant String := Socket.Description.all;
+
          begin
             Trace_Message_Exception (Trace, Fault, Message);
 
@@ -163,10 +160,7 @@ package body Ada_Lib.Socket_IO.Client is
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
          raise Failed with "Could not open host " & Host_Name &
-            (if Socket.Description = Null then
-               ""
-            else
-               " for " & Socket.Description.all);
+            Socket.Description.all;
 
       when Fault: others =>
          Trace_Exception (Trace, Fault);
@@ -175,11 +169,8 @@ package body Ada_Lib.Socket_IO.Client is
             Ada.Exceptions.Exception_Message (Fault));
          Ada.Exceptions.Raise_Exception (
             Ada.Exceptions.Exception_Identity (Fault),
-            "Could not open host " & Host_Name &
-            (if Socket.Description = Null then
-               ""
-            else
-               " for " & Socket.Description.all));
+            "Could not open host " & Host_Name & " " &
+            Socket.Description.all);
 
    end Connect;
 
@@ -190,7 +181,7 @@ package body Ada_Lib.Socket_IO.Client is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -199,7 +190,7 @@ package body Ada_Lib.Socket_IO.Client is
                                     Ada_Lib.Socket_IO.Image (IP_Address) & " Port" & Port'img;
    begin
       Socket.Initialize;
-      Socket.Set_Description (Description);
+--    Socket.Set_Description (Description);
       Log_In (Trace, "connected socket " & Socket.Image &
          " for Address " & Ada_Lib.Socket_IO.Image (IP_Address));
 
@@ -263,13 +254,13 @@ package body Ada_Lib.Socket_IO.Client is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
 
    begin
-      Socket.Set_Description (Description);
+--    Socket.Set_Description (Description);
       Log_In (Trace, "connected socket " & Socket.Image &
          " for Address " & Address.Image);
 
@@ -277,14 +268,14 @@ package body Ada_Lib.Socket_IO.Client is
 
          when IP =>
             Socket.Connect (Address.IP_Address, Port, Connection_Timeout,
-               Description, Expected_Read_Callback);
+               Expected_Read_Callback);
 
          when Not_Set =>
             raise Failed with "address not set raised at " & Here;
 
          when URL =>
             Socket.Connect (Address.URL_Address.Coerce, Port, Connection_Timeout,
-               Description, Expected_Read_Callback);
+               Expected_Read_Callback);
 
       end case;
       Log_Out (Trace);

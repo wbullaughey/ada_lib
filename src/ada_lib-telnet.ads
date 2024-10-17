@@ -1,5 +1,4 @@
--- with Ada_Lib.Socket_Stream_Line_IO;
--- with Ada_Lib.Socket_IO.Client;
+with Ada_Lib.Strings;
 with Ada_Lib.Socket_IO.Stream_IO;
 -- with GNAT.Sockets;
 
@@ -7,8 +6,9 @@ package Ada_Lib.Telnet is
 
    Failed                  : exception;
 
-   type Telnet_Type        is tagged limited private;
-
+   type Telnet_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is tagged limited private;
    procedure Close (
       Telnet               : in out Telnet_Type);
 
@@ -37,8 +37,11 @@ package Ada_Lib.Telnet is
 
 private
 
-   type Telnet_Type        is tagged limited record
-      Socket               : Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type;
+   type Telnet_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is tagged limited record
+      Socket         : Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (
+                        Description);
    end record;
 
 end Ada_Lib.Telnet;

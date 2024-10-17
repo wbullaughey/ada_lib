@@ -211,7 +211,9 @@ null;
       Test_Suite                 : constant AUnit.Test_Suites.Access_Test_Suite :=
                                     new AUnit.Test_Suites.Test_Suite;
       CURL_Tests                 : constant CURL_Test_Access := new CURL_Test_Type;
-      SMTP_Tests                 : constant SMTP_Test_Access := new SMTP_Test_Type;
+      Description                : aliased constant String := "smtp";
+      SMTP_Tests                 : constant SMTP_Test_Access :=
+                                    new SMTP_Test_Type (Description'unchecked_access);
 
    begin
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites

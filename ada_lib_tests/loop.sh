@@ -12,6 +12,8 @@ text_to_search="Successful Tests:  1"
 
 for (( ; ; ))
 do
+   cat concatinated.txt list-ada_lib.txt > merged
+   mv merged concatinated.txt
    $COMMAND
    if grep -q "$text_to_search"  < list-ada_lib.txt; then
      echo "test ran"

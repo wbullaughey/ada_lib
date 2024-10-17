@@ -63,9 +63,9 @@ package Ada_Lib.Socket_IO is
    procedure Close (
       Socket                     : in out Socket_Interface) is abstract;
 
-   procedure Set_Description (
-      Socket                     : in out Socket_Interface;
-      Description                : in     String) is abstract;
+-- procedure Set_Description (
+--    Socket                     : in out Socket_Interface;
+--    Description                : in     String) is abstract;
 
    function Hex is new Hex_IO.Modular_Hex (Data_Type);
 
@@ -77,12 +77,13 @@ package Ada_Lib.Socket_IO is
       Socket                     : in     Socket_Interface
    ) return Boolean is abstract;
 
-   type Socket_Type              is abstract new Ada.Finalization.Limited_Controlled and
-                                    Socket_Interface with record
-      Description                : Ada_Lib.Strings.String_Access_All := Null;
-      GNAT_Socket                : aliased GNAT.Sockets.Socket_Type :=
-                                    GNAT.Sockets.No_Socket;
-      Open                       : Boolean := False;
+   type Socket_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access
+                        ) is abstract new Ada.Finalization.Limited_Controlled and
+                           Socket_Interface with record
+      GNAT_Socket    : aliased GNAT.Sockets.Socket_Type :=
+                        GNAT.Sockets.No_Socket;
+      Open           : Boolean := False;
    end record;
 
    type Socket_Access            is access Socket_Type;
@@ -92,10 +93,10 @@ package Ada_Lib.Socket_IO is
    procedure Close (
       Socket                     : in out Socket_Type);
 
-   overriding
-   procedure Set_Description (
-      Socket                     : in out Socket_Type;
-      Description                : in     String);
+-- overriding
+-- procedure Set_Description (
+--    Socket                     : in out Socket_Type;
+--    Description                : in     String);
 
    function Get_Description (
       Socket                     : in     Socket_Type
@@ -122,7 +123,7 @@ package Ada_Lib.Socket_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;
@@ -132,7 +133,7 @@ package Ada_Lib.Socket_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;
@@ -142,7 +143,7 @@ package Ada_Lib.Socket_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;
@@ -152,8 +153,7 @@ package Ada_Lib.Socket_IO is
    procedure Create_Stream (
       Socket                     : in out Socket_Stream_Interface;
       Default_Read_Timeout       : in     Duration := No_Timeout;
-      Default_Write_Timeout      : in     Duration := No_Timeout;
-      Description                : in     String := "") is abstract;
+      Default_Write_Timeout      : in     Duration := No_Timeout) is abstract;
 
    function In_Buffer (
       Socket                     : in   Socket_Stream_Interface

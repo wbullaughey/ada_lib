@@ -9,7 +9,8 @@ with Interfaces;
 
 package body Ada_Lib.Socket_IO.Stream_IO is
 
-   use type Ada_Lib.Strings.String_Access_All;
+-- use type Ada_Lib.Strings.String_Access_All;
+   use type Ada_Lib.Strings.String_Constant_Access;
 -- use type Data_Type;
    use type Index_Type;
    use type GNAT.Sockets.Error_Type;
@@ -52,22 +53,23 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Out (Trace);
          return;
       end if;
-      Socket.Stream.Input_Buffer.Set_Event (Closed); -- signal input task to close
       while not Socket.Stream.Output_Buffer.Empty (False) loop
          delay 0.1;
       end loop;
+      Socket.Stream.Input_Buffer.Set_Event (Closed); -- signal input task to close
       Log_Here (Trace);
       Socket.Stream.Output_Buffer.Set_Event (Closed); -- signal output task to close
       Socket.Stream.Socket_Closed := True;
       delay 0.2;     -- let tasks complete
-
-      Socket_Type (Socket).Close;
 
       Log_Here (Tracing, "wait for write task to exit socket " &
          Socket.Image & " writer stopped " & Socket.Stream.Writer_Stopped'img);
       while not Socket.Stream.Writer_Stopped loop
          delay 0.1;
       end loop;
+
+      Socket_Type (Socket).Close;   -- to terminate receive
+      Socket.Stream.Close;
 
       Log_Here (Tracing, "wait for reader task to exit socket " &
          Socket.Image &
@@ -76,8 +78,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          delay 0.1;
       end loop;
       Log_Here (Tracing);
-      Socket.Stream.Close;
       Log_Out (Trace);
+
    exception
       when Fault: others =>
          Trace_Exception (Trace, Fault);
@@ -138,7 +140,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    pragma Unreferenced (Socket, Server_Name, Port, Connection_Timeout, Expected_Read_Callback);
@@ -155,7 +157,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -171,7 +173,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
-      Description                : in     String := "";
+--    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -225,24 +227,23 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    procedure Create_Stream (
       Socket                     : in out Stream_Socket_Type;
       Default_Read_Timeout       : in     Duration := No_Timeout;
-      Default_Write_Timeout      : in     Duration := No_Timeout;
-      Description                : in     String := "") is
+      Default_Write_Timeout      : in     Duration := No_Timeout) is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Tracing, Socket.Image & Quote (" Description", Description) &
+      Log_In (Tracing, Socket.Image & -- Quote (" Description", Description) &
          " socket " & Socket.Image & " no description expected ");
 --       "addresses socket " & Image (Socket'address) &
 --       " stream " & Image (Socket.Stream'address));
 
-      if Socket.Description = Null then
-         Socket.Set_Description (Description);
-      elsif Description'length > 0 and then
-            Socket.Description.all /= Description then
-         Log_Exception (Trace, "missmatch description");
-         raise Different_Description with Quote ("Missmatch description. Socket",
-            Socket.Image) & Quote ("create description", Description);
-      end if;
+--    if Socket.Description = Null then
+--       Socket.Set_Description (Description);
+--    elsif Description'length > 0 and then
+--          Socket.Description.all /= Description then
+--       Log_Exception (Trace, "missmatch description");
+--       raise Different_Description with Quote ("Missmatch description. Socket",
+--          Socket.Image) & Quote ("create description", Description);
+--    end if;
 
       Socket.Stream.GNAT_Stream := GNAT.Sockets.Stream (Socket.GNAT_Socket);
       Socket.Stream.Create (
@@ -265,7 +266,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       if Length = 0 then
          Put_Line ("dump for " & Description & " for 0 bytes called from " & From);
       else
-         Ada_Lib.Trace.Dump (Data'address, Length, 8,
+         Ada_Lib.Trace.Dump (Data'address, Length, 32,
             Ada_Lib.Trace.Width_8, Description & " length" & Length'img, From);
       end if;
    end Dump;
@@ -768,6 +769,9 @@ Log_Exception (true or Trace, Fault);
 
    protected body Protected_Buffer_Type is
 
+      function Prefix
+      return String;
+
       -----------------------------------------------------------------------
       function Empty (
          Throw_Expression        : in     Boolean
@@ -775,25 +779,26 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_In (Tracing, Kind'img & " Buffer_Count" & Buffer_Count'img &
-            " state " & State'img);
+         Log_In (Tracing, Prefix);
 
          case State is
 
             when Ok =>
-               Log_Out (Tracing,  (if Buffer_Count = 0 then "" else "not ") & "empty");
+               Log_Out (Tracing, Kind'img &
+                  (if Buffer_Count = 0 then " " else " not ") & "empty");
                return Buffer_Count = 0;
 
             when Closed | Failed =>
-               Log_Out (Tracing,  (if Buffer_Count = 0 then "" else "not ") & "empty");
+               Log_Out (Tracing, Kind'img &
+                  (if Buffer_Count = 0 then " " else " not ") & "empty");
                return Buffer_Count = 0;
 
             when Timed_Out =>
                if Throw_Expression then
-                  Log_Exception (Tracing);
+                  Log_Exception (Tracing, Kind'img);
                   raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
                else
-                  Log_Out (Tracing, "empty");
+                  Log_Out (Tracing, Kind'img & " empty");
                   return True;
                end if;
 
@@ -828,7 +833,7 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_In (Tracing, Kind'img & " State " & State'img &
+         Log_In (Tracing, Prefix &
             " primmed" & Primed_Input'img &
             " Buffer_Count" & Buffer_Count'img &
             " tail" & Tail'img & " data first" & Data'first'img);
@@ -836,7 +841,7 @@ Log_Exception (true or Trace, Fault);
          case State is
 
          when Closed =>
-            Log_Exception (Trace, "socket closed");
+            Log_Exception (Trace, Prefix & " socket closed");
             raise Aborted with "Get called with closed socket at " & Here;
 
          when OK =>
@@ -844,11 +849,11 @@ Log_Exception (true or Trace, Fault);
 
          when Timed_Out =>
             Event := Timed_Out;
-            Log_Out (Tracing, "timed out");
+            Log_Out (Tracing, Prefix & " timed out");
             return;
 
          when Failed =>
-            Log_Exception (Trace);
+            Log_Exception (Trace, Prefix);
             raise Aborted with "unexpected state " & State'img & " in get";
 
          end case;
@@ -877,7 +882,7 @@ Log_Exception (true or Trace, Fault);
             Dump ("got", Data (Data'first .. Last));
          end if;
 
-         Log_Out (Tracing, "Event " & Event'img & " Last" & Last'img &
+         Log_Out (Tracing, Prefix & " Event " & Event'img & " Last" & Last'img &
             " tail" & Tail'img &
             " Buffer_Count" & Buffer_Count'img);
 --          " data " & Image (Data'address) &
@@ -898,15 +903,25 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_Here (Tracing, Kind'img & " Buffer_Count" & Buffer_Count'img &
+         Log_Here (Tracing, Prefix & " Buffer_Count" & Buffer_Count'img &
             " state " & State'img);
 
          if State /= Ok then
-            Log_Exception (Trace);
+            Log_Exception (Trace, Prefix);
             raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
          end if;
          return Buffer_Count;
       end In_Buffer;
+
+      -----------------------------------------------------------------------
+      function Prefix
+      return String is
+      -----------------------------------------------------------------------
+
+      begin
+         return Description.all & " " & Kind'img & " " & State'img &
+            " count" & Buffer_Count'img;
+      end Prefix;
 
       -----------------------------------------------------------------------
       procedure Prime_Output (
@@ -926,7 +941,7 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_In (Tracing, Kind'img & " primed" & Primed_Output'img &
+         Log_In (Tracing, Prefix & " primed" & Primed_Output'img &
             " head" & Head'img &
             " buffer count" & Buffer_Count'img & " state " & State'img);
          if Primed_Output = 0 then
@@ -944,17 +959,17 @@ Log_Exception (true or Trace, Fault);
             null;
 
          when Timed_Out =>
-            Log_Here (Tracing, "timed out");
+            Log_Here (Tracing, Kind'img & " timed out");
             State := Ok;      -- more data now availabl
 --          Timeout_Time := Ada_Lib.Time.No_Time;
 --          return;
 
          when Closed =>
-            Log_Out (Tracing, "closed");
+            Log_Out (Tracing, Kind'img & " closed");
             return;
 
          when Failed =>
-            Log_Exception (Tracing, "failed");
+            Log_Exception (Tracing, Prefix & " failed");
             raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
          end case;
 
@@ -979,7 +994,7 @@ Log_Exception (true or Trace, Fault);
             Dump ("Buffer", Buffer);
          end if;
 
-         Log_Out (Tracing, "Buffer_Count" & Buffer_Count'img &
+         Log_Out (Tracing, Prefix & " Buffer_Count" & Buffer_Count'img &
             " Head" & Head'img & " event " & Event'img);
       end Put;
 
@@ -1021,8 +1036,7 @@ Log_Exception (true or Trace, Fault);
                                     )
                                  );
       begin
-         Log_In (Tracing, Kind'img & " event " & Event'img &
-            " old state " & State'img &
+         Log_In (Tracing, Prefix & " event " & Event'img &
             " from " & From);
 
          case Valid_Transitions (State, Event) is
@@ -1039,7 +1053,7 @@ Log_Exception (true or Trace, Fault);
                   " to " & Event'img;
          end case;
 
-         Log_Out (Tracing, "state " & State'img);
+         Log_Out (Tracing, Prefix);
       end Set_Event;
 
       -----------------------------------------------------------------------
@@ -1048,7 +1062,7 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_In (Trace, "kind " & Kind'img & " state " & State'img);
+         Log_In (Trace, Prefix);
          return State = Timed_Out;
 --
 --       declare
@@ -1078,10 +1092,9 @@ Log_Exception (true or Trace, Fault);
       -----------------------------------------------------------------------
 
       begin
-         Log_Here ("kind " & Kind'img & " Buffer_Count" & Buffer_Count'img &
+         Log_Here (Prefix & " Buffer_Count" & Buffer_Count'img &
             " head" & Head'img & " tail" & Tail'img &
-            " Primed_Output" & Primed_Output'img &
-            " state " & State'img);
+            " Primed_Output" & Primed_Output'img);
       end Trace_State;
 
    end Protected_Buffer_Type;
@@ -1389,7 +1402,7 @@ Log_Exception (true or Trace, Fault);
             Log_Here (Trace, "event " & Event'img & " last" & Last'img &
                " closed " & Stream_Pointer.Socket_Closed'img);
 
-            if Stream_Pointer.Socket_Closed then
+            if Last = 0 and then Stream_Pointer.Socket_Closed then
                exit;
             end if;
 
@@ -1398,7 +1411,7 @@ Log_Exception (true or Trace, Fault);
 --             when Buffer_Limit =>
 --                raise Aborted with "buffer limit after get";
 
-               when OK =>
+               when OK | Closed =>  -- write even if closed but last > 0
                   Log_Here (Trace, Stream_Pointer.Image);
                   declare
                      Start_Send  : Index_Type := Data'first;
@@ -1446,9 +1459,9 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
                      end loop;
                   end;
 
-               when Closed =>
-                  Log_Here (Trace);
-                  exit;
+--             when Closed =>
+--                Log_Here (Trace);
+--                exit;
 
                when Failed | Timed_Out =>
                   null;
