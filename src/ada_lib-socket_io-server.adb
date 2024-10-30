@@ -56,12 +56,14 @@ package body Ada_Lib.Socket_IO.Server is
 
          when GNAT.Sockets.Expired =>
             Log_Exception (Trace, "select expired");
+            Accepted_Socket.Open := False;
             raise Select_Timeout with "select timed out" &
                " for server " & Server_Socket.Description.all &
                " at " & Here;
 
          when GNAT.Sockets.Aborted =>
             Log_Exception (Trace, "select failed");
+            Accepted_Socket.Open := False;
             raise Failed with "select failed";
 
       end case;

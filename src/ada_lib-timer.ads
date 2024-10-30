@@ -19,7 +19,8 @@ package Ada_Lib.Timer is
 
    type Duration_Access    is access all Duration;
 
-   type State_Type               is (Canceled, Completed, Finalized, Waiting);
+   type State_Type         is (Canceled, Completed, Finalized, Waiting,
+                              Uninitialized);
 
    type Event_Type         is abstract new Ada.Finalization.Limited_Controlled
                                  with private;
@@ -53,6 +54,10 @@ package Ada_Lib.Timer is
 
    overriding
    procedure Finalize (
+      Event             : in out Event_Type);
+
+   overriding
+   procedure Initialize (
       Event             : in out Event_Type);
 
    procedure Initialize (
@@ -97,19 +102,21 @@ private
 
    type Timer_Task_Access  is access Timer_Task_Type;
 
-   Wait_Event_Description  : aliased constant String := "wait event";
+   Uninitialized_Event_Description
+                           : aliased String := "uninitialized event";
    type Event_Type         is abstract new Ada.Finalization.Limited_Controlled
                                  with record
-      Description          : Ada_Lib.Strings.String_Access := Null;
+      Description          : Ada_Lib.Strings.String_Access_All :=
+                              Uninitialized_Event_Description'unchecked_access;
       Dynamic              : Boolean := False;
       Exception_Message    : Ada_Lib.Strings.String_Access := Null;
       Exception_Name       : Ada_Lib.Strings.String_Access := Null;
+      Initialized          : Boolean := False;
       Repeating            : Boolean := False;
-      State                : State_Type := Waiting;
+      State                : State_Type := Uninitialized;
       Time                 : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;
-      Wait                 : Duration;
---    Wait_Event           : Ada_Lib.Event.Event_Access := Null;
+      Wait                 : Duration := 0.25;  -- uninitialized timeout
    end record;
 
 end Ada_Lib.Timer;

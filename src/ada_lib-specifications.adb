@@ -50,8 +50,7 @@ package body Ada_Lib.Specifications is
       -------------------------------------------------------------------
 
       begin
-put_line ("Not_Implemented");
---       Not_Implemented;
+         put_line ("Not_Implemented");
 --       for Trace in Selection_Type'succ (Selection_Type'first) .. Selection_Type'last loop
 --          declare
 --             Specification  : Specification_Type renames Specifications (Trace);
@@ -73,8 +72,7 @@ put_line ("Not_Implemented");
       --------------------------------------------------------------------
 
       begin
-put_line ("Not_Implemented");
---       Not_Implemented;
+         put_line ("Not_Implemented");
          return false;
 --       return Settings (Which) >= Priority;
       end Test;
@@ -87,8 +85,7 @@ put_line ("Not_Implemented");
       --------------------------------------------------------------------
 
       begin
-put_line ("Not_Implemented");
---       Not_Implemented;
+         put_line ("Not_Implemented");
 --       Settings (Which) := Priority;
       end Set;
 

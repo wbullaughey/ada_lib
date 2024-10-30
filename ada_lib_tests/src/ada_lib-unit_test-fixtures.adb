@@ -97,7 +97,6 @@ package body Ada_Lib.Unit_Test.Fixtures is
    ----------------------------------------------------------------------------
 
    begin
--- Log ( Here, Who & " enter");
       Log ( Debug, Here, Who & " enter");
 
       Current_Fixture := Test'unchecked_access;
@@ -237,5 +236,6 @@ begin
    if Trace_Tests then
       Debug := Trace_Tests;
    end if;
+--Debug := Trace_Tests;
 
 end Ada_Lib.Unit_Test.Fixtures;

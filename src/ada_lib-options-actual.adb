@@ -34,11 +34,12 @@ package body Ada_Lib.Options.Actual is
    Test_Condition_Flag           : constant Character := 'c';
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
-                                          Create_Options ('a');
+                                          Create_Options ('a', Unmodified);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             "hPv" & Test_Condition_Flag) &
+                                             "hPv" & Test_Condition_Flag,
+                                             Unmodified) &
                                           Ada_Lib.Options.Create_Options (
                                              "iptx", Ada_Lib.Help.Modifier);
 -- Parameter_Parsing_Failed      : Boolean := False;
@@ -264,6 +265,15 @@ package body Ada_Lib.Options.Actual is
 -- end Parsing_Failed;
 
    ----------------------------------------------------------------------------
+   procedure Post_Process (      -- final initialization
+     Options                    : in out Program_Options_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_Here (Debug or Trace_Options, "options post processing completed");
+   end Post_Process;
+
+   ----------------------------------------------------------------------------
 -- overriding
    function Process (     -- processes whole command line calling Process_Option for each option
      Options                     : in out Program_Options_Type;
@@ -277,7 +287,8 @@ package body Ada_Lib.Options.Actual is
    begin
       Log_In (Debug or Trace_Options, "Include_Options " & Include_Options'img &
          " Include_Non_Options " & Include_Non_Options'img &
-         Ada_Lib.Trace.Quote (" modifiers", Modifiers));
+         Ada_Lib.Trace.Quote (" modifiers", Modifiers) &
+         " " & Tag_Name (Program_Options_Type'class (Options)'tag));
 
       declare
          Iterator                : Ada_Lib.Command_Line_Iterator.Run_String.
@@ -320,7 +331,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
       Log_In (Debug or Trace_Options,
-         "options tag " & Tag_Name (Program_Options_Type'class (Options)'tag));
+         Tag_Name (Program_Options_Type'class (Options)'tag));
 
       while not Iterator.At_End loop
          if Iterator.Is_Option then
@@ -357,8 +368,6 @@ package body Ada_Lib.Options.Actual is
             Iterator.Advance;
          end if;
       end loop;
-
---    Program_Options_Type'class (Options).Update_Filter;   -- sets filter name
 
       Options.Processed := True;
       Log_Out (Debug or Trace_Options, "processed");

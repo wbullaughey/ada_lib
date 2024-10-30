@@ -15,11 +15,11 @@ package Ada_Lib.OS is
 
 -- subtype Exit_Code_Type        is Integer range -128 .. 127;
 
-   type Exit_Code_Type           is (
-      Application_Error,
+   type Exit_Code_Type           is (  -- macos errors
+      No_Error,
+      Application_Error,               -- error codes are probably wrong
       Application_Exception,
       ENOENT,
-      No_Error,
       Unassigned);
    for Exit_Code_Type'size use 8;
 

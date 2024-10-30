@@ -105,9 +105,13 @@ package body Ada_Lib.OS.Tests is
                            Aunit_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
+      Log_In (Trace,
+         Quote ("remote host", Options.Database_Options.Remote_Host) &
+         Quote ("remote user", Options.Database_Options.Remote_User));
       if Options.Database_Options.Remote_Host.Length > 0 then
-         if Options.Database_Options.Remote_User.Length > 0 then
+         if Options.Database_Options.Remote_User.Length = 0 then
             Put_Line ("could not run test" & Who & ". No user specified");
+            return;
          end if;
 
          declare
@@ -115,11 +119,12 @@ package body Ada_Lib.OS.Tests is
             Parameters                 : constant String := "ls " &
                                           Ada_Lib.OS.Run.Path.
                                              Remote_Home_Directory &
-                                          "/project/ada_lib/aunit/tests";
+                                          "/Project/git/alr/applications/ada_lib/ada_lib_tests/src";
+            Remote_Program             : constant String := "/usr/bin/ssh";
             Result                     : Boolean := False;
             Return_Code                : Exit_Code_Type;
             Test_Pattern               : constant String :=
-                                          "ada_lib-test-Ada_Lib_run_remote.ads";
+                                          "test_ada_lib.adb";
 
          begin
             Log (Trace, Here, Who & " enter User '" & Ada_Lib.OS.Run.Path.User &
@@ -131,18 +136,24 @@ package body Ada_Lib.OS.Tests is
                   "' Parameters '" & Parameters & "'");
             Return_Code := Ada_Lib.OS.Run.Spawn (
                Remote      => Options.Database_Options.Remote_Host.Coerce,
-               Program     => "/usr/bin/ssh",
+               Program     => Remote_Program,
                User        => Options.Database_Options.Remote_User.Coerce,
                Parameters  => Parameters,
                Output_File => Ada_Lib.OS.Run.Path.Log_File);
 
             Log (Trace, Here, Who & " Return_Code" & Return_Code'img);
+            if Return_Code /= No_Error then
+               Assert (False, "Could not run program " & Remote_Program &
+                  " on Host '" & Options.Database_Options.Remote_Host.Coerce);
+            end if;
 
             declare
                File                    : Ada.Text_IO.File_Type;
 
             begin
-               Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Ada_Lib.OS.Run.Path.Log_File);
+               Log_Here (Trace, Quote ("open", Ada_Lib.OS.Run.Path.Log_File));
+               Ada.Text_IO.Open (File, Ada.Text_IO.In_File,
+                  Ada_Lib.OS.Run.Path.Log_File);
 
                while not Ada.Text_IO.End_Of_File (File) loop
                   declare
@@ -151,6 +162,14 @@ package body Ada_Lib.OS.Tests is
                   begin
                      Log (Trace, Here, "line '" & Line & "'");
                      Lines := Lines + 1;
+
+                     if Ada.Strings.Fixed.Index (Line,
+                           "Could not resolve hostname") > 0 then
+                        Put_Line ("Host '" &
+                           Options.Database_Options.Remote_Host.Coerce &
+                           "' not available");
+                        exit;
+                     end if;
 
                      if Ada.Strings.Fixed.Index (Line,
                            "Could not resolve hostname") > 0 then

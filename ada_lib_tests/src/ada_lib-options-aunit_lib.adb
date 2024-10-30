@@ -31,7 +31,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             Trace_Option);
+                                             Trace_Option, Unmodified);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Null_Options;

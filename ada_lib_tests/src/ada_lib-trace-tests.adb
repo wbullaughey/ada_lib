@@ -253,9 +253,9 @@ package body Ada_Lib.Trace.Tests is
                                     "caught expected test exception";
       Expected_Output            : constant Output_List_Type := (
                ( 0, new String'("----------- exception --------------"), 0, 0),
-               ( 0, new String'("Exception:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION"), 0, 0),
+               ( 0, new String'("Exception name:ADA_LIB.TRACE.TESTS.TEST_EXCEPTION"), 0, 0),
                ( 0, new String'("Exception message:ada_lib-trace-tests.adb:*"), 0, 0),
-               ( 0, new String'("message:'" & Message & "'"), 0, 0),
+               ( 0, new String'("handler message:'" & Message & "'"), 0, 0),
                ( 0, new String'("caught at ada_lib-trace-tests.adb:*"), 0, 0),
                ( 0, new String'("------------------------------------"), 0, 0));
       Start_Time                 : constant Ada_Lib.Time.Time_Type :=
@@ -400,7 +400,7 @@ package body Ada_Lib.Trace.Tests is
                                     Ada.Numerics.Float_Random.Random (
                                        Randome_Generator);
             begin
-               Log_Here ("expected " &
+               Log_Here (Debug, "expected " &
                   (if ID = 0 then
                         "main"
                      else

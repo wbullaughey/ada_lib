@@ -25,6 +25,7 @@ begin
       Ada_Lib.Options.Set_Ada_Lib_Options (Aunit_Options'unchecked_access);
       if Aunit_Options.Initialize then
          Log_Here (Debug);
+         Aunit_Options.Post_Process;
          Ada_Lib.Trace_Tasks.Start ("main");
          Ada_Lib.Test.Run_Suite (Aunit_Options);
          Gnoga.Application.Multi_Connect.End_Application;

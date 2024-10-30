@@ -3,7 +3,9 @@ with Ada_Lib.Socket_IO.Stream_IO;
 
 package Ada_Lib.Socket_IO.Server is
 
-   type Accepted_Socket_Type     is new Ada_Lib.Socket_IO.Stream_IO.
+   type Accepted_Socket_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Ada_Lib.Socket_IO.Stream_IO.
                                        Stream_Socket_Type and
                                     Socket_Interface  with private;
 
@@ -26,22 +28,11 @@ package Ada_Lib.Socket_IO.Server is
       Socket                     : in     Accepted_Socket_Type
    ) return Boolean;
 
--- overriding
--- procedure Read (
---    Socket                     : in out Accepted_Socket_Type;
---    Buffer                     :    out Buffer_Type;
---    Timeout_Length             : in     Duration := No_Timeout);
---
    procedure Set_Closed (
       Socket                     : in out Accepted_Socket_Type);
 
    procedure Set_Connected (
       Socket                     : in out Accepted_Socket_Type);
-
--- overriding
--- procedure Write (
---    Socket                     : in out Accepted_Socket_Type;
---    Buffer                     : in     Buffer_Type);
 
    type Server_Socket_Type (
       Description    : Ada_Lib.Strings.String_Constant_Access;
@@ -98,7 +89,10 @@ private
    procedure Create_Stream (
       Socket                     : in out Server_Socket_Type);
 
-   type Accepted_Socket_Type     is new Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type and
+   type Accepted_Socket_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Ada_Lib.Socket_IO.Stream_IO.
+                                    Stream_Socket_Type (Description) and
                                     Socket_Interface with record
       Accepted                   : Boolean := False;
       Server_Closed              : Boolean := False;

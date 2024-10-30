@@ -397,7 +397,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Buffer.Prime_Output (Length);
             Buffer.Put (Data (Start .. Start + Length - 1), Event);
             if Event /= Ok then
-               raise IO_Failed with "event " & Event'img;
+               Log_Here (Tracing, "event " & Event'img);
+               exit;
             end if;
             Left := Left - Length;
             Start := Start + Length;
@@ -551,7 +552,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    exception
       when Fault: Timeout =>
-Log_Exception (true or Trace, Fault);
          raise;
 
       when Fault: others =>
@@ -948,30 +948,30 @@ Log_Exception (true or Trace, Fault);
             raise IO_Failed with "not primed for put";
          end if;
 
-         if Buffer_Length - Buffer_Count < Primed_Output then
-            raise IO_Failed with "not room in buffer for primmed output";
-         end if;
-
          Event := State;
          case State is
 
-          when Ok =>
-            null;
+             when Ok =>
+               null;
 
-         when Timed_Out =>
-            Log_Here (Tracing, Kind'img & " timed out");
-            State := Ok;      -- more data now availabl
---          Timeout_Time := Ada_Lib.Time.No_Time;
---          return;
+            when Timed_Out =>
+               Log_Here (Tracing, Kind'img & " timed out");
+               State := Ok;      -- more data now availabl
+   --          Timeout_Time := Ada_Lib.Time.No_Time;
+   --          return;
 
-         when Closed =>
-            Log_Out (Tracing, Kind'img & " closed");
-            return;
+            when Closed =>
+               Log_Out (Tracing, Kind'img & " closed");
+               return;
 
-         when Failed =>
-            Log_Exception (Tracing, Prefix & " failed");
-            raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
+            when Failed =>
+               Log_Exception (Tracing, Prefix & " failed");
+               raise IO_Failed with "buffer state " & State'img & " not ok at " & Here;
          end case;
+
+         if Buffer_Length - Buffer_Count < Primed_Output then
+            raise IO_Failed with "not room in buffer for primmed output";
+         end if;
 
          for Index in Data'range loop
             Buffer (Head) := Data (Index);

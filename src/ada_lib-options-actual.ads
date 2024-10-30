@@ -84,6 +84,9 @@ package Ada_Lib.Options.Actual is
    with pre => Options.Verify_Preinitialize,
         post => Options.Verify_Initialized;
 
+   procedure Post_Process (      -- final initialization
+     Options                    : in out Program_Options_Type);
+
    -- needs to be overrident by type used to allocate options object
    function Process (
      Options                     : in out Program_Options_Type;

@@ -8,8 +8,10 @@ package Ada_Lib.Socket_IO.Client is
 
    use type Index_Type;
 
-   type Client_Socket_Type       is new Ada_Lib.Socket_IO.Stream_IO.
-                                    Stream_Socket_Type and
+   type Client_Socket_Type  (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Ada_Lib.Socket_IO.Stream_IO.
+                                       Stream_Socket_Type and
                                     Socket_Interface with private;
    type Client_Socket_Access     is access Client_Socket_Type;
 
@@ -108,7 +110,10 @@ private
 
    type Read_Check_Access        is access Read_Check_Type;
 
-   type Client_Socket_Type       is new Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type and
+   type Client_Socket_Type (
+      Description                : Ada_Lib.Strings.String_Constant_Access
+                                    ) is new Ada_Lib.Socket_IO.Stream_IO.
+                                       Stream_Socket_Type (Description) and
                                     Socket_Interface with record
       Connected                  : Boolean := False;
       Exception_Message          : Ada_Lib.Strings.Unlimited.String_Type;

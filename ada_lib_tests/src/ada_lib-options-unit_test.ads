@@ -73,6 +73,10 @@ package Ada_Lib.Options.Unit_Test is
    with pre => Options.Verify_Preinitialize;
 
    overriding
+   procedure Post_Process (      -- final initialization
+     Options                    : in out Ada_Lib_Unit_Test_Options_Type);
+
+   overriding
    function Process_Option (  -- process one option
      Options                     : in out Ada_Lib_Unit_Test_Options_Type;
      Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;

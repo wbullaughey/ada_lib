@@ -39,7 +39,8 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
    function Create_Option (
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Option_Type is
    ----------------------------------------------------------------------------
 
@@ -51,11 +52,12 @@ package body Ada_Lib.Options is
                                     Modifier => Modifier,
                                     Option   => Option);
    begin
-      Log_Here (Debug or Trace_Options, Quote ("option", Option) & (if Modifier = Unmodified then
+      Log_Here (Debug or Trace_Options, Quote ("option", Option) &
+         (if Modifier = Unmodified then
             " no modifier"
          else
             Quote (" modifier", Modifier)) & " " &
-         Result.Image);
+         Result.Image & " from " & From);
 
       return Result;
    end Create_Option;
@@ -63,7 +65,8 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
    function Create_Options (
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Access is
    ----------------------------------------------------------------------------
 
@@ -71,14 +74,15 @@ package body Ada_Lib.Options is
                                     New Options_Type (1 .. 1);
 
    begin
-      Result.all := Create_Options (Option, Modifier);
+      Result.all := Create_Options (Option, Modifier, From);
       return Result;
    end Create_Options;
 
    ----------------------------------------------------------------------------
    function Create_Options (    -- create a single options
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Type is
    ----------------------------------------------------------------------------
 
@@ -86,7 +90,8 @@ package body Ada_Lib.Options is
       Log_Here (Debug or Trace_Options, Quote ("option", Option) & (if Modifier = Unmodified then
             " no modifier"
          else
-            Quote (" modifier", Modifier)));
+            Quote (" modifier", Modifier) &
+         " from " & From));
 
       return Options_Type'(
          1 => Option_Type' (
@@ -101,7 +106,8 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
    function Create_Options (
       Source                     : in     String;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Ada_Lib.Options.Options_Type is
    ----------------------------------------------------------------------------
 
@@ -113,10 +119,11 @@ package body Ada_Lib.Options is
       Log_In (Debug or Trace_Options, Quote ("source", Source) & (if Modifier = Unmodified then
             " no modifier"
          else
-            Quote (" modifier", Modifier)));
+            Quote (" modifier", Modifier)) &
+         " from " & From);
       for Option of Source loop
          Count := Count + 1;
-            Options (Count) := Create_Option (Option, Modifier);
+            Options (Count) := Create_Option (Option, Modifier, From);
       end loop;
 
       Log_Out (Debug or Trace_Options, "count" & Count'img);
@@ -126,12 +133,13 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
    function Create_Options (
       Source                     : in     String;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Ada_Lib.Options.Options_Access is
    ----------------------------------------------------------------------------
 
       Options                    : constant Ada_Lib.Options.Options_Type :=
-                                    Create_Options (Source, Modifier);
+                                    Create_Options (Source, Modifier, From);
       Result                     : constant Ada_Lib.Options.Options_Access :=
                                     new Options_Type (1 .. Options'last);
    begin

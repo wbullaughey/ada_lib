@@ -10,16 +10,11 @@ unmatched record
 
 
 client task
+enters loop
 writes 5000
-exits loop
-check_answer correct start, end, length
-reads answer write length wrong answer
+all written
+into check answer
+read answer times out
 
 server
-does read of 5000
-enters read loop
-buffer not empty
-calls get of 1024
-get returns 1024
-good buffer contents
 

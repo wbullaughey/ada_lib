@@ -21,7 +21,9 @@ package body Ada_Lib.Trace is
    type Context_Type             is (Decrement, Report_Exception, Increment,
                                        Raise_Exception, Same);
 
-   type Task_Index_Type          is range 1 .. Maximum_Tasks;
+
+   type Task_Count_Type          is range 0 .. Maximum_Tasks;
+   subtype Task_Index_Type       is Task_Count_Type range 1 .. Maximum_Tasks;
 
    type Task_Type is record
       Buffer                     : Ada_Lib.Strings.Unlimited.String_Type;
@@ -1058,6 +1060,16 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    end Tag_History;
 
    --------------------------------------------------------------------
+   function Tag_Name (
+      Tag_Value                  : Ada.Tags.Tag
+   ) return String is
+   --------------------------------------------------------------------
+
+   begin
+      return "tag " & Ada.Tags.Expanded_Name (Tag_Value);
+   end Tag_Name;
+
+   --------------------------------------------------------------------
    procedure Tag_History (
       Enable                     : in     Boolean;
       Tag_Value                  : in     Ada.Tags.Tag;
@@ -1244,6 +1256,8 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
 
             Current_Task_ID            : constant Ada.Task_Identification.Task_ID :=
                                           Ada.Task_Identification.Current_Task;
+            Free_Task_Index            : Task_Count_Type := 0;
+
          begin
             for Index in Tasks'first .. Next_Free_Task - 1 loop
                declare
@@ -1254,19 +1268,30 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
                      T(Debug_Trace, "task" & Index'img);
                      Result := Index;
                      return;
+                  elsif Free_Task_Index = 0 and then
+                        Ada.Task_Identification.Is_Terminated (
+                           Item.Task_ID) then
+                     Free_Task_Index := Index;
+                     T (Debug_Trace, "free index " & Free_Task_Index'img);
                   end if;
                end;
             end loop;
 
-            Tasks (Next_Free_Task).Task_ID := Current_Task_ID;
-            declare
-               Task_ID                 : constant Task_Index_Type := Next_Free_Task;
+            if Free_Task_Index /= 0 then
+               Result := Free_Task_Index;
+               T(Debug_Trace, "use free task index" & Result'img);
+            else
+               declare
+                  Task_Index                 : constant Task_Index_Type := Next_Free_Task;
 
-            begin
-               Next_Free_Task := Next_Free_Task + 1;
-               T(Debug_Trace, "task" & Task_ID'img);
-               Result := Task_ID;
-            end;
+               begin
+                  Next_Free_Task := Next_Free_Task + 1;
+                  Result := Task_Index;
+                  T(Debug_Trace, "new task index" & Result'img);
+               end;
+            end if;
+
+            Tasks (Result).Task_ID := Current_Task_ID;
          end Find_Task;
 
          -------------------------------------------------------------------
@@ -1378,7 +1403,8 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
             begin
 --ada.Text_io.put_line (here);
                T (Debug_Trace, "in enable " & Enable'img & " context " & Context'img &
-                  " level" & Task_Entry.Level'img & Quote (" text", Text));
+                  " level" & Task_Entry.Level'img & Quote (" text", Text) &
+                  " where " & Where & " who " & Who);
 --ada.Text_io.put_line (here & " emab;e " & enable'img);
                if Enable then
                   case Context is
@@ -1432,7 +1458,7 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    ---------------------------------------------------------------
 
    begin
---Debug_Trace := True;
+Debug_Trace := True;
 --Elaborate := True;
 --Trace_Tests := True;
    Include_Hundreds := True;

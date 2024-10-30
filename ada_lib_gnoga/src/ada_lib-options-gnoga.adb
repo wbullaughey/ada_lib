@@ -15,10 +15,11 @@ package body Ada_Lib.Options.GNOGA is
    Options_With_Parameters          : aliased constant
                                        Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             Trace_Option);
+                                             Trace_Option, Unmodified);
    Options_Without_Parameters       : aliased constant
                                        Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options ('w');
+                                          Ada_Lib.Options.Create_Options ('w',
+                                             Unmodified);
 
    ----------------------------------------------------------------------------
    overriding
@@ -98,9 +99,9 @@ package body Ada_Lib.Options.GNOGA is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-            Ada_Lib.Help.Add_Option (Create_Option ('G'), "trace options",
-               "GNOGA traces", "GNOGA library");
-            Ada_Lib.Help.Add_Option (Create_Option ('w'), "",
+            Ada_Lib.Help.Add_Option (Create_Option ('G', Unmodified),
+               "trace options", "GNOGA traces", "GNOGA library");
+            Ada_Lib.Help.Add_Option (Create_Option ('w', Unmodified), "",
                "Web server port", "GNOGA library");
 
       when Ada_Lib.Options.Traces =>

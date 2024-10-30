@@ -1,3 +1,4 @@
+with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.GNOGA.Unit_Test;
 with Ada_Lib.Help;
@@ -20,13 +21,13 @@ package body Ada_Lib.Options.Unit_Test is
                                     : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             "esSU") &
+                                             "esSU", Unmodified) &
                                           Ada_Lib.Options.Create_Options (
                                              "nR", Ada_Lib.Help.Modifier);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             "x") &
+                                             "x", Unmodified) &
                                           Ada_Lib.Options.Create_Options (
                                              Driver_List_Option & "lmPSu",
                                              Ada_Lib.Help.Modifier);
@@ -74,12 +75,12 @@ package body Ada_Lib.Options.Unit_Test is
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters,
          Options_Without_Parameters);
---    Unit_Test_Options := Options'unchecked_access;
 
       return Log_Out_Checked (Initialized_Recursed,
          Options.GNOGA_Options.Initialize and then
-         Actual.Program_Options_Type (Options).Initialize,
+            Actual.Program_Options_Type (Options).Initialize,
          Debug or Trace_Options, Message);
+
    end Initialize;
 
 -- ----------------------------------------------------------------------------
@@ -101,6 +102,60 @@ package body Ada_Lib.Options.Unit_Test is
 --    return Unit_Test_Options_Constant_Class_Access (
 --       Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options);
 -- end Options;
+
+   ----------------------------------------------------------------------------
+   procedure Post_Process (
+     Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_In (Debug or Trace_Options, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      case Options.Random_Seed_Mode is
+
+         when Ada_Lib.Options.Unit_Test.Default_Seed =>
+            Options.Random_Seeds := (others =>
+               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+
+         when Ada_Lib.Options.Unit_Test.Seed_Not_Set =>
+            Options.Random_Seeds := (others =>
+               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+            Options.Random_Seed_Mode :=
+               Ada_Lib.Options.Unit_Test.Default_Seed;
+
+         when Ada_Lib.Options.Unit_Test.Specified_Seed =>
+            null; -- should already be set
+
+         when Ada_Lib.Options.Unit_Test.Random_Seed =>
+            declare
+               Now         : constant Ada.Real_Time.Time :=
+                              Ada.Real_Time.Clock;
+               Offset      : Duration;
+               Seconds     : Ada.Real_Time.Seconds_Count;
+               Seed        : Integer;
+               for Seed'address use Offset'address;
+               Time_Span   : Ada.Real_Time.Time_Span;
+
+            begin
+               Ada.Real_Time.Split (Now, Seconds, Time_Span);
+               Offset := Ada.Real_Time.To_Duration (Time_Span);
+               Log_Here (Debug or Trace_Options, "offset " & Image (Offset, True));
+
+               for Index in 1 .. Options.Number_Random_Generators loop
+                  Options.Random_Seeds (Index) := Seed;
+                  Log_Here (Debug or Trace_Options, "seed" & Index'img & ":" & Seed'img);
+                  if Options.Report_Random then
+                     Put_Line ("random seed" & Index'img & " =" & Seed'img);
+                  end if;
+
+                  Seed := Seed / 2;
+               end loop;
+            end;
+      end case;
+
+      Ada_Lib.Options.Actual.Program_Options_Type (Options).Post_Process   ;
+      Log_Out (Debug or Trace_Options);
+
+   end Post_Process;
 
    ----------------------------------------------------------------------------
    -- processes options it knows about and calls parent for others
@@ -287,7 +342,7 @@ package body Ada_Lib.Options.Unit_Test is
          end case;
 
          return Log_Out (True, Trace_Options or Debug,
-            " option" & Option.Image & " handled mode " & Options.Mode'img);
+            " " & Option.Image & " handled mode " & Options.Mode'img);
       else
          return Log_Out (Options.GNOGA_Options.Process_Option (
                Iterator, Option) or else
@@ -352,6 +407,7 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      l               Ada_Lib.Unit_Test.Debug Library");
          Put_Line ("      p               test programs");
          Put_Line ("      r               Runtime_Options");
+         Put_Line ("      s               Trace Set_Up Tear_Down");
          Put_Line ("      t               Ada_Lib.Test.Debug");
          Put_Line ("      T               Ada_Lib.Trace.Debug_Trace");
          New_Line;
@@ -460,8 +516,11 @@ package body Ada_Lib.Options.Unit_Test is
             when 'r' =>
                Debug := True;
 
-           when 'p' =>
-              Options.Debug := True;
+            when 'p' =>
+               Options.Debug := True;
+
+            when 's' =>
+               Ada_Lib.Trace.Trace_Set_Up := True;
 
             when 't' =>
                Ada_Lib.Test.Debug := True;

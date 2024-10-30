@@ -16,7 +16,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
 
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
-                                       Ada_Lib.Options.Create_Options ('g');
+                                       Ada_Lib.Options.Create_Options ('g',
+                                          Ada_Lib.Options.Unmodified);
 
    -------------------------------------------------------------------
    overriding

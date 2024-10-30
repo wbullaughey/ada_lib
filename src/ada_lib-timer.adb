@@ -9,18 +9,15 @@ package body Ada_Lib.Timer is
 
 -- use type Ada.Calendar.Time;
    use type Ada_Lib.Strings.String_Access;
+   use type Ada_Lib.Strings.String_Access_All;
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => Event_Class_Access,
       Object   => Event_Type'class);
 
    procedure Free is new Ada.Unchecked_Deallocation (
-      Name     => Ada_Lib.Strings.String_Access,
+      Name     => Ada_Lib.Strings.String_Access_All,
       Object   => String);
-
--- procedure Free is new Ada.Unchecked_Deallocation (
---    Name     => Ada_Lib.Event.Event_Access,
---    Object   => Ada_Lib.Event.Event_Type);
 
    ---------------------------------------------------------------------------
    function Active (
@@ -74,7 +71,7 @@ package body Ada_Lib.Timer is
          Log_Here (Trace, "state " & Event.State'img);
 
          case Event.State is
-            when Canceled | Completed | Finalized =>
+            when Canceled | Completed | Finalized | Uninitialized =>
                Null;
 
             when Waiting =>
@@ -83,8 +80,9 @@ package body Ada_Lib.Timer is
 
          end case;
       end if;
-      Free (Event.Description);
---    Free (Event.Wait_Event);
+      if Event.Description /= Uninitialized_Event_Description'unchecked_access then
+         Free (Event.Description);
+      end if;
       Log_Out (Trace);
 
 exception
@@ -119,17 +117,15 @@ exception
                " message " & Event.Exception_Message.all));
    end Get_Exception;
 
--- ---------------------------------------------------------------------------
--- overriding
--- procedure Initialize (
---    Event             : in out Event_Type) is
--- ---------------------------------------------------------------------------
---
--- begin
---    Log_In (Trace, "state " & Event.State'img);
---    Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
---    Log_Out (Trace,;
--- end Initialize;
+   ---------------------------------------------------------------------------
+   overriding
+   procedure Initialize (
+      Event             : in out Event_Type) is
+   ---------------------------------------------------------------------------
+
+   begin
+      Log_Here (Trace, "state " & Event.State'img);
+   end Initialize;
 
    ---------------------------------------------------------------------------
    procedure Initialize (
@@ -143,26 +139,16 @@ exception
    begin
       Log_In (Trace, Quote ("description", Description) &
          " wait " & Wait'img);
-      Event.Set_Description (Description);
       Event.Dynamic := Dynamic;
+      Event.Initialized := True;
       Event.Repeating := Repeating;
+      Event.Set_Description (Description);
+      Event.State := Waiting;
       Event.Wait := Wait;
---    Event.Wait_Event := new Ada_Lib.Event.Event_Type (
---       Ada_Lib.Strings.String_Constant_Access (Event.Description));
       Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
       Log_Out (Trace, "address " & Image (Event'address));
    end Initialize;
 
--- ---------------------------------------------------------------------------
--- function Offset (
---    Event             : in   Event_Type
--- ) return Duration is
--- ---------------------------------------------------------------------------
---
--- begin
---    return To_Duration (Event.Offset);
--- end Offset;
---
    ---------------------------------------------------------------------------
    procedure Set_Description (
       Event                      : in out Event_Type;
@@ -170,7 +156,9 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      if Event.Description /= Null then
+      if    Event.Description /= Null and then
+            Event.Description /= Uninitialized_Event_Description'
+               unchecked_access then
          Free (Event.Description);
       end if;
       Event.Description := new String'(Description);
@@ -215,32 +203,11 @@ exception
       end if;
    end State;
 
--- ---------------------------------------------------------------------------
--- function To_Duration (
---    Time                       : in     Duration
--- ) return Duration is
--- ---------------------------------------------------------------------------
---
--- begin
---    return Duration (Time) / Duration (Ratio);
--- end To_Duration;
-
--- ---------------------------------------------------------------------------
--- procedure Wait_For_Event (
---    Event                   : in out Event_Type;
---    From                    : in     String :=
---                                        GNAT.Source_Info.Source_Location) is
--- ---------------------------------------------------------------------------
---
--- begin
---    Event.Wait_Event.Wait_For_Event;
--- end Wait_For_Event;
-
    ---------------------------------------------------------------------------
    task body Timer_Task_Type is
 
    begin
-      Log_In (Trace, "task started");
+      Log_In (Trace, "task started dynamic " & Event.Dynamic'img);
       Ada_Lib.Trace_Tasks.Start ("timer task", Here);
 
 
@@ -271,7 +238,12 @@ exception
             end Get_State;
          or
             delay Event.Wait;          -- delay until timeout
-            Log_Here (Trace, Quote ("description", Event.Description));
+            Log_Here (Trace, Quote ("description", Event.Description) &
+               " initialized " & Event.Initialized'img);
+            if not Event.Initialized then
+               raise Failed with Quote ("event", Event.Description) &
+                  " not initialized";
+            end if;
             Event.Callback;
             if not Event.Repeating then
                Event.State := Completed;
@@ -292,11 +264,13 @@ exception
          begin
             Free (Event_Pointer);
          end;
+      else
+         Log_Here (Trace, "dynamic already finalized");
       end if;
 
       Event.Timer_Task := Null;
       Ada_Lib.Trace_Tasks.Stop;
-      Log_Out (Trace);
+      Log_Out (Trace, Quote (" description", Event.Description));
 
    exception
       when Fault: others =>
@@ -310,6 +284,6 @@ exception
    end Timer_Task_Type;
 
 begin
---Trace := True;
+Trace := True;
    Log_Here (Elaborate or Trace);
 end Ada_Lib.Timer;

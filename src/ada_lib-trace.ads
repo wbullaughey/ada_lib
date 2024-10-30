@@ -281,7 +281,7 @@ package Ada_Lib.Trace is
                                              Source_Location);
    function Tag_Name (
       Tag_Value                  : Ada.Tags.Tag
-   ) return String renames Ada.Tags.Expanded_Name ;
+   ) return String;
 
    procedure Trace_Exception (
       Debug                      : in   Boolean;

@@ -52,7 +52,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    private
 
       type Test_Type is abstract new AUnit.Test_Cases.Test_Case with record
-         Set_Up                     : Boolean := False;
+         Set_Up_Succeeded           : Boolean := False;
          Set_Up_Failed              : Boolean := False;
          Tear_Down_Failed           : Boolean := False;
          Torn_Down                  : Boolean := False;

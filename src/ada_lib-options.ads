@@ -30,7 +30,8 @@ package Ada_Lib.Options is
 
    function Create_Option (
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Option_Type;
 
    function Image (
@@ -55,22 +56,26 @@ package Ada_Lib.Options is
 
    function Create_Options (     -- create a single options
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Type;
 
    function Create_Options (
       Source                     : in     String;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Access;
 
    function Create_Options (     -- create a single options
       Option                     : in     Character;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Access;
 
    function Create_Options (
       Source                     : in     String;
-      Modifier                   : in     Character := Unmodified
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Type;
 
    function Has_Option (   -- tests if option is registered for a catagory

@@ -85,17 +85,17 @@ package body Ada_Lib.Help.Tests is
 
       Test_Case                  : constant Test_Cases_Type := (
          Test_Case_Type'(
-            Option      => Create_Option ('b'),
+            Option      => Create_Option ('b', Unmodified),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('c'),
+            Option      => Create_Option ('c', Unmodified),
             Parameter   => new String'("c parameter"),
             Description => new String'("c option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('a'),
+            Option      => Create_Option ('a', Unmodified),
             Parameter   => new String'("a parameter"),
             Description => new String'("a option")
          )
@@ -163,7 +163,7 @@ package body Ada_Lib.Help.Tests is
             Description => new String'(Modifier & "a option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('b'),
+            Option      => Create_Option ('b', Unmodified),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),

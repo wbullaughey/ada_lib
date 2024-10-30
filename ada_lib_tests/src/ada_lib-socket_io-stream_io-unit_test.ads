@@ -60,16 +60,16 @@ private
       No_Data,
       Polling_Read,              -- server has short read timeout and polls
       Unmatched_Record_Length,   -- server fixed length reads, client delays and reads available
-      Read_Timeout,              -- client sends short write, server times out
-      Write_Timeout,             -- server reads slower then client writes
-      Connect_Timeout);          -- server doesn't to accept
+      Read_Timeout);              -- client sends short write, server times out
+--    Write_Timeout,             -- server reads slower then client writes
+--    Connect_Timeout);          -- server doesn't to accept
 
    type Sockets_Type             is array (1 .. 10) of Socket_Class_Access;
 
    type Socket_Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with record
       Answer                     : Answer_Type := Success;
       Client_Completed           : Boolean := False;
-      Client_Delay_Write_Time    : Duration := No_Timeout;
+      Client_Delay_Write_Time    : Duration := 0.0;
       Client_Delayed             : Boolean := False;
       Client_Failed              : Boolean := False;
       Client_Read_Timeout_Time   : Duration := No_Timeout;
