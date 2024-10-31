@@ -55,7 +55,7 @@ case "$DATABASE" in
       ;;
 
    "remote")
-      export DATABASE_OPTION="-r compile2.wmi.com -R /home/wayne/bin/dbdaemon -u wayne"
+      export DATABASE_OPTION="-r localhost -R /home/wayne/bin/dbdaemon -u wayne"
       ;;
 
    "none")
