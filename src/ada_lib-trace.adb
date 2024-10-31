@@ -1458,7 +1458,7 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    ---------------------------------------------------------------
 
    begin
-Debug_Trace := True;
+--Debug_Trace := True;
 --Elaborate := True;
 --Trace_Tests := True;
    Include_Hundreds := True;

@@ -284,6 +284,6 @@ exception
    end Timer_Task_Type;
 
 begin
-Trace := True;
+--Trace := True;
    Log_Here (Elaborate or Trace);
 end Ada_Lib.Timer;
