@@ -83,6 +83,7 @@ package Ada_Lib.Socket_IO is
                            Socket_Interface with record
       GNAT_Socket    : aliased GNAT.Sockets.Socket_Type :=
                         GNAT.Sockets.No_Socket;
+      Initialized    : Boolean := False;
       Open           : Boolean := False;
    end record;
 
@@ -113,6 +114,10 @@ package Ada_Lib.Socket_IO is
 
    overriding
    function Is_Open (
+      Socket                     : in     Socket_Type
+   ) return Boolean;
+
+   function Is_Initialized (
       Socket                     : in     Socket_Type
    ) return Boolean;
 
@@ -188,6 +193,9 @@ package Ada_Lib.Socket_IO is
    function Image (
       IP_Address                 : in     IP_Address_Type
    ) return String;
+
+   procedure Set_Open (
+      Socket                     : in out Socket_Type);
 
    procedure Set_Socket (
       Socket                     : in out Socket_Type;

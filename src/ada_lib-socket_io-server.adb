@@ -38,7 +38,7 @@ package body Ada_Lib.Socket_IO.Server is
             begin
                Accepted_Socket.Create_Stream;
 --                Description    => Accepted_Description);
-               Accepted_Socket.Set_Connected;
+               Accepted_Socket.Set_Open;
                Log_Out (Trace, "accepted socket " & Accepted_Socket.Image);
                return;
 
@@ -194,16 +194,16 @@ package body Ada_Lib.Socket_IO.Server is
 --    Log_Out (Trace);
 -- end Initialize;
 
-   ---------------------------------------------------------------------------
-   function Is_Connected (
-      Socket                     : in     Accepted_Socket_Type
-   ) return Boolean is
-   ---------------------------------------------------------------------------
-
-   begin
-      Log_Here (Trace, "Accepted " & Socket.Accepted'img);
-      return Socket.Accepted;
-   end Is_Connected;
+-- ---------------------------------------------------------------------------
+-- function Is_Connected (
+--    Socket                     : in     Accepted_Socket_Type
+-- ) return Boolean is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Log_Here (Trace, "Accepted " & Socket.Accepted'img);
+--    return Socket.Accepted;
+-- end Is_Connected;
 
    ---------------------------------------------------------------------------
    overriding
@@ -239,14 +239,14 @@ package body Ada_Lib.Socket_IO.Server is
       Socket.Server_Closed := True;
    end Set_Closed;
 
-   ---------------------------------------------------------------------------
-   procedure Set_Connected (
-      Socket                     : in out Accepted_Socket_Type) is
-   ---------------------------------------------------------------------------
-
-   begin
-      Socket.Accepted := True;
-   end Set_Connected;
+-- ---------------------------------------------------------------------------
+-- procedure Set_Open (
+--    Socket                     : in out Accepted_Socket_Type) is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Socket.Accepted := True;
+-- end Set_Open;
 
 -- ---------------------------------------------------------------------------
 -- procedure Set_Option (

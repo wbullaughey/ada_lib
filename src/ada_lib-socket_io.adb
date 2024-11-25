@@ -186,7 +186,7 @@ package body Ada_Lib.Socket_IO is
         Log_In (Tracing, "socket " & Socket.Image);
         GNAT.Sockets.Create_Socket (Socket.GNAT_Socket, GNAT.Sockets.Family_Inet,
            GNAT.Sockets.Socket_Stream);
-        Socket.Open := True;
+        Socket.Initialized := True;
         Log_Out (Tracing, "initialized socket " & Socket.Image);
 
    exception
@@ -199,6 +199,19 @@ package body Ada_Lib.Socket_IO is
            raise Failed with Message;
         end;
    end Initialize;
+
+   ---------------------------------------------------------------------------
+   function Is_Initialized (
+      Socket                     : in     Socket_Type
+   ) return Boolean is
+   ---------------------------------------------------------------------------
+
+   begin
+     Log_Here (Tracing, "initialized " & Socket.Initialized'img &
+        " address " & Image (Socket'address));
+
+     return Socket.Initialized;
+   end Is_Initialized;
 
    ---------------------------------------------------------------------------
    overriding
@@ -232,6 +245,15 @@ package body Ada_Lib.Socket_IO is
 --       else
 --          new String'(Description));
 -- end Set_Description;
+
+   ---------------------------------------------------------------------------
+   procedure Set_Open (
+      Socket                     : in out Socket_Type) is
+   ---------------------------------------------------------------------------
+
+   begin
+      Socket.Open := True;
+   end Set_Open;
 
    ---------------------------------------------------------------------------
    procedure Set_Socket (

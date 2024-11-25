@@ -57,6 +57,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
          Data                    : in     Buffer_Type;
          Event                   :    out Event_Type);
 
+      procedure Reset;
 
       procedure Set_Event (
          Event                   : in     Event_Type;
@@ -104,7 +105,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Connection_Timeout         : in     Timeout_Type := 1.0;
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
-         Socket                  : in     Socket_Class_Access) := Null);
+         Socket                  : in     Socket_Class_Access) := Null
+   ) with Pre => Socket.Is_Initialized;
 
    overriding
    procedure Connect (
@@ -115,7 +117,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
-   ) with Pre => Socket.Is_Open;
+   ) with Pre => Socket.Is_Initialized;
 
    overriding
    procedure Connect (
@@ -125,8 +127,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Connection_Timeout         : in     Timeout_Type := 1.0;
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
-         Socket                  : in     Socket_Class_Access) := Null);
-
+         Socket                  : in     Socket_Class_Access) := Null
+   ) with Pre => Socket.Is_Initialized;
 
    overriding
    procedure Create_Stream (

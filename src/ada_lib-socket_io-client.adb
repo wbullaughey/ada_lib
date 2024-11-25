@@ -129,7 +129,8 @@ package body Ada_Lib.Socket_IO.Client is
             Socket.Create_Stream (
                Default_Read_Timeout    => 1.0,
                Default_Write_Timeout   => 1.0);
-            Socket.Connected := True;
+--          Socket.Connected := True;
+            Socket.Open := True;
 
             Log (Trace, Here, Who & " Status " & Status'img & " exit");
          end;
@@ -140,7 +141,7 @@ package body Ada_Lib.Socket_IO.Client is
          Expected_Read_Callback (Socket'unchecked_access);
       end if;
 
-      Log_Out (Trace, "connected " & Socket.Connected'img);
+      Log_Out (Trace, "open " & Socket.Open'img);
 
    exception
       when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
@@ -156,7 +157,7 @@ package body Ada_Lib.Socket_IO.Client is
 
       when Fault: GNAT.SOCKETS.HOST_ERROR =>
          Trace_Exception (Trace, Fault);
-         Socket.Connected := False;
+         Socket.Open := False;
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
          raise Failed with "Could not open host " & Host_Name &
@@ -164,7 +165,7 @@ package body Ada_Lib.Socket_IO.Client is
 
       when Fault: others =>
          Trace_Exception (Trace, Fault);
-         Socket.Connected := False;
+         Socket.Open := False;
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
          Ada.Exceptions.Raise_Exception (
@@ -213,7 +214,7 @@ package body Ada_Lib.Socket_IO.Client is
          case Status is
 
             when GNAT.Sockets.Completed =>
-               Socket.Connected := True;
+               Socket.Open := True;
 
             when GNAT.Sockets.Expired =>
                raise Failed with "timeout connection to " & Address;
@@ -306,7 +307,7 @@ package body Ada_Lib.Socket_IO.Client is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, Socket.Image & "connected " & Socket.Connected'img &
+      Log_In (Trace, Socket.Image & "open " & Socket.Open'img &
          " address " & Image (Socket'address));
       Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Finalize;
       Log_Out (Trace);
@@ -346,17 +347,17 @@ package body Ada_Lib.Socket_IO.Client is
       Log_Out (Trace, " exit");
    end Initialize;
 
-   ---------------------------------------------------------------------------
-   function Is_Connected (
-      Socket                     : in     Client_Socket_Type
-   ) return Boolean is
-   ---------------------------------------------------------------------------
-
-   begin
-      Log_In (Trace, "open " & Socket.Open'img &
-         " connected " & Socket.Connected'img);
-      return Socket.Open and then Socket.Connected;
-   end Is_Connected;
+-- ---------------------------------------------------------------------------
+-- function Is_Connected (
+--    Socket                     : in     Client_Socket_Type
+-- ) return Boolean is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Log_In (Trace, "open " & Socket.Open'img &
+--       " connected " & Socket.Connected'img);
+--    return Socket.Open and then Socket.Connected;
+-- end Is_Connected;
 
 -- ---------------------------------------------------------------------------
 -- overriding
@@ -387,15 +388,15 @@ package body Ada_Lib.Socket_IO.Client is
 --    Log_Out (Trace);
 -- end Read;
 
-   ---------------------------------------------------------------------------
-   procedure Set_Connected (
-      Socket                     : in out Client_Socket_Type) is
-   ---------------------------------------------------------------------------
-
-   begin
-      Log_In (Trace);
-      Socket.Connected := True;
-   end Set_Connected;
+-- ---------------------------------------------------------------------------
+-- procedure Set_Open (
+--    Socket                     : in out Client_Socket_Type) is
+-- ---------------------------------------------------------------------------
+--
+-- begin
+--    Log_In (Trace);
+--    Socket.Connected := True;
+-- end Set_Open;
 
    ---------------------------------------------------------------------------
    procedure Set_Expected_Read_Length (
@@ -442,7 +443,7 @@ package body Ada_Lib.Socket_IO.Client is
 -- end Write;
 
 begin
--- Trace := True;
+Trace := True;
    Log_Here (Trace);
 
 end Ada_Lib.Socket_IO.Client;

@@ -10,3 +10,9 @@ new_configuration.cfg
 *.txt
 *.cswi
 message
+/obj/
+/lib/
+/alire/
+/config/
+/*save/
+alire-toml-save

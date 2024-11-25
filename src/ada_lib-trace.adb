@@ -1460,7 +1460,8 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    begin
 --Debug_Trace := True;
 --Elaborate := True;
---Trace_Tests := True;
+Trace_Set_Up := True;
+Trace_Tests := True;
    Include_Hundreds := True;
 -- Include_Program := True;
    Include_Task := True;

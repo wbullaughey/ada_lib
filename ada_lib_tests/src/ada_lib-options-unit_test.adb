@@ -104,6 +104,7 @@ package body Ada_Lib.Options.Unit_Test is
 -- end Options;
 
    ----------------------------------------------------------------------------
+   overriding
    procedure Post_Process (
      Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
    ----------------------------------------------------------------------------

@@ -214,8 +214,11 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Stream.GNAT_Stream :=  GNAT.Sockets.Stream (Socket.GNAT_Socket);
       Stream.Default_Read_Timeout := Default_Read_Timeout;
       Stream.Default_Write_Timeout := Default_Write_Timeout;
+      Stream.Input_Buffer.Reset; -- put back to ok for Reopen
+      Stream.Output_Buffer.Reset; -- put back to ok for Reopen
       Stream.Reader := new Input_Task (Reader_Task_Description);
       Stream.Reader.Open (Stream'unchecked_access, Priority);
+      Stream.Socket_Closed := False;
       delay 0.1;  -- lett read initialize before write starts for debugging
       Stream.Writer := new Output_Task (Writer_Task_Description);
       Stream.Writer.Open (Stream'unchecked_access, Priority);
@@ -552,6 +555,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    exception
       when Fault: Timeout =>
+         Log_Exception (Trace, Fault, "read timed out");
          raise;
 
       when Fault: others =>
@@ -999,6 +1003,14 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       end Put;
 
       -----------------------------------------------------------------------
+      procedure Reset is
+      -----------------------------------------------------------------------
+
+      begin
+         State := OK;
+      end Reset;
+
+      -----------------------------------------------------------------------
       procedure Set_Event (
          Event          : in     Event_Type;
          From           : in     String := Here) is
@@ -1364,7 +1376,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                exit;
 
             when Ok =>
-               null;
+               Log_Here (Trace, "got state OK");
 
             when Timed_Out =>
                Log_Here (Trace, "output buffer timed out");
@@ -1375,13 +1387,16 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          declare
             Data     : Buffer_Type (1 .. 1024);
             Event    : Event_Type;
-            Last        : Index_Type;
+            Last     : Index_Type;
 
          begin
             Log_Here (Trace, Stream_Pointer.Image);
 
             begin
+Log_Here;
+Log_Here ("in buffer " & Stream_Pointer.Output_Buffer.In_Buffer'img);
                Stream_Pointer.Output_Buffer.Get (Data, Event, Last);
+Log_Here;
 
             exception
                when Fault: Aborted =>     -- socket got closed
@@ -1492,8 +1507,8 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
    end Output_Task;
 
 begin
---Trace := True;
---Tracing := True;
+Trace := True;
+Tracing := True;
    Log_Here (Elaborate or Tracing);
 end Ada_Lib.Socket_IO.Stream_IO;
 

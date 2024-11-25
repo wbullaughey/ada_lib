@@ -107,7 +107,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
       begin
          Socket.Connect (URL_Address, URL_Port);
-         Assert (Socket.Is_Connected, "could not connect to " & URL_Address &
+         Assert (Socket.Is_Open, "could not connect to " & URL_Address &
             " port" & URL_Port'img);
       exception
 
@@ -122,7 +122,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
       begin
          Socket.Connect (IP_Address, IP_Address_Port);
-         Assert (Socket.Is_Connected, "could not connect to " &
+         Assert (Socket.Is_Open, "could not connect to " &
             Ada_Lib.Socket_IO.Image (IP_Address) &
             " port" & IP_Address_Port'img);
       exception

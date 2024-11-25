@@ -19,9 +19,9 @@ package Ada_Lib.Socket_IO.Server is
       Socket                     : in     Accepted_Socket_Type
    ) return Index_Type;
 
-   function Is_Connected (
-      Socket                     : in     Accepted_Socket_Type
-   ) return Boolean;
+-- function Is_Connected (
+--    Socket                     : in     Accepted_Socket_Type
+-- ) return Boolean;
 
    overriding
    function Is_Open (
@@ -31,8 +31,8 @@ package Ada_Lib.Socket_IO.Server is
    procedure Set_Closed (
       Socket                     : in out Accepted_Socket_Type);
 
-   procedure Set_Connected (
-      Socket                     : in out Accepted_Socket_Type);
+-- procedure Set_Open (
+--    Socket                     : in out Accepted_Socket_Type);
 
    type Server_Socket_Type (
       Description    : Ada_Lib.Strings.String_Constant_Access;

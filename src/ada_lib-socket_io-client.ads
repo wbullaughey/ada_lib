@@ -31,7 +31,7 @@ package Ada_Lib.Socket_IO.Client is
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
-   ) with Pre => Socket.Is_Open;
+   ) with Pre => Socket.Is_Initialized;
 
    overriding
    procedure Connect (
@@ -42,7 +42,7 @@ package Ada_Lib.Socket_IO.Client is
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
-   ) with Pre => Socket.Is_Open;
+   ) with Pre => Socket.Is_Initialized;
 
    overriding
    procedure Connect (
@@ -53,15 +53,15 @@ package Ada_Lib.Socket_IO.Client is
 --    Description                : in     String := "";
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
-   ) with Pre => Socket.Is_Open;
+   ) with Pre => Socket.Is_Initialized;
 
    function Has_Read_Check (
       Socket                     : in     Client_Socket_Type
    ) return Boolean;
 
-   function Is_Connected (
-      Socket                     : in     Client_Socket_Type
-   ) return Boolean;
+-- function Is_Connected (
+--    Socket                     : in     Client_Socket_Type
+-- ) return Boolean;
 
 -- function Is_Open (
 --    Socket                     : in     Client_Socket_Type
@@ -74,8 +74,8 @@ package Ada_Lib.Socket_IO.Client is
 -- ) with pre => Socket.Is_Connected and
 --               Buffer'length > 0;
 
-   procedure Set_Connected (
-      Socket                     : in out Client_Socket_Type);
+-- procedure Set_Open (
+--    Socket                     : in out Client_Socket_Type);
 
    procedure Set_Expected_Read_Length (
       Socket                     : in out Client_Socket_Type;
@@ -115,7 +115,7 @@ private
                                     ) is new Ada_Lib.Socket_IO.Stream_IO.
                                        Stream_Socket_Type (Description) and
                                     Socket_Interface with record
-      Connected                  : Boolean := False;
+--    Connected                  : Boolean := False;
       Exception_Message          : Ada_Lib.Strings.Unlimited.String_Type;
       Read_Check                 : Read_Check_Access := Null;
    end record;
