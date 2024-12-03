@@ -49,6 +49,12 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          " output buffer empty " &
             Socket.Stream.Output_Buffer.Empty (False)'img);
 
+         if Socket.GNAT_Socket_Open then
+            Log_Here (Trace);
+            GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
+            Socket.GNAT_Socket_Open := False;
+         end if;
+
       if not Socket.Is_Open then
          Log_Out (Trace);
          return;
@@ -82,7 +88,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    exception
       when Fault: others =>
-         Trace_Exception (Trace, Fault);
+--       Trace_Exception (Trace, Fault);
          Log_Exception (Trace, Fault);
          raise;
 
@@ -1393,10 +1399,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Log_Here (Trace, Stream_Pointer.Image);
 
             begin
-Log_Here;
-Log_Here ("in buffer " & Stream_Pointer.Output_Buffer.In_Buffer'img);
                Stream_Pointer.Output_Buffer.Get (Data, Event, Last);
-Log_Here;
 
             exception
                when Fault: Aborted =>     -- socket got closed
@@ -1436,7 +1439,7 @@ Log_Here;
                      loop  -- until whole buffer sent
                         begin
                            if Tracing then
-                              Dump ("sending", Data (Start_Send .. Last));
+                              Dump ("GNAT socket send", Data (Start_Send .. Last));
                            end if;
 
 pragma Assert (Stream_Pointer /= Null, "stream pointer null");
@@ -1507,8 +1510,8 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
    end Output_Task;
 
 begin
-Trace := True;
-Tracing := True;
+--Trace := True;
+--Tracing := True;
    Log_Here (Elaborate or Tracing);
 end Ada_Lib.Socket_IO.Stream_IO;
 

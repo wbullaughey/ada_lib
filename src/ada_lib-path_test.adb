@@ -239,13 +239,13 @@ package body Ada_Lib.Path_Test is
 
             when Fault: Bad_Path_File =>
                Put_Line (Ada.Exceptions.Exception_Message (Fault));
-               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
             when Fault: others =>
                Put_Line (Ada.Exceptions.Exception_Name (Fault) & " in " &
                   GNAT.Source_Info.Source_Location);
                Put_Line (Ada.Exceptions.Exception_Message (Fault));
-               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
          end;
       end if;
@@ -416,7 +416,7 @@ package body Ada_Lib.Path_Test is
          end loop;
 
          Put_Line ("too many enities");
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Error);
       end if;
    end Put;
 

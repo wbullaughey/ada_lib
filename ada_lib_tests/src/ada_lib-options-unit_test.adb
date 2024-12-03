@@ -373,8 +373,8 @@ package body Ada_Lib.Options.Unit_Test is
 
       when Ada_Lib.Options.Program =>
          -- options without modifier
-         Ada_Lib.Help.Add_Option ('e', "routine", "test routine.", Component);
-         Ada_Lib.Help.Add_Option ('s', "test suite", "select test suite to run.",
+         Ada_Lib.Help.Add_Option ('e', "routine", "routine to test.", Component);
+         Ada_Lib.Help.Add_Option ('s', "suite to test", "select test suite to run.",
             Component);
          Ada_Lib.Help.Add_Option ('S', "suites", "enable default disabled suites.",
             Component);
@@ -580,6 +580,6 @@ begin
 exception
    when Fault: others =>
       Trace_Exception (Fault);
-      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
 end Ada_Lib.Options.Unit_Test;

@@ -523,7 +523,7 @@ package body Ada_Lib.Command_Line_Iterator is
          when Fault: others =>
             Trace_Exception (Fault);
             Put_Line ("aborting");
-            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
       end Initialize;
 

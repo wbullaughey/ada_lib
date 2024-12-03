@@ -38,7 +38,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Test.Connection_Data := Ada_Lib.GNOGA.Get_Connection_Data;
+--    Test.Connection_Data := Ada_Lib.GNOGA.Get_Connection_Data;
       if not Test.Test_Driver then
          Log_Here (Debug, -- "URL_Opened " & URL_Opened'img &
             " Initialize_GNOGA " & Test.Initialize_GNOGA'img);
@@ -108,28 +108,28 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Log_Out (Debug);
    end Test_Handler;
 
-   ---------------------------------------------------------------
-   overriding
-   function Verify_Set_Up (
-      Test                       : in     GNOGA_Tests_Type
-   )  return Boolean is
-   ---------------------------------------------------------------
-
-   begin
-      return Log_Here (Test.Connection_Data /= Null and then
-             Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up,
-         Debug, (
-            if Test.Connection_Data = Null then
-               " Test.Connection_Data is Null"
-            else
-               ""
-            ) &
-            (if Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up then
-               ""
-            else
-               " Verify_Set_Up failed"
-            ));
-   end Verify_Set_Up;
+-- ---------------------------------------------------------------
+-- overriding
+-- function Verify_Set_Up (
+--    Test                       : in     GNOGA_Tests_Type
+-- )  return Boolean is
+-- ---------------------------------------------------------------
+--
+-- begin
+--    return Log_Here (Test.Connection_Data /= Null and then
+--           Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up,
+--       Debug, (
+--          if Test.Connection_Data = Null then
+--             " Test.Connection_Data is Null"
+--          else
+--             ""
+--          ) &
+--          (if Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Verify_Set_Up then
+--             ""
+--          else
+--             " Verify_Set_Up failed"
+--          ));
+-- end Verify_Set_Up;
 
 begin
 --Trace_Tests := True;

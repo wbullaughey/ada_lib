@@ -16,6 +16,10 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    use type Standard.Gnoga.GUI.Window.Pointer_To_Window_Class;
    use type Standard.Gnoga.Types.Pointer_to_Connection_Data_Class;
 
+   procedure Keyboard_Test (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class
+   ) with Pre => Ada_Lib.GNOGA.Has_Connection_Data;
+
    procedure Mouse_Move_Handler (
       Object                     : in out Standard.Gnoga.Gui.Base.Base_Type'Class;
       Mouse_Event             :  in     Standard.Gnoga.Gui.Base.Mouse_Event_Record);
@@ -204,8 +208,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    ---------------------------------------------------------------
    procedure Keyboard_Test (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class
-   ) with Pre => Ada_Lib.GNOGA.Has_Connection_Data is
+      Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options     : Ada_Lib.Options.Unit_Test.
@@ -213,9 +217,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
-      Data                       : constant Event_Connection_Data_Access :=
-                                    Event_Connection_Data_Access (Local_Test.Connection_Data);
+--    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
+      Connection_Data            : constant Event_Connection_Data_Access :=
+                                    Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
       Key                        : constant Character := 'A';
       Down_Key_Event             : constant Standard.Gnoga.Gui.Base.Keyboard_Event_Record := (
                                     Message     => Standard.Gnoga.Gui.Base.Key_Down,
@@ -246,38 +250,40 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                                  );
 
    begin
-      Log_In (Debug, (if Data = Null then "null data" else "data address " & Image (Data'address) &
-         (if Data.Main_Window = Null then " null main window" else "have main window")));
-      Data.Main_Window.On_Character_Handler (Character_Event_Handler'access);
-      Data.Main_Window.On_Key_Down_Handler (Keyboard_Event_Handler'access);
-      Data.Main_Window.On_Key_Up_Handler (Keyboard_Event_Handler'access);
-      Data.Main_Window.On_Key_Press_Handler (Keyboard_Event_Handler'access);
+      Log_In (Debug, (if Connection_Data.Main_Window = Null then
+            " null main window"
+         else
+            "have main window"));
+      Connection_Data.Main_Window.On_Character_Handler (Character_Event_Handler'access);
+      Connection_Data.Main_Window.On_Key_Down_Handler (Keyboard_Event_Handler'access);
+      Connection_Data.Main_Window.On_Key_Up_Handler (Keyboard_Event_Handler'access);
+      Connection_Data.Main_Window.On_Key_Press_Handler (Keyboard_Event_Handler'access);
 
       if Options.Manual then
          Pause ("Press enter on keyboard and then click a mouse while button");
-         while not Data.Got_Click loop
+         while not Connection_Data.Got_Click loop
             delay 0.1;
          end loop;
       else
-         Local_Test.Connection_Data.Main_Window.Fire_On_Character (Key);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Key_Down (Down_Key_Event);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Key_Press (Press_Key_Event);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Key_Up (Up_Key_Event);
+         Connection_Data.Main_Window.Fire_On_Character (Key);
+         Connection_Data.Main_Window.Fire_On_Key_Down (Down_Key_Event);
+         Connection_Data.Main_Window.Fire_On_Key_Press (Press_Key_Event);
+         Connection_Data.Main_Window.Fire_On_Key_Up (Up_Key_Event);
       end if;
 
-      Assert (Data.Got_Key, "did not get Key");
+      Assert (Connection_Data.Got_Key, "did not get Key");
       if not Options.Manual then
-         Assert (Data.Down_Key = Down_Key_Event, "did not get expected Down_Key " &
+         Assert (Connection_Data.Down_Key = Down_Key_Event, "did not get expected Down_Key " &
             Ada.Characters.Handling.To_Character (Down_Key_Event.Key_Char) & " got '" &
-            Ada.Characters.Handling.To_Character (Data.Down_Key.Key_Char) & "'");
-         Assert (Data.Key = Key, "did not get expected Key " & Key &
-            " got '" & Data.Key & "'");
-         Assert (Data.Press_Key = Press_Key_Event, "did not get expected Press_Key " &
+            Ada.Characters.Handling.To_Character (Connection_Data.Down_Key.Key_Char) & "'");
+         Assert (Connection_Data.Key = Key, "did not get expected Key " & Key &
+            " got '" & Connection_Data.Key & "'");
+         Assert (Connection_Data.Press_Key = Press_Key_Event, "did not get expected Press_Key " &
             Ada.Characters.Handling.To_Character (Press_Key_Event.Key_Char) & " got '" &
-            Ada.Characters.Handling.To_Character (Data.Press_Key.Key_Char) & "'");
-         Assert (Data.Up_Key = Up_Key_Event, "did not get expected Up_Key " &
+            Ada.Characters.Handling.To_Character (Connection_Data.Press_Key.Key_Char) & "'");
+         Assert (Connection_Data.Up_Key = Up_Key_Event, "did not get expected Up_Key " &
             Ada.Characters.Handling.To_Character (Up_Key_Event.Key_Char) & " got '" &
-            Ada.Characters.Handling.To_Character (Data.Up_Key.Key_Char) & "'");
+            Ada.Characters.Handling.To_Character (Connection_Data.Up_Key.Key_Char) & "'");
       end if;
 
       Log_Out (Debug);
@@ -291,45 +297,49 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
    procedure Mouse_Click(
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
+      Connection_Data
+                  : constant Event_Connection_Data_Access :=
+                     Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
       Options     : Ada_Lib.Options.Unit_Test.
                      Ada_Lib_Unit_Test_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
+--    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Data                      : constant Event_Connection_Data_Access :=
-                                    Event_Connection_Data_Access (Local_Test.Connection_Data);
+                                    Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
    begin
-      Log_In (Debug, (if Local_Test.Connection_Data = Null then
+      Log_In (Debug, (if Connection_Data = Null then
             "data null"
          else
-            (if Local_Test.Connection_Data.Main_Window = Null then
+            (if Connection_Data.Main_Window = Null then
                   "main window null"
                else
                   "have main window")));
-      Local_Test.Connection_Data.Main_Window.On_Click_Handler (Click_Handler'access);
+      Connection_Data.Main_Window.On_Click_Handler (Click_Handler'access);
       if Options.Manual then
          Pause ("Press enter on keyboard and then click a mouse while button");
          while not Data.Got_Click loop
             delay 0.1;
          end loop;
       else
-         Local_Test.Connection_Data.Main_Window.Fire_On_Click;
+         Connection_Data.Main_Window.Fire_On_Click;
       end if;
 
       Assert (Data.Got_Click, "did not get click");
-      Event_Connection_Data_Access (Local_Test.Connection_Data).Got_Click := False; -- clear for next event
+      Connection_Data.Got_Click := False; -- clear for next event
 
-      Local_Test.Connection_Data.Main_Window.On_Mouse_Click_Handler (Click_Event_Handler'access);
+      Connection_Data.Main_Window.On_Mouse_Click_Handler (Click_Event_Handler'access);
       if Options.Manual then
          Pause ("Click the left mouse while holding the shift key");
          while not Data.Got_Click loop
             delay 0.1;
          end loop;
       else
-         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Click (Auto_Mouse_Event_1);
+         Connection_Data.Main_Window.Fire_On_Mouse_Click (Auto_Mouse_Event_1);
       end if;
       Log_Out (Debug);
    end Mouse_Click;
@@ -341,7 +351,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
 --    Data                      : Constant Event_Connection_Data_Access :=
---                                  Event_Connection_Data_Access (Local_Test.Connection_Data);
+--                                  Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
 --
 -- begin
 --    Log_In (Debug);
@@ -366,6 +376,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
    procedure Test_Mouse_Move (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options     : Ada_Lib.Options.Unit_Test.
@@ -373,32 +384,32 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
+--    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : Event_Connection_Data_Type renames
                                     Event_Connection_Data_Access (
-                                       Local_Test.Connection_Data).all;
-      Data                       : Constant Event_Connection_Data_Access :=
-                                    Event_Connection_Data_Access (Local_Test.
-                                       Connection_Data);
+                                       Ada_Lib.GNOGA.Get_Connection_Data).all;
+--    Data                       : Constant Event_Connection_Data_Access :=
+--                                  Event_Connection_Data_Access (Local_Test.
+--                                     Connection_Data);
 
    begin
       Log_In (Debug, "manual " & Options.Manual'img);
-      Local_Test.Connection_Data.Main_Window.On_Click_Handler (
+      Connection_Data.Main_Window.On_Click_Handler (
          Click_Handler'access);
-      Local_Test.Connection_Data.Main_Window.On_Mouse_Move_Handler (
+      Connection_Data.Main_Window.On_Mouse_Move_Handler (
          Mouse_Move_Handler'access);
       if Options.Manual then
          Pause ("Press enter on keyboard and then move the mouse over " &
             "the window and then click the mouse");
-         while not Data.Got_Click loop
+         while not Connection_Data.Got_Click loop
             delay 0.1;
          end loop;
       else
-         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (
+         Connection_Data.Main_Window.Fire_On_Mouse_Move (
             Auto_Mouse_Event_1);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Mouse_Move (
+         Connection_Data.Main_Window.Fire_On_Mouse_Move (
             Auto_Mouse_Event_2);
-         Local_Test.Connection_Data.Main_Window.Fire_On_Click;
+         Connection_Data.Main_Window.Fire_On_Click;
          Assert (Connection_Data.Delta_X = Auto_Mouse_Event_2.X and then
             Connection_Data.Delta_Y = Auto_Mouse_Event_2.Y,
             "wrong deleta x or y expected " & Auto_Mouse_Event_2.X'img & "," &
@@ -407,9 +418,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                Connection_Data.Delta_Y'img);
       end if;
 
-      Assert (Data.Got_Click, "did not get click");
-      Assert (Data.Mouse_Move_Count > 0, "zero mouse move count");
-      Put_Line ("mouse move count" & Data.Mouse_Move_Count'img);
+      Assert (Connection_Data.Got_Click, "did not get click");
+      Assert (Connection_Data.Mouse_Move_Count > 0, "zero mouse move count");
+      Put_Line ("mouse move count" & Connection_Data.Mouse_Move_Count'img);
    end Test_Mouse_Move;
 
    ---------------------------------------------------------------
@@ -487,8 +498,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    begin
       Log_In (Debug);
-      Test.Connection_Data := new Event_Connection_Data_Type;
-      Ada_Lib.GNOGA.Set_Connection_Data (Test.Connection_Data);
+      Ada_Lib.GNOGA.Set_Connection_Data (new Event_Connection_Data_Type);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
 -- main window not opened during set_up

@@ -130,7 +130,7 @@ package body Ada_Lib.Socket_IO.Client is
                Default_Read_Timeout    => 1.0,
                Default_Write_Timeout   => 1.0);
 --          Socket.Connected := True;
-            Socket.Open := True;
+            Socket.Set_Open;
 
             Log (Trace, Here, Who & " Status " & Status'img & " exit");
          end;
@@ -151,21 +151,26 @@ package body Ada_Lib.Socket_IO.Client is
          begin
             Trace_Message_Exception (Trace, Fault, Message);
 
+            Log_Exception (Trace, Fault);
             Ada.Exceptions.Raise_Exception (
                Ada.Exceptions.Exception_Identity (Fault), Message);
          end;
 
       when Fault: GNAT.SOCKETS.HOST_ERROR =>
-         Trace_Exception (Trace, Fault);
+         Log_Exception (Trace, Fault);
          Socket.Open := False;
+         Socket.GNAT_Socket_Open := False;
+         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
          raise Failed with "Could not open host " & Host_Name &
             Socket.Description.all;
 
       when Fault: others =>
-         Trace_Exception (Trace, Fault);
+         Log_Exception (Trace, Fault);
          Socket.Open := False;
+         Socket.GNAT_Socket_Open := False;
+         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
          Socket.Exception_Message.Construct (
             Ada.Exceptions.Exception_Message (Fault));
          Ada.Exceptions.Raise_Exception (
@@ -214,7 +219,7 @@ package body Ada_Lib.Socket_IO.Client is
          case Status is
 
             when GNAT.Sockets.Completed =>
-               Socket.Open := True;
+               Socket.Set_Open;
 
             when GNAT.Sockets.Expired =>
                raise Failed with "timeout connection to " & Address;
@@ -237,7 +242,7 @@ package body Ada_Lib.Socket_IO.Client is
       end;
 
       Log_Here (Trace);
-      Socket.Open := True;
+      Socket.Set_Open;
 
       Log_Out (Trace);
 
@@ -272,6 +277,7 @@ package body Ada_Lib.Socket_IO.Client is
                Expected_Read_Callback);
 
          when Not_Set =>
+            Log_Exception (Trace);
             raise Failed with "address not set raised at " & Here;
 
          when URL =>
@@ -283,7 +289,7 @@ package body Ada_Lib.Socket_IO.Client is
 
    exception
       when Fault: others =>
-            Trace_Exception (Trace, Fault);
+            Log_Exception (Trace, Fault);
             raise Failed with Ada.Exceptions.Exception_Message (Fault);
 
    end Connect;
@@ -307,8 +313,7 @@ package body Ada_Lib.Socket_IO.Client is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, Socket.Image & "open " & Socket.Open'img &
-         " address " & Image (Socket'address));
+      Log_In (Trace, Socket.Image & " address " & Image (Socket'address));
       Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Finalize;
       Log_Out (Trace);
    end Finalize;
@@ -443,7 +448,7 @@ package body Ada_Lib.Socket_IO.Client is
 -- end Write;
 
 begin
-Trace := True;
+--Trace := True;
    Log_Here (Trace);
 
 end Ada_Lib.Socket_IO.Client;

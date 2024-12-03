@@ -66,17 +66,18 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Keyboard_Press (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test              : Window_Event_Test_Type renames
-                                 Window_Event_Test_Type (Test);
+--    Local_Test              : Window_Event_Test_Type renames
+--                               Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Local_Test.Connection_Data).all;
+                                    Ada_Lib.GNOGA.Get_Connection_Data).all;
       Press_Event             : constant Standard.Gnoga.Gui.Base.
                                  Keyboard_Event_Record := (
                                     Message     => Standard.Gnoga.
@@ -202,16 +203,17 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Drag (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
+--    Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data   : Window_Connection_Data_Type renames
                            Window_Connection_Data_Access (
-                              Local_Test.Connection_Data).all;
+                              Ada_Lib.GNOGA.Get_Connection_Data).all;
    begin
       Log_In (Debug);
       Pause_On_Flag ("start of test");
@@ -384,16 +386,17 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Move (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
-      Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
+--    Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Local_Test.Connection_Data).all;
+                                    Ada_Lib.GNOGA.Get_Connection_Data).all;
       Move_Event              : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
                                  Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
                                  X             => 0,
@@ -581,32 +584,25 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Test                       : in out Window_Event_Test_Type) is
    ---------------------------------------------------------------
 
---    Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
---                                     Ada_Lib.Options.AUnit_Lib.
---                                        Aunit_Options_Constant_Class_Access (
---                                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+      Connection_Data            : constant Window_Connection_Data_Access :=
+                                    new Window_Connection_Data_Type;
    begin
       Log_In (Debug);
-      Ada_Lib.GNOGA.Set_Connection_Data (new Window_Connection_Data_Type);
+      Ada_Lib.GNOGA.Set_Connection_Data (
+         Ada_Lib.GNOGA.Connection_Data_Class_Access (Connection_Data));
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
-      declare
-         Connection_Data         : Window_Connection_Data_Type renames
-                                    Window_Connection_Data_Type (
-                                       Test.Connection_Data.all);
-      begin
-         Connection_Data.Top_View.Create (
-            Connection_Data.Main_Window.all, "Top_View_ID");
-         Connection_Data.Top_View.Border (
-            Width       => "3px",
-            Style       => Standard.Gnoga.Gui.Element.Solid,
-            Color       => Standard.Gnoga.Types.Colors.Black);
-         Connection_Data.Top_View.Position (Standard.Gnoga.Gui.Element.Absolute);
-         Connection_Data.Top_View.Top (20);
-         Connection_Data.Top_View.Height (Top_View_Height);
-         Connection_Data.Top_View.Left (20);
-         Connection_Data.Top_View.Width (Top_View_Width);
-      end;
+      Connection_Data.Top_View.Create (
+         Connection_Data.Main_Window.all, "Top_View_ID");
+      Connection_Data.Top_View.Border (
+         Width       => "3px",
+         Style       => Standard.Gnoga.Gui.Element.Solid,
+         Color       => Standard.Gnoga.Types.Colors.Black);
+      Connection_Data.Top_View.Position (Standard.Gnoga.Gui.Element.Absolute);
+      Connection_Data.Top_View.Top (20);
+      Connection_Data.Top_View.Height (Top_View_Height);
+      Connection_Data.Top_View.Left (20);
+      Connection_Data.Top_View.Width (Top_View_Width);
       Log_Out (Debug);
 
    exception

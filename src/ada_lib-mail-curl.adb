@@ -115,7 +115,7 @@ package body Ada_Lib.Mail.CURL is
          Ada.Text_IO.Close (Command_File);
 
          declare
-            Result               : constant Ada_Lib.OS.Exit_Code_Type :=
+            Result               : constant Ada_Lib.OS.OS_Exit_Code_Type :=
                                     Ada_Lib.OS.Run.Spawn (
                                        "/bin/bash", Parameter, Response_File_Name);
          begin

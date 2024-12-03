@@ -1,5 +1,8 @@
+with Ada.Characters.Latin_1;
 with Ada.Text_IO; use  Ada.Text_IO;
 with Ada_Lib.OS_Strings;
+with Ada_Lib.Strings;
+--with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 with GNAT.Sockets;
 with Interfaces.C;
@@ -13,6 +16,30 @@ package body Ada_Lib.OS is
    pragma Import (C, getpid);
 
 -- Shell_File_Name            : constant String := "/bin/sh";
+
+   -------------------------------------------------------------------
+   -- creates scrtach file and returns its name
+   function Create_Scratch_File
+   return String is
+   -------------------------------------------------------------------
+
+      File                       : File_Descriptor;
+      Name                       : Temporary_File_Name;
+      Zero_String                : constant String (1 .. 1) := (
+                                    1 => Ada.Characters.Latin_1.NUL);
+   begin
+      Create_Scratch_File (File, Name);
+      declare
+         Terminator              : constant Integer := Ada_Lib.Strings.Index (Name, Zero_String);
+
+      begin
+         if Terminator < Name'length - 1 then
+            raise Failed with "invalid scratch file name terminator" & Terminator'img;
+         end if;
+         Close_File (File);
+         return String (Name (Name'first .. Terminator - 1));
+      end;
+   end Create_Scratch_File;
 
    -------------------------------------------------------------------
    procedure Exception_Halt (
@@ -29,20 +56,20 @@ package body Ada_Lib.OS is
       & " From " & From & ". Exception: " &
       Ada.Exceptions.Exception_Name (Fault) &
       " message: " & Ada.Exceptions.Exception_Message (Fault));
-      Immediate_Halt (Ada_Lib.OS.No_Error);
+      Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    end Exception_Halt;
 
    -------------------------------------------------------------------
    procedure Immediate_Halt (
-      Exit_Code            : in   Exit_Code_Type) is
+      Exit_Code            : in   OS_Exit_Code_Type) is
    -------------------------------------------------------------------
 
    begin
       if Trace then
          Put_Line ("Exit_Code " & Exit_Code'img & " for " & Command_Name);
       end if;
-      GNAT.OS_Lib.OS_Exit (Integer (Exit_Code_Type'pos (Exit_Code)));
+      GNAT.OS_Lib.OS_Exit (Integer (OS_Exit_Code_Type'pos (Exit_Code)));
    end Immediate_Halt;
 
    -------------------------------------------------------------------

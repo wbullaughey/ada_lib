@@ -954,13 +954,13 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       when SYSTEM.ASSERTIONS.ASSERT_FAILURE =>
          Put_Line ("pragma assert failed");
          Log_Out (Debug);
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Assertion_Exit);
 
       when Fault: others =>
          Trace_Exception (Fault, Here);
          if Local_Test = Null then
             Put_Line ("exception in " & Who & " befor Local_Test initialized");
-            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Assertion_Exit);
          else
             Local_Test.Client_Failed := True;
          end if;
@@ -1308,7 +1308,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       when SYSTEM.ASSERTIONS.ASSERT_FAILURE =>
          Put_Line ("pragma assert failed");
          Log_Out (Debug);
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Assertion_Exit);
 
       when Fault: others =>
          Local_Test.Server_Failed := True;

@@ -78,13 +78,14 @@ package Ada_Lib.Socket_IO is
    ) return Boolean is abstract;
 
    type Socket_Type (
-      Description    : Ada_Lib.Strings.String_Constant_Access
-                        ) is abstract new Ada.Finalization.Limited_Controlled and
-                           Socket_Interface with record
-      GNAT_Socket    : aliased GNAT.Sockets.Socket_Type :=
-                        GNAT.Sockets.No_Socket;
-      Initialized    : Boolean := False;
-      Open           : Boolean := False;
+      Description       : Ada_Lib.Strings.String_Constant_Access
+                           ) is abstract new Ada.Finalization.Limited_Controlled and
+                              Socket_Interface with record
+      GNAT_Socket       : aliased GNAT.Sockets.Socket_Type :=
+                           GNAT.Sockets.No_Socket;
+      GNAT_Socket_Open  : Boolean := False;
+      Initialized       : Boolean := False;
+      Open              : Boolean := False;
    end record;
 
    type Socket_Access            is access Socket_Type;

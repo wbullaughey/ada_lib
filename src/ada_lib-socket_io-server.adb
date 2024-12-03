@@ -167,7 +167,7 @@ package body Ada_Lib.Socket_IO.Server is
       Step := Listen_Failed'access;
       Log_Here (Trace, "listen for socket");
       GNAT.Sockets.Listen_Socket (Socket.GNAT_Socket);
-      Socket.Open := True;
+      Socket.Set_Open;
       Log_Out (Trace, "socket " & Socket.Image);
 
    exception

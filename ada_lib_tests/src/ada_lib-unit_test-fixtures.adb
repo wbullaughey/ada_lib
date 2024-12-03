@@ -133,7 +133,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
       New_Line;
       Flush;
 --    Pause ("Set_Up_Exception exit",  Here);
-      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Unit_Test_Set_Up_Exception);
    end Set_Up_Exception;
 
    ----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
          Put (" " & Message);
       end if;
       New_Line;
-      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Unit_Test_Tear_Down_Exception);
    end Tear_Down_Exception;
 
    ----------------------------------------------------------------------------
@@ -213,7 +213,7 @@ package body Ada_Lib.Unit_Test.Fixtures is
             Put (" " & Message);
          end if;
          New_Line;
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Unit_Test_Tear_Down_Exception);
       end if;
    end Tear_Down_Failure;
 

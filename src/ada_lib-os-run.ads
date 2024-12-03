@@ -35,7 +35,7 @@ package Ada_Lib.OS.Run is
       Parameters                 : in     String;
       Output_File                : in     String := "";
       Zero_Ok                    : in     Boolean := False
-   ) return Exit_Code_Type;
+   ) return OS_Exit_Code_Type;
 
    -- returns 1st line from output file. raises exception for failure
    function Spawn (
@@ -50,7 +50,7 @@ package Ada_Lib.OS.Run is
       Parameters                 : in     String;
       Output_File                : in     String := "";
       Zero_Ok                    : in     Boolean := False
-   ) return Exit_Code_Type;
+   ) return OS_Exit_Code_Type;
 
    generic
       type Context_Type is tagged private;   -- used to pass data to caller

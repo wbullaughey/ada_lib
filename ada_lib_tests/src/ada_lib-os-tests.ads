@@ -1,4 +1,4 @@
-with AUnit.Test_Cases;
+--with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 with Ada_Lib.Unit_Test.Tests;
 
@@ -15,15 +15,6 @@ package Ada_Lib.OS.Tests is
 
    overriding
    procedure Register_Tests (Test : in out Test_Type);
-
-   procedure Encode_Decode (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class);
-
-   procedure Kill_All (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class);
-
-   procedure Run_Remote (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
 

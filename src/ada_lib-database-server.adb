@@ -1534,7 +1534,7 @@ end Poll_Timeout;
                         if No_New_Count > 5 then
                            Put_Line ("repeated exceptions with no new requests No_New_Count" &
                               No_New_Count'img);
-                           Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+                           Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
                         end if;
                      end if;
 

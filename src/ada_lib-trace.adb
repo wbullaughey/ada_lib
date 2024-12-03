@@ -308,7 +308,7 @@ package body Ada_Lib.Trace is
                         Trace_Message_Exception (Fault,
                            Quote ("text", Text), Where & " " & Who);
                         Ada_Lib.OS.Immediate_Halt (
-                           Ada_Lib.OS.Application_Exception);
+                           Ada_Lib.OS.Exception_Exit);
 
                   end;
                end if;
@@ -328,7 +328,7 @@ package body Ada_Lib.Trace is
             when Fault: others =>
                Trace_Message_Exception (Fault, Quote ("text", Text),
                   Where & " " & Who);
-               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
          end;
       end if;
@@ -346,7 +346,7 @@ package body Ada_Lib.Trace is
             when Fault: others =>
                Trace_Message_Exception (Fault, Quote ("text", Text),
                   Where & " " & Who);
-               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+               Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
          end;
       end if;
@@ -358,7 +358,7 @@ package body Ada_Lib.Trace is
          Trace_Message_Exception (Fault, Quote ("text", Text) &
             " buffer length" & Task_Data.Buffer.Length'img,
             Where & " " & Who);
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Exception);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    end Format_Output;
 
@@ -605,7 +605,7 @@ package body Ada_Lib.Trace is
                         "caught at " & Where & LF,
          Where       => Where,
          Who         => Who);
-put_Line (here & " enable " & Enable'img & " '" & Where & "'");
+--put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    end Log_Exception;
 
    -------------------------------------------------------------------
@@ -683,7 +683,7 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
       if Recursed then
          Put_Line ("recursive call from " & Where & " by " & Who &
             Quote (" message", Message));
-         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+         Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Recursion_Exit);
       else
          Recursed := True;
       end if;
@@ -777,7 +777,7 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
          Text        => Why & " not implemented" & LF,
          Where       => Here,
          Who         => Who);
-      Ada_Lib.OS.Immediate_Halt(Ada_Lib.OS.Application_Exception);
+      Ada_Lib.OS.Immediate_Halt(Ada_Lib.OS.Not_Implemented_Exit);
    end Not_Implemented;
 
    --------------------------------------------------------------------
@@ -1348,7 +1348,7 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
             when Fault: others =>
                Output_File.Output  (Ada.Exceptions.Exception_Name (Fault) &
                   "Exception message:" & Ada.Exceptions.Exception_Message (Fault));
-               Ada_Lib.OS.Immediate_Halt(Ada_Lib.OS.Application_Exception);
+               Ada_Lib.OS.Immediate_Halt(Ada_Lib.OS.Exception_Exit);
          end Trace_Message_Exception;
 
          ------------------------------------------------------------
@@ -1430,7 +1430,8 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
                         null;
 
                      when Report_Exception =>
-                        Output_File.Output ("-----------------------------------------------");
+                        Output_File.Output (
+                           "-----------------------------------------------" & LF);
 
                      when others =>
                         return;
@@ -1460,8 +1461,8 @@ put_Line (here & " enable " & Enable'img & " '" & Where & "'");
    begin
 --Debug_Trace := True;
 --Elaborate := True;
-Trace_Set_Up := True;
-Trace_Tests := True;
+--Trace_Set_Up := True;
+--Trace_Tests := True;
    Include_Hundreds := True;
 -- Include_Program := True;
    Include_Task := True;

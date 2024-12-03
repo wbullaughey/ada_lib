@@ -119,12 +119,12 @@ package body Hex_IO is
       First_Skip           : Boolean := True;
 
    begin
-Put_Line ("size" & Size'img & " Values" & Values'img & " limit" & Line_Limit'img &
-   " data size" & Data_Type'size'img &
-   " buffer first" & Buffer'first'img &
-   " buffer last" & Buffer'last'img &
-   " buffer length" & Buffer'length'img &
-   Quote (" message", Message));
+--Put_Line ("size" & Size'img & " Values" & Values'img & " limit" & Line_Limit'img &
+-- " data size" & Data_Type'size'img &
+-- " buffer first" & Buffer'first'img &
+-- " buffer last" & Buffer'last'img &
+-- " buffer length" & Buffer'length'img &
+-- Quote (" message", Message));
 
       if Message'length > 0 then
          if Include_Task then

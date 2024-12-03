@@ -66,6 +66,7 @@ Main Create_Main_Window
 Main Main_Window_With_Exit_Button
 OS Encode_Decode
 OS Kill_All
+OS Run_Local
 OS Run_Remote
 Parser Basic_Operations
 Send_Mail Send_CURL_File_Mail

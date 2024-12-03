@@ -1,3 +1,4 @@
+--with Ada.Directories;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Directory;
 --with Ada_Lib.OS;
@@ -11,7 +12,22 @@ package body Ada_Lib.OS.Run is
    function Translate_Return_Code (
       Return_Code                : in     Integer;
       Zero_OK                    : in     Boolean
-   ) return Exit_Code_Type;
+   ) return OS_Exit_Code_Type;
+
+   ---------------------------------------------------------------------------
+   procedure Check_Program (
+      Program     : in     String) is
+   ---------------------------------------------------------------------------
+
+   begin
+      if not Ada_Lib.Directory.Exists (Program) then
+         raise Failed with Quote ("program", Program) & " does not exist";
+      end if;
+
+      if not Ada_Lib.Directory.Is_Executable(Program) then
+         raise Failed with Quote ("program", Program) & " is not executable";
+      end if;
+   end Check_Program;
 
    ---------------------------------------------------------------------------
    procedure Kill_All (
@@ -25,7 +41,7 @@ package body Ada_Lib.OS.Run is
       Log_In (Debug, "program '" & Program & "' name '" & Name & "'");
 
       declare
-         Result                  : constant Exit_Code_Type :=
+         Result                  : constant OS_Exit_Code_Type :=
                                     Spawn (Program, Parameters, "/tmp/list");
 
       begin
@@ -145,7 +161,7 @@ package body Ada_Lib.OS.Run is
       Parameters                 : in     String;
       Output_File                : in     String := "";
       Zero_Ok                    : in     Boolean := False
-   ) return Exit_Code_Type is
+   ) return OS_Exit_Code_Type is
    ---------------------------------------------------------------------------
 
       Arguments                  : constant GNAT.OS_Lib.Argument_List_Access :=
@@ -181,7 +197,7 @@ package body Ada_Lib.OS.Run is
          Return_Code'img);
       if Success then
          declare
-            Result               : constant Exit_Code_Type :=
+            Result               : constant OS_Exit_Code_Type :=
                                     Translate_Return_Code (
                                        Return_Code, Zero_Ok);
          begin
@@ -201,7 +217,7 @@ package body Ada_Lib.OS.Run is
       Parameters                 : in     String;
       Output_File                : in     String := "";
       Zero_Ok                    : in     Boolean := False
-   ) return Exit_Code_Type is
+   ) return OS_Exit_Code_Type is
    ---------------------------------------------------------------------------
 
       Arguments                  : constant GNAT.OS_Lib.Argument_List_Access :=
@@ -219,6 +235,8 @@ package body Ada_Lib.OS.Run is
          New_Line;
       end if;
 
+      Check_Program (Program);
+
       if Output_File = "" then
          GNAT.OS_Lib.Spawn (Program, Arguments.all, Success);
          Log_Here (Debug, "success " & Success'img);
@@ -233,11 +251,11 @@ package body Ada_Lib.OS.Run is
                " Return_Code" & Return_Code'img);
             if Success then
                declare
-                  Result               : constant Exit_Code_Type :=
+                  Result               : constant OS_Exit_Code_Type :=
                                           Translate_Return_Code (
                                              Return_Code, Zero_Ok);
                begin
-                  Log_Out (Debug, "result " & Result'img);
+                  Log_Out ( Debug, "result " & Result'img);
                   return Result;
                end;
             else
@@ -278,7 +296,7 @@ package body Ada_Lib.OS.Run is
          Output_File_Name        : String renames Temporary_File_Name (
                                     Temporary_File_Name'first ..
                                        Temporary_File_Name'last - 1);
-         Result                  : constant Exit_Code_Type :=
+         Result                  : constant OS_Exit_Code_Type :=
                                     Run.Spawn (
                                        Program, Parameters, Output_File_Name,
                                        Zero_OK);
@@ -337,7 +355,7 @@ package body Ada_Lib.OS.Run is
             Output_File_Name        : String renames Temporary_File_Name (
                                        Temporary_File_Name'first ..
                                           Temporary_File_Name'last - 1);
-            Result                  : constant Exit_Code_Type :=
+            Result                  : constant OS_Exit_Code_Type :=
                                        Run.Spawn (
                                           Program, Parameters, Output_File_Name,
                                           Zero_OK);
@@ -389,7 +407,7 @@ package body Ada_Lib.OS.Run is
             Output_File_Name        : String renames Temporary_File_Name (
                                        Temporary_File_Name'first ..
                                           Temporary_File_Name'last - 1);
-            Result                  : constant Exit_Code_Type :=
+            Result                  : constant OS_Exit_Code_Type :=
                                        Run.Spawn (
                                           Program, Parameters, Output_File_Name,
                                           Zero_OK);
@@ -422,16 +440,17 @@ package body Ada_Lib.OS.Run is
    function Translate_Return_Code (
       Return_Code                : in     Integer;
       Zero_OK                    : in     Boolean
-   ) return Exit_Code_Type is
+   ) return OS_Exit_Code_Type is
    ---------------------------------------------------------------------------
 
    begin
-      return (if Return_Code > Exit_Code_Type'pos (Unassigned) then
+      return (if Return_Code > OS_Exit_Code_Type'pos (Unassigned) then
          Unassigned
       elsif Return_Code = 0 and then Zero_Ok then
          No_Error
       else
-         Exit_Code_Type'val (Return_Code));
+         OS_Exit_Code_Type'val (Return_Code));
+
 
    end Translate_Return_Code;
 

@@ -9,8 +9,21 @@ with Ada_Lib.OS.Run.Path;
 --with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test;
+with AUnit.Test_Cases;
 
 package body Ada_Lib.OS.Tests is
+
+   procedure Encode_Decode (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Kill_All (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Run_Local(
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+
+   procedure Run_Remote (
+      Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
    Encode_Source                 : constant String := "abcdef";
 
@@ -91,7 +104,82 @@ package body Ada_Lib.OS.Tests is
          Routine        => Kill_All'access,
          Routine_Name   => AUnit.Format ("Kill_All")));
 
+      Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+         Routine        => Run_Local'access,
+         Routine_Name   => AUnit.Format ("Run_Local")));
+
    end Register_Tests;
+
+   -----------------------------------------   ---------------------------------------------------------------
+   procedure Run_Local(
+      Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+      pragma Unreferenced (Test);
+   ---------------------------------------------------------------
+
+      Lines                      : Natural := 0;
+      Local_Program              : constant String := "/bin/ls";
+      Parameters                 : constant String := "src";
+      Result                     : Boolean := False;
+      Return_Code                : OS_Exit_Code_Type;
+      Test_Pattern               : constant String :=
+                                    "test_ada_lib.adb";
+
+   begin
+      Log_In (Trace, Here, Who & " enter User '" & Ada_Lib.OS.Run.Path.User &
+         "' Log_File '" & Ada_Lib.OS.Run.Path.Log_File &
+            "' Parameters '" & Parameters & "'");
+      Return_Code := Ada_Lib.OS.Run.Spawn (
+         Program     => Local_Program,
+         Parameters  => Parameters,
+         Output_File => Ada_Lib.OS.Run.Path.Log_File);
+
+      Log (Trace, Here, Who & " Return_Code " & Return_Code'img);
+      if Return_Code /= No_Error then
+         Assert (False, "Could not run program " & Local_Program);
+      end if;
+
+      declare
+         File                    : Ada.Text_IO.File_Type;
+
+      begin
+         Log_Here (Trace, Quote ("open", Ada_Lib.OS.Run.Path.Log_File));
+         Ada.Text_IO.Open (File, Ada.Text_IO.In_File,
+            Ada_Lib.OS.Run.Path.Log_File);
+
+         while not Ada.Text_IO.End_Of_File (File) loop
+            declare
+               Line              : constant String := Ada.Text_IO.Get_Line (File);
+
+            begin
+               Log (Trace, Here, "line '" & Line & "'");
+               Lines := Lines + 1;
+
+               if Ada.Strings.Fixed.Index (Line, Test_Pattern) > 0 then
+                  Result := True;
+                  exit;
+               end if;
+            end;
+         end loop;
+
+         Ada.Text_IO.Close (File);
+      end;
+
+      Assert (Lines > 0, "empty Log file");
+      Assert (Result, "pattern '" & Test_Pattern & "' not found");
+      Log_Out (Trace, Here, Who & " exit");
+
+   exception
+
+      when Fault: AUNIT.ASSERTIONS.ASSERTION_ERROR =>
+         Trace_Message_Exception (Fault, Who, Here);
+         raise;
+
+      when Fault: others =>
+         Trace_Message_Exception (Fault, Who, Here);
+         Assert (False, "exception " & Ada.Exceptions.Exception_Name (Fault) &
+         " " & Ada.Exceptions.Exception_Message (Fault));
+
+   end Run_Local;
 
    ---------------------------------------------------------------
    procedure Run_Remote(
@@ -119,10 +207,10 @@ package body Ada_Lib.OS.Tests is
             Parameters                 : constant String := "ls " &
                                           Ada_Lib.OS.Run.Path.
                                              Remote_Home_Directory &
-                                          "/Project/git/alr/applications/ada_lib/ada_lib_tests/src";
+                                          "/Projects/applications/ada_lib/ada_lib_tests/src";
             Remote_Program             : constant String := "/usr/bin/ssh";
             Result                     : Boolean := False;
-            Return_Code                : Exit_Code_Type;
+            Return_Code                : OS_Exit_Code_Type;
             Test_Pattern               : constant String :=
                                           "test_ada_lib.adb";
 

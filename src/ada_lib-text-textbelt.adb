@@ -8,7 +8,7 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Text.Textbelt is
 
-   use type Ada_Lib.OS.Exit_Code_Type;
+   use type Ada_Lib.OS.OS_Exit_Code_Type;
 
    Key                           : constant String :=
                                     "f425d0d5b9762c8802dd02f523dad124e5fe2643ZjLZndTNtFJTyBpfgINYdoHlE";
@@ -94,7 +94,7 @@ package body Ada_Lib.Text.Textbelt is
       Ada_Lib.OS.Close_File (Response_File);
 
       declare
-         Result                  : constant Ada_Lib.OS.Exit_Code_Type :=
+         Result                  : constant Ada_Lib.OS.OS_Exit_Code_Type :=
                                     Ada_Lib.OS.Run.Spawn ("/usr/bin/CURL", Parameter,
                                        Response_File_Name);
          Success                 : Boolean := False;
