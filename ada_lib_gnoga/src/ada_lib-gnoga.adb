@@ -20,7 +20,7 @@ package body Ada_Lib.GNOGA is
 
    begin
       Log_Here (Debug, "Connection_Data from " & From & " " &
-         Tag_Name (Program_Connection_Data.all'tag) &
+         Tag_Name (Program_Connection_Data.all'tag) & " " &
          Image (Program_Connection_Data.all'address));
       return Program_Connection_Data;
    end Get_Connection_Data;

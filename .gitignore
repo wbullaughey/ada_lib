@@ -16,3 +16,6 @@ message
 /config/
 /*save/
 alire-toml-save
+compile.sh
+list
+

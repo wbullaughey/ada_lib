@@ -272,6 +272,12 @@ package body Ada_Lib.OS.Run is
          Log_Exception (Debug, "spawn filed");
          raise Failed with "GNAT.OS_Lib.Spawn running '" & Program & "";
       end if;
+
+   exception
+      when Fault: others =>
+         Log_Exception (Debug, Fault);
+         raise;
+
    end Spawn;
 
    ---------------------------------------------------------------------------

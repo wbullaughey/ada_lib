@@ -21,6 +21,7 @@ library project Ada_Lib is
 
    package Compiler is
       for Default_Switches ("Ada") use Default_Config.Ada_Compiler_Switches;
+      for Default_Switches ("c") use ("-M");
    end Compiler;
 
    package Binder is
