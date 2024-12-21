@@ -23,7 +23,7 @@ package body Ada_Lib.Configuration.Tests is
    New_Value                     : constant String := "new_configuration_value";
    Missing_Configuration_Path    : constant String := Root_Path &
                                                       "missing_configuration.cfg";
-   Prevous_Name                  : constant String := "previous_name";
+   Previous_Name                 : constant String := "previous_name";
    Update_New_Path               : constant String := Root_Path &
                                                       "test-update_new_path.cfg";
    Update_Name                   : constant String := "update_name";

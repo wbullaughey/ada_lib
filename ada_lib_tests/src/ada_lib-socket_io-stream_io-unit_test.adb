@@ -168,7 +168,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       elsif Options.Number_Random_Generators /=
             Required_Random_Number_Generators then
          raise Fault with "wrong number random number generators" &
-            Options.Number_Random_Generators'img;
+            Options.Number_Random_Generators'img &
+            " required" & Required_Random_Number_Generators'img;
       end if;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Answer := Success;
@@ -704,16 +705,17 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    ---------------------------------------------------------------
    procedure Set_Answer (
       Test                       : in out Socket_Test_Type;
-      Answer                     : in     Answer_Type) is
+      Answer                     : in     Answer_Type;
+      From                       : in     String := Ada_Lib.Trace.Here) is
    ---------------------------------------------------------------
 
    begin
       if Test.Answer = Success then
          Test.Answer := Answer;
-         Log_Here (Debug, "set answer " & Answer'img);
+         Log_Here (Debug, "set answer " & Answer'img & " from " & From);
       else
-         Log_Here (Debug, "anser alread set " & Test.Answer'img &
-            " new answer " & Answer'img);
+         Log_Here (Debug, "answer alread set " & Test.Answer'img &
+            " new answer " & Answer'img & " from " & From);
       end if;
    end Set_Answer;
 
@@ -793,10 +795,13 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Local_Test.Client_Failed := False;
 
       declare
-         Data_Left      : Index_Type := (if Local_Test.Read_Write_Mode = No_Data then
-                              0
-                           else
-                              Data_Buffer_Type'length);
+         Data_Left      : Index_Type := (case Local_Test.Read_Write_Mode is
+
+                           when No_Data | Read_Timeout => 0,
+
+                           when Polling_Read => Buffer_Length,
+
+                           when others => Data_Buffer_Type'length);
          Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
                            Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
@@ -812,6 +817,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       begin
          Log_Here (Debug,
             "client socket " & Client_Socket.Image &
+            " Read_Write_Mode " & Local_Test.Read_Write_Mode'img &
             " data left" & Data_Left'img &
             " delay time " & Delay_Time'img &
             " socket " & Image (Client_Socket'address) &
@@ -829,106 +835,115 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Record_Socket (Local_Test.all, Client_Socket.all);
          Log_Here (Debug, "connected");
 
-         if Local_Test.Read_Write_Mode /= No_Data then
+         if Data_Left > 0 then
             if Local_Test.Client_Delay_Write_Time > 0.0 then
                Log_Here (Debug, "start delay " &
                   Local_Test.Client_Delay_Write_Time'img);
                delay Local_Test.Client_Delay_Write_Time;
             end if;
 
-         while Data_Left > 0 and then not (
-               Local_Test.Server_Failed or else Local_Test.Server_Timedout) loop
-            Log_Here (Debug, " left" & Data_Left'img);
+            while Data_Left > 0 and then not (
+                  Local_Test.Server_Failed or else Local_Test.Server_Timedout) loop
+               Log_Here (Debug, " left" & Data_Left'img);
 
-            declare
-               Write_Length      : Index_Type;
-                                 -- make sure never zero
-            begin
-               case Local_Test.Read_Write_Mode is
+               declare
+                  Write_Length      : Index_Type;
+                                    -- make sure never zero
+               begin
+                  case Local_Test.Read_Write_Mode is
 
-               when Matching_Record_Length =>
-                  -- send buffer length
-                  declare
-                     Random_Length     : constant Index_Type := Index_Type (
-                                          Ada_Lib.Unit_Test.Test_Cases.
-                                             Random_Number_Generator.Random (
-                                                Local_Test.Random_Generators (
-                                                   Data_Generator_Index)));
-                     Mod_Length        : constant Index_Type :=
-                                          Random_Length mod (Buffer_Length / 2);
-                     Length_Request_Buffer
-                                    : Length_Or_Answer_Type :=
-                                     Length_Or_Answer_Type(Data_Left);
-                     Write_Buffer   : Buffer_Type (1 ..
-                                       Buffer_Bytes (Length_Request_Buffer'size));
-                     for Write_Buffer'address use Length_Request_Buffer'address;
+                  when Matching_Record_Length =>
+                     -- send buffer length
+                     declare
+                        Random_Length     : constant Index_Type := Index_Type (
+                                             Ada_Lib.Unit_Test.Test_Cases.
+                                                Random_Number_Generator.Random (
+                                                   Local_Test.Random_Generators (
+                                                      Data_Generator_Index)));
+                        Mod_Length        : constant Index_Type :=
+                                             Random_Length mod (Test_Buffer_Length / 2);
+                        Length_Request_Buffer
+                                       : Length_Or_Answer_Type :=
+                                        Length_Or_Answer_Type(Data_Left);
+                        Write_Buffer   : Buffer_Type (1 ..
+                                          Buffer_Bytes (Length_Request_Buffer'size));
+                        for Write_Buffer'address use Length_Request_Buffer'address;
 
-                  begin
-                     Write_Length:= Mod_Length + 1;
-                     if Write_Length > Data_Left then
-                        Write_Length := Data_Left;
+                     begin
+                        Write_Length:= Mod_Length + 1;
+                        if Write_Length > Data_Left then
+                           Write_Length := Data_Left;
+                        end if;
+                        Length_Request_Buffer := Length_Or_Answer_Type (Write_Length);
+
+                        Log_Here (Debug, "Length_Request_Buffer" &
+                              Length_Request_Buffer'img &
+                              " Random_Length" & Random_Length'img &
+                              " mod length" & Mod_Length'img &
+                              " write length" & Write_Length'img);
+
+                        Client_Socket.Write (Write_Buffer);     -- send request length
+                     end;
+
+                  when Polling_Read =>
+                     Write_Length:= Buffer_Length;
+                     Log_Here (Debug, "write length" & Write_Length'img &
+                        " to client socket " & Client_Socket.Image);
+
+--                when Read_Timeout =>
+--                   raise False with "should not happen " & Here;
+
+                  when Unmatched_Record_Length =>
+                     Write_Length:= Test_Buffer_Length;
+                     Log_Here (Debug, "write length" & Write_Length'img &
+                        " to client socket " & Client_Socket.Image);
+
+                  when others =>
+   log_here;
+                     raise Fault with "unexpected Local_Test.Read_Write_Mode " &
+                           Local_Test.Read_Write_Mode'img & " at " & Here;
+
+                  end case;
+
+                  -- write data
+                  Client_Socket.Write (Local_Test.Send_Data (
+                      Start_Offset .. Start_Offset + Write_Length - 1));
+                  Written := Written + Write_Length;
+
+                  if Local_Test.Read_Write_Mode = Matching_Record_Length then
+                     if not Check_Answer (Client_Socket, Write_Length,
+                           Start_Offset, Start_Offset + Write_Length - 1) then
+                        exit;
                      end if;
-                     Length_Request_Buffer := Length_Or_Answer_Type (Write_Length);
 
-                     Log_Here (Debug, "Length_Request_Buffer" &
-                           Length_Request_Buffer'img &
-                           " Random_Length" & Random_Length'img &
-                           " mod length" & Mod_Length'img &
-                           " write length" & Write_Length'img);
-
-                     Client_Socket.Write (Write_Buffer);     -- send request length
-                  end;
-
-                  when Polling_Read | Read_Timeout | Unmatched_Record_Length =>
-                  Write_Length:= Buffer_Length;
-                  Log_Here (Debug, "write length" & Write_Length'img &
-                     " to client socket " & Client_Socket.Image);
-
-               when others =>
-                  raise Fault with "unexpected Local_Test.Read_Write_Mode " &
-                        Local_Test.Read_Write_Mode'img & " at " & Here;
-
-               end case;
-
-               -- write data
-               Client_Socket.Write (Local_Test.Send_Data (
-                   Start_Offset .. Start_Offset + Write_Length - 1));
-               Written := Written + Write_Length;
-
-               if Local_Test.Read_Write_Mode = Matching_Record_Length then
-                  if not Check_Answer (Client_Socket, Write_Length,
-                        Start_Offset, Start_Offset + Write_Length - 1) then
-                     exit;
+                     if Ada_Lib.Options.Actual.
+                           Program_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
+                                 Count mod Notify_Frequency = 0 then
+                        Put_Line (Count'img & " records received");
+                     end if;
                   end if;
 
-                  if Ada_Lib.Options.Actual.
-                        Program_Options_Constant_Class_Access (
-                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
-                              Count mod Notify_Frequency = 0 then
-                     Put_Line (Count'img & " records received");
+                  Start_Offset := Start_Offset + Write_Length;
+                  Data_Left := Data_Left - Write_Length;
+
+                  Count := Count + 1;
+                  if Count mod 10 = 0 and then Options.Verbose then
+                     Put_LIne (Count'img & " records written");
                   end if;
+
+                  Log_Here (Debug, "left" & Data_Left'img &
+                     " start " & Start_Offset'img & " length" & Write_Length'img &
+                     " written" & Written'img);
+               end;
+            end loop;
+
+            if Local_Test.Read_Write_Mode = Unmatched_Record_Length then
+               if not Check_Answer (Client_Socket, Test_Buffer_Length,
+                     Local_Test.Send_Data'first, Local_Test.Send_Data'last) then
+                  Log_Here (Debug);
                end if;
-
-               Start_Offset := Start_Offset + Write_Length;
-               Data_Left := Data_Left - Write_Length;
-
-               Count := Count + 1;
-               if Count mod 10 = 0 and then Options.Verbose then
-                  Put_LIne (Count'img & " records written");
-               end if;
-
-               Log_Here (Debug, "left" & Data_Left'img &
-                  " start " & Start_Offset'img & " length" & Write_Length'img &
-                  " written" & Written'img);
-            end;
-         end loop;
-
-         if Local_Test.Read_Write_Mode = Unmatched_Record_Length then
-            if not Check_Answer (Client_Socket, Buffer_Length,
-                  Local_Test.Send_Data'first, Local_Test.Send_Data'last) then
-               Log_Here (Debug);
             end if;
-         end if;
          end if;
 
          Log_Here (Debug);

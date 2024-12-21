@@ -38,9 +38,12 @@ package body Ada_Lib.Socket_IO is
          Log_Out (Trace);
          return;
       end if;
-      GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
+
+      if Socket.GNAT_Socket_Open then
+         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
+         Socket.GNAT_Socket_Open := False;
+      end if;
       Socket.Open := False;
-      Socket.GNAT_Socket_Open := False;
       Log_Out (Trace);
    end Close;
 
@@ -160,7 +163,7 @@ package body Ada_Lib.Socket_IO is
          else
             GNAT.Sockets.Image (Socket.GNAT_Socket)) &
          Quote (" description", Socket.Description) &
-         " open " & Socket.Open'img & ":" & Socket.GNAT_Socket_Open'img &
+         " socket open " & Socket.Open'img & " GNAT socket " & Socket.GNAT_Socket_Open'img &
          " address " & Image (Socket'address);
    end Image;
 

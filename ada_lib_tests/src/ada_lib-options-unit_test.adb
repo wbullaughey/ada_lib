@@ -109,8 +109,26 @@ package body Ada_Lib.Options.Unit_Test is
      Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
    ----------------------------------------------------------------------------
 
+      -------------------------------------------------------------------------
+      procedure List_Seeds is
+      -------------------------------------------------------------------------
+
+      begin
+         for Index in 1 .. Options.Number_Random_Generators loop
+            Log_Here (Debug or Trace_Options,
+               "seed" & Index'img & ":" & Options.Random_Seeds (Index)'img);
+            if Options.Report_Random then
+               Put_Line ("random seed" & Index'img & " =" &
+                  Options.Random_Seeds (Index)'img);
+            end if;
+         end loop;
+
+      end List_Seeds;
+      -------------------------------------------------------------------------
+
    begin
-      Log_In (Debug or Trace_Options, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      Log_In (Debug or Trace_Options,
+         "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
       case Options.Random_Seed_Mode is
 
          when Ada_Lib.Options.Unit_Test.Default_Seed =>
@@ -124,7 +142,7 @@ package body Ada_Lib.Options.Unit_Test is
                Ada_Lib.Options.Unit_Test.Default_Seed;
 
          when Ada_Lib.Options.Unit_Test.Specified_Seed =>
-            null; -- should already be set
+            List_Seeds; -- should already be set
 
          when Ada_Lib.Options.Unit_Test.Random_Seed =>
             declare
@@ -143,13 +161,9 @@ package body Ada_Lib.Options.Unit_Test is
 
                for Index in 1 .. Options.Number_Random_Generators loop
                   Options.Random_Seeds (Index) := Seed;
-                  Log_Here (Debug or Trace_Options, "seed" & Index'img & ":" & Seed'img);
-                  if Options.Report_Random then
-                     Put_Line ("random seed" & Index'img & " =" & Seed'img);
-                  end if;
-
                   Seed := Seed / 2;
                end loop;
+               List_Seeds;
             end;
       end case;
 
@@ -313,6 +327,10 @@ package body Ada_Lib.Options.Unit_Test is
                         Iterator.Get_Integer;
                      Log_Here (Trace_Options, "random seed " &
                         Options.Random_Seeds (Options.Random_Seed_Count)'img);
+                     if Options.Report_Random then
+                        Put_Line ("random seed" & Options.Random_Seed_Count'img & " =" &
+                           Options.Random_Seeds (Options.Random_Seed_Count)'img);
+                     end if;
 
                   when 'S' =>
                      Options.Report_Random := True;

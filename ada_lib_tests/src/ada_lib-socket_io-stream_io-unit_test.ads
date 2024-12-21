@@ -1,5 +1,6 @@
 --with Ada.Numerics.Discrete_Random;
 --with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Tests;
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
@@ -29,7 +30,8 @@ package Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
    procedure Set_Answer (
       Test                       : in out Socket_Test_Type;
-      Answer                     : in     Answer_Type);
+      Answer                     : in     Answer_Type;
+      From                       : in     String := Ada_Lib.Trace.Here);
 
    overriding
    procedure Set_Up (
@@ -47,10 +49,10 @@ package Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
 private
 
-   Buffer_Length                 : constant := 5000;
+   Test_Buffer_Length            : constant := 5000;
 
    subtype Data_Buffer_Type      is Ada_Lib.Socket_IO.Buffer_Type (1 ..
-                                    Buffer_Length);
+                                    Test_Buffer_Length);
    type Data_Access              is access all Buffer_Type;
 
    Default_Port                  : constant := 12345;

@@ -1,20 +1,53 @@
+test Socket_Stream  Socket_Send_Receive_Fixed_Record
+
 handles
    4 unit test client accepted
    5 server socket renamed to unit test server
    6 unit test client connect - gets closed
    7 unit test client accepted
 
-gets 2 random seeds should only set generator once
+client calls stream read 435 trace 4390 socket is open
+   enters read loop
+   buffer is empty trace 4402
+   calls buffer get
+exception caught at 571 raised in buffer get because buffer state is closed
 
-unmatched record
+output task was closed which closed the buffer
 
+exception caught at read 571
+exception caught at Client_Task_Type 960
+task exits ??
 
-client task
-enters loop
-writes 5000
-all written
-into check answer
-read answer times out
+server task waits for stream write to stop which happens
+waits for stream reader to stop which happens
+server terminates
 
-server
+finalizes handle 6
+finalizes server socket
+finalizes client socket
+stream input task exits
+
+client timeout
+server task exited unit test 1322 trace 6638
+read all data last record 82 unit test 1126 trace 6545
+sent last ack 10071 unit test 1060 trace 6523
+close write socket 46 trace 6553
+stream_writer stream_io 1444 before gnat socket send trace 6574
+exception bad file descritor caught at 1468 trace 6583
+wait for writer to stop 70 trace 6693
+
+client task exit unit test 967 trace 6718
+last top of loop 82 left to write unit test847 trace 6238
+before last write of 82 unit test 881 unit test 6421
+writes length of last record stream_io 749 trace 6246
+stream_io exit write 760 trace 6290
+stream_io write last buffer 749 trace 6293
+check_anser for last buffer 745 trace 6342
+stream_io read last buffer start .45 595 trace 6344
+stream_io 484 before get for last buffer 6354
+stream_io returned from get 503 trace 6646
+
+exception bad file descritor caught at 1471 trace 6631
+close socket 7 stream_IO 70 trace 6653
+close socket 7 socket_io 32 trace 6656
 

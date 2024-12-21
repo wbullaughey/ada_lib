@@ -43,17 +43,10 @@ package body Ada_Lib.Socket_IO.Stream_IO is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, Socket.Image & " Open " & Socket.Is_Open'img &
-         " addresses socket " & Image (Socket'address) &
+      Log_In (Trace, Socket.Image &
          " stream " & Image (Socket.Stream'address) &
          " output buffer empty " &
             Socket.Stream.Output_Buffer.Empty (False)'img);
-
-         if Socket.GNAT_Socket_Open then
-            Log_Here (Trace);
-            GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
-            Socket.GNAT_Socket_Open := False;
-         end if;
 
       if not Socket.Is_Open then
          Log_Out (Trace);
@@ -74,6 +67,12 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          delay 0.1;
       end loop;
 
+      if Socket.GNAT_Socket_Open then
+         Log_Here (Trace);
+         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
+         Socket.GNAT_Socket_Open := False;
+      end if;
+
       Socket_Type (Socket).Close;   -- to terminate receive
       Socket.Stream.Close;
 
@@ -84,7 +83,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          delay 0.1;
       end loop;
       Log_Here (Tracing);
-      Log_Out (Trace);
+      Log_Out (Trace, Socket.Image);
 
    exception
       when Fault: others =>
@@ -1391,7 +1390,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          end case;
 
          declare
-            Data     : Buffer_Type (1 .. 1024);
+            Data     : Stream_Buffer_Type;
             Event    : Event_Type;
             Last     : Index_Type;
 
@@ -1444,15 +1443,21 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
 pragma Assert (Stream_Pointer /= Null, "stream pointer null");
 pragma Assert (Stream_Pointer.socket /= Null, "socket null");
+pragma Assert (Stream_Pointer.socket.Is_Open, "socket not open");
 pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
    "no socket");
+                           Log_Here (Trace, Stream_Pointer.Socket.Image);
+                           if not Stream_Pointer.Socket.GNAT_Socket_Open then
+                              raise IO_Failed with "GNAT Socket closed " & Stream_Pointer.Socket.Image;
+                           end if;
+
                            GNAT.Sockets.Send_Socket (
                               Stream_Pointer.Socket.GNAT_Socket,
                               Data (Start_Send .. Last), Send_Last);
 
                            Log_Here (Trace, "Start_Send" & Start_Send'img &
                               " Send_Last " & Send_Last'img &
-                              " last " & Last'img & " on socket" &
+                              " last " & Last'img & " on socket " &
                                  Stream_Pointer.Socket.Image);
 
                            if Send_Last = Last then
@@ -1464,7 +1469,7 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
                         exception
                            when Fault: GNAT.Sockets.Socket_Error =>
                               Trace_Message_Exception (Trace, Fault,
-                                 "stream " & Image (Stream_Pointer.all'address));
+                                 "stream " & Image (Stream_Pointer.all));
 
                               if GNAT.Sockets.Resolve_Exception (Fault) /=
                                     GNAT.Sockets.Resource_Temporarily_Unavailable then
