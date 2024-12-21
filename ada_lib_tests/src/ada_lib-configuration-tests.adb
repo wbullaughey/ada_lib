@@ -250,13 +250,13 @@ package body Ada_Lib.Configuration.Tests is
          Next_Value              : constant Integer := Update_Value + 1;
 
       begin
-         Local_Test.Configuration.Set (Prevous_Name, Update_Value, True);
+         Local_Test.Configuration.Set (Previous_Name, Update_Value, True);
          Local_Test.Configuration.Set (Update_Name, Next_Value, True);
          Local_Test.Configuration.Close;
          Local_Test.Configuration.Load (Update_Same_Path, False);
          declare
             Previous_Value          : constant Integer := Local_Test.Configuration.
-                                       Get_Integer (Prevous_Name);
+                                       Get_Integer (Previous_Name);
             Update_Value            : constant Integer := Local_Test.Configuration.
                                        Get_Integer (Update_Name);
             Expected_Value          : constant Integer := Previous_Value + 1;
