@@ -91,6 +91,11 @@ package Ada_Lib.Socket_IO is
    type Socket_Access            is access Socket_Type;
    type Socket_Class_Access      is access all Socket_Type'class;
 
+   procedure Bind (
+      Socket               : in out Socket_Type;
+      Port                 : in     Port_Type;
+      Reuse                : in     Boolean := False);
+
    overriding
    procedure Close (
       Socket                     : in out Socket_Type);
@@ -129,7 +134,7 @@ package Ada_Lib.Socket_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;
@@ -139,7 +144,7 @@ package Ada_Lib.Socket_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;
@@ -149,7 +154,7 @@ package Ada_Lib.Socket_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
    ) is abstract;

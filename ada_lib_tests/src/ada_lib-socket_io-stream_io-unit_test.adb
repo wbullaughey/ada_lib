@@ -453,7 +453,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                   Repetition'img & " port" & Port'img);
 
                begin
-                  Client_Socket.Connect (Server_Name, Port);
+                  Client_Socket.Connect (Server_Name, Port, Reuse => True);
 
                exception
                   when Fault: others =>
@@ -830,7 +830,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Client_Socket.Connect (
             Connection_Timeout=> 1.0,
             Port              => Local_Test.Server_Port,
-            Server_Name       => Server_Name);
+            Server_Name       => Server_Name,
+            Reuse             => True);
 
          Record_Socket (Local_Test.all, Client_Socket.all);
          Log_Here (Debug, "connected");

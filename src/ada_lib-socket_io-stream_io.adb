@@ -145,7 +145,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    pragma Unreferenced (Socket, Server_Name, Port, Connection_Timeout, Expected_Read_Callback);
@@ -162,7 +162,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -178,7 +178,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------

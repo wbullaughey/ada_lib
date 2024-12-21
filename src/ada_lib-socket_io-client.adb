@@ -68,34 +68,21 @@ package body Ada_Lib.Socket_IO.Client is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
 
       Host_Name                  : constant String := Server_Name & ":" &
                                        Ada_Lib.Strings.Trim (Port'img);
---    Retry_Timeout              : constant := 3.0;
    begin
---    if    Socket.Description /= Null and then
---          Socket.Description.all /= Description then
---       Log_Here (Trace,
---          Quote ("current socket description", Socket.Description) &
---          Quote (" connect description", Description));
---    end if;
---
---    if Description'length > 0 then
---       Socket.Set_Description (Description);
---    end if;
-
       Log_In (Trace, "preconnect socket " & Socket.Image &
          " open " & Socket.Open'img &
          Quote (" Server_Name", Server_Name) &
          " port" & Port'img &
          " timeout " & Connection_Timeout'img &
-         Quote ( " Host_Name", Host_Name));
---       " socket address " & Image (Socket'address) &
---       " connect socket " & GNAT.Sockets.Image (Socket.GNAT_Socket));
+         Quote ( " Host_Name", Host_Name) &
+         " reuse " & Reuse'img);
 
       declare
          Host_Entry                 : constant GNAT.Sockets.Host_Entry_Type :=
@@ -109,11 +96,6 @@ package body Ada_Lib.Socket_IO.Client is
                                           Family   => GNAT.Sockets.Family_Inet,
                                           Addr     => Host_Address,
                                           Port     => Port);
---          GNAT_Socket                : GNAT.Sockets.Socket_Type renames
---                                        Socket.GNAT_Socket;
---          Retry_Count                : Natural := 0;
---          Timeout_Time               : constant Ada_Lib.Time.Time_Type :=
---                                        Ada_Lib.Time.Now + Retry_Timeout;
             Status                     : GNAT.Sockets.Selector_Status;
 
          begin
@@ -121,6 +103,7 @@ package body Ada_Lib.Socket_IO.Client is
                GNAT.Sockets.Image (Socket.GNAT_Socket));
             GNAT.Sockets.Connect_Socket (Socket.GNAT_Socket, Host_Socket_Address,
                 Connection_Timeout, Null, Status);
+
             Log_Here (Trace, "connected socket " & Socket.Image &
                " connected status  " & Status'img);
             if Status /= GNAT.Sockets.Completed then
@@ -140,6 +123,18 @@ package body Ada_Lib.Socket_IO.Client is
          Log_Here (Trace);
          Expected_Read_Callback (Socket'unchecked_access);
       end if;
+
+            if Reuse then
+               declare
+                  Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
+
+               begin
+                  Socket_Option.Enabled := TRue;
+                  GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
+                     Level       => GNAT.Sockets.Socket_Level,
+                     Option      => Socket_Option);
+               end;
+            end if;
 
       Log_Out (Trace, "open " & Socket.Open'img);
 
@@ -187,7 +182,7 @@ package body Ada_Lib.Socket_IO.Client is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -212,6 +207,20 @@ package body Ada_Lib.Socket_IO.Client is
 
       begin
          Log_Here (Trace);
+
+         if Reuse then
+            declare
+               Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
+
+            begin
+               Socket_Option.Enabled := TRue;
+               Log_Here (Trace, "set reuse");
+               GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
+                  Level       => GNAT.Sockets.Socket_Level,
+                  Option      => Socket_Option);
+            end;
+         end if;
+
          GNAT.Sockets.Connect_Socket (Socket.GNAT_Socket, Host_Socket_Address,
              Connection_Timeout, Null, Status);
          Log_Here (Trace, "Status " & Status'img);
@@ -260,7 +269,7 @@ package body Ada_Lib.Socket_IO.Client is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
---    Description                : in     String := "";
+      Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
@@ -274,7 +283,7 @@ package body Ada_Lib.Socket_IO.Client is
 
          when IP =>
             Socket.Connect (Address.IP_Address, Port, Connection_Timeout,
-               Expected_Read_Callback);
+               Reuse, Expected_Read_Callback);
 
          when Not_Set =>
             Log_Exception (Trace);
@@ -282,7 +291,7 @@ package body Ada_Lib.Socket_IO.Client is
 
          when URL =>
             Socket.Connect (Address.URL_Address.Coerce, Port, Connection_Timeout,
-               Expected_Read_Callback);
+               Reuse, Expected_Read_Callback);
 
       end case;
       Log_Out (Trace);

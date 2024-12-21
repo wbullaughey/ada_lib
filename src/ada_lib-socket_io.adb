@@ -13,6 +13,39 @@ package body Ada_Lib.Socket_IO is
    use type GNAT.Sockets.Socket_Type;
 
    ---------------------------------------------------------------------------
+   procedure Bind (
+      Socket               : in out Socket_Type;
+      Port                 : in     Port_Type;
+      Reuse                : in     Boolean := False) is
+   ---------------------------------------------------------------------------
+
+      Server_Address             : constant GNAT.Sockets.Sock_Addr_Type := (
+                                    Family   => GNAT.Sockets.Family_Inet,
+                                    Addr     => GNAT.Sockets.Any_Inet_Addr,
+                                    Port     => Port);
+
+   begin
+      Log_In (Trace, "socket " & Socket.Image &
+         " port" & Port'img & " reuse " & Reuse'img);
+      if Reuse then
+         declare
+            Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
+
+         begin
+            Socket_Option.Enabled := TRue;
+            Log_Here (Trace, "set reuse");
+            GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
+               Level       => GNAT.Sockets.Socket_Level,
+               Option      => Socket_Option);
+         end;
+      end if;
+
+      GNAT.Sockets.Bind_Socket (Socket.GNAT_Socket, Server_Address);
+
+      Log_Out (Trace);
+   end Bind;
+
+   ---------------------------------------------------------------------------
    function Buffer_Bytes (
       Bits                       : in     Natural
    ) return Index_Type is

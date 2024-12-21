@@ -106,7 +106,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
          Socket                  : Client_Socket_Type (Description'unchecked_access);
 
       begin
-         Socket.Connect (URL_Address, URL_Port);
+         Socket.Connect (URL_Address, URL_Port, Reuse => True);
          Assert (Socket.Is_Open, "could not connect to " & URL_Address &
             " port" & URL_Port'img);
       exception
@@ -121,7 +121,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
          Socket                  : Client_Socket_Type (Description'unchecked_access);
 
       begin
-         Socket.Connect (IP_Address, IP_Address_Port);
+         Socket.Connect (IP_Address, IP_Address_Port, Reuse => True);
          Assert (Socket.Is_Open, "could not connect to " &
             Ada_Lib.Socket_IO.Image (IP_Address) &
             " port" & IP_Address_Port'img);

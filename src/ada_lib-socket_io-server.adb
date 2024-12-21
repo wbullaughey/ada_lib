@@ -145,11 +145,6 @@ package body Ada_Lib.Socket_IO.Server is
       Bind_Failed                : aliased constant String := "Bind Failed";
       Initialize_Failed          : aliased constant String := "Initialize Failed";
       Listen_Failed              : aliased constant String := "Listen Failed";
-      Server_Address             : constant GNAT.Sockets.Sock_Addr_Type := (
-                                    Family   => GNAT.Sockets.Family_Inet,
-                                    Addr     => GNAT.Sockets.Any_Inet_Addr,
-                                    Port     => Socket.Port);
-      Socket_Option              : GNAT.Sockets.Option_Type (Reuse_Address);
       Step                       : access constant String := Null;
 
    begin
@@ -158,12 +153,8 @@ package body Ada_Lib.Socket_IO.Server is
       Step := Initialize_Failed'access;
       Socket_Type (Socket).Initialize;
       Log_Here (Trace);
-      Socket_Option.Enabled := TRue;
-      GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
-         Level       => GNAT.Sockets.Socket_Level,
-         Option      => Socket_Option);
       Step := Bind_Failed'access;
-      GNAT.Sockets.Bind_Socket (Socket.GNAT_Socket, Server_Address);
+      Socket.Bind (Socket.Port, Reuse => True);
       Step := Listen_Failed'access;
       Log_Here (Trace, "listen for socket");
       GNAT.Sockets.Listen_Socket (Socket.GNAT_Socket);
