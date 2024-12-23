@@ -450,14 +450,15 @@ package body Ada_Lib.OS.Run is
    ---------------------------------------------------------------------------
 
    begin
-      return (if Return_Code > OS_Exit_Code_Type'pos (Unassigned) then
-         Unassigned
+      if Return_Code > OS_Exit_Code_Type'pos (Unassigned) or else
+            Return_Code < 0 then
+         Put_Line ("unexpected return code " & Return_Code'img);
+         return Unassigned;
       elsif Return_Code = 0 and then Zero_Ok then
-         No_Error
+         return No_Error;
       else
-         OS_Exit_Code_Type'val (Return_Code));
-
-
+         return OS_Exit_Code_Type'val (Return_Code);
+      end if;
    end Translate_Return_Code;
 
    ---------------------------------------------------------------------------

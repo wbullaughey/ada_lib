@@ -141,7 +141,7 @@ package body Ada_Lib.Trace is
          loop
             declare
                Response          : constant Character :=
-                                    Ask.Ask_Character (Prompt);
+                                    Ask.Ask_Character (Prompt & "[y/n]");
             begin
                case Response is
 
