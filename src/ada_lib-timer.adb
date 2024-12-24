@@ -49,11 +49,14 @@ package body Ada_Lib.Timer is
             else
                " have task") &
             " called from " & From);
-      if    Event.State = Waiting and then
-            Event.Timer_Task /= Null then
+      if    Event.State = Waiting then
+         if Event.Timer_Task = Null then
+            raise Failed with "state waiting but task null";
+         end if;
          Event.Timer_Task.Cancel;
          return Log_Out (True, Trace);
       else
+         Event.State := Canceled;
          return Log_Out (False, Trace);
       end if;
    end Cancel;
@@ -209,50 +212,60 @@ exception
    begin
       Log_In (Trace, "task started dynamic " & Event.Dynamic'img);
       Ada_Lib.Trace_Tasks.Start ("timer task", Here);
-
-
       Log_Here (Trace, "wait " & Event.Wait'img &
          Quote ( " description", Event.Description) &
          " repeating " & Event.Repeating'img &
          " state " & Event.State'img);
-      while Event.State = Waiting loop -- if null then canceled before set
-         Log_Here (Trace, Quote ("description", Event.Description) &
-            " start loop delay time " & Event.Wait'img &
-            " address " & Image (Event.all'address));
-         select
-            accept Cancel do
-               Log_Here (Trace, Quote ("description", Event.Description));
-               Event.State := Canceled;
-            end Cancel;
-         or
-            accept Finalizing do
-               Log_Here (Trace, Quote ("description", Event.Description));
-               Event.State := Finalized;
-            end Finalizing;
-         or
-            accept Get_State (
-               Return_State         :   out State_Type) do
 
-               Log_Here (Trace, Quote ("description", Event.Description));
-               Return_State := Event.State;
-            end Get_State;
-         or
-            delay Event.Wait;          -- delay until timeout
-            Log_Here (Trace, Quote ("description", Event.Description) &
-               " initialized " & Event.Initialized'img);
-            if not Event.Initialized then
-               raise Failed with Quote ("event", Event.Description) &
-                  " not initialized";
-            end if;
-            Event.Callback;
-            if not Event.Repeating then
-               Event.State := Completed;
-            end if;
-            Log_Here (Trace, Quote ("description", Event.Description) &
-               " repeating " & Event.Repeating'img);
-         end select;
-      end loop;
+      case Event.State is
 
+         when Canceled | Completed =>
+            Log_Here (Trace);
+
+         when Finalized | Uninitialized =>
+            raise Failed with "unexpected state " & Event.State'img &
+               " at " & Here;
+
+         when Waiting =>
+            while Event.State = Waiting loop -- if null then canceled before set
+               Log_Here (Trace, Quote ("description", Event.Description) &
+                  " start loop delay time " & Event.Wait'img &
+                  " address " & Image (Event.all'address));
+               select
+                  accept Cancel do
+                     Log_Here (Trace, Quote ("description", Event.Description));
+                     Event.State := Canceled;
+                  end Cancel;
+               or
+                  accept Finalizing do
+                     Log_Here (Trace, Quote ("description", Event.Description));
+                     Event.State := Finalized;
+                  end Finalizing;
+               or
+                  accept Get_State (
+                     Return_State         :   out State_Type) do
+
+                     Log_Here (Trace, Quote ("description", Event.Description));
+                     Return_State := Event.State;
+                  end Get_State;
+               or
+                  delay Event.Wait;          -- delay until timeout
+                  Log_Here (Trace, Quote ("description", Event.Description) &
+                     " initialized " & Event.Initialized'img);
+                  if not Event.Initialized then
+                     raise Failed with Quote ("event", Event.Description) &
+                        " not initialized";
+                  end if;
+                  Event.Callback;
+                  if not Event.Repeating then
+                     Event.State := Completed;
+                  end if;
+                  Log_Here (Trace, Quote ("description", Event.Description) &
+                     " repeating " & Event.Repeating'img);
+               end select;
+            end loop;
+
+      end case;
       Log_Here (Trace, "event state " & Event.State'img
          & Quote (" description", Event.Description) & " completed" &
          " dynamic " & Event.Dynamic'img);
