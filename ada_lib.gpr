@@ -9,7 +9,7 @@ library project Ada_Lib is
    for Library_Name use "Ada_Lib";
    for Library_Version use Project'Library_Name & ".so."; -- & Ada_Lib_Config.Crate_Version;
 
-   for Source_Dirs use ("src/", "src/macosx", "config/");
+   for Source_Dirs use ("src/", "src/macosx");
    for Object_Dir use "obj/"; -- & Ada_Lib_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib";

@@ -535,8 +535,13 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
                   when Timed_Out =>
                      if Throw_Exception then
-                        Log_Exception (Trace, "timeout");
-                        raise Timeout with "from " & here;
+                        declare
+                           Message  : constant String := "timeout after " &
+                                       Timeout_Length'img & " from " & Here;
+                        begin
+                           Log_Exception (Trace, Message);
+                           raise Timeout with Message;
+                        end;
                      else
                         Stream.Close;
                         Log_Here (Trace);

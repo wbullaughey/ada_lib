@@ -44,6 +44,11 @@ package Ada_Lib.Timer is
       From              : in     String := Here
    ) return Boolean;
 
+   -- cancel a scheduled event
+   procedure Cancel (
+      Event             : in out Event_Type;
+      From              : in     String := Here);
+
    function Get_Exception (
       Event             : in     Event_Type
    ) return Ada_Lib.Strings.String_Access;
@@ -88,19 +93,19 @@ package Ada_Lib.Timer is
 
 private
 
-   task type Timer_Task_Type (
-      Event                      : Event_Class_Access) is
+   task type Timer_Task_Type is
 
       entry Cancel;
 
-      entry Finalizing;
-
       entry Get_State (
-         Return_State            :   out State_Type);
+         Return_State            :    out State_Type);
+
+      entry Initialize(
+         Container               : in     Event_Class_Access);
 
    end Timer_Task_Type;
 
-   type Timer_Task_Access  is access Timer_Task_Type;
+-- type Timer_Task_Access  is access Timer_Task_Type;
 
    Uninitialized_Event_Description
                            : aliased String := "uninitialized event";
@@ -108,14 +113,14 @@ private
                                  with record
       Description          : Ada_Lib.Strings.String_Access_All :=
                               Uninitialized_Event_Description'unchecked_access;
-      Dynamic              : Boolean := False;
+--    Dynamic              : Boolean := False;
       Exception_Message    : Ada_Lib.Strings.String_Access := Null;
       Exception_Name       : Ada_Lib.Strings.String_Access := Null;
       Initialized          : Boolean := False;
       Repeating            : Boolean := False;
       State                : State_Type := Uninitialized;
       Time                 : Ada.Calendar.Time := Null_Time;
-      Timer_Task           : Timer_Task_Access := Null;
+      Timer_Task           : Timer_Task_Type;
       Wait                 : Duration := 0.25;  -- uninitialized timeout
    end record;
 

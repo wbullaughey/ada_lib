@@ -27,6 +27,7 @@
 -----------------------------------------------------------------------------
 
 with Ada.Text_IO; use Ada.Text_IO;
+--with Ada.Text_IO.Integer_IO;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada.Unchecked_Conversion;
@@ -675,4 +676,36 @@ package body Hex_IO is
       return Result.Coerce;
    end Modular_Hex_Address;
 
+   -------------------------------------------------------------------
+   package body Modular_Package is
+   -------------------------------------------------------------------
+
+      package Hex_IO is new Ada.Text_IO.Integer_IO (Integer);
+
+      -------------------------------------------------------------------
+      function Hex (
+         Source            : in   Source_Type
+--       Width             : in   Positive := Data_Type'size / 4
+      ) return Integer is
+      -------------------------------------------------------------------
+
+         Last              : Positive;
+         Result            : Integer := 0;
+         Text              : String (1 .. Source'length);
+         for Text'address use Source'address;
+
+      begin
+         Log_In (Debug, Quote ("source", Text));
+         if Debug then
+            Dump_8 (Source'address, Size => 8, Width => 32);
+         end if;
+         Hex_IO.Get (
+            From     => Text,
+            Item     => Result,
+            Last     => Last);
+         Log_Out (Debug, "value " & Result'img);
+         return Result;
+      end Hex;
+
+   end Modular_Package;
 end Hex_IO;

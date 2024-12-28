@@ -25,10 +25,8 @@ package body Ada_Lib.Timer is
    ) return Boolean is
    ---------------------------------------------------------------------------
 
-      Running                    : constant Boolean := (if Event.Timer_Task = Null then
-                                       False
-                                    else
-                                       not Event.Timer_Task.all'terminated);
+      Running                    : constant Boolean := not Event.Timer_Task'terminated;
+
    begin
       Log_Here (Trace, "active " & Running'img);
       return Running;
@@ -43,23 +41,58 @@ package body Ada_Lib.Timer is
 
    begin
       Log_In (Trace, Quote ("description", Event.Description) &
-            " state " & Event.State'img & (
-            if Event.Timer_Task = Null then
-               " null task"
-            else
-               " have task") &
-            " called from " & From);
-      if    Event.State = Waiting then
-         if Event.Timer_Task = Null then
-            raise Failed with "state waiting but task null";
-         end if;
-         Event.Timer_Task.Cancel;
-         return Log_Out (True, Trace);
-      else
-         Event.State := Canceled;
-         return Log_Out (False, Trace);
-      end if;
+            " state " & Event.State'img);
+
+      case Event.State is
+
+         when Waiting | Uninitialized =>
+            Event.Timer_Task.Cancel;
+            return Log_Out (True, Trace);
+
+         when others =>
+            Event.State := Canceled;
+            return Log_Out (False, Trace);
+      end case;
    end Cancel;
+
+   ---------------------------------------------------------------------------
+   procedure Cancel (
+      Event                      : in out Event_Type;
+      From                       : in     String := Here) is
+   ---------------------------------------------------------------------------
+
+   begin
+      Log_In (Trace, Quote ("description", Event.Description) &
+            " state " & Event.State'img);
+
+      case Event.State is
+
+         when Waiting | Uninitialized =>
+            Event.Timer_Task.Cancel;
+            Log_Out (Trace);
+
+         when others =>
+            declare
+               Message  : constant String := "could not cancel event " &
+                           Quote ("description", Event.Description) &
+                           " state " & Event.State'img;
+            begin
+               Event.State := Canceled;
+               Log_Exception (Trace, Message);
+               raise Failed with Message;
+            end;
+      end case;
+   end Cancel;
+
+   ---------------------------------------------------------------------------
+   function Description (
+      Event             : in     Event_Type
+   ) return String is
+   ---------------------------------------------------------------------------
+
+   begin
+      return Event.Description.all;
+   end Description;
 
    ---------------------------------------------------------------------------
    overriding
@@ -69,20 +102,18 @@ package body Ada_Lib.Timer is
 
    begin
       Log_In (Trace, Quote ("description", Event.Description) &
+         " state " & Event.State'img &
          " address " & Image (Event'address));
-      if Event.Timer_Task /= Null then
-         Log_Here (Trace, "state " & Event.State'img);
 
-         case Event.State is
-            when Canceled | Completed | Finalized | Uninitialized =>
-               Null;
+      case Event.State is
+         when Canceled | Completed | Finalized | Uninitialized =>
+            Null;
 
-            when Waiting =>
-               Event.Timer_Task.Finalizing;
-               Event.Timer_Task := Null;
+         when Waiting =>
+            Event.Timer_Task.Cancel;
 
-         end case;
-      end if;
+      end case;
+
       if Event.Description /= Uninitialized_Event_Description'unchecked_access then
          Free (Event.Description);
       end if;
@@ -95,16 +126,6 @@ exception
       raise;
 
    end Finalize;
-
-   ---------------------------------------------------------------------------
-   function Description (
-      Event             : in     Event_Type
-   ) return String is
-   ---------------------------------------------------------------------------
-
-   begin
-      return Event.Description.all;
-   end Description;
 
    ---------------------------------------------------------------------------
    function Get_Exception (
@@ -142,13 +163,12 @@ exception
    begin
       Log_In (Trace, Quote ("description", Description) &
          " wait " & Wait'img);
-      Event.Dynamic := Dynamic;
       Event.Initialized := True;
       Event.Repeating := Repeating;
       Event.Set_Description (Description);
       Event.State := Waiting;
       Event.Wait := Wait;
-      Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
+      Event.Timer_Task.Initialize (Event'unchecked_access);
       Log_Out (Trace, "address " & Image (Event'address));
    end Initialize;
 
@@ -193,105 +213,101 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      if Event.Timer_Task = Null then
-         return Waiting;
-      else
-         declare
-            Result               : State_Type;
-
-         begin
-            Event.Timer_Task.Get_State (Result);
-            return Result;
-         end;
-      end if;
+      return Event.State;
    end State;
 
    ---------------------------------------------------------------------------
    task body Timer_Task_Type is
 
+      Event          : Event_Class_Access := Null;
    begin
-      Log_In (Trace, "task started dynamic " & Event.Dynamic'img);
+      Log_In (Trace, "task started ");
       Ada_Lib.Trace_Tasks.Start ("timer task", Here);
-      Log_Here (Trace, "wait " & Event.Wait'img &
-         Quote ( " description", Event.Description) &
-         " repeating " & Event.Repeating'img &
-         " state " & Event.State'img);
 
-      case Event.State is
+     select
+         accept Cancel do
+            Log_Here (Trace, (if Event = Null then
+               "uninitialized"
+            else
+               Quote ("description", Event.Description)));
+         end Cancel;
+      or
+         accept Initialize (
+            Container               : in     Event_Class_Access) do
 
-         when Canceled | Completed =>
-            Log_Here (Trace);
+            Event := Container;
+         end Initialize;
+      end select;
 
-         when Finalized | Uninitialized =>
-            raise Failed with "unexpected state " & Event.State'img &
-               " at " & Here;
+      if Event /= Null then
+         Log_Here (Trace, "wait " & Event.Wait'img &
+            Quote ( " description", Event.Description) &
+            " repeating " & Event.Repeating'img &
+            " state " & Event.State'img);
 
-         when Waiting =>
-            while Event.State = Waiting loop -- if null then canceled before set
-               Log_Here (Trace, Quote ("description", Event.Description) &
-                  " start loop delay time " & Event.Wait'img &
-                  " address " & Image (Event.all'address));
-               select
-                  accept Cancel do
-                     Log_Here (Trace, Quote ("description", Event.Description));
-                     Event.State := Canceled;
-                  end Cancel;
-               or
-                  accept Finalizing do
-                     Log_Here (Trace, Quote ("description", Event.Description));
-                     Event.State := Finalized;
-                  end Finalizing;
-               or
-                  accept Get_State (
-                     Return_State         :   out State_Type) do
+         case Event.State is
 
-                     Log_Here (Trace, Quote ("description", Event.Description));
-                     Return_State := Event.State;
-                  end Get_State;
-               or
-                  delay Event.Wait;          -- delay until timeout
+            when Canceled | Completed | Finalized =>
+               Log_Here (Trace, "state " & Event.State'img);
+
+            when Uninitialized =>
+               raise Failed with "unexpected state " & Event.State'img &
+                  " at " & Here;
+
+            when Waiting =>
+               while Event.State = Waiting loop -- if null then canceled before set
                   Log_Here (Trace, Quote ("description", Event.Description) &
-                     " initialized " & Event.Initialized'img);
-                  if not Event.Initialized then
-                     raise Failed with Quote ("event", Event.Description) &
-                        " not initialized";
-                  end if;
-                  Event.Callback;
-                  if not Event.Repeating then
-                     Event.State := Completed;
-                  end if;
-                  Log_Here (Trace, Quote ("description", Event.Description) &
-                     " repeating " & Event.Repeating'img);
-               end select;
-            end loop;
+                     " start loop delay time " & Event.Wait'img &
+                     " address " & Image (Event.all'address));
+                  select
+                     accept Cancel do
+                        Log_Here (Trace, Quote ("description", Event.Description));
+                        Event.State := Canceled;
+                     end Cancel;
+                  or
+                     accept Get_State (
+                        Return_State         :   out State_Type) do
 
-      end case;
-      Log_Here (Trace, "event state " & Event.State'img
-         & Quote (" description", Event.Description) & " completed" &
-         " dynamic " & Event.Dynamic'img);
+                        Log_Here (Trace, Quote ("description", Event.Description));
+                        Return_State := Event.State;
+                     end Get_State;
+                  or
+                     delay Event.Wait;          -- delay until timeout
+                     Log_Here (Trace, Quote ("description", Event.Description) &
+                        " initialized " & Event.Initialized'img);
+                     if not Event.Initialized then
+                        raise Failed with Quote ("event", Event.Description) &
+                           " not initialized";
+                     end if;
+                     Event.Callback;
+                     if not Event.Repeating then
+                        Event.State := Completed;
+                     end if;
+                     Log_Here (Trace, Quote ("description", Event.Description) &
+                        " repeating " & Event.Repeating'img);
+                  end select;
+               end loop;
 
-      if Event.Dynamic and then Event.State/= Finalized then
-         declare
-            Event_Pointer        : Event_Class_Access := Event;
-
-         begin
-            Free (Event_Pointer);
-         end;
-      else
-         Log_Here (Trace, "dynamic already finalized");
+         end case;
+         Log_Here (Trace, "event state " & Event.State'img
+            & Quote (" description", Event.Description) & " completed");
       end if;
 
-      Event.Timer_Task := Null;
       Ada_Lib.Trace_Tasks.Stop;
-      Log_Out (Trace, Quote (" description", Event.Description));
+      Log_Out (Trace, Quote (if Event = Null then
+               "uninitialized"
+            else
+               Quote ("description", Event.Description)));
 
    exception
       when Fault: others =>
          Log_Exception (Trace, Fault);
-         Event.Exception_Name := new String'(
-            Ada.Exceptions.Exception_Name (Fault));
-         Event.Exception_Message := new String'(
-            Ada.Exceptions.Exception_Message (Fault));
+         if Event /= Null then
+            Event.Exception_Name := new String'(
+               Ada.Exceptions.Exception_Name (Fault));
+            Event.Exception_Message := new String'(
+               Ada.Exceptions.Exception_Message (Fault));
+         end if;
          Log_Out (Trace);
 
    end Timer_Task_Type;
