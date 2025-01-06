@@ -18,4 +18,5 @@ message
 alire-toml-save
 compile.sh
 list
-
+ada_lib_tests/alire-save
+ada_lib_tests/alire.toml-save
