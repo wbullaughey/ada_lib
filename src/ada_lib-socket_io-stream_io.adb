@@ -430,8 +430,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    begin
       Ada_Lib.Trace.Log_In (Trace,
-         Index_Type'image (Buffer'first) & " .." &
-         Index_Type'image (Buffer'last) &
+         Buffer'first'img & " .." &
+         Buffer'last'img &
          " socket " & Stream.Image &
 --       " input buffer " & Image (Stream.Input_Buffer'address) &
          " state " & Stream.Input_Buffer.Get_State'img &
@@ -479,8 +479,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
             begin
                Log_Here (Trace, "Buffer_Empty " & Buffer_Empty'img &
-                  " Timeout_Length " & Timeout_Length'img &
-                  " last" & Last'img);
+                  " Timeout_Length " & Timeout_Length'img);
+--                " last" & Last'img);
 
                if    Buffer_Empty and then
                      Timeout_Length = 0.0 then  -- return data current in buffer
@@ -508,7 +508,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
                   when OK =>
                      if Last = Buffer'last then  -- buffer full
-                        Last := Buffer'last;
                         Log_Here (Trace);
                         exit;
                      end if;
@@ -557,6 +556,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Here (Trace, "zero length read");
       else
          if Tracing then
+log_here (Buffer'first'img & " .." & Buffer'last'img & " last" & last'img);
             Dump ("read", Buffer (Buffer'first .. Last));
          end if;
       end if;
@@ -595,6 +595,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                                     Timeout_Length);
    begin
       Log_In (Tracing, " length" & Buffer'length'img &
+         " last" & Buffer'last'img &
          " timeout " & Timeout_Length'img);
       loop
          declare
@@ -615,6 +616,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                   end;
                end if;
             end if;
+            Log_Here (Tracing, " start" & Start'img);
             Read (Socket.Stream, Buffer (Start .. Buffer'last), Last,
                Timeout_Length    => This_Timeout);
             Log_Here (Tracing, "last" & Last'img);
@@ -838,7 +840,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       end Free;
 
       -----------------------------------------------------------------------
-      -- return everything in buffer
+      -- return everything in buffer up to size of data
       entry Get (
          Data                    :    out Buffer_Type;
          Event                   :    out Event_Type;
@@ -850,7 +852,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_In (Tracing, Prefix &
             " primmed" & Primed_Input'img &
             " Buffer_Count" & Buffer_Count'img &
-            " tail" & Tail'img & " data first" & Data'first'img);
+            " tail" & Tail'img & " datafirst" & Data'first'img &
+            " data'last" & Data'last'img);
 
          case State is
 
@@ -888,11 +891,15 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Buffer_Count := Buffer_Count - 1;
 
             if Buffer_Count = 0 then   -- buffer empty
+               Head := Buffer'first;   -- reset pointers
+               Tail := Buffer'first;
+               Log_Here (Debug, "last" & Last'img);
                exit;
             end if;
          end loop;
 
          if Tracing then
+Log_Here ("last" & Last'img);
             Dump ("got", Data (Data'first .. Last));
          end if;
 
@@ -956,7 +963,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
       begin
          Log_In (Tracing, Prefix & " primed" & Primed_Output'img &
-            " head" & Head'img &
+            " head" & Head'img & " data'first" & Data'first'img &
+            " data'last" & Data'last'img &
             " buffer count" & Buffer_Count'img & " state " & State'img);
          if Primed_Output = 0 then
             raise IO_Failed with "not primed for put";
