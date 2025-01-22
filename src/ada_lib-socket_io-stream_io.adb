@@ -480,6 +480,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             begin
                Log_Here (Trace, "Buffer_Empty " & Buffer_Empty'img &
                   " Timeout_Length " & Timeout_Length'img);
+--                " Start_Get" & Start_Get'img);
 --                " last" & Last'img);
 
                if    Buffer_Empty and then
@@ -556,7 +557,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Here (Trace, "zero length read");
       else
          if Tracing then
-log_here (Buffer'first'img & " .." & Buffer'last'img & " last" & last'img);
             Dump ("read", Buffer (Buffer'first .. Last));
          end if;
       end if;
@@ -595,6 +595,7 @@ log_here (Buffer'first'img & " .." & Buffer'last'img & " last" & last'img);
                                     Timeout_Length);
    begin
       Log_In (Tracing, " length" & Buffer'length'img &
+         " first" & Buffer'first'img &
          " last" & Buffer'last'img &
          " timeout " & Timeout_Length'img);
       loop
@@ -852,7 +853,7 @@ log_here (Buffer'first'img & " .." & Buffer'last'img & " last" & last'img);
          Log_In (Tracing, Prefix &
             " primmed" & Primed_Input'img &
             " Buffer_Count" & Buffer_Count'img &
-            " tail" & Tail'img & " datafirst" & Data'first'img &
+            " tail" & Tail'img & " data first" & Data'first'img &
             " data'last" & Data'last'img);
 
          case State is
@@ -891,15 +892,14 @@ log_here (Buffer'first'img & " .." & Buffer'last'img & " last" & last'img);
             Buffer_Count := Buffer_Count - 1;
 
             if Buffer_Count = 0 then   -- buffer empty
-               Head := Buffer'first;   -- reset pointers
-               Tail := Buffer'first;
+--             Head := Buffer'first;   -- reset pointers
+--             Tail := Buffer'first;
                Log_Here (Debug, "last" & Last'img);
                exit;
             end if;
          end loop;
 
          if Tracing then
-Log_Here ("last" & Last'img);
             Dump ("got", Data (Data'first .. Last));
          end if;
 

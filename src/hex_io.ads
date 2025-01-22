@@ -143,20 +143,6 @@ package Hex_IO is
       Width             : in   Positive := Data_Type'size / 4
    ) return String;
 
-   generic
-      type Data_Type       is mod <> ;
-
-   package Modular_Package is
-
-      type Source_Type  is array (Positive range <>) of Data_Type;
-
-      function Hex (
-         Source            : in   Source_Type
---       Width             : in   Positive := Data_Type'size / 4
-      ) return Integer;
-
-   end Modular_Package;
-
    function Modular_Hex_Address (
       Address           : in   System.Address;
       Width             : in   Positive
