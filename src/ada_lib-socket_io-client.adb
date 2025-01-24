@@ -275,6 +275,7 @@ package body Ada_Lib.Socket_IO.Client is
    ---------------------------------------------------------------------------
 
    begin
+      Socket.Initialize;
 --    Socket.Set_Description (Description);
       Log_In (Trace, "connected socket " & Socket.Image &
          " for Address " & Address.Image);
