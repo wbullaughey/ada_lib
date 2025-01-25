@@ -107,7 +107,6 @@ package body Ada_Lib.Options.GNOGA is
       when Ada_Lib.Options.Traces =>
          Put_Line ("Ada_Lib.Options.GNOGA library trace options (-" & Trace_Option & ")");
          Put_Line ("      a               all");
-         Put_Line ("      g               Ada_Lib.GNOGA.Debug");
          Put_Line ("      m               GNOGA.Ada_Lib.Trace");
          Put_Line ("      o               GNOGA options");
          New_Line;
@@ -136,11 +135,7 @@ package body Ada_Lib.Options.GNOGA is
 
                when 'a' =>
                   Standard.GNOGA.Ada_Lib.Trace := True;
-                  Ada_Lib.GNOGA.Debug := True;
                   Debug := True;
-
-               when 'g' =>
-                  Ada_Lib.GNOGA.Debug := True;
 
                when 'm' =>
                   Standard.GNOGA.Ada_Lib.Trace := True;

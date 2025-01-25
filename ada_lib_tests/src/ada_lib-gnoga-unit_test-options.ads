@@ -34,7 +34,7 @@ package Ada_Lib.GNOGA.Unit_Test.Options is
       Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type)
    with pre => Options.Verify_Initialized;
 
-   Debug                         : aliased Boolean := False;
+-- Debug                         : aliased Boolean := False;
    Debug_Options                 : aliased Boolean := False;
 -- GNOGA_Options                 : GNOGA_Options_Constant_Class_Access := Null;
 

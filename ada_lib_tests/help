@@ -1,10 +1,9 @@
 test_ada_lib
-main_task_00007F9BAA008800: [00:00:00.00] ada_lib-options-runstring.adb:107 Ada_Lib.Options.Runstring.Registration_Type.Has_Parameter (0) option: 'h' kind WITHOUT_PARAMETERS
 
 test_ada_lib command line options:
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
     -A <trace options>             : AUnit library traces              (AUnit library)
-    -e <routine>                   : test routine.                     (test_ada_lib)
+    -e <routine>                   : routine to test.                  (test_ada_lib)
     -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
     -G <trace options>             : GNOGA traces                      (GNOGA library)
     -h                             : this message                      (Ada_Lib)
@@ -14,7 +13,7 @@ test_ada_lib command line options:
     -P                             : pause                             (Ada_Lib)
     -r                             : remote dbdaemon.                  (Ada_Lib.Options.Database)
     -R <path>                      : remote dbdaemon path.             (Ada_Lib.Options.Database)
-    -s <test suite>                : select test suite to run.         (test_ada_lib)
+    -s <suite to test>             : select test suite to run.         (test_ada_lib)
     -S <suites>                    : enable default disabled suites.   (test_ada_lib)
     -t                             : ada_lib unit tests
     -T <options>                   : enables trace template unit tests (Ada_Lib.Template.Tests)
@@ -66,8 +65,8 @@ AUnit.Ada_Lib.Options library trace options (-A)
 Ada_Lib.Options.GNOGA unit test trace options (-g)
       a               all
       e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
-      g               Ada_Lib.GNOGA.Unit_Test.Debug (main window)
-      o               Ada_Lib.GNOGA.Unit_Test.Debug_Options
+      g               Ada_Lib.GNOGA.Debug (main window)
+      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
 
 Ada_Lib.Template.Tests (-T)
       a               all
@@ -79,8 +78,7 @@ Ada_Lib.Template.Tests (-T)
 
 Ada_Lib.Options.GNOGA library trace options (-G)
       a               all
-      g               Ada_Lib.GNOGA
-      m               GNOGA.Ada_Lib
+      m               GNOGA.Ada_Lib.Trace
       o               GNOGA options
 
 CAC ada_lib trace library options (-a)
@@ -121,6 +119,7 @@ Ada_Lib unit test library trace options (-U)
       l               Ada_Lib.Unit_Test.Debug Library
       p               test programs
       r               Runtime_Options
+      s               Trace Set_Up Tear_Down
       t               Ada_Lib.Test.Debug
       T               Ada_Lib.Trace.Debug_Trace
 
