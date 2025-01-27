@@ -2,7 +2,7 @@
 echo build ada_lib tests parameters $*
 #pwd
 if [ -z "$2" ]; then
-  echo "initial build"
+  echo "local build"
 else
   echo "remote build"
   cd $2

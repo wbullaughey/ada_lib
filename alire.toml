@@ -1,5 +1,5 @@
-        name = "ada_lib"
-description = "Ada_Lib Utility Library"
+        name = "gnoga = { path ="/Users/Wayne/GNAT/share/gpr" }"
+description = "gnoga = { path ="/Users/Wayne/GNAT/share/gpr" } Utility Library"
 version = "2.0-dev"
 
 authors = ["Wayne Bullaughey"]

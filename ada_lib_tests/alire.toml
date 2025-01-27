@@ -24,4 +24,15 @@ aunit  = { path = "../../aunit" }
 gnatcoll = "^23.0.0"
 
 [[depends-on]]
-gnoga = "^2.1.2"
+gnoga = "*"
+
+[[pins]]
+gnoga = { path ="/Users/Wayne/GNAT/share/gpr" }
+
+[[depends-on]]
+ada_lib_gnoga = "*"
+
+[[pins]]
+ada_lib_gnoga  = { path = "../ada_lib_gnoga" }
+
+
