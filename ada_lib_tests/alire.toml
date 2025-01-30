@@ -9,6 +9,12 @@ maintainers-logins = ["wbullaughey"]
 executables = ["ada_lib_tests"]
 
 [[depends-on]]
+applications = "*"
+
+[[pins]]
+applications  = { path = "../.." }
+
+[[depends-on]]
 ada_lib = "*"
 
 [[pins]]
