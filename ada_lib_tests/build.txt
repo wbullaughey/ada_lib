@@ -1,419 +1,69 @@
--e [SE wayne@Mac ada_lib_tests]$ /Applications/SlickEditPro.app/Contents/MacOS/vsbuild build -b /Users/wayne/Project/git/alr/alr_environment/remote_build.sh -v -beep -c macosx -hidevep /Users/wayne/Project/git/alr/alr_environment/IDE/SlickEdit/Macosx/applications.vpw /Users/wayne/Project/git/alr/alr_environment/IDE/SlickEdit/ada_lib_aunit_tests.vpj -signal "1vsbuild_done "
-vsbuild: No dependencies for /Users/wayne/Project/git/alr/alr_environment/IDE/SlickEdit/ada_lib_aunit_tests.vpj
-vsbuild: ---------- 'build' Project: '../ada_lib_aunit_tests.vpj' - 'macosx' ----------
-VSLICKERRORPATH=/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-vsbuild: ./build.sh
-build ada_lib tests parameters
-initial build
-running .zshrc at /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-remote_build
 /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-BASE_PATH ada_lib/ada_lib_tests
-BUILD_PATH Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-HOME /Users/wayne
-LOCAL_APPLICATION /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/test_ada_lib
-LOCAL_BUILD_PATH /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-QUICK_BUILD
-RELATIVE_ALR_ENVIRONMENT_PATH Project/git/alr
-REMOTE_APPLICATION /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/test_ada_lib
-REMOTE_BUILD_PATH /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-ROOT_PATH alr_environment
-building test_ada_lib on 15.2 LOCAL_BUILD_PATH: /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests REMOTE_BUILD_PATH: /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-pwd /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-desktop
-/opt/gcc-14.1.0-1-aarch64/bin:/usr/local/bin:/Users/wayne/bin:/opt/homebrew/bin:/Users/wayne/GNAT/gprbuild:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/SlickEditPro.app/Contents/MacOS/
-VERBOSE verbose
-OPTIONS -lptvv
-rsync source /Users/wayne/Project/git/alr/alr_environment destination /Volumes/wayne/Project/git/alr/alr_environment
-source: /Users/wayne/Project/git/alr/alr_environment directory:
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment//src/* /Volumes/wayne/Project/git/alr/alr_environment//src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment//*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment//src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: /alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment//alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment//alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: /project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment//project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment//project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: ada_lib
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/* /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/src
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-delta-transmission disabled for local transfer or --whole-file
-ada_lib.gpr
+Note: Synchronizing workspace...
+Dependencies automatically updated as follows:
 
-sent 1145 bytes  received 42 bytes  2374 bytes/sec
-total size is 1050  speedup is 0.88
-rsync: : sender finished updating
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/src
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/adasockets: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/linux: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/macosx: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/snmp: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/test: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/src/windows: skipping directory
-rsync: : non-recursively generated 199 filenames
-rsync: : sending file metadata list: 199
-Transfer starting: 199 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/src": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/alire.toml
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/alire.toml": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/ada_lib/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: ada_lib/ada_lib_gnoga
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/src/* /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/src
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/src
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 8 filenames
-rsync: : sending file metadata list: 8
-Transfer starting: 8 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/src": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/ada_lib_gnoga/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/alire.toml
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/alire.toml": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/ada_lib_gnoga/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: ada_lib/ada_lib_tests
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src/* /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src/alire: skipping directory
-rsync: warning: /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src/macosx: skipping directory
-rsync: : non-recursively generated 90 filenames
-rsync: : sending file metadata list: 90
-Transfer starting: 90 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/src": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/ada_lib_tests/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/alire.toml
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/alire.toml": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/ada_lib_tests/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: aunit
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/src/* /Volumes/wayne/Project/git/alr/alr_environment/aunit/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/aunit/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/aunit/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: aunit/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/aunit/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: aunit/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/aunit/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: aunit/ada_lib
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/src/* /Volumes/wayne/Project/git/alr/alr_environment/aunit/ada_lib/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: aunit/ada_lib/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: aunit/ada_lib/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/aunit/ada_lib/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: vendor/github.com/gnoga
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/src/* /Volumes/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: vendor/github.com/gnoga/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: vendor/github.com/gnoga/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera/lib
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/lib/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/lib/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/lib/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/lib/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/lib/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/lib/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/lib/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/lib/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/lib/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/lib/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera/test_lib
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/test_lib/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/test_lib/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/test_lib/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/test_lib/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera/unit_test
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/unit_test/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/unit_test/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/unit_test/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera/driver
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/driver/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/camera/driver/unit_test
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/unit_test/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/unit_test/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/lib
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/lib/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/lib/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/lib/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/lib/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/lib/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/lib/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/lib/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment directory: video/lib/video_aunit
-rsync directory -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/src/* /Volumes/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/src
-copy_directory:5: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/*.gpr
-copy_directory:6: no matches found: /Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/src/*
-source: /Users/wayne/Project/git/alr/alr_environment file: video/lib/video_aunit/alire.toml
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/alire.toml /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/alire.toml does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/lib/video_aunit/project_paths.cfg
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/project_paths.cfg /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/lib/video_aunit/project_paths.cfg does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: remote_build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/remote_build.sh /Volumes/wayne/Project/git/alr/alr_environment
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/remote_build.sh
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-delta-transmission disabled for local transfer or --whole-file
-remote_build.sh
+   +· ada_lib       2.0.0-dev (new,path=..)                           
+   +· ada_lib_gnoga 0.1.0-dev (new,path=../ada_lib_gnoga)             
+   +· applications  unknown   (new,path=../..)                        
+   +· aunit         0.1.0-dev (new,path=../../aunit)                  
+   +i gnat          12.2.1    (new,installed,gnat_native,indirect)    
+   +  gnatcoll      23.0.0    (new)                                   
+   +· gnoga         0.1.0-dev (new,path=../../vendor/github.com/gnoga)
+   +  libgpr        23.0.0    (new,indirect)                          
+   +  xmlada        23.0.0    (new,indirect)                          
+Note: Deploying xmlada=23.0.0...
+#=#=#                                                                          ##O#-#                                                                         ##=O#- #                                                                       # #=O#- #                                                                       # #=O#-  #                                                                    
+Note: Running post_fetch actions for xmlada=23.0.0...
+checking build system type... x86_64-apple-darwin21.6.0
+checking host system type... x86_64-apple-darwin21.6.0
+checking target system type... x86_64-apple-darwin21.6.0
+checking whether gnat can build shared libs... warning: could not read project path file "Project/git/alr/alr_environment/ada_lib/ada_lib_tests/project_paths.cfg"
+yes
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether ln -s works... yes
+configure: creating ./config.status
+config.status: creating xmlada_shared.gpr
+config.status: creating Makefile
+config.status: creating tests/dom/default.gpr
+Note: Deploying libgpr=23.0.0...
+#=#=#                                                                          ##O#-#                                                                         ##=O#- #                                                                       # #=O#- #                                                                      
+Note: Deploying gnatcoll=23.0.0...
+#=#=#                                                                          ##O#-#                                                                         ##=O#- #                                                                       # #=O#- #                                                                      
 
-sent 3387 bytes  received 42 bytes  6858 bytes/sec
-total size is 3288  speedup is 0.96
-rsync: : sender finished updating
-source: /Users/wayne/Project/git/alr/alr_environment file: ada_lib/ada_lib_tests/build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/build.sh /Volumes/wayne/Project/git/alr/alr_environment
-rsync: : exec[0] = rsync
-rsync: : exec[1] = --server
-rsync: : exec[2] = -l
-rsync: : exec[3] = -p
-rsync: : exec[4] = -t
-rsync: : exec[5] = -v
-rsync: : exec[6] = -v
-rsync: : exec[7] = -W
-rsync: : exec[8] = .
-rsync: : exec[9] = /Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/build.sh
-rsync: : client detected client version 29, server version 29, negotiated protocol version 29, seed 1738585500
-rsync: : Delta transmission disabled for this transfer
-rsync: : client starting sender: (local)
-rsync: : non-recursively generated 1 filenames
-rsync: : sending file metadata list: 1
-Transfer starting: 1 files
-rsync: ERROR: cannot stat destination "/Volumes/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/build.sh": Not a directory (20)
-rsync error: errors selecting input/output files, dirs (code 3) at /AppleInternal/Library/BuildRoots/b11baf73-9ee0-11ef-b7b4-7aebe1f78c73/Library/Caches/com.apple.xbs/Sources/rsync/rsync/main.c(517) [receiver=2.6.9]
-rsync: error: poll: hangup
-rsync: error: rsync_sender
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/build.sh /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/build.sh does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/build.sh /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/build.sh does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/driver/unit_test/build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/build.sh /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/driver/unit_test/build.sh does not exist
-source: /Users/wayne/Project/git/alr/alr_environment file: video/camera/unit_test/build.sh
-rsync file -lptvv /Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/build.sh /Volumes/wayne/Project/git/alr/alr_environment
-/Users/wayne/Project/git/alr/alr_environment/video/camera/unit_test/build.sh does not exist
-BUILD_HOME /Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests
-
-[SE wayne@Mac ada_lib_tests]$
+Note: applications*: no build needed.
+Note: Building ada_lib_tests/ada_lib_tests.gpr...
+warning: could not read project path file "Project/git/alr/alr_environment/ada_lib/ada_lib_tests/project_paths.cfg"
+ada_lib_tests.gpr:5:06: imported project file "default_config.gpr" not found
+ada_lib_tests.gpr:17:40: unknown package or project "Default_Config"
+ada_lib_tests.gpr:17:40: wrong expression kind for attribute "default_switches"
+ada_lib_tests.gpr:26:40: unknown package or project "Default_Config"
+ada_lib_tests.gpr:26:40: wrong expression kind for attribute "default_switches"
+aunit.gpr:2:06: imported project file "applications.gpr" not found
+aunit.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/aunit/aunit.gpr"
+aunit.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr"
+aunit.gpr:4:06: imported project file "default_config" not found
+aunit.gpr:4:06: imported by "/Users/wayne/Project/git/alr/alr_environment/aunit/aunit.gpr"
+aunit.gpr:4:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr"
+aunit.gpr:22:40: unknown package or project "Default_Config"
+aunit.gpr:22:40: wrong expression kind for attribute "default_switches"
+ada_lib.gpr:2:06: imported project file "default_config.gpr" not found
+ada_lib.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib.gpr"
+ada_lib.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/aunit/config/aunit_config.gpr"
+ada_lib.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/aunit/aunit.gpr"
+ada_lib.gpr:2:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr"
+ada_lib.gpr:23:40: unknown package or project "Default_Config"
+ada_lib.gpr:23:40: wrong expression kind for attribute "default_switches"
+ada_lib_gnoga.gpr:1:06: imported project file "default_config.gpr" not found
+ada_lib_gnoga.gpr:1:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/ada_lib_gnoga.gpr"
+ada_lib_gnoga.gpr:1:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr"
+ada_lib_gnoga.gpr:22:40: unknown package or project "Default_Config"
+ada_lib_gnoga.gpr:22:40: wrong expression kind for attribute "default_switches"
+GNOGA.gpr:3:06: imported project file "default_config.gpr" not found
+GNOGA.gpr:3:06: imported by "/Users/wayne/Project/git/alr/alr_environment/vendor/github.com/gnoga/GNOGA.gpr"
+GNOGA.gpr:3:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_gnoga/ada_lib_gnoga.gpr"
+GNOGA.gpr:3:06: imported by "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr"
+GNOGA.gpr:25:40: unknown package or project "Default_Config"
+GNOGA.gpr:25:40: wrong expression kind for attribute "default_switches"
+gprbuild: "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr" processing failed
+ERROR: Command ["gprbuild", "-s", "-j0", "-p", "-P", "/Users/wayne/Project/git/alr/alr_environment/ada_lib/ada_lib_tests/ada_lib_tests.gpr", "-j10", "-s", "-k", "-gnatE"] exited with code 4
+ERROR: Compilation failed.
