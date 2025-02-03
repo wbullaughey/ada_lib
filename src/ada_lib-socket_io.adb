@@ -1,3 +1,4 @@
+with Ada.Strings.Unbounded;
 --with Ada.Text_IO; use Ada.Text_IO;
 -- with Ada.Streams;
 -- with Ada.Unchecked_Deallocation;
@@ -11,39 +12,6 @@ package body Ada_Lib.Socket_IO is
    use type Ada_Lib.Strings.String_Constant_Access;
 -- use type Ada_Lib.Strings.String_Access_All;
    use type GNAT.Sockets.Socket_Type;
-
-   ---------------------------------------------------------------------------
-   procedure Bind (
-      Socket               : in out Socket_Type;
-      Port                 : in     Port_Type;
-      Reuse                : in     Boolean := False) is
-   ---------------------------------------------------------------------------
-
-      Server_Address             : constant GNAT.Sockets.Sock_Addr_Type := (
-                                    Family   => GNAT.Sockets.Family_Inet,
-                                    Addr     => GNAT.Sockets.Any_Inet_Addr,
-                                    Port     => Port);
-
-   begin
-      Log_In (Trace, "socket " & Socket.Image &
-         " port" & Port'img & " reuse " & Reuse'img);
-      if Reuse then
-         declare
-            Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
-
-         begin
-            Socket_Option.Enabled := TRue;
-            Log_Here (Trace, "set reuse");
-            GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
-               Level       => GNAT.Sockets.Socket_Level,
-               Option      => Socket_Option);
-         end;
-      end if;
-
-      GNAT.Sockets.Bind_Socket (Socket.GNAT_Socket, Server_Address);
-
-      Log_Out (Trace);
-   end Bind;
 
    ---------------------------------------------------------------------------
    function Buffer_Bytes (
@@ -79,6 +47,44 @@ package body Ada_Lib.Socket_IO is
       Socket.Open := False;
       Log_Out (Trace);
    end Close;
+
+   ---------------------------------------------------------------------------
+   function Dump (
+      Address                    : in     GNAT.Sockets.Sock_Addr_Type
+   ) return String is
+   ---------------------------------------------------------------------------
+
+   begin
+      return "sock addr family " & Address.Family'img & (
+         case Address.Family is
+            when GNAT.Sockets.Family_Unix =>
+               Ada.Strings.Unbounded.To_String (Address.Name),
+
+            when GNAT.Sockets.Family_Inet_4_6 => (
+               case Address.Family is
+
+                  when GNAT.Sockets.Family_Inet =>
+                     Address.Addr.Sin_V4 (1)'img & '.' &
+                     Address.Addr.Sin_V4 (2)'img & '.' &
+                     Address.Addr.Sin_V4 (3)'img & '.' &
+                     Address.Addr.Sin_V4 (4)'img &
+                     " port" & Address.Port'img,
+
+                  when GNAT.Sockets.Family_Inet6 =>
+                     "inet6",
+
+                  when GNAT.Sockets.Family_Unix =>
+                     "Family_Unix",
+
+                  when GNAT.Sockets.Family_Unspec =>
+                     "Family_Unspec"
+
+               ),
+
+            when GNAT.Sockets.Family_Unspec =>
+               ""
+         );
+   end Dump;
 
    ---------------------------------------------------------------------------
    overriding
@@ -383,5 +389,7 @@ package body Ada_Lib.Socket_IO is
 --
 --   end Root_Socket;
 
-
+begin
+--Trace := True;
+   Log_Here (Trace or else Tracing or else Elaborate or else Trace_Options);
 end Ada_Lib.Socket_IO;

@@ -69,49 +69,55 @@ package body Ada_Lib.Socket_IO.Server is
       end case;
    end Accept_Socket;
 
--- ---------------------------------------------------------------------------
--- procedure Bind_Socket (
---    Socket                     : in out Server_Socket_Type;
---    Host_Entry                 : in     Host_Entry_Type;
---    Port                       : in     Port_Type) is
--- ---------------------------------------------------------------------------
---
---    Address                    : constant GNAT.Sockets.Sock_Addr_Type :=
---                                  GNAT.Sockets.Sock_Addr_Type'(
---                                  Family      => GNAT.Sockets.Family_Inet,
---                                  Addr        => (     -- Inet_Addr_Type (Family)
---                                     Family   => GNAT.Sockets.Family_Inet,
---                                     Sin_V4   => GNAT.Sockets.Addresses (Host_Entry).Sin_V4),
---                                  Port        => Port);
---
--- begin
---    GNAT.Sockets.Bind_Socket (Socket, Address);
--- end Bind_Socket;
+   ---------------------------------------------------------------------------
+   procedure Bind (
+      Socket               : in out Server_Socket_Type;
+      Reuse                : in     Boolean := False) is
+   ---------------------------------------------------------------------------
 
--- ---------------------------------------------------------------------------
--- procedure Finalize (
---    Socket                     : in out Server_Socket_Type) is
--- ---------------------------------------------------------------------------
---
--- begin
---    GNAT.Sockets.Close_Socket (Socket);
--- end Finalize;
+      Server_Address             : constant GNAT.Sockets.Sock_Addr_Type := (
+                                    Family   => GNAT.Sockets.Family_Inet,
+                                    Addr     => GNAT.Sockets.Any_Inet_Addr,
+                                    Port     => Socket.Port);
 
--- ---------------------------------------------------------------------------
--- procedure Connect (
---    Socket                     : in out Server_Socket_Type;
---    Server_Name                : in     String;
---    Port                       : in     Port_Type;
---    Connection_Timeout         : in     Timeout_Type := 1.0;
---    Expected_Read_Callback     : access procedure (
---       Socket                  : in     Socket_Class_Access) := Null) is
--- pragma Unreferenced (Socket, Server_Name, Port, Connection_Timeout, Expected_Read_Callback);
--- ---------------------------------------------------------------------------
---
--- begin
---    Not_Implemented;
--- end Connect;
---
+   begin
+      Log_In (Trace, "socket " & Socket.Image &
+         " port" & Socket.Port'img & " reuse " & Reuse'img);
+      if Reuse then
+         declare
+            Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
+
+         begin
+            Socket_Option.Enabled := TRue;
+            Log_Here (Trace, "set reuse");
+            GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
+               Level       => GNAT.Sockets.Socket_Level,
+               Option      => Socket_Option);
+         end;
+      end if;
+
+      Log_Here (Trace, "call Bind_Socket");
+      GNAT.Sockets.Bind_Socket (Socket.GNAT_Socket, Server_Address);
+      Socket.Bound := True;
+      Log_Out (Trace);
+
+   exception
+      when Fault: GNAT.Sockets.Socket_Error =>
+         Trace_Message_Exception (Trace, Fault, "Bind failed");
+         raise;
+
+   end Bind;
+
+   ---------------------------------------------------------------------------
+   function Is_Bound (
+      Socket               : in     Server_Socket_Type
+   ) return Boolean is
+   ---------------------------------------------------------------------------
+
+   begin
+      return Socket.Bound;
+   end Is_Bound;
+
    ---------------------------------------------------------------------------
    procedure Create_Stream (
       Socket                     : in out Server_Socket_Type) is
@@ -154,7 +160,7 @@ package body Ada_Lib.Socket_IO.Server is
       Socket_Type (Socket).Initialize;
       Log_Here (Trace);
       Step := Bind_Failed'access;
-      Socket.Bind (Socket.Port, Reuse => True);
+      Socket.Bind (Reuse => True);
       Step := Listen_Failed'access;
       Log_Here (Trace, "listen for socket");
       GNAT.Sockets.Listen_Socket (Socket.GNAT_Socket);
@@ -167,8 +173,7 @@ package body Ada_Lib.Socket_IO.Server is
             Message              : constant String :=  Step.all &
                                     " server socket " & Socket.Image;
          begin
-            Trace_Message_Exception (Fault, Message);
-            Log_Exception (Trace, Fault);
+            Log_Exception (Trace, Fault, Message);
             raise Failed with Message;
          end;
    end Initialize;

@@ -91,11 +91,6 @@ package Ada_Lib.Socket_IO is
    type Socket_Access            is access Socket_Type;
    type Socket_Class_Access      is access all Socket_Type'class;
 
-   procedure Bind (
-      Socket               : in out Socket_Type;
-      Port                 : in     Port_Type;
-      Reuse                : in     Boolean := False);
-
    overriding
    procedure Close (
       Socket                     : in out Socket_Type);
@@ -206,6 +201,10 @@ package Ada_Lib.Socket_IO is
    procedure Set_Socket (
       Socket                     : in out Socket_Type;
       GNAT_Socket                : in     GNAT.Sockets.Socket_Type);
+
+   function Dump (
+      Address                    : in     GNAT.Sockets.Sock_Addr_Type
+   ) return String;
 
 private
 

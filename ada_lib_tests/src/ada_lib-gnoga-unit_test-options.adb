@@ -93,7 +93,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
          Put_Line ("Ada_Lib.Options.GNOGA unit test trace options (-g)");
          Put_Line ("      a               all");
          Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig");
-         Put_Line ("      g               Ada_Lib.GNOGA.Debug (main window)");
+--       Put_Line ("      g               Ada_Lib.GNOGA.Unit_Test.Options.Debug (main window)");
          Put_Line ("      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options");
          New_Line;
 
@@ -126,14 +126,13 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
                when 'a' =>
                   Ada_Lib.GNOGA.Unit_Test.Events.Debug := True;
                   Debug_Options := True;
-                  Ada_Lib.GNOGA.Debug := True;
+--                Debug := True;
 
                when 'e' =>
                   Ada_Lib.GNOGA.Unit_Test.Events.Debug := True;
 
-               when 'g' =>
-                  Ada_Lib.GNOGA.Debug := True;
-
+--             when 'g' =>
+--                Debug := True;
 
                when 'o' =>
                   Debug_Options := True;

@@ -12,10 +12,10 @@ package Ada_Lib.Database.Server.Tests is
 --    Started                 : Boolean := False;
 -- end record;
 
-   -- used for tests which access DBDaemon, open close done by set_up,tear_down
-   type Server_Test_Type is new Ada_Lib.Database.Unit_Test.Test_Case_Type  with record
-      Started                 : Boolean := False;
-   end record;
+      -- used for tests which access DBDaemon, open close done by set_up,tear_down
+      type Server_Test_Type is new Ada_Lib.Database.Unit_Test.Test_Case_Type  with record
+         Started                 : Boolean := False;
+      end record;
    -- creates a test suite for all get_put tests that use DBDaemon
    -- adds a test list for local and Remote test to the test suite
    function Server_Suite (
@@ -89,8 +89,8 @@ private
    overriding
    procedure Set_Up (               -- allocates and opens database
       Test                       : in out Server_Test_Type)
-   with Pre => not Test.Verify_Set_Up,
-        Post => Test.Verify_Set_Up;
+   with Pre => Test.Verify_Presetup,
+        Post => Test.Verify_Postsetup;
 
    procedure Subscribe (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);

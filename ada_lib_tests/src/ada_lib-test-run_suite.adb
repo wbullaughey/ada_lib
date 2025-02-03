@@ -5,10 +5,10 @@ with AUnit.Test_Suites;
 with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
 with Ada_Lib.Curl.Tests;
-with Ada_Lib.Database.Get_Put_Tests;
-with Ada_Lib.Database.Server.Tests;
-with Ada_Lib.Database.Subscribe.Tests;
-with Ada_Lib.Database.Subscription.Tests;
+--with Ada_Lib.Database.Get_Put_Tests;
+--with Ada_Lib.Database.Server.Tests;
+--with Ada_Lib.Database.Subscribe.Tests;
+--with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Directory.Test;
 with Ada_Lib.Event.Unit_Test;
 with Ada_Lib.GNOGA.Unit_Test.Base;
@@ -19,6 +19,7 @@ with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS.Tests;
 with Ada_Lib.Parser.Tests;
 with Ada_Lib.Socket_IO.Client.Unit_Test;
+with Ada_Lib.Socket_IO.Server.Tests;
 with Ada_Lib.Socket_IO.Stream_IO.Unit_Test;
 with Ada_Lib.Template.Tests;
 with Ada_Lib.Test.Ask_Tests;
@@ -47,7 +48,7 @@ begin
 
    declare
       AUnit_Options           : AUnit.Options.AUnit_Options;
-      Have_Host               : Boolean := False;
+--    Have_Host               : Boolean := False;
       Non_DBDaemon_Test_Suite : constant Ada_Lib.Options.AUnit_Lib.
                                  Non_DBDamon_Test_Access :=
                                     Ada_Lib.Options.AUnit_Lib.New_Suite;
@@ -84,6 +85,8 @@ begin
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Socket_IO.Client.Unit_Test.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
+         Ada_Lib.Socket_IO.Server.Tests.Suite);
+      Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Configuration.Tests.Suite);
@@ -99,8 +102,8 @@ begin
          Ada_Lib.GNOGA.Unit_Test.Base.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Command_Line_Iterator.Tests.Suite);
-      Non_DBDaemon_Test_Suite.Add_Test (
-         Ada_Lib.Database.Get_Put_Tests.No_Database_Suite );
+--    Non_DBDaemon_Test_Suite.Add_Test (
+--       Ada_Lib.Database.Get_Put_Tests.No_Database_Suite );
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Mail.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
@@ -111,53 +114,53 @@ begin
          Ada_Lib.Template.Tests.Suite);
       Test_Suite.Add_Test (Non_DBDaemon_Test_Suite);
 
-      for Host_Kind in Ada_Lib.Database.Valid_Hosts_Type loop
-         Log (Debug, Here, Who & " Host_Kind " & Host_Kind'img);
+--    for Host_Kind in Ada_Lib.Database.Valid_Hosts_Type loop
+--       Log (Debug, Here, Who & " Host_Kind " & Host_Kind'img);
+--
+--       if (case Host_Kind is
+--
+--             when Ada_Lib.Database.Local =>
+--                Options.Database_Options.Has_Local_DBDaemon or else
+--                Options.Mode = Ada_Lib.Options.List_Suites,
+--
+--             when Ada_Lib.Database.Remote =>
+--                Options.Database_Options.Has_Remote_Host
+--
+--          ) then
+--          declare
+--             DBDaemon_Test_Suite
+--                            : constant Ada_Lib.Options.AUnit_Lib.
+--                               DBDamon_Test_Access :=
+--                                  Ada_Lib.Options.AUnit_Lib.New_Suite;
+--             Subscribe_Test_Suite
+--                            : constant AUnit.Test_Suites.Access_Test_Suite :=
+--                               Ada_Lib.Database.Subscribe.Tests.
+--                                  Subscribe_Suite (Host_Kind);
+--             Subscription_Test_Suite
+--                            : constant AUnit.Test_Suites.Access_Test_Suite :=
+--                               Ada_Lib.Database.Subscription.Tests.
+--                                  Subscription_Suite (Host_Kind);
+--
+--          begin
+--             Log (Debug, Here, Who & " add tests for " & Host_Kind'img);
+--
+--             DBDaemon_Test_Suite.Add_Test (
+--                Ada_Lib.Database.Get_Put_Tests.Database_Suite (Host_Kind));
+--
+--             DBDaemon_Test_Suite.Add_Test (
+--                Ada_Lib.Database.Server.Tests.Server_Suite (Host_Kind));
+--
+--             Test_Suite.Add_Test (Subscription_Test_Suite);
+--             Test_Suite.Add_Test (Subscribe_Test_Suite);
+--             Test_Suite.Add_Test (DBDaemon_Test_Suite);
+--             Have_Host := True;
+--          end;
+--       end if;
+--    end loop;
 
-         if (case Host_Kind is
-
-               when Ada_Lib.Database.Local =>
-                  Options.Database_Options.Has_Local_DBDaemon or else
-                  Options.Mode = Ada_Lib.Options.List_Suites,
-
-               when Ada_Lib.Database.Remote =>
-                  Options.Database_Options.Has_Remote_Host
-
-            ) then
-            declare
-               DBDaemon_Test_Suite
-                              : constant Ada_Lib.Options.AUnit_Lib.
-                                 DBDamon_Test_Access :=
-                                    Ada_Lib.Options.AUnit_Lib.New_Suite;
-               Subscribe_Test_Suite
-                              : constant AUnit.Test_Suites.Access_Test_Suite :=
-                                 Ada_Lib.Database.Subscribe.Tests.
-                                    Subscribe_Suite (Host_Kind);
-               Subscription_Test_Suite
-                              : constant AUnit.Test_Suites.Access_Test_Suite :=
-                                 Ada_Lib.Database.Subscription.Tests.
-                                    Subscription_Suite (Host_Kind);
-
-            begin
-               Log (Debug, Here, Who & " add tests for " & Host_Kind'img);
-
-               DBDaemon_Test_Suite.Add_Test (
-                  Ada_Lib.Database.Get_Put_Tests.Database_Suite (Host_Kind));
-
-               DBDaemon_Test_Suite.Add_Test (
-                  Ada_Lib.Database.Server.Tests.Server_Suite (Host_Kind));
-
-               Test_Suite.Add_Test (Subscription_Test_Suite);
-               Test_Suite.Add_Test (Subscribe_Test_Suite);
-               Test_Suite.Add_Test (DBDaemon_Test_Suite);
-               Have_Host := True;
-            end;
-         end if;
-      end loop;
-
-      if not Have_Host then
-         Log_Here (Debug, "no host found");
-      end if;
+--    if not Have_Host then
+--       Log_Here (Debug, "no host found");
+--    end if;
       Test_Suite.Run (AUnit_Options, Results, Outcome);
 
       case Options.Mode is

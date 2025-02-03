@@ -8,14 +8,14 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 package Ada_Lib.Timer is
 
    Failed                  : exception;   -- invalid request
-   Overflow             : exception;   -- too many events
+   Overflow                : exception;   -- too many events
 
    Null_Time               : constant Ada.Calendar.Time :=
-                           Ada.Calendar.Time_Of (
-                              Year  => Ada.Calendar.Year_Number'last,
-                              Month => Ada.Calendar.Month_Number'last,
-                              Day      => Ada.Calendar.Day_Number'last,
-                              Seconds  => 0.0);
+                                 Ada.Calendar.Time_Of (
+                                    Year  => Ada.Calendar.Year_Number'last,
+                                    Month => Ada.Calendar.Month_Number'last,
+                                    Day      => Ada.Calendar.Day_Number'last,
+                                    Seconds  => 0.0);
 
    type Duration_Access    is access all Duration;
 

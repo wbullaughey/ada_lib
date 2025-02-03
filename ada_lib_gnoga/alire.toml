@@ -19,4 +19,4 @@ gnatcoll = "^23.0.0"
 gnoga = "*"
 
 [[pins]]
-gnoga = { path ="/Users/Wayne/GNAT/share/gpr" }
+gnoga = { path = "../../vendor/github.com/gnoga" }

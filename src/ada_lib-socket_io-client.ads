@@ -13,6 +13,7 @@ package Ada_Lib.Socket_IO.Client is
                                     ) is new Ada_Lib.Socket_IO.Stream_IO.
                                        Stream_Socket_Type and
                                     Socket_Interface with private;
+
    type Client_Socket_Access     is access Client_Socket_Type;
 
    type Client_Socket_Class_Access

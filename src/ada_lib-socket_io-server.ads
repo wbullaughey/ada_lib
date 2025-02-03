@@ -37,9 +37,9 @@ package Ada_Lib.Socket_IO.Server is
    type Server_Socket_Type (
       Description    : Ada_Lib.Strings.String_Constant_Access;
       Port           : GNAT.Sockets.Port_Type
-                        ) is new Socket_Type (
-                           Description) and
-                        Socket_Interface with null record;
+                        ) is new Ada_Lib.Socket_IO.Stream_IO.
+                           Stream_Socket_Type  and
+                           Socket_Interface with private;
 
    type Server_Socket_Access     is access Server_Socket_Type;
 
@@ -53,38 +53,31 @@ package Ada_Lib.Socket_IO.Server is
                                              Ada_Lib.OS.Default_Priority
    ) with Pre => Server_Socket.Is_Open;
 
--- procedure Bind_Socket (
---    Socket                     : in out Server_Socket_Type;
---    Host_Entry                 : in     Host_Entry_Type;
---    Port                       : in     Port_Type);
-
--- procedure Finalize (
---    Socket                     : in out Server_Socket_Type);
-
--- overriding
--- procedure Connect (
---    Socket                     : in out Server_Socket_Type;
---    Server_Name                : in     String;
---    Port                       : in     Port_Type;
---    Connection_Timeout         : in     Timeout_Type := 1.0;
---    Expected_Read_Callback     : access procedure (
---       Socket                  : in     Root_Socket.Socket_Class_Access) := Null);
-
    overriding
    procedure Initialize (           -- does Bind
       Socket                     : in out Server_Socket_Type
    ) with Pre => not Socket.Is_Open;
 
--- overriding
--- function Is_Open (
---    Socket                     : in     Server_Socket_Type
--- ) return Boolean;
+   function Is_Bound (
+      Socket               : in     Server_Socket_Type
+   ) return Boolean;
 
--- procedure Set_Option (
---    Socket                     : in out Server_Socket_Type;
---    Option                     : in     Option_Type);
---
 private
+
+   type Server_Socket_Type (
+      Description    : Ada_Lib.Strings.String_Constant_Access;
+      Port           : GNAT.Sockets.Port_Type
+                        ) is new Ada_Lib.Socket_IO.Stream_IO.
+                           Stream_Socket_Type (Description) and
+                           Socket_Interface with record
+      Bound          : Boolean := False;
+   end record;
+
+   -- called by Initialize
+   procedure Bind (
+      Socket               : in out Server_Socket_Type;
+      Reuse                : in     Boolean := False
+   ) with Pre => not Socket.Is_Bound;
 
    procedure Create_Stream (
       Socket                     : in out Server_Socket_Type);
@@ -98,13 +91,4 @@ private
       Server_Closed              : Boolean := False;
    end record;
 
--- overriding
--- procedure Initialize (           -- creates stream
---    Socket                     : in out Accepted_Socket_Type
--- ) with Pre => not Socket.Is_Open;
-
--- procedure Set_Option (
---    Socket                     : in out Accepted_Socket_Type;
---    Option                     : in     Option_Type);
---
 end Ada_Lib.Socket_IO.Server;

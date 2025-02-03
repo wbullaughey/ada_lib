@@ -53,6 +53,7 @@ bin/test_ada_lib trace options (-t)
       t               Template Test
       T               Timer Test
       @d              Debug Test
+      @s              Socket_IO.Server trace
       @T              Debug Tests
       @t              Debug Test routines
 
@@ -65,7 +66,6 @@ AUnit.Ada_Lib.Options library trace options (-A)
 Ada_Lib.Options.GNOGA unit test trace options (-g)
       a               all
       e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
-      g               Ada_Lib.GNOGA.Debug (main window)
       o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
 
 Ada_Lib.Template.Tests (-T)

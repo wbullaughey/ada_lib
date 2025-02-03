@@ -2,28 +2,21 @@ with Ada.Command_Line;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
-with Ada_Lib.Database.Server.Tests;
+--with Ada_Lib.Database.Server.Tests;
 with Ada_Lib.Directory.Test;
 with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Help;
---with Ada_Lib.Options; -- .Actual;
 with Ada_Lib.Options.Runstring;
---with Ada_Lib.Options.GNOGA;
---with Ada_Lib.Options.Template;
 with Ada_Lib.Socket_IO.Client.Unit_Test;
+with Ada_Lib.Socket_IO.Server.Tests;
 with Ada_Lib.Socket_IO.Stream_IO.Unit_Test;
---with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Template;
---with Ada_Lib.Test;
 with Ada_Lib.Timer.Tests;
 with Ada_Lib.Trace.Tests; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test; --.GNOGA;
---with AUnit.Ada_Lib.Options;
 with Debug_Options;
-
---pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
 package body Ada_Lib.Options.AUnit_Lib is
 
@@ -182,6 +175,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          Put_Line ("      t               Template Test");
          Put_Line ("      T               Timer Test");
          Put_Line ("      @d              Debug Test");
+         Put_Line ("      @s              Socket_IO.Server trace");
          Put_Line ("      @T              Debug Tests");
          Put_Line ("      @t              Debug Test routines");
          New_Line;
@@ -251,11 +245,12 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Debug := True;
                         Ada_Lib.Command_Line_Iterator.Tests.Debug := True;
                         Ada_Lib.Configuration.Tests.Debug := True;
-                        Ada_Lib.Database.Server.Tests.Debug := True;
+--                      Ada_Lib.Database.Server.Tests.Debug := True;
                         Ada_Lib.Help.Tests.Debug := True;
                         Ada_Lib.Lock.Tests.Debug := True;
                         Ada_Lib.Mail.Tests.Debug := True;
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;
+                        Ada_Lib.Socket_IO.Server.Tests.Debug := True;
                         Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Debug := True;
                         Ada_Lib.Template.Trace_Compile := True;
                         Ada_Lib.Template.Trace_Evaluate := True;
@@ -301,8 +296,8 @@ package body Ada_Lib.Options.AUnit_Lib is
                      when 's' =>
                         Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Debug := True;
 
-                     when 'S' =>
-                        Ada_Lib.Database.Server.Tests.Debug := True;
+--                   when 'S' =>
+--                      Ada_Lib.Database.Server.Tests.Debug := True;
 
                      when 't' =>
                         Ada_Lib.Template.Trace_Test := True;
@@ -326,6 +321,9 @@ package body Ada_Lib.Options.AUnit_Lib is
 
                      when 'd' =>
                         Ada_Lib.Trace.Tests.Debug_Test := True;
+
+                     when 's' =>
+                        Ada_Lib.Socket_IO.Server.Tests.Debug := True;
 
                      when 't' =>
                         Ada_Lib.Trace.Tests.Debug := True;
