@@ -9,4 +9,4 @@ else
 fi
 
 #ls -l ../../*.sh
-../../remote_build.sh ada_lib/ada_lib_tests test_ada_lib
+../../remote_build.sh alr_environment ada_lib/ada_lib_tests test_ada_lib
