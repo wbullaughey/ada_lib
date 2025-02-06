@@ -1,4 +1,4 @@
---with "applications.gpr";
+with "alr_environment.gpr";
 with "default_config.gpr";
 --with "config/ada_lib_config.gpr";
 with "gnatcoll.gpr";

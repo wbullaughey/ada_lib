@@ -12,7 +12,7 @@ executables = ["ada_lib_tests"]
 ada_lib = "*"
 
 [[pins]]
-ada_lib  = { path = "../" }
+ada_lib  = { path = ".." }
 
 [[depends-on]]
 ada_lib_gnoga = "*"

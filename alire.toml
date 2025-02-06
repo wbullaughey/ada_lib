@@ -7,10 +7,4 @@ maintainers = ["Wayne Bullaughey <wlb122@verizon.net>"]
 maintainers-logins = ["wbullaughey"]
 
 [[depends-on]]
-applications = "*"
-
-[[pins]]
-applications  = { path = ".." }
-
-[[depends-on]]
 gnatcoll = "^23.0.0"
