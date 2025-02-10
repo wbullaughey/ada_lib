@@ -1,4 +1,4 @@
---with "ada_lib_testing.gpr";
+--with "ada_lib_tests.gpr";
 with "aunit.gpr";
 with "ada_lib.gpr";
 with "ada_lib_gnoga.gpr";
