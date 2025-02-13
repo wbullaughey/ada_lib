@@ -1,4 +1,4 @@
-        name = "ada_lib"
+name = "ada_lib"
 description = "Ada_Lib Utility Library"
 version = "2.0-dev"
 

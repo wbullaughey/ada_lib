@@ -32,7 +32,7 @@ package Ada_Lib.Options.AUnit_Lib is
                            )  is new Ada_Lib.Options.Unit_Test.
                               Ada_Lib_Unit_Test_Program_Options_Type (Multi_Test) with
                                     record
-      AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Program_Options_Type;
+      AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
       Database_Options           : Ada_Lib.Options.Database.Database_Options_Type;
