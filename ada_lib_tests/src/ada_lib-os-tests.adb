@@ -188,7 +188,7 @@ package body Ada_Lib.OS.Tests is
    ---------------------------------------------------------------
 
       Options     : Ada_Lib.Options.AUnit_Lib.
-                     Aunit_Options_Type'class renames
+                     Aunit_Program_Options_Type'class renames
                         Ada_Lib.Options.AUnit_Lib.
                            Aunit_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;

@@ -26,13 +26,13 @@ package Ada_Lib.Options.AUnit_Lib is
    function New_Suite return Non_DBDamon_Test_Access;
 
    -- type used in application for unit testing;
-   type Aunit_Options_Type (
+   type Aunit_Program_Options_Type (
       Multi_Test                 : Boolean -- perform multiple tests in one
                                             -- execution of test program
                            )  is new Ada_Lib.Options.Unit_Test.
-                              Ada_Lib_Unit_Test_Options_Type (Multi_Test) with
+                              Ada_Lib_Unit_Test_Program_Options_Type (Multi_Test) with
                                     record
-      AUnit_Options              : AUnit.Ada_Lib.Options.AUnit_Options_Type;
+      AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Program_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
       Database_Options           : Ada_Lib.Options.Database.Database_Options_Type;
@@ -41,13 +41,13 @@ package Ada_Lib.Options.AUnit_Lib is
       Template                   : Ada_Lib.Options.Template.Template_Options_Type;
       Tester_Debug               : Boolean := False;
 --    Unit_Test                  : Ada_Lib.Options.Unit_Test.
---                                  Ada_Lib_Unit_Test_Options_Type (True);
+--                                  Ada_Lib_Unit_Test_Program_Options_Type (True);
    end record;
 
    type Aunit_Options_Class_Access
-                                 is access all Aunit_Options_Type'class;
+                                 is access all Aunit_Program_Options_Type'class;
    type Aunit_Options_Constant_Class_Access
-                                 is access constant Aunit_Options_Type'class;
+                                 is access constant Aunit_Program_Options_Type'class;
 
    Failure                       : exception;
 
@@ -58,7 +58,7 @@ package Ada_Lib.Options.AUnit_Lib is
 
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type;
+     Options                     : in out Aunit_Program_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
@@ -72,25 +72,25 @@ private
 
    overriding
    procedure Program_Help (
-      Options                    : in     Aunit_Options_Type;  -- only used for dispatch
+      Options                    : in     Aunit_Program_Options_Type;  -- only used for dispatch
       Help_Mode                  : in     Help_Mode_Type);
 
    overriding
    function Process_Option (
-      Options                    : in out Aunit_Options_Type;
+      Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
       Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean
    with pre => Options.Initialized;
 
    procedure Register_Tests (
-      Options                    : in     Aunit_Options_Type;
+      Options                    : in     Aunit_Program_Options_Type;
       Suite_Name                 : in     String;
       Test                       : in out Ada_Lib.Unit_Test.Tests.
                                              Test_Case_Type'class);
    overriding
    procedure Trace_Parse (
-      Options                    : in out Aunit_Options_Type;
+      Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class);
 
 end Ada_Lib.Options.AUnit_Lib;

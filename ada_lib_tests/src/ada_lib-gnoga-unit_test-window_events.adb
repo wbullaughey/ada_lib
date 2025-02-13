@@ -69,7 +69,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -140,7 +140,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Keyboard_Event                : in     Standard.Gnoga.Gui.Base.Keyboard_Event_Record) is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -206,7 +206,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -389,7 +389,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -476,7 +476,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Mouse_Event             : in     Standard.Gnoga.Gui.Base.Mouse_Event_Record) is
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;

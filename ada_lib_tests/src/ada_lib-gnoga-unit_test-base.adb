@@ -224,7 +224,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
    ---------------------------------------------------------------
 
       Options     : Ada_Lib.Options.Unit_Test.
-                     Ada_Lib_Unit_Test_Options_Type'class renames
+                     Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;

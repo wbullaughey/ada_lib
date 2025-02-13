@@ -105,7 +105,7 @@ package body Ada_Lib.Database.Unit_Test is
    ) return String is
    ----------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -123,7 +123,7 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Ada_Lib.Database.Port_Type is
    ----------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -242,7 +242,7 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Boolean is       -- return true if test can be run
    ----------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -276,7 +276,7 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Which_Host_Type is
    ----------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;

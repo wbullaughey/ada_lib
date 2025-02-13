@@ -31,9 +31,9 @@ package Ada_Lib.Options.Unit_Test is
    Default_Random_Seed           : constant := 0;
 
    -- base type for all unit test programs which -- include ada_lib
-   type Ada_Lib_Unit_Test_Options_Type (
+   type Ada_Lib_Unit_Test_Program_Options_Type (
       Multi_Test        : Boolean -- perform multiple tests in one
-                                   -- execution of test program
+                                      -- execution of test program
                            ) is new Ada_Lib.Options.Actual.
                               Program_Options_Type with record
       Debug             : Boolean := False;  -- debug unit test application
@@ -57,28 +57,28 @@ package Ada_Lib.Options.Unit_Test is
    end record;
 
    type Ada_Lib_Unit_Test_Options_Class_Access
-                                 is access all Ada_Lib_Unit_Test_Options_Type'class;
+                                 is access all Ada_Lib_Unit_Test_Program_Options_Type'class;
    type Ada_Lib_Unit_Test_Options_Constant_Class_Access
-                                 is access constant Ada_Lib_Unit_Test_Options_Type'class;
+                                 is access constant Ada_Lib_Unit_Test_Program_Options_Type'class;
 
    -- call this for unit tests that cannot run multiple tests at one time
    procedure Check_Test_Suite_And_Routine (
-      Options                    : in     Ada_Lib_Unit_Test_Options_Type);
+      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type);
 
    overriding
    function Initialize (
-     Options                     : in out Ada_Lib_Unit_Test_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
    with pre => Options.Verify_Preinitialize;
 
    overriding
    procedure Post_Process (      -- final initialization
-     Options                    : in out Ada_Lib_Unit_Test_Options_Type);
+     Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type);
 
    overriding
    function Process_Option (  -- process one option
-     Options                     : in out Ada_Lib_Unit_Test_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
      Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
       Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean
@@ -91,7 +91,7 @@ package Ada_Lib.Options.Unit_Test is
 
    overriding
    procedure Update_Filter (
-      Options                    : in out Ada_Lib_Unit_Test_Options_Type);
+      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type);
 
    procedure Routine_Action (
       Suite                      : in     String;
@@ -108,12 +108,12 @@ private
 
    overriding
    procedure Program_Help (
-      Options                    : in     Ada_Lib_Unit_Test_Options_Type;  -- only used for dispatch
+      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type;  -- only used for dispatch
       Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type);
 
    overriding
    procedure Trace_Parse (
-      Options              : in out Ada_Lib_Unit_Test_Options_Type;
+      Options              : in out Ada_Lib_Unit_Test_Program_Options_Type;
       Iterator             : in out Ada_Lib.Options.
                                        Command_Line_Iterator_Interface'class);
 

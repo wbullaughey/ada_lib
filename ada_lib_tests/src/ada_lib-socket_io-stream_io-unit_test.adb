@@ -158,8 +158,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Test                       : in out Socket_Test_Type) is
    ---------------------------------------------------------------
 
-      Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
-                     Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class (
+      Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
+                     Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class (
                         Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options.all);
    begin
       Log_In (Debug);
@@ -213,7 +213,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                      : constant Ada_Lib.Strings.String_Constant_Access :=
                         new String'("client send receive");
 
---    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+--    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
 --                      Ada_Lib.Options.AUnit_Lib.
 --                         Aunit_Options_Constant_Class_Access (
 --                            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -802,7 +802,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                            when Polling_Read => Buffer_Length,
 
                            when others => Data_Buffer_Type'length);
-         Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class renames
+         Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                            Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;

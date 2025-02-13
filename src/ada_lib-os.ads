@@ -149,6 +149,7 @@ package Ada_Lib.OS is
       State_not_recoverable,                             -- ENOTRECOVERABLE
       Operation_not_possible_due_to_RF_kill,             -- ERFKILL
       Memory_page_has_hardware_error,                    -- EHWPOISON
+      Application_Exception,
       Application_Error,
       Assertion_Exit,
       Exception_Exit,

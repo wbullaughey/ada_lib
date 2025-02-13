@@ -16,7 +16,7 @@ procedure Test_Ada_Lib is
 begin
    Put_Line ("test_ada_lib");
    declare
-      Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type (
+      Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type (
                         Multi_Test => True);
       Debug          : Boolean renames AUnit_Options.Tester_Debug;
 

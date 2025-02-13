@@ -34,7 +34,7 @@ pragma Elaborate_All (Ada_Lib.Lock);
 ----------------------------------------------------------------------------
 procedure Ada_Lib.Test.Run_Suite (
    Options                       : in     Ada_Lib.Options.AUnit_Lib.
-                                             Aunit_Options_Type'class) is
+                                             Aunit_Program_Options_Type'class) is
 ----------------------------------------------------------------------------
 
    use type Ada_Lib.Options.Mode_Type;

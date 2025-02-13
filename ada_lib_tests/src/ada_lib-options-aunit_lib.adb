@@ -40,7 +40,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    function Has_Database return Boolean is
    -------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Options_Type'class
+      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
@@ -52,7 +52,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Aunit_Options_Type;
+     Options                     : in out Aunit_Program_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          Options.GNOGA_Unit_Test_Options.Initialize and then
          Options.Template.Initialize and then
 --       Options.Initialize and then
-         Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+         Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
             Options).Initialize and then
          Options.Process (
             Include_Options      => True,
@@ -101,7 +101,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    function Process_Option (
-      Options                    : in out Aunit_Options_Type;
+      Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
       Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
@@ -143,7 +143,7 @@ package body Ada_Lib.Options.AUnit_Lib is
             Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
             Options.Template.Process_Option (Iterator, Option) or else
 --          Options.Unit_Test.Process_Option (Iterator, Option) or else
-            Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+            Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
                Options).Process_Option (Iterator, Option),
             Trace_Options or Debug, Option.Image & " processed");
       end if;
@@ -152,7 +152,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    procedure Program_Help (
-      Options                    : in      Aunit_Options_Type;  -- only used for dispatch
+      Options                    : in      Aunit_Program_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
@@ -192,14 +192,14 @@ package body Ada_Lib.Options.AUnit_Lib is
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
       Options.Template.Program_Help (Help_Mode);
 --    Options.Unit_Test.Program_Help (Help_Mode);
-      Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Options_Type (
+      Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
          Options).Program_Help (Help_Mode);
       Log_Out (Debug or Trace_Options);
    end Program_Help;
 
    ----------------------------------------------------------------------------
    procedure Register_Tests (
-      Options                    : in     Aunit_Options_Type;
+      Options                    : in     Aunit_Program_Options_Type;
       Suite_Name                 : in     String;
       Test                       : in out Ada_Lib.Unit_Test.Tests.
                                              Test_Case_Type'class) is
@@ -217,7 +217,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    Log_Here (Debug, Tag_Name (Aunit_Options_Type'class (Protected_Options)'tag));
+--    Log_Here (Debug, Tag_Name (Aunit_Program_Options_Type'class (Protected_Options)'tag));
 --
 --    Ada_Lib.Options.Set_Ada_Lib_Options (
 --       Protected_Options'access);
@@ -226,7 +226,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Aunit_Options_Type;
+      Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 

@@ -36,7 +36,7 @@ package body Ada_Lib.Options.Unit_Test is
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
-      Options                    : in     Ada_Lib_Unit_Test_Options_Type) is
+      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin
@@ -57,7 +57,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Ada_Lib_Unit_Test_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Post_Process (
-     Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
+     Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type) is
    ----------------------------------------------------------------------------
 
       -------------------------------------------------------------------------
@@ -176,7 +176,7 @@ package body Ada_Lib.Options.Unit_Test is
    -- processes options it knows about and calls parent for others
    overriding
    function Process_Option (
-      Options                    : in out Ada_Lib_Unit_Test_Options_Type;
+      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
       Option                     : in     Ada_Lib.Options.Option_Type'class
    ) return Boolean is
@@ -375,7 +375,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Program_Help (
-      Options                    : in      Ada_Lib_Unit_Test_Options_Type;  -- only used for dispatch
+      Options                    : in      Ada_Lib_Unit_Test_Program_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
@@ -502,7 +502,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Ada_Lib_Unit_Test_Options_Type;
+      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
@@ -566,7 +566,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Update_Filter (
-      Options                    : in out Ada_Lib_Unit_Test_Options_Type) is
+      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin
