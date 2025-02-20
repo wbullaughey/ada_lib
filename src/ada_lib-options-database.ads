@@ -60,8 +60,8 @@ package Ada_Lib.Options.Database is
 
    overriding
    procedure Trace_Parse (
-      Options                    : in out Database_Options_Type;
-      Iterator                   : in out Command_Line_Iterator_Interface'class);
+      Options              : in out Database_Options_Type;
+      Iterator             : in out Command_Line_Iterator_Interface'class);
 
    function Which_Host (
       Options                    : in     Database_Options_Type

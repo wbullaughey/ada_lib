@@ -135,8 +135,8 @@ package body Ada_Lib.Options.Template is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Template_Options_Type;
-      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
+      Options        : in out Template_Options_Type;
+      Iterator       : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

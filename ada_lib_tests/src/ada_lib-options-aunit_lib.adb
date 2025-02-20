@@ -64,7 +64,7 @@ package body Ada_Lib.Options.AUnit_Lib is
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Options_Without_Parameters);
       return Log_Out (
-         Options.AUnit_Options.Initialize and then
+--       Options.AUnit_Options.Initialize and then
          Options.Database_Options.Initialize and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
          Options.Template.Initialize and then
@@ -138,7 +138,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 
       else
          return Log_Out(
-            Options.AUnit_Options.Process_Option (Iterator, Option) or else
+--          Options.AUnit_Options.Process_Option (Iterator, Option) or else
             Options.Database_Options.Process_Option (Iterator, Option) or else
             Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
             Options.Template.Process_Option (Iterator, Option) or else
@@ -187,7 +187,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          New_Line;
 
       end case;
-      Options.AUnit_Options.Program_Help (Help_Mode);
+--    Options.AUnit_Options.Program_Help (Help_Mode);
       Options.Database_Options.Program_Help (Help_Mode);
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
       Options.Template.Program_Help (Help_Mode);
@@ -226,8 +226,9 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Aunit_Program_Options_Type;
-      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class) is
+      Options     : in out Aunit_Program_Options_Type;
+      Iterator    : in out Ada_Lib.Options.
+                              Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;

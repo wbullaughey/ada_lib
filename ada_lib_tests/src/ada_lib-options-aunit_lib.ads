@@ -4,7 +4,7 @@ with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.Template;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test.Tests;
-with AUnit.Ada_Lib.Options;
+--with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
 
 -- options for unit tests of Ada_Lib
@@ -32,7 +32,7 @@ package Ada_Lib.Options.AUnit_Lib is
                            )  is new Ada_Lib.Options.Unit_Test.
                               Ada_Lib_Unit_Test_Program_Options_Type (Multi_Test) with
                                     record
-      AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Options_Type;
+--    AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Options_Type;
       Database                   : Ada_Lib.Database.Connection.
                                     Abstract_Database_Class_Access := Null;
       Database_Options           : Ada_Lib.Options.Database.Database_Options_Type;
@@ -90,7 +90,8 @@ private
                                              Test_Case_Type'class);
    overriding
    procedure Trace_Parse (
-      Options                    : in out Aunit_Program_Options_Type;
-      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class);
+      Options     : in out Aunit_Program_Options_Type;
+      Iterator    : in out Ada_Lib.Options.
+                              Command_Line_Iterator_Interface'class);
 
 end Ada_Lib.Options.AUnit_Lib;

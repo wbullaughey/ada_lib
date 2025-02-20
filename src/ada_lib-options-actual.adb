@@ -598,8 +598,8 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options                    : in out Program_Options_Type;
-      Iterator                   : in out Command_Line_Iterator_Interface'class) is
+      Options              : in out Program_Options_Type;
+      Iterator             : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
       Extended                   : Boolean := False;
