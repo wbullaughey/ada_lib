@@ -260,7 +260,7 @@ package body Ada_Lib.Help is
 
    ----------------------------------------------------------------------------
 begin
-     Debug := Debug_Options.Debug_All;
+     Debug := Debug or Debug_Options.Debug_All;
 --debug := True;
 --trace_options := True;
    Log_Here (Debug or Trace_Options or Elaborate);

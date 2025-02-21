@@ -205,7 +205,7 @@ package body Ada_Lib.Options.Template is
 
 begin
 -- Elaborate := True;
--- Debug := Debug_Options.Debug_All;
+-- Debug := Debug or Debug_Options.Debug_Al;
 --Trace_Options := True;
 --debug := True;
    Log_Here (Elaborate or Debug);

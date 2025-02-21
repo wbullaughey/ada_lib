@@ -348,7 +348,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 begin
 -- AUnit_Lib_Options := Protected_Options'access;
 -- Elaborate := True;
-   Debug := Debug_Options.Debug_All;
+   Debug := Debug or Debug_Options.Debug_All;
 --Trace_Options := True;
 --debug := True;
 --Protected_Options.Tester_Debug := True;

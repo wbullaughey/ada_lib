@@ -289,7 +289,9 @@ package Ada_Lib.Options is
    with pre => Have_Options;
 
    procedure Set_Ada_Lib_Options (
-      Options                    : in     Interface_Options_Class_Access);
+      Options                    : in     Interface_Options_Class_Access
+   ) with Pre => Options /= Null and then
+                 not Have_Options;
 
    type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
 

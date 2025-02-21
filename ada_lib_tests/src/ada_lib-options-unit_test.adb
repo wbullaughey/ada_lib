@@ -590,7 +590,7 @@ package body Ada_Lib.Options.Unit_Test is
 begin
 --Ada_Lib.Trace.Trace_Tests := True;
 --Elaborate := True;
-   Debug := Debug_Options.Debug_All;
+   Debug := Debug or Debug_Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
    Log_Here (Debug or Elaborate or Trace_Options);

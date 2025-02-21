@@ -831,7 +831,7 @@ package body Ada_Lib.Command_Line_Iterator is
    end Make;
 
 begin
-   Debug := Debug_Options.Debug_All;
+   Debug := Debug or Debug_Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
 --Elaborate := True;

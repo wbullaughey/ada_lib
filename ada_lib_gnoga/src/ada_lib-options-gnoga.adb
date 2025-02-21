@@ -1,7 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 -- with Ada_Lib.Help;
 ----with Ada_Lib.Database.Server;
-with Ada_Lib.GNOGA;
+--with Ada_Lib.GNOGA;
 with Ada_Lib.Help;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Options.Runstring;
@@ -154,7 +154,7 @@ package body Ada_Lib.Options.GNOGA is
    end Trace_Parse;
 
 begin
---   Debug := Debug_Options.Debug_All;
+--   Debug := Debug or Debug_Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
    Log_Here (Elaborate);

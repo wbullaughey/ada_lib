@@ -220,7 +220,7 @@ package body Ada_Lib.Options.Runstring is
    end Registration_Type;
 
 begin
-     Debug := Debug_Options.Debug_All;
+     Debug := Debug or Debug_Options.Debug_All;
 --debug := true;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.Options.Runstring;
