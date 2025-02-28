@@ -680,6 +680,8 @@ package body Ada_Lib.Trace is
    -------------------------------------------------------------------
 
    begin
+      Log_In (Enable, Message, Where, Who);
+
       if Recursed then
          Put_Line ("recursive call from " & Where & " by " & Who &
             Quote (" message", Message));
@@ -687,8 +689,6 @@ package body Ada_Lib.Trace is
       else
          Recursed := True;
       end if;
-
-      Log_In (Enable, Message, Where, Who);
    end Log_In_Checked;
 
    -------------------------------------------------------------------
