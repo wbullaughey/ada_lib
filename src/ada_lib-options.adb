@@ -115,7 +115,6 @@ package body Ada_Lib.Options is
       Options                    : Options_Type (1 .. 100);
 
    begin
-log_here (ada_lib.options.debug'img & " from " & From);
       Log_In (Debug or Trace_Options, Quote ("source", Source) & (if Modifier = Unmodified then
             " no modifier"
          else
@@ -127,7 +126,6 @@ log_here (ada_lib.options.debug'img & " from " & From);
       end loop;
 
       Log_Out (Debug or Trace_Options, "count" & Count'img);
-log_here (ada_lib.options.debug'img & " from " & From);
       return Options (1 .. Count);
    end Create_Options;
 
@@ -341,7 +339,6 @@ log_here (ada_lib.options.debug'img & " from " & From);
    ----------------------------------------------------------------
 
    begin
-log_here (debug'img);
       Log_In (Debug or Trace_Options, Tag_Name (Options.all'tag));
       if Debug or Trace_Options then
          Tag_History (Options.all'tag);
@@ -462,9 +459,9 @@ log_here (debug'img);
 
 begin
      Debug := Debug or Debug_Options.Debug_All;
-Debug := true;
-Elaborate := True;
-Trace_Options := True;
+--Debug := true;
+--Elaborate := True;
+--Trace_Options := True;
 
    Indent_Trace := True;
 --log_here ("Indent_Trace address " & Image (Indent_Trace'address));
