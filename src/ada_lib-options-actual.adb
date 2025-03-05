@@ -828,17 +828,17 @@ package body Ada_Lib.Options.Actual is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug,  "called from " & From);
+      Log_In (Debug or Trace_Options,  "called from " & From);
       if Options.Verify_Initialized then
          if Options.Processed then
             Put_Line ("Options.Processed before initialization " & " called from " & From);
          else
-            return Log_Out (True, Debug);
+            return Log_Out (True, Debug or Trace_Options);
          end if;
       else
          Put_Line ("Ada_Lib_Options not initialized at " & Here & " called from " & From);
       end if;
-      return Log_Out (False, Debug);
+      return Log_Out (False, Debug or Trace_Options);
    end Verify_Preprocess;
 
    ----------------------------------------------------------------------------
@@ -854,6 +854,7 @@ package body Ada_Lib.Options.Actual is
    end Update_Filter;
 
 begin
+--Debug := True;
 --Trace_Options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Options.Actual;

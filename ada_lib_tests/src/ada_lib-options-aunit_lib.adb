@@ -70,12 +70,12 @@ package body Ada_Lib.Options.AUnit_Lib is
          Options.Template.Initialize and then
 --       Options.Initialize and then
          Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
-            Options).Initialize and then
-         Options.Process (
-            Include_Options      => True,
-            Include_Non_Options  => False,
-            Modifiers            => String'(
-               1 => Ada_Lib.Help.Modifier)),
+            Options).Initialize,
+--       Options.Process (
+--          Include_Options      => True,
+--          Include_Non_Options  => False,
+--          Modifiers            => String'(
+--             1 => Ada_Lib.Help.Modifier)),
          Debug or Trace_Options);
    end Initialize;
 
