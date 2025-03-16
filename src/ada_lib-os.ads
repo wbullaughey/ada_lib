@@ -322,7 +322,8 @@ package Ada_Lib.OS is
    return String;
 
    procedure Immediate_Halt (
-      Exit_Code                  : in     OS_Exit_Code_Type);
+      Exit_Code                  : in     OS_Exit_Code_Type;
+      Message                    : in     String := "");
 
    procedure Close_File (
       File                       : in     File_Descriptor) renames

@@ -3,7 +3,7 @@ with Ada.Strings.Fixed;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Strings;
 
---pragma Elaborate (Ada_Lib.Limited_Trace);
+pragma Elaborate (Ada_Lib.Trace);
 
 package body Ada_Lib.Parser is
 
@@ -711,7 +711,8 @@ package body Ada_Lib.Parser is
    end Name_Value;
 
 begin
---Debug := True;
+Debug := True;
+Elaborate := True;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.Parser;
 

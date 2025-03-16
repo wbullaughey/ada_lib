@@ -54,13 +54,13 @@ package Ada_Lib.Options is
    type Options_Type             is array (Positive range <>) of Option_Type;
    type Options_Access           is access Options_Type;
 
-   function Create_Options (     -- create a single options
+   function Create_Options (     -- create a single options with a character
       Option                     : in     Character;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Type;
 
-   function Create_Options (
+   function Create_Options (     -- create multiple options from a string
       Source                     : in     String;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
@@ -72,7 +72,7 @@ package Ada_Lib.Options is
       From                       : in     String := Ada_Lib.Trace.Here
    ) return Options_Access;
 
-   function Create_Options (
+   function Create_Options (    -- create a single options with a character
       Source                     : in     String;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here

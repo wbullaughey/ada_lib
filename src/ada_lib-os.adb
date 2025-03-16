@@ -2,7 +2,7 @@ with Ada.Characters.Latin_1;
 with Ada.Text_IO; use  Ada.Text_IO;
 with Ada_Lib.OS_Strings;
 with Ada_Lib.Strings;
---with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 with GNAT.Sockets;
 with Interfaces.C;
@@ -62,13 +62,19 @@ package body Ada_Lib.OS is
 
    -------------------------------------------------------------------
    procedure Immediate_Halt (
-      Exit_Code            : in   OS_Exit_Code_Type) is
+      Exit_Code            : in   OS_Exit_Code_Type;
+      Message                    : in     String := "") is
    -------------------------------------------------------------------
 
    begin
       if Trace then
-         Put_Line ("Exit_Code " & Exit_Code'img & " for " & Command_Name);
+         Put_Line ("Exit_Code " & Exit_Code'img & " for " & Command_Name &
+            Quote ("message", Message));
       end if;
+      if Message'length > 0 then
+         Put_Line (Message);
+      end if;
+
       GNAT.OS_Lib.OS_Exit (Integer (OS_Exit_Code_Type'pos (Exit_Code)));
    end Immediate_Halt;
 
