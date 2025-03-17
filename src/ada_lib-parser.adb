@@ -711,8 +711,8 @@ package body Ada_Lib.Parser is
    end Name_Value;
 
 begin
-Debug := True;
-Elaborate := True;
+--Debug := True;
+--Elaborate := True;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.Parser;
 

@@ -1459,10 +1459,10 @@ package body Ada_Lib.Trace is
    ---------------------------------------------------------------
 
    begin
-Debug_Trace := True;
-Elaborate := True;
-Trace_Set_Up := True;
-Trace_Tests := True;
+--Debug_Trace := True;
+--Elaborate := True;
+--Trace_Set_Up := True;
+--Trace_Tests := True;
    Include_Hundreds := True;
 -- Include_Program := True;
    Include_Task := True;

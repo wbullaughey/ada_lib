@@ -261,7 +261,7 @@ package body Ada_Lib.Help is
    ----------------------------------------------------------------------------
 begin
      Debug := Debug or Debug_Options.Debug_All;
---debug := True;
+Debug := True;
 --trace_options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
 -- Ada_Lib.Options.Runstring.Options.Register (

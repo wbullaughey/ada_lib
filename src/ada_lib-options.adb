@@ -461,7 +461,7 @@ begin
      Debug := Debug or Debug_Options.Debug_All;
 --Debug := true;
 --Elaborate := True;
---Trace_Options := True;
+Trace_Options := True;
 
    Indent_Trace := True;
 --log_here ("Indent_Trace address " & Image (Indent_Trace'address));
