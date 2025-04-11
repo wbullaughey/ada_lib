@@ -54,6 +54,7 @@ package Ada_Lib.Options.Actual is
    -- type to application options
    type Program_Options_Type  is abstract limited new Program_Options_Package.
                                  Options_Type with record
+      Help_Test               : Boolean := False;  -- used to test help options
       In_Help                 : Boolean := False;
       Processed               : Boolean := False;
       Test_Driver             : Boolean := False;

@@ -1,4 +1,4 @@
---with Ada.Directories;
+with Ada.Directories;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Directory;
 --with Ada_Lib.OS;
@@ -20,13 +20,28 @@ package body Ada_Lib.OS.Run is
    ---------------------------------------------------------------------------
 
    begin
+      Log_In (Debug, Quote ("program", Program) &
+         Quote (" CWD", Ada.Directories.Current_Directory));
       if not Ada_Lib.Directory.Exists (Program) then
-         raise Failed with Quote ("program", Program) & " does not exist";
+         declare
+            Message     : constant String := Quote ("program", Program) &
+               " does not exist";
+         begin
+            Log_Exception (Debug, Message);
+            raise Failed with Message;
+         end;
       end if;
 
       if not Ada_Lib.Directory.Is_Executable(Program) then
-         raise Failed with Quote ("program", Program) & " is not executable";
+         declare
+            Message     : constant String := Quote ("program", Program) &
+               " is not executable";
+         begin
+            Log_Exception (Debug, Message);
+            raise Failed with Message;
+         end;
       end if;
+      Log_Out (Debug);
    end Check_Program;
 
    ---------------------------------------------------------------------------

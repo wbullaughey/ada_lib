@@ -10,9 +10,9 @@ library project Ada_Lib is
    for Library_Version use Project'Library_Name & ".so."; -- & Ada_Lib_Config.Crate_Version;
 
    for Source_Dirs use ("src/", "src/macosx");
-   for Object_Dir use "obj/"; -- & Ada_Lib_Config.Build_Profile;
+   for Object_Dir use "obj/" & ALR_Environment.Mode;
    for Create_Missing_Dirs use "True";
-   for Library_Dir use "lib";
+   for Library_Dir use "lib/" & ALR_Environment.Mode;
 
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=

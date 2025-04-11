@@ -26,22 +26,42 @@ package Ada_Lib.Options.AUnit_Lib is
    function New_Suite return Non_DBDamon_Test_Access;
 
    -- type used in application for unit testing;
+
+
+   type Options_Selection_Type   is (
+      Ada_Lib_Unit_Test_Only,
+      Ada_Lib_Unit_Test_With_Database,
+      Not_Ada_Lib_Unit_Test,
+      With_Database_Only);
+
    type Aunit_Program_Options_Type (
-      Multi_Test                 : Boolean -- perform multiple tests in one
+      Multi_Test        : Boolean; -- perform multiple tests in one
                                             -- execution of test program
+      Options_Selection : Options_Selection_Type
                            )  is new Ada_Lib.Options.Unit_Test.
-                              Ada_Lib_Unit_Test_Program_Options_Type (Multi_Test) with
-                                    record
---    AUnit_Options              : AUnit.Ada_Lib.Options.Aunit_Options_Type;
-      Database                   : Ada_Lib.Database.Connection.
-                                    Abstract_Database_Class_Access := Null;
-      Database_Options           : Ada_Lib.Options.Database.Database_Options_Type;
-      GNOGA_Unit_Test_Options    : Ada_Lib.GNOGA.Unit_Test.Options.
-                                    GNOGA_Unit_Test_Options_Type;
-      Template                   : Ada_Lib.Options.Template.Template_Options_Type;
-      Tester_Debug               : Boolean := False;
---    Unit_Test                  : Ada_Lib.Options.Unit_Test.
---                                  Ada_Lib_Unit_Test_Program_Options_Type (True);
+                              Ada_Lib_Unit_Test_Program_Options_Type (
+                                 Multi_Test) with record
+      Database                : Ada_Lib.Database.Connection.
+                                 Abstract_Database_Class_Access := Null;
+      GNOGA_Unit_Test_Options : Ada_Lib.GNOGA.Unit_Test.Options.
+                                 GNOGA_Unit_Test_Options_Type;
+      Tester_Debug            : Boolean := False;
+      case Options_Selection is
+
+         when Ada_Lib_Unit_Test_Only =>
+            Template_Only     : Ada_Lib.Options.Template.Template_Options_Type;
+
+         when Ada_Lib_Unit_Test_With_Database =>
+            Database_Options  : Ada_Lib.Options.Database.Database_Options_Type;
+            Template          : Ada_Lib.Options.Template.Template_Options_Type;
+
+         when Not_Ada_Lib_Unit_Test =>
+            null;
+
+         when With_Database_Only =>
+            Database_Only     : Ada_Lib.Options.Database.Database_Options_Type;
+
+      end case;
    end record;
 
    type Aunit_Options_Class_Access

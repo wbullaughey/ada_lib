@@ -3,6 +3,7 @@
 --
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator;
+with Ada_Lib.Help;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
@@ -16,8 +17,11 @@ procedure Test_Ada_Lib is
 begin
    Put_Line ("test_ada_lib");
    declare
-      Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type (
-                        Multi_Test => True);
+      Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.
+                        Aunit_Program_Options_Type (
+         Multi_Test        => True,
+         Options_Selection => Ada_Lib.Options.AUnit_Lib.
+                                 Ada_Lib_Unit_Test_With_Database);
       Debug          : Boolean renames AUnit_Options.Tester_Debug;
 
    begin
@@ -25,17 +29,32 @@ begin
       Ada_Lib.Options.Set_Ada_Lib_Options (Aunit_Options'unchecked_access);
       if Aunit_Options.Initialize then
          Log_Here (Debug);
-         Aunit_Options.Post_Process;
-         Ada_Lib.Trace_Tasks.Start ("main");
-         Ada_Lib.Test.Run_Suite (Aunit_Options);
-         Gnoga.Application.Multi_Connect.End_Application;
-         Log_Here (Debug);
-         if Aunit_Options.Exit_On_Done then
-            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
-         end if;
+         if Aunit_Options.Process (
+               Include_Options      => True,
+               Include_Non_Options  => True,
+               Modifiers            => Ada_Lib.Help.Modifiers) then
+            Aunit_Options.Post_Process;
+            if Ada_Lib.Help_Test then
+               Put_Line ("help test " & (if Ada_Lib.Exception_Occured then
+                     "failed"
+                  else
+                     "completed"));
+            else
+               Ada_Lib.Trace_Tasks.Start ("main");
+               Ada_Lib.Test.Run_Suite (Aunit_Options);
+               Gnoga.Application.Multi_Connect.End_Application;
+               Log_Here (Debug);
+               if Aunit_Options.Exit_On_Done then
+                  Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+               end if;
 
-         Ada_Lib.Trace_Tasks.Stop;
-         Ada_Lib.Trace_Tasks.Report;
+               Ada_Lib.Trace_Tasks.Stop;
+               Ada_Lib.Trace_Tasks.Report;
+            end if;
+         else
+            ADA_LIB.OS.Immediate_Halt (Ada_Lib.OS.Application_Error,
+               "Process Options failed");
+         end if;
       else
          Put_Line ("initialiation failed");
       end if;

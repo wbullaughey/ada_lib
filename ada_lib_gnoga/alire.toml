@@ -15,6 +15,9 @@ ada_lib  = { path = ".." }
 [[depends-on]]
 gnatcoll = "^23.0.0"
 
+[[pins]]
+gnoga = { path = "../../vendor/github.com/gnoga" }
+
 [[depends-on]]
 gnoga = "*"
 

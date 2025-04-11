@@ -222,6 +222,6 @@ package body Ada_Lib.Options.Runstring is
 
 begin
      Debug := Debug or Debug_Options.Debug_All;
-debug := true;
+--debug := true;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.Options.Runstring;

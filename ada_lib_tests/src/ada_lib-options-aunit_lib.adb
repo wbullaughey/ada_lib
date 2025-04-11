@@ -21,6 +21,7 @@ with Ada_Lib.Timer.Tests;
 with Ada_Lib.Trace.Tests; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test; --.GNOGA;
 --with AUnit.Ada_Lib.Options;
+--with Command_Name;
 with Debug_Options;
 
 --pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
@@ -46,7 +47,22 @@ package body Ada_Lib.Options.AUnit_Lib is
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
    begin
       Log_Here (Debug or Trace_Options);
-      return Options.Database_Options.Has_Database;
+      return (
+         case Options.Options_Selection is
+
+            when Ada_Lib_Unit_Test_Only =>
+               False,
+
+            when Ada_Lib_Unit_Test_With_Database =>
+               Options.Database_Options.Has_Database,
+
+            when Not_Ada_Lib_Unit_Test =>
+               False,
+
+            when With_Database_Only =>
+               Options.Database_Only.Has_Database
+
+         );
    end Has_Database;
 
    ----------------------------------------------------------------------------
@@ -58,24 +74,32 @@ package body Ada_Lib.Options.AUnit_Lib is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Options);
+      Log_In (Debug or Trace_Options,
+         "Options_Selection " & Options.Options_Selection'img);
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters, Options_With_Parameters);
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Options_Without_Parameters);
       return Log_Out (
---       Options.AUnit_Options.Initialize and then
-         Options.Database_Options.Initialize and then
+         (case Options.Options_Selection is
+
+            when Ada_Lib_Unit_Test_Only =>
+               Options.Template_Only.Initialize,
+
+            when Not_Ada_Lib_Unit_Test =>
+               True,
+
+            when Ada_Lib_Unit_Test_With_Database =>
+               Options.Database_Options.Initialize and then
+               Options.Template.Initialize,
+
+            when With_Database_Only =>
+               Options.Database_Only.Initialize
+
+         ) and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
-         Options.Template.Initialize and then
---       Options.Initialize and then
          Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
             Options).Initialize,
---       Options.Process (
---          Include_Options      => True,
---          Include_Non_Options  => False,
---          Modifiers            => String'(
---             1 => Ada_Lib.Help.Modifier)),
          Debug or Trace_Options);
    end Initialize;
 
@@ -137,12 +161,23 @@ package body Ada_Lib.Options.AUnit_Lib is
          return Log_Out (True, Trace_Options or Debug);
 
       else
-         return Log_Out(
---          Options.AUnit_Options.Process_Option (Iterator, Option) or else
-            Options.Database_Options.Process_Option (Iterator, Option) or else
+         return Log_Out (
+            (case Options.Options_Selection is
+
+               when Ada_Lib_Unit_Test_Only =>
+                  Options.Template_Only.Process_Option (Iterator, Option),
+
+               when Not_Ada_Lib_Unit_Test =>
+                  False,
+
+               when Ada_Lib_Unit_Test_With_Database =>
+                  Options.Database_Options.Process_Option (Iterator, Option),
+
+               when With_Database_Only =>
+                  Options.Database_Only.Process_Option (Iterator, Option)
+
+            ) or else
             Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
-            Options.Template.Process_Option (Iterator, Option) or else
---          Options.Unit_Test.Process_Option (Iterator, Option) or else
             Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
                Options).Process_Option (Iterator, Option),
             Trace_Options or Debug, Option.Image & " processed");
@@ -156,12 +191,15 @@ package body Ada_Lib.Options.AUnit_Lib is
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
+      Component                  : constant String := "Ada_Lib Unit Test";
+
    begin
       Log_In (Debug or Trace_Options, "mode " & Help_Mode'img);
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Ada_Lib.Help.Add_Option ('t', "", "ada_lib unit tests");
+         Ada_Lib.Help.Add_Option (Trace_Option, "trace options",
+            "ada_lib trace options", Component);
 
       when Ada_Lib.Options.Traces =>
          Put_Line (Ada.Command_Line.Command_Name & " trace options (-" &
@@ -188,10 +226,23 @@ package body Ada_Lib.Options.AUnit_Lib is
 
       end case;
 --    Options.AUnit_Options.Program_Help (Help_Mode);
-      Options.Database_Options.Program_Help (Help_Mode);
+      case Options.Options_Selection is
+
+         when Ada_Lib_Unit_Test_Only =>
+            Options.Template_Only.Program_Help (Help_Mode);
+
+         when Not_Ada_Lib_Unit_Test =>
+            null;
+
+         when Ada_Lib_Unit_Test_With_Database =>
+            Options.Database_Options.Program_Help (Help_Mode);
+            Options.Template.Program_Help (Help_Mode);
+
+         when With_Database_Only =>
+            Options.Database_Only.Program_Help (Help_Mode);
+
+      end case;
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
-      Options.Template.Program_Help (Help_Mode);
---    Options.Unit_Test.Program_Help (Help_Mode);
       Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
          Options).Program_Help (Help_Mode);
       Log_Out (Debug or Trace_Options);
@@ -349,10 +400,10 @@ begin
 -- AUnit_Lib_Options := Protected_Options'access;
 -- Elaborate := True;
    Debug := Debug or Debug_Options.Debug_All;
---Trace_Options := True;
+Trace_Options := True;
 --debug := True;
 --Protected_Options.Tester_Debug := True;
-   Log_Here (Elaborate or Debug);
+   Log_Here (Elaborate or Trace_Options or Debug);
 
 exception
    when Fault: others =>

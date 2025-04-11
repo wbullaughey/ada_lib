@@ -38,10 +38,11 @@ package body Ada_Lib.Options.Actual is
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             "hPv" & Test_Condition_Flag,
+                                             "hPv",
                                              Unmodified) &
                                           Ada_Lib.Options.Create_Options (
-                                             "iptx", Ada_Lib.Help.Modifier);
+                                             "iptx" & Test_Condition_Flag,
+                                             Ada_Lib.Help.Modifier);
 -- Parameter_Parsing_Failed      : Boolean := False;
 
 
@@ -334,36 +335,48 @@ package body Ada_Lib.Options.Actual is
          Tag_Name (Program_Options_Type'class (Options)'tag));
 
       while not Iterator.At_End loop
-         if Iterator.Is_Option then
-            declare
-               Option         : constant Ada_Lib.Options.Option_Type'class :=
-                                 Iterator.Get_Option;
-               Message        : constant String := Option.Image & " not defined";
+         begin
+            if Iterator.Is_Option then
+               declare
+                  Option         : constant Ada_Lib.Options.Option_Type'class :=
+                                    Iterator.Get_Option;
+                  Message        : constant String := Option.Image & " not defined";
 
-            begin
-               Log_Here (Debug or Trace_Options, Option.Image);
-               if Ada_Lib.Options.Interface_Options_Type'class (
-                     Options).Process_Option (Iterator, Option) then
+               begin
                   Log_Here (Debug or Trace_Options, Option.Image);
-               else
-                  Log_Here (Debug or Trace_Options, Message);
-                  Options.Bad_Option (Option, Message);     -- aborts program
-                  exit;
+                  if Ada_Lib.Options.Interface_Options_Type'class (
+                        Options).Process_Option (Iterator, Option) then
+                     Log_Here (Debug or Trace_Options, Option.Image);
+                  else
+                     Log_Here (Debug or Trace_Options, Message);
+                     Options.Bad_Option (Option, Message);     -- aborts program
+                     exit;
+                  end if;
+               end;
+            else
+               declare
+                  Argument          : constant String :=
+                                       Iterator.Get_Argument;
+               begin
+                  if not Program_Options_Type'class (Options).Process_Argument (
+                        Iterator, Argument) then
+                     Log_Out (Debug or Trace_Options);
+                     Options.Bad_Option ("unexpected '" & Argument & "' on run string" &
+                        " from " & Here);
+                        -- raises exception
+                  end if;
+               end;
+            end if;
+
+         exception
+
+            when Fault: others =>
+               Trace_Exception (Debug or Trace_Options, Fault);
+               if not Ada_Lib.Help_Test then
+                  raise;
                end if;
-            end;
-         else
-            declare
-               Argument          : constant String :=
-                                    Iterator.Get_Argument;
-            begin
-               if not Program_Options_Type'class (Options).Process_Argument (Iterator, Argument) then
-                  Log_Out (Debug or Trace_Options);
-                  Options.Bad_Option ("unexpected '" & Argument & "' on run string" &
-                     " from " & Here);
-                     -- raises exception
-               end if;
-            end;
-         end if;
+
+         end;
          if not Iterator.At_End then
             Iterator.Advance;
          end if;
@@ -391,7 +404,8 @@ package body Ada_Lib.Options.Actual is
 
    begin
       Log_In (Trace_Options or Debug, "option '" & Option.Image &
-         " kind " & Option.Kind'img);
+         " kind " & Option.Kind'img &
+         " Help_Test " & Ada_Lib.Help_Test'img);
 
       if Ada_Lib.Options.Has_Option (Option, Options_With_Parameters,
             Options_Without_Parameters) then
@@ -402,7 +416,9 @@ package body Ada_Lib.Options.Actual is
                   Options.Trace_Parse (Iterator);
 
                when 'h' =>
+                  if not Ada_Lib.Help_Test then
                      Get_Ada_Lib_Read_Only_Options.Display_Help;
+                  end if;
 
                when 'P' =>
                   Ada_Lib.Trace.Pause_Flag := True;
@@ -412,7 +428,8 @@ package body Ada_Lib.Options.Actual is
 
                when Others =>
                   Log_Exception (Debug or Trace_Options);
-                  raise Failed with "Has_Option incorrectly passed " & Option.Image;
+                  raise Failed with "Has_Option incorrectly passed " &
+                     Option.Image;
 
             end case;
          else
@@ -486,7 +503,8 @@ package body Ada_Lib.Options.Actual is
       case Help_Mode is
 
       when Ada_Lib.Options.Program =>
-         Ada_Lib.Help.Add_Option ('a', "trace options", "Ada_Lib library trace options", Component);
+         Ada_Lib.Help.Add_Option ('a', "trace options",
+            "Ada_Lib library trace options", Component);
          Ada_Lib.Help.Add_Option ('h', "", "this message", Component);
          Ada_Lib.Help.Add_Option ('P', "", "pause", Component);
          Ada_Lib.Help.Add_Option ('v', "", "verbose", Component);
@@ -500,6 +518,7 @@ package body Ada_Lib.Options.Actual is
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Add_Option ('x', "", "exclude time in trace", Component,
             Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Add_Option ('?', "", "this message", Component);
 
       when Ada_Lib.Options.Traces =>
          Put_Line ("CAC ada_lib trace library options (-a)");
@@ -528,7 +547,6 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      T               Ada_Lib.Trace_Tasks");
 --       Put_Line ("      x               Ada_Lib.Trace.Detail");
 --       Put_Line ("      @               Ada_Lib.Strings");
-         Put_Line ("      -               Ada_Lib.Text");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "c              Template Compile");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
@@ -545,6 +563,8 @@ package body Ada_Lib.Options.Actual is
                            "o              Trace_Options");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "s              Strings");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "t              Ada_Lib.Text");
 
       end case;
       Log_Out (Debug or Trace_Options);
@@ -606,9 +626,11 @@ package body Ada_Lib.Options.Actual is
       Parameter                  : constant String := Iterator.Get_Parameter;
 
    begin
-      Log_In (Ada_Lib_Trace_Trace,  Quote ("parameter", Parameter));
+      Log_In (Debug or Ada_Lib_Trace_Trace or Trace_Options,
+         Quote ("parameter", Parameter));
       for Trace of Parameter loop
-         Log_Here (Ada_Lib_Trace_Trace, " Extended " & Extended'img & Quote (" trace", Trace));
+         Log_Here (Debug or Ada_Lib_Trace_Trace or Trace_Options, " Extended " &
+            Extended'img & Quote (" trace", Trace));
 
          case Extended is
 
@@ -689,9 +711,6 @@ package body Ada_Lib.Options.Actual is
                   when Ada_Lib.Help.Modifier =>
                      Extended := True;
 
-                  when '-' =>
-                     Ada_Lib.Text.Debug := True;
-
                   when others =>
                      Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
                         Trace));
@@ -726,6 +745,9 @@ package body Ada_Lib.Options.Actual is
                   when 's' =>
                      Ada_Lib.Strings.Debug := True;
 
+                  when 't' =>
+                     Ada_Lib.Text.Debug := True;
+
                   when others =>
                      Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
                         Trace));    -- aborts program
@@ -735,7 +757,7 @@ package body Ada_Lib.Options.Actual is
 
          end case;
       end loop;
-      Log_Out (Debug or Trace_Options);
+      Log_Out (Debug or Ada_Lib_Trace_Trace or Trace_Options);
    end Trace_Parse;
 
       ---------------------------------------------------------------

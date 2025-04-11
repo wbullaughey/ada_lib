@@ -15,24 +15,23 @@ package body Ada_Lib.Options.Unit_Test is
 -- use type Ada_Lib.Options.Options_Type;
 -- use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
-   Driver_List_Option            : constant Character := 'd';
-
+   Driver_List_Option         : constant Character := 'd';
+   Trace_Option               : constant Character := 'U';
    Options_With_Parameters
-                                    : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options (
-                                             "esSU", Unmodified) &
-                                          Ada_Lib.Options.Create_Options (
-                                             "nR", Ada_Lib.Help.Modifier);
-   Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options (
-                                             "x", Unmodified) &
-                                          Ada_Lib.Options.Create_Options (
-                                             Driver_List_Option & "lmPSu",
-                                             Ada_Lib.Help.Modifier);
+                              : aliased constant Ada_Lib.Options.Options_Type :=
+                                 Ada_Lib.Options.Create_Options (
+                                    "es" & Trace_Option, Unmodified) &
+                                 Ada_Lib.Options.Create_Options (
+                                    "DnR", Ada_Lib.Help.Modifier);
+   Options_Without_Parameters : aliased constant
+                                 Ada_Lib.Options.Options_Type :=
+                                    Ada_Lib.Options.Create_Options (
+                                       "x", Unmodified) &
+                                    Ada_Lib.Options.Create_Options (
+                                       Driver_List_Option & "lmPSu",
+                                       Ada_Lib.Help.Modifier);
 
-   Initialized_Recursed          : Boolean := False;
+   Initialized_Recursed       : Boolean := False;
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
@@ -188,9 +187,11 @@ package body Ada_Lib.Options.Unit_Test is
       ----------------------------------------------------------------------------
 
       begin
-         Options.Bad_Option ("bad options: Routine (-e) or Suite Name (-s) " &
-            "cannot be combined" &
-            " with List_Suites (-@l) or Driver_Suites (-@d) called from " & From);
+         if not Ada_Lib.Help_Test then
+            Options.Bad_Option ("bad options: Routine (-e) or Suite Name (-s) " &
+               "cannot be combined" &
+               " with List_Suites (-@l) or Driver_Suites (-@d) called from " & From);
+         end if;
       end Bad_Options;
       ----------------------------------------------------------------------------
 
@@ -236,7 +237,29 @@ package body Ada_Lib.Options.Unit_Test is
                      Log_Here (Trace_Options or Debug, Quote ("filter Suite_Name",
                         Options.Suite_Name));
 
-                  when 'S' =>       -- enable default disabled tests
+                  when 'U' =>       -- trace options
+                     Options.Trace_Parse (Iterator);
+
+                  when 'x' =>
+                     Options.Exit_On_Done := True;
+
+                  when others =>
+                     Log_Exception (Trace_Options or Debug, " other option" & Option.Image);
+                     raise Failed with "Has_Option incorrectly passed " & Option.Image;
+
+               end case;
+
+            when Modified =>
+               case Option.Option is
+
+                  when 'd' =>
+                     if Options.Routine.Length > 0 or else
+                           Options.Suite_Name.Length > 0 then
+                        Bad_Options;
+                     end if;
+                     Options.Mode := Driver_Suites;
+
+                  when 'D' =>       -- enable default disabled tests
                      declare
                         Parameter: constant String := Iterator.Get_Parameter;
 
@@ -263,28 +286,6 @@ package body Ada_Lib.Options.Unit_Test is
                         end loop;
                      end;
 
-                  when 'U' =>       -- trace options
-                     Options.Trace_Parse (Iterator);
-
-                  when 'x' =>
-                     Options.Exit_On_Done := True;
-
-                  when others =>
-                     Log_Exception (Trace_Options or Debug, " other option" & Option.Image);
-                     raise Failed with "Has_Option incorrectly passed " & Option.Image;
-
-               end case;
-
-            when Modified =>
-               case Option.Option is
-
-                  when 'd' =>
-                     if Options.Routine.Length > 0 or else
-                           Options.Suite_Name.Length > 0 then
-                        Bad_Options;
-                     end if;
-                     Options.Mode := Driver_Suites;
-
                   when 'l' =>
                      if Options.Routine.Length > 0 or else
                            Options.Suite_Name.Length > 0 then
@@ -310,7 +311,8 @@ package body Ada_Lib.Options.Unit_Test is
 --                   Options.Update_Filter;   -- sets filter name
 
                   when 'R' => -- set random seed to argument
-                     if Options.Number_Random_Generators = 0 then
+                     if Options.Number_Random_Generators = 0 and
+                           not Ada_Lib.Help_Test then
                         raise Failed with
                            "number randoom number generators not set";
                      end if;
@@ -394,8 +396,8 @@ package body Ada_Lib.Options.Unit_Test is
          Ada_Lib.Help.Add_Option ('e', "routine", "routine to test.", Component);
          Ada_Lib.Help.Add_Option ('s', "suite to test", "select test suite to run.",
             Component);
-         Ada_Lib.Help.Add_Option ('S', "suites", "enable default disabled suites.",
-            Component);
+         Ada_Lib.Help.Add_Option ('D', "suites", "enable default disabled suites.",
+            Component, Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Add_Option ('U', "unit test trace Ada_Lib.",
             "select trace", Component);
          Ada_Lib.Help.Add_Option ('x', "", "exit on tests complete", Component);
@@ -419,7 +421,8 @@ package body Ada_Lib.Options.Unit_Test is
             Ada_Lib.Help.Modifier);
 
       when Ada_Lib.Options.Traces =>
-         Put_Line ("Ada_Lib unit test library trace options (-U)");
+         Put_Line ("Ada_Lib unit test library trace options (-" &
+            Trace_Option & ")");
          Put_Line ("      a               all");
          Put_Line ("      A               all unit tests");
          Put_Line ("      g               Ada_Lib.GNOGA.Unit_Test.Debug");

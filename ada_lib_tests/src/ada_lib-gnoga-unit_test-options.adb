@@ -14,10 +14,11 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.GNOGA.Unit_Test.Options is
 
-   Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                       Ada_Lib.Options.Create_Options ('g',
-                                          Ada_Lib.Options.Unmodified);
+   Trace_Option            : constant Character := 'g';
+   Options_With_Parameters : aliased constant
+                              Ada_Lib.Options.Options_Type :=
+                                 Ada_Lib.Options.Create_Options (Trace_Option,
+                                    Ada_Lib.Options.Unmodified);
 
    -------------------------------------------------------------------
    overriding
@@ -90,7 +91,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
             "GNOGA Unit Test traces", Component);
 
       when Ada_Lib.Options.Traces =>
-         Put_Line ("Ada_Lib.Options.GNOGA unit test trace options (-g)");
+         Put_Line ("Ada_Lib.Options.GNOGA unit test trace options (-" &
+            Trace_Option & ")");
          Put_Line ("      a               all");
          Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig");
          Put_Line ("      g               Ada_Lib.GNOGA.Debug (main window)");

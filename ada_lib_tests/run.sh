@@ -33,7 +33,6 @@ case $1 in
 esac
 
 export DATABASE=$1  # local,remote,connect,none
-export PROGRAM=bin/test_ada_lib
 export KILL=true
 #export VERBOSE="-v"
 
@@ -41,7 +40,29 @@ case "$DATABASE" in
 
    "help")
       shift 1
+      export PROGRAM=bin/test_ada_lib
       $PROGRAM -h $* | tee $OUTPUT
+      exit
+      ;;
+
+   "help_test")
+      echo Help Test
+      export PROGRAM=bin/help_test
+      $PROGRAM \
+      -h -l -P -r -v -x -@c -@d -@i -@l -@m -@p -@P -@S -@t -@u -@x \
+      -a abcCehiIlmMoOpPrRsStT@c@d@D@e@E@l@o@s@t \
+      -@D adt \
+      -e routine \
+      -g aego \
+      -G amo \
+      -L path \
+      -R path \
+      -s suite \
+      -t acCdhilmorRsStT@d@T@t \
+      -T aceElt \
+      -u user  \
+      -U aAglprstT \
+      2>&1 | tee $OUTPUT
       exit
       ;;
 

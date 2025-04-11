@@ -1,8 +1,8 @@
 test_ada_lib
 
 test_ada_lib command line options:
+    -?                             : this message                      (Ada_Lib)
     -a <trace options>             : Ada_Lib library trace options     (Ada_Lib)
-    -A <trace options>             : AUnit library traces              (AUnit library)
     -e <routine>                   : routine to test.                  (test_ada_lib)
     -g <trace options>             : GNOGA Unit Test traces            (Ada_Lib.GNOGA)
     -G <trace options>             : GNOGA traces                      (GNOGA library)
@@ -14,16 +14,16 @@ test_ada_lib command line options:
     -r                             : remote dbdaemon.                  (Ada_Lib.Options.Database)
     -R <path>                      : remote dbdaemon path.             (Ada_Lib.Options.Database)
     -s <suite to test>             : select test suite to run.         (test_ada_lib)
-    -S <suites>                    : enable default disabled suites.   (test_ada_lib)
-    -t                             : ada_lib unit tests
+    -t <trace options>             : ada_lib trace options             (Ada_Lib Unit Test)
     -T <options>                   : enables trace template unit tests (Ada_Lib.Template.Tests)
     -u <user>                      : remote user.                      (Ada_Lib.Options.Database)
     -U <unit test trace Ada_Lib.>  : select trace                      (test_ada_lib)
     -v                             : verbose                           (Ada_Lib)
-    -w                             : Web server port                   (GNOGA library)
+    -w <port number>               : Web server port                   (GNOGA library)
     -x                             : exit on tests complete            (test_ada_lib)
     -@c                            : trace test condition              (Ada_Lib)
     -@d                            : driver suites                     (test_ada_lib)
+    -@D <suites>                   : enable default disabled suites.   (test_ada_lib)
     -@i                            : indent trace                      (Ada_Lib)
     -@l                            : List test suites                  (test_ada_lib)
     -@m                            : manual operations.                (test_ada_lib)
@@ -56,18 +56,6 @@ bin/test_ada_lib trace options (-t)
       @T              Debug Tests
       @t              Debug Test routines
 
-AUnit.Ada_Lib.Options library trace options (-A)
-      a               all
-      A               AUnit.Debug
-      l               AUnit.Ada_Lib.Debug
-      o               AUnit options
-
-Ada_Lib.Options.GNOGA unit test trace options (-g)
-      a               all
-      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
-      g               Ada_Lib.GNOGA.Debug (main window)
-      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
-
 Ada_Lib.Template.Tests (-T)
       a               all
       c               compile
@@ -75,6 +63,12 @@ Ada_Lib.Template.Tests (-T)
       E               expand
       l               load
       t               test
+
+Ada_Lib.Options.GNOGA unit test trace options (-g)
+      a               all
+      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
+      g               Ada_Lib.GNOGA.Debug (main window)
+      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
 
 Ada_Lib.Options.GNOGA library trace options (-G)
       a               all
@@ -103,7 +97,6 @@ CAC ada_lib trace library options (-a)
       S               socket Stream
       t               Ada_Lib.Trace
       T               Ada_Lib.Trace_Tasks
-      -               Ada_Lib.Text
       @c              Template Compile
       @d              Template Detail
       @D              Ada_Lib.Directory trace
@@ -112,6 +105,7 @@ CAC ada_lib trace library options (-a)
       @l              Template Load
       @o              Trace_Options
       @s              Strings
+      @t              Ada_Lib.Text
 Ada_Lib unit test library trace options (-U)
       a               all
       A               all unit tests

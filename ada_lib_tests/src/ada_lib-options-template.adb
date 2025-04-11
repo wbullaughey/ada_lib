@@ -18,9 +18,9 @@ package body Ada_Lib.Options.Template is
                                     Standard.Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
                                              Trace_Option, Unmodified);
-   Options_Without_Parameters    : aliased constant
-                                    Standard.Ada_Lib.Options.Options_Type :=
-                                       Standard.Ada_Lib.Options.Null_Options;
+-- Options_Without_Parameters    : aliased constant
+--                                  Standard.Ada_Lib.Options.Options_Type :=
+--                                     Standard.Ada_Lib.Options.Null_Options;
 
    ----------------------------------------------------------------------------
    overriding
@@ -33,11 +33,13 @@ package body Ada_Lib.Options.Template is
    begin
       Log_In (Debug);
       Template_Options_Constant := Options'unchecked_access;
-      Ada_Lib.Options.Runstring.Options.Register (
-         Ada_Lib.Options.Runstring.With_Parameters, Options_With_Parameters);
-      Ada_Lib.Options.Runstring.Options.Register (
-         Ada_Lib.Options.Runstring.Without_Parameters,
-         Options_Without_Parameters);
+      if Ada_Lib.Help_Test then
+         Ada_Lib.Options.Runstring.Options.Register (
+            Ada_Lib.Options.Runstring.With_Parameters, Options_With_Parameters);
+      end if;
+--    Ada_Lib.Options.Runstring.Options.Register (
+--       Ada_Lib.Options.Runstring.Without_Parameters,
+--       Options_Without_Parameters);
       return Log_Out (Actual.Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
@@ -54,16 +56,15 @@ package body Ada_Lib.Options.Template is
 
 --    use Standard.Ada_Lib.Options;
 
-      Has_On_Options             : constant Boolean :=
-                                    Has_Option (Option,
-                                       Options_With_Parameters,
-                                       Options_Without_Parameters);
+--    Has_On_Options             : constant Boolean :=
+--                                  Has_Option (Option,
+--                                     Options_With_Parameters,
+--                                     Options_Without_Parameters);
    begin
       Log_In (Trace_Options or Debug, Option.Image &
-         " has options " & Has_On_Options'img &
          " Options address " & Image (Options'address));
 
-      if Has_On_Options then
+      if Ada_Lib.Help_Test then
          case Option.Option is
 
             when 'T' => -- template trace options
@@ -101,9 +102,11 @@ package body Ada_Lib.Options.Template is
       case Help_Mode is
 
          when Ada_Lib.Options.Program =>
-            New_Line;
-            Ada_Lib.Help.Add_Option (Trace_Option, "options", -- t
-               "enables trace template unit tests", Component);
+            if Ada_Lib.Help_Test then
+               New_Line;
+               Ada_Lib.Help.Add_Option (Trace_Option, "options", -- t
+                  "enables trace template unit tests", Component);
+            end if;
 
          when Ada_Lib.Options.Traces =>
             Put_Line (Component & " (-" & Trace_Option & ")");

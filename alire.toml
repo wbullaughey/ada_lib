@@ -8,3 +8,11 @@ maintainers-logins = ["wbullaughey"]
 
 [[depends-on]]
 gnatcoll = "^23.0.0"
+
+[[depends-on]]
+alr_environment = "*"
+
+[[pins]]
+alr_environment  = { path = ".." }
+
+

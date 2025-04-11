@@ -15,11 +15,9 @@ package body Ada_Lib.Options.GNOGA is
    Options_With_Parameters          : aliased constant
                                        Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             Trace_Option, Unmodified);
-   Options_Without_Parameters       : aliased constant
-                                       Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options ('w',
-                                             Unmodified);
+                                             Trace_Option & 'w', Unmodified);
+-- Options_Without_Parameters       : aliased constant
+--                                     Ada_Lib.Options.Options_Type :=
 
    ----------------------------------------------------------------------------
    overriding
@@ -35,8 +33,8 @@ package body Ada_Lib.Options.GNOGA is
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
          Options_With_Parameters);
-      Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.Without_Parameters,
-         Options_Without_Parameters);
+--    Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.Without_Parameters,
+--       Options_Without_Parameters);
       return Log_Out (Actual.Nested_Options_Type (Options).Initialize,
          Debug or Trace_Options);
    end Initialize;
@@ -101,8 +99,8 @@ package body Ada_Lib.Options.GNOGA is
       when Ada_Lib.Options.Program =>
             Ada_Lib.Help.Add_Option (Create_Option ('G', Unmodified),
                "trace options", "GNOGA traces", "GNOGA library");
-            Ada_Lib.Help.Add_Option (Create_Option ('w', Unmodified), "",
-               "Web server port", "GNOGA library");
+            Ada_Lib.Help.Add_Option (Create_Option ('w', Unmodified),
+               "port number", "Web server port", "GNOGA library");
 
       when Ada_Lib.Options.Traces =>
          Put_Line ("Ada_Lib.Options.GNOGA library trace options (-" & Trace_Option & ")");

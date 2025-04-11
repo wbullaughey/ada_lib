@@ -1113,6 +1113,8 @@ package body Ada_Lib.Trace is
    --------------------------------------------------------------------
 
    begin
+      Ada_Lib.Exception_Occured := True;
+
       if Debug then
          Locked_Package.Trace_Message_Exception (Fault, Message, Where);
       end if;
@@ -1210,6 +1212,7 @@ package body Ada_Lib.Trace is
       -------------------------------------------------------------------
 
       begin
+         Ada_Lib.Exception_Occured := True;
          State.Trace_Message_Exception (Fault, Message, From);
       end Trace_Message_Exception;
 
@@ -1323,6 +1326,7 @@ package body Ada_Lib.Trace is
             Task_Index              : Task_Index_Type;
 
          begin
+            Ada_Lib.Exception_Occured := True;
             Find_Task (Task_Index);
 
             declare
@@ -1410,6 +1414,7 @@ package body Ada_Lib.Trace is
                   case Context is
 
                      when Report_Exception =>
+                        Ada_Lib.Exception_Occured := True;
                         Output_File.Output (
                            "-------------------- exception ----------------" & LF);
 

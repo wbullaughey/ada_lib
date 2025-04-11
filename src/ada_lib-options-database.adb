@@ -25,8 +25,9 @@ package body Ada_Lib.Options.Database is
    -------------------------------------------------------------------------
 
    begin
-      if    Options.Has_Local_DBDaemon or else
-            Options.Local_DBDaemon_Path.Length > 0 then
+      if    (  Options.Has_Local_DBDaemon or else
+               Options.Local_DBDaemon_Path.Length > 0) and then
+            not Ada_Lib.Help_Test then
          raise Multiple_Hosts with "from " & Here;
       end if;
    end Cant_Be_Local;
@@ -37,9 +38,10 @@ package body Ada_Lib.Options.Database is
    -------------------------------------------------------------------------
 
    begin
-      if    Options.Remote_Host.Length > 0 or else
-            Options.Remote_User.Length > 0 or else
-            Options.Remote_DBDaemon_Path.Length > 0 then
+      if    (  Options.Remote_Host.Length > 0 or else
+               Options.Remote_User.Length > 0 or else
+               Options.Remote_DBDaemon_Path.Length > 0) and then
+            not Ada_Lib.Help_Test then
          raise No_Host with "Application does not suport a remote host, " &
             "remote user or a remote dbdaemon path from " & Here;
       end if;
