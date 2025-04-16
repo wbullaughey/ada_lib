@@ -20,3 +20,7 @@ compile.sh
 list
 ada_lib_tests/alire-save
 ada_lib_tests/alire.toml-save
+/obj/
+/lib/
+/alire/
+/config/

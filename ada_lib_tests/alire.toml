@@ -33,5 +33,5 @@ gnoga = "*"
 gnoga  = { path = "../../vendor/github.com/gnoga" }
 
 [[depends-on]]
-gnatcoll = "^23.0.0"
+gnatcoll = "^25.0.0"
 

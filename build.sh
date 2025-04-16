@@ -1,17 +1,18 @@
-#!/bin/zsh
-echo ada_lib/build.sh
+source ~/.zshrc
 export BUILD_MODE=$1
 echo BUILD_MODE $BUILD_MODE
 
-../global_build.sh $BUILD_MODE
+case "$BUILD_MODE" in
+   "")
+      alr -v build -- -j10 -s -k -gnatE -v -XBUILD_MODE=execute
+      ;;
 
-#pwd
-#echo user $USER
-#echo home $HOME
-#source /Users/$USER/.zshrc
-#echo shell $SHELL
-#echo path $PATH
-#export CFLAG="-M"
-#which alr
-#which gprbuild
-#alr -v build -- -j10 -s -k -gnatE
+   "help_test")
+      alr -v build -- -j10 -s -k -gnatE -XBUILD_MODE=help_test
+      ;;
+
+   "all")
+      ../global_build.sh
+      ;;
+
+esac

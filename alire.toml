@@ -7,7 +7,7 @@ maintainers = ["Wayne Bullaughey <wlb122@verizon.net>"]
 maintainers-logins = ["wbullaughey"]
 
 [[depends-on]]
-gnatcoll = "^23.0.0"
+gnatcoll = "^25.0.0"
 
 [[depends-on]]
 alr_environment = "*"
