@@ -3,6 +3,9 @@ with "ada_lib.gpr";
 with "ada_lib_gnoga.gpr";
 with "aunit.gpr";
 with "gnatcoll.gpr";
+with "gnatcoll_core.gpr";
+with "gnatcoll_minimal.gpr";
+with "gnatcoll_projects.gpr";
 with "gnoga.gpr";
 abstract project Ada_Lib_Tests_Config is
    Crate_Version := "0.1.0-dev";

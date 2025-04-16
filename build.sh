@@ -2,17 +2,21 @@ source ~/.zshrc
 export BUILD_MODE=$1
 echo BUILD_MODE $BUILD_MODE
 
-case "$BUILD_MODE" in
-   "")
-      alr -v build -- -j10 -s -k -gnatE -v -XBUILD_MODE=execute
-      ;;
+#case "$BUILD_MODE" in
+#   "")
+#      alr -v build -- -j10 -s -k -gnatE -v -XBUILD_MODE=execute
+#      ;;
+#
+#   "help_test")
+#      alr -v build -- -j10 -s -k -gnatE -XBUILD_MODE=help_test
+#      ;;
+#
+#   "all")
+#      ../global_build.sh
+#      ;;
+#
+#esac
 
-   "help_test")
-      alr -v build -- -j10 -s -k -gnatE -XBUILD_MODE=help_test
-      ;;
+../global_build.sh $BUILD_MODE local
 
-   "all")
-      ../global_build.sh
-      ;;
 
-esac
