@@ -11,9 +11,9 @@ package body Ada_Lib.Timer is
    use type Ada_Lib.Strings.String_Access;
    use type Ada_Lib.Strings.String_Access_All;
 
-   procedure Free is new Ada.Unchecked_Deallocation (
-      Name     => Event_Class_Access,
-      Object   => Event_Type'class);
+-- procedure Free is new Ada.Unchecked_Deallocation (
+--    Name     => Event_Class_Access,
+--    Object   => Event_Type'class);
 
    procedure Free is new Ada.Unchecked_Deallocation (
       Name     => Ada_Lib.Strings.String_Access_All,

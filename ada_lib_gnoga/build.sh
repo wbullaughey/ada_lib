@@ -1,2 +1,6 @@
 source ~/.zshrc
-alr -v build -- -j10 -s -k -gnatE
+export BUILD_MODE=$1
+export DIRECTORY=`pwd`
+echo BUILD_MODE $BUILD_MODE BUILD_PROFILE $ADA_APPLICATION_PROFILE ADA_OS_INCLUDE $ADA_OS_INCLUDE
+
+../../global_build.sh $BUILD_MODE $ADA_APPLICATION_PROFILE $DIRECTORY

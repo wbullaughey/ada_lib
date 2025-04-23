@@ -32,6 +32,7 @@ package body Ada_Lib.Options.Unit_Test is
                                        Ada_Lib.Help.Modifier);
 
    Initialized_Recursed       : Boolean := False;
+   Unit_Test_Options          : Ada_Lib_Unit_Test_Options_Class_Access := Null;
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
@@ -52,6 +53,34 @@ package body Ada_Lib.Options.Unit_Test is
       end if;
       Log_Out (Debug);
    end Check_Test_Suite_And_Routine;
+
+   ------------------------------------------------------------
+   function Get_Modifiable_Ada_Lib_Unit_Test_Options
+   return Ada_Lib_Unit_Test_Options_Class_Access is
+   ------------------------------------------------------------
+
+   begin
+      return Unit_Test_Options;
+   end Get_Modifiable_Ada_Lib_Unit_Test_Options;
+
+   ------------------------------------------------------------
+   function Get_Readonly_Ada_Lib_Unit_Test_Options
+   return Ada_Lib_Unit_Test_Options_Constant_Class_Access is
+   ------------------------------------------------------------
+
+   begin
+      return Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+         Unit_Test_Options);
+   end Get_Readonly_Ada_Lib_Unit_Test_Options;
+
+   ----------------------------------------------------------------------------
+   function Have_Unit_Test_Options
+   return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Unit_Test_Options /= Null;
+   end Have_Unit_Test_Options;
 
    ----------------------------------------------------------------------------
    overriding
@@ -311,7 +340,7 @@ package body Ada_Lib.Options.Unit_Test is
 --                   Options.Update_Filter;   -- sets filter name
 
                   when 'R' => -- set random seed to argument
-                     if Options.Number_Random_Generators = 0 and
+                     if Options.Number_Random_Generators = 0 and then
                            not Ada_Lib.Help_Test then
                         raise Failed with
                            "number randoom number generators not set";
@@ -472,6 +501,15 @@ package body Ada_Lib.Options.Unit_Test is
       end case;
       Log_Out (Debug);
    end Routine_Action;
+
+   ------------------------------------------------------------
+   procedure Set_Ada_Lib_Unit_Test_Options (
+      Options                    : in     Ada_Lib_Unit_Test_Options_Class_Access) is
+   ------------------------------------------------------------
+
+   begin
+      Unit_Test_Options := Options;
+   end Set_Ada_Lib_Unit_Test_Options;
 
    ------------------------------------------------------------
    procedure Suite_Action (

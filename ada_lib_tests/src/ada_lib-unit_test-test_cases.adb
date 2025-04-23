@@ -1,3 +1,4 @@
+with Ada.Environment_Variables;
 with Ada.Text_IO; use Ada.Text_IO;
 --with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Trace;
@@ -17,7 +18,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Program_Options_Type'class (
-                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all);
+                           Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options.all);
    begin
       Log_In (Debug, Quote ("routine", Val.Routine_Name.all) &
          " mode " & Options.Mode'img);
@@ -40,7 +41,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                   Ada_Lib_Unit_Test_Program_Options_Type'class renames
                      Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Options_Class_Access (
-                           Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options).all;
+                           Ada_Lib.Options.Actual.Get_Ada_Lib_Modifiable_Program_Options).all;
    begin
       Log_In (Debug, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
 
@@ -55,7 +56,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       end loop;
 
-      Ada_Lib.Unit_Testing := True;
+--    Ada_Lib.Unit_Testing := True;
       Root_Test.Test_Type (Test).Set_Up;
       Log_Out (Debug);
    end Set_Up;
@@ -226,7 +227,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       begin
          Log_In (Debug);
-         Ada_Lib.Unit_Testing := True;
+--       Ada_Lib.Unit_Testing := True;
          Test.Set_Up_Succeeded := True;
          Log_Out (Debug);
       end Set_Up;
@@ -299,6 +300,9 @@ begin
       Debug := Trace_Tests;
    end if;
 --Debug := True;
-   Log_Here (Trace_Options or Elaborate);
+Log_Here (true or Trace_Options or Elaborate, "unit testing " & Unit_Testing'img &
+      " help test " & Help_Test'img);
+log_here ("help test " & Ada.Environment_Variables.Value ("BUILD_MODE", "execute"));
+log_here ("unit test " & Ada.Environment_Variables.Value ("UNIT_TEST", "FALSE"));
 
 end Ada_Lib.Unit_Test.Test_Cases;

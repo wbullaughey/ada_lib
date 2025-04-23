@@ -5,7 +5,7 @@ with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Database.Common;
 --with Ada_Lib.Database.Unit_Test;
 with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Options;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -461,7 +461,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=

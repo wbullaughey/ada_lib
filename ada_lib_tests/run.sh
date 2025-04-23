@@ -1,6 +1,7 @@
 #!/bin/bash
 export OUTPUT=list-ada_lib.txt
-echo "arguments $*"
+echo "arguments $*" | tee $OUTPUT
+export PROGRAM=bin/test_ada_lib
 
 case $1 in
 
@@ -40,7 +41,6 @@ case "$DATABASE" in
 
    "help")
       shift 1
-      export PROGRAM=bin/test_ada_lib
       $PROGRAM -h $* | tee $OUTPUT
       exit
       ;;

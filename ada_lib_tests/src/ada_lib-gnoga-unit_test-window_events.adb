@@ -1,5 +1,6 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.AUnit_Lib;
 --with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
@@ -72,7 +73,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test              : Window_Event_Test_Type renames
 --                               Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
@@ -143,7 +144,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                             Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Connection_Data            : constant Window_Connection_Data_Access :=
                                     Window_Connection_Data_Access (
                                        Object.Connection_Data);
@@ -209,7 +210,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data   : Window_Connection_Data_Type renames
                            Window_Connection_Data_Access (
@@ -392,7 +393,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
@@ -479,7 +480,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
                                           Aunit_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                             Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Connection_Data         : constant Window_Connection_Data_Access :=
                                  Window_Connection_Data_Access (
                                     Object.Connection_Data);

@@ -63,13 +63,15 @@ package body Ada_Lib.OS is
    -------------------------------------------------------------------
    procedure Immediate_Halt (
       Exit_Code            : in   OS_Exit_Code_Type;
-      Message                    : in     String := "") is
+      Message                    : in     String := "";
+      From                       : in     String := GNAT.Source_Info.Source_Location) is
    -------------------------------------------------------------------
 
    begin
       if Trace then
-         Put_Line ("Exit_Code " & Exit_Code'img & " for " & Command_Name &
-            Quote ("message", Message));
+         Put_Line ("Exit_Code " & Exit_Code'img &
+            Integer (OS_Exit_Code_Type'pos (Exit_Code))'img & " for " & Command_Name &
+            Quote (" message", Message) & " from " & From);
       end if;
       if Message'length > 0 then
          Put_Line (Message);
@@ -171,6 +173,8 @@ package body Ada_Lib.OS is
 begin
 --Trace := True;
    if Trace then
-      Put_Line (GNAT.Source_Info.Source_Location);
+      Put_Line ("help test " & Help_Test'img &
+         " Unit_Testing " & Unit_Testing'img & " " &
+         GNAT.Source_Info.Source_Location);
    end if;
 end Ada_Lib.OS;

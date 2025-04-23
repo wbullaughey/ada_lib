@@ -1,12 +1,13 @@
 with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
 
 package Ada_Lib.Unit_Test.Test_Cases is
 
-   use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
+-- use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
 
    Failed                        : exception;
 
@@ -73,7 +74,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
       Val                     : AUnit.Test_Cases.Routine_Spec
-   ) with pre => Ada_Lib.Options.Have_Options;
+   ) with pre => Ada_Lib.Options.Actual.Have_Ada_Lib_Program_Options;
 
    overriding
    procedure Set_Up (

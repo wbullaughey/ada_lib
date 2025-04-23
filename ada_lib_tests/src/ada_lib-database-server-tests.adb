@@ -5,6 +5,7 @@ with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.DAtabase.Subscribe;
 with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Database.Event;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
@@ -614,7 +615,7 @@ package body Ada_Lib.Database.Server.Tests is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=
@@ -887,7 +888,7 @@ package body Ada_Lib.Database.Server.Tests is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
                                     Table_Class_Access := new Ada_Lib.Database.
                                        Subscription.Tests.Subscription_Table_Type;

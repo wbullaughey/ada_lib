@@ -65,6 +65,17 @@ package Ada_Lib.Options.Unit_Test is
    procedure Check_Test_Suite_And_Routine (
       Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type);
 
+   function Get_Modifiable_Ada_Lib_Unit_Test_Options
+   return Ada_Lib_Unit_Test_Options_Class_Access
+   with pre => Have_Unit_Test_Options;
+
+   function Get_Readonly_Ada_Lib_Unit_Test_Options
+   return Ada_Lib_Unit_Test_Options_Constant_Class_Access
+   with pre => Have_Unit_Test_Options;
+
+   function Have_Unit_Test_Options
+   return Boolean;
+
    overriding
    function Initialize (
      Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
@@ -97,6 +108,11 @@ package Ada_Lib.Options.Unit_Test is
       Suite                      : in     String;
       Routine                    : in     String;
       Mode                       : in     Mode_Type);
+
+   procedure Set_Ada_Lib_Unit_Test_Options (
+      Options                    : in     Ada_Lib_Unit_Test_Options_Class_Access
+   ) with Pre => Options /= Null and then
+                 not Have_Unit_Test_Options;
 
    procedure Suite_Action (
       Suite                      : in     String;

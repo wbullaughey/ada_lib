@@ -1,4 +1,4 @@
-with Ada_Lib.Options;
+with Ada_Lib.Options.Actual;
 -- with Ada_Lib.Options.GNOGA.Database.AUnit;
 with AUnit.Test_Suites.Optional;
 with Ada_Lib.Unit_Test.Tests;
@@ -69,7 +69,7 @@ package Ada_Lib.Database.Unit_Test is
 --    Options                    : in     Options_Type
 -- ) return Boolean;
 
-   function Options_Set return Boolean renames Ada_Lib.Options.Have_Options;
+   function Options_Set return Boolean renames Ada_Lib.Options.Actual.Have_Ada_Lib_Program_Options;
 
 -- function Pause (
 --    Options                    : in     Options_Type

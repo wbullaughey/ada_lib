@@ -363,9 +363,9 @@ package Ada_Lib.Trace is
    package Specification_Package is new Ada_Lib.Specifications.Specification_Package (
       Priority_Type           => Priority_Type,
       Selection_Type       => Traces_Type,
-      Specification_Type   => Selection_Package.Specification_Level_Type,
-      Specifications_Array => Selection_Package.Specification_Array,
-      Specifications       => Specification);
+      Specification_Type   => Selection_Package.Specification_Level_Type);
+--    Specifications_Array => Selection_Package.Specification_Array);
+--    Specifications       => Specification);
 
    function Test (
       Which             : in   String;

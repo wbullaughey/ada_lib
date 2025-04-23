@@ -145,7 +145,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                         Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                               Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Debug, "object type " & Tag_Name (Object'tag) &
          " connection data " & (if Object.Connection_Data = Null then
@@ -199,8 +199,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
       end case;
 
-      if Debug or else Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
-            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose then
+      if Debug or else Ada_Lib.Options.Actual.
+            Get_Ada_Lib_Read_Only_Program_Options.Verbose then
          Ada_Lib.GNOGA.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
       Log_Out (Debug);
@@ -216,7 +216,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
@@ -307,7 +307,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Data                      : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (Ada_Lib.GNOGA.Get_Connection_Data);
@@ -383,7 +383,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : Event_Connection_Data_Type renames
                                     Event_Connection_Data_Access (

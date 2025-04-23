@@ -2,7 +2,7 @@ with Ada.Characters.Handling;
 --with Ada.Exceptions;
 --with Ada.Strings.Maps;
 --with Ada.Tags;
-with Ada.Text_IO;use Ada.Text_IO;
+--with Ada.Text_IO;use Ada.Text_IO;
 ----with Ada_Lib.Configuration;
 --with Ada_Lib.Database.Connection;
 --with Ada_Lib.Directory;
@@ -33,7 +33,6 @@ package body Ada_Lib.Options is
 
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
-   Modifiable_Options            : Interface_Options_Class_Access := Null;
    Parameter_Parsing_Failed      : Boolean := False;
 
    ----------------------------------------------------------------------------
@@ -146,38 +145,6 @@ package body Ada_Lib.Options is
       return Result;
    end Create_Options;
 
-   ----------------------------------------------------------------
-   function Get_Ada_Lib_Modifiable_Options (
-      From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Class_Access is
-   ----------------------------------------------------------------
-
-   begin
-      Log_Here (Debug or Trace_Options, "from " & From);
-      if Debug or Trace_Options then
-         Tag_History (Modifiable_Options.all'tag, From);
-      end if;
-      return Modifiable_Options;
-
-   exception
-      when Fault: others =>
-         Trace_Exception (Fault);
-         raise;
-
-   end Get_Ada_Lib_Modifiable_Options;
-
-   ----------------------------------------------------------------------------
-   function Get_Ada_Lib_Read_Only_Options (
-      From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Constant_Class_Access is
-   ----------------------------------------------------------------------------
-
-   begin
-      Log_Here (Debug or Trace_Options, "from " & From);
-      return Interface_Options_Constant_Class_Access (
-         Modifiable_Options);
-   end Get_Ada_Lib_Read_Only_Options;
-
    ----------------------------------------------------------------------------
    function Has_Option (
       Option                     : in     Option_Type;
@@ -204,13 +171,13 @@ package body Ada_Lib.Options is
       return Log_Out (False, Debug or Trace_Options);
    end Has_Option;
 
-   ----------------------------------------------------------------------------
-   function Have_Options return Boolean is
-   ----------------------------------------------------------------------------
-
-   begin
-      return Modifiable_Options /= Null;
-   end Have_Options;
+-- ----------------------------------------------------------------------------
+-- function Have_Options return Boolean is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return Modifiable_Options /= Null;
+-- end Have_Options;
 
    ----------------------------------------------------------------------------
    function Image (
@@ -282,19 +249,19 @@ package body Ada_Lib.Options is
             Left.Kind < Right.Kind);
    end Less;
 
-   ----------------------------------------------------------------------------
-   function Modifiable_Options_Address
-   return String is
-   ----------------------------------------------------------------------------
-
-   begin
-      return "Modifiable_Options address is " &
-         (if Modifiable_Options = Null then
-            "null "
-         else
-            Image (Modifiable_Options.all'address));
-
-   end Modifiable_Options_Address;
+-- ----------------------------------------------------------------------------
+-- function Modifiable_Options_Address
+-- return String is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return "Modifiable_Options address is " &
+--       (if Modifiable_Options = Null then
+--          "null "
+--       else
+--          Image (Modifiable_Options.all'address));
+--
+-- end Modifiable_Options_Address;
 
    ----------------------------------------------------------------------------
    function Modified (
@@ -333,131 +300,9 @@ package body Ada_Lib.Options is
       return Parameter_Parsing_Failed;
    end Parsing_Failed;
 
-   ----------------------------------------------------------------
-   procedure Set_Ada_Lib_Options (
-      Options                    : in     Interface_Options_Class_Access) is
-   ----------------------------------------------------------------
-
-   begin
-      Log_In (Debug or Trace_Options, Tag_Name (Options.all'tag));
-      if Debug or Trace_Options then
-         Tag_History (Options.all'tag);
-      end if;
-      Modifiable_Options := Options;
-      Log_Out (Debug or Trace_Options, Modifiable_Options_Address);
-
-   end Set_Ada_Lib_Options;
-
-   ----------------------------------------------------------------
-
-   package body Verification_Package is
-
-      ---------------------------------------------------------------
-      overriding
-      function Initialize (
-         Options                 : in out Options_Type;
-         From                        : in     String := Standard.Ada_Lib.Trace.Here
-      ) return Boolean is
-      ---------------------------------------------------------------
-
-      begin
-         Log_In_Checked (Options.Initialized, Debug or Trace_Options,
-            "options address " &
-            Image (Options'address) &" options tag " &
-            Tag_Name (Options_Type'class (Options)'tag));
-         if Debug or Trace_Options then
-            Tag_History (Options_Type'class (Options)'tag);
-         end if;
-         Options.Initialized := True;
-         return Log_Out_Checked (Options.Initialized, True,
-            Debug or Trace_Options);
-      end Initialize;
-
-      ---------------------------------------------------------------
-      overriding
-      function Process_Argument (  -- process one argument
-        Options                     : in out Options_Type;
-        Iterator                    : in out Command_Line_Iterator_Interface'
-                                                class;
-        Argument                    : in     String
-      ) return Boolean is
-      pragma Unreferenced (Options, Iterator, Argument);
-      ---------------------------------------------------------------
-
-      begin
-         Log_Here (Debug or Trace_Options, "no argument");
-         return False;
-      end Process_Argument;
-
-      ---------------------------------------------------------------
-      overriding
-      function Verify_Initialized (
-         Options                    : in     Options_Type;
-         From                       : in     String := GNAT.Source_Info.Source_Location
-      ) return Boolean is
-      ---------------------------------------------------------------
-
-      begin
-         Log_In (Debug or Trace_Options, "options tag " &
-            Tag_Name (Options_Type'class (Options)'tag) &
-            Modifiable_Options_Address);
-
-         if Modifiable_Options = Null then
-            Put_Line ("Modifiable_Options not initialized at " & Here &
-            " called from " & From);
-         else
-            if not Options.Initialized then
-               Put_Line ("Options.Initialized not initialized at " & Here &
-                  " called from " & From);
-            else
-               return Log_Out (True, Debug or Trace_Options);
-            end if;
-         end if;
-
-         if Debug or Trace_Options then
-            Tag_History (Options_Type'class (Options)'tag);
-         end if;
-         return Log_Out (False, Debug or Trace_Options);
-      end Verify_Initialized;
-
-      ---------------------------------------------------------------
-      overriding
-      function Verify_Preinitialize (
-         Options                    : in     Options_Type;
-         From                       : in     String := GNAT.Source_Info.Source_Location
-      ) return Boolean is
-      ---------------------------------------------------------------
-
-      begin
-         Log_In (Debug or Trace_Options, "options tag " &
-            Tag_Name (Options_Type'class (Options)'tag) &
-            " Get_Ada_Lib_Read_Only_Options " & Image (Get_Ada_Lib_Read_Only_Options.all'address));
-         if Debug or Trace_Options then
-            Tag_History (Options_Type'class (Options)'tag);
-         end if;
-
-         if Get_Ada_Lib_Read_Only_Options = Null then
-            Put_Line ("Get_Ada_Lib_Read_Only_Options null " & Here);
-         else
-            if Options.Initialized then
-               Put_Line ("Options.Initialized should be false");
-            else
-               return Log_Out (True, Debug or Trace_Options);
-            end if;
-         end if;
-         Put_Line (Who & " failed at " & Here);
-         return Log_Out (False, Debug or Trace_Options);
-
-      exception
-         when Fault: others =>
-            Trace_Exception (Fault);
-            return False;
-
-      end Verify_Preinitialize;
-
-   end Verification_Package;
-
 begin
+Log_Here ("Unit Testing  " & Ada_Lib.Unit_Testing'img &
+   " Help_Test " & Ada_Lib.Help_Test'img);
      Debug := Debug or Debug_Options.Debug_All;
 --Debug := true;
 --Elaborate := True;

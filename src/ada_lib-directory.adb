@@ -122,7 +122,7 @@ package body Ada_Lib.Directory is
 
       declare
          Output_File : constant String := Ada_Lib.OS.Create_Scratch_File;
-         Success     : Boolean := False;
+--       Success     : Boolean := False;
          Exit_Code   : constant Ada_Lib.OS.OS_Exit_Code_Type :=
                         Ada_Lib.OS.Run.Spawn (
                            Stat_Program, File_Name, Output_File);

@@ -97,8 +97,8 @@ package body Ada_Lib.Trace.Tests is
                " expected seconds " & Expected_Seconds'img &
                " expected hundreds " & Expected_Hundreds'img &
                " raw expected" & Raw_Expected'img);
-            if Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (
-                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose then
+            if Ada_Lib.Options.Actual.
+                  Get_Ada_Lib_Read_Only_Program_Options.Verbose then
                Ada.Text_IO.Put_Line (Quote ("line", Line));
             end if;
 

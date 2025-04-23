@@ -323,7 +323,8 @@ package Ada_Lib.OS is
 
    procedure Immediate_Halt (
       Exit_Code                  : in     OS_Exit_Code_Type;
-      Message                    : in     String := "");
+      Message                    : in     String := "";
+      From                       : in     String := GNAT.Source_Info.Source_Location);
 
    procedure Close_File (
       File                       : in     File_Descriptor) renames

@@ -108,7 +108,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return (case Test.Which_Host is
          when Local => Local_Host_Name,
@@ -126,7 +126,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Port;
    end Host_Port;
@@ -245,7 +245,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Debug, "Has_Local_DBDaemon " & Options.Database_Options.Has_Local_DBDaemon'img &
          (if Options.Database_Options.Remote_Host.Length = 0 then " no Remote_Host" else " Remote_Host dbdaemon.all "));
@@ -279,7 +279,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Which_Host;
    end Which_Host;

@@ -160,7 +160,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 
       Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                      Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class (
-                        Ada_Lib.Options.Get_Ada_Lib_Modifiable_Options.all);
+                        Ada_Lib.Options.Actual.Get_Ada_Lib_Modifiable_Program_Options.all);
    begin
       Log_In (Debug);
       if Options.Number_Random_Generators = 0 then
@@ -216,7 +216,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 --    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
 --                      Ada_Lib.Options.AUnit_Lib.
 --                         Aunit_Options_Constant_Class_Access (
---                            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+--                            Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Send_Started   : Boolean := True;
       Server         : Server_Task_Access := Null;
       Server_Description
@@ -805,7 +805,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                            Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
          Description   : aliased constant String := "client";
          Client_Socket  : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
                            new Ada_Lib.Socket_IO.Client.Client_Socket_Type (
@@ -918,9 +918,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                      end if;
 
                      if Ada_Lib.Options.Actual.
-                           Program_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).Verbose and then
-                                 Count mod Notify_Frequency = 0 then
+                           Get_Ada_Lib_Read_Only_Program_Options.Verbose and then
+                              Count mod Notify_Frequency = 0 then
                         Put_Line (Count'img & " records received");
                      end if;
                   end if;

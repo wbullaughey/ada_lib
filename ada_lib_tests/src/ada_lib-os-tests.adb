@@ -2,6 +2,7 @@ with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.AUnit_Lib;
 --with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS.Base64;
@@ -191,7 +192,7 @@ package body Ada_Lib.OS.Tests is
                      Aunit_Program_Options_Type'class renames
                         Ada_Lib.Options.AUnit_Lib.
                            Aunit_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Trace,
          Quote ("remote host", Options.Database_Options.Remote_Host) &

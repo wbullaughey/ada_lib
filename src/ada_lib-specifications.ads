@@ -34,14 +34,15 @@ package Ada_Lib.Specifications is
 
    end Selection_Package;
 
-   generic
+   generic     -- body commented out so parameters not referenced
 
       type Priority_Type            is ( <> );
       type Selection_Type        is ( <> );
       type Specification_Type    is tagged private;
-      type Specifications_Array  is array (Selection_Type) of Specification_Type;
+--    type Specifications_Array  is array (Selection_Type) of Specification_Type;
 
-      Specifications             : in Specifications_Array;
+--    Specifications             : in Specifications_Array;
+   pragma Unreferenced (Selection_Type, Specification_Type);
 
    package Specification_Package is
 

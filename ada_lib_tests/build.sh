@@ -1,19 +1,7 @@
 source ~/.zshrc
 export BUILD_MODE=$1
-echo BUILD_MODE $BUILD_MODE
+export DIRECTORY=`pwd`
+echo BUILD_MODE $BUILD_MODE BUILD_PROFILE $ADA_APPLICATION_PROFILE ADA_OS_INCLUDE $ADA_OS_INCLUDE
 
-case "$BUILD_MODE" in
-   "")
-      alr -v build -- -j10 -s -k -gnatE -v -XBUILD_MODE=execute
-      ;;
-
-   "help_test")
-      alr -v build -- -j10 -s -k -gnatE -XBUILD_MODE=help_test
-      ;;
-
-   "all")
-      ../../global_build.sh
-      ;;
-
-esac
+../../global_build.sh $BUILD_MODE $ADA_APPLICATION_PROFILE $DIRECTORY
 

@@ -5,6 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Unit_Test;
 -- with Ada_Lib.Mail.GMail;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.AUnit_Lib;
 -- with Ada_Lib.OS.Base64;
 -- with Ada_Lib.OS.Run.Path;
@@ -32,7 +33,7 @@ package body Ada_Lib.Template.Tests is
       Options              : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                               renames Ada_Lib.Options.AUnit_Lib.
                                  Aunit_Options_Constant_Class_Access (
-                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+                                    Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
       Template             : Ada_Lib.Template.Compile.Template_Type;
       Raw                  : constant String := Ada_Lib.Template.Compile.Load (
                               Full_Source_Path);

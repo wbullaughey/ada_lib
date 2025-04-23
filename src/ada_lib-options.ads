@@ -1,6 +1,6 @@
 with Ada.Characters.Latin_1;
 --with  Ada.Characters.Latin_1;
-with Ada.Finalization;
+--with Ada.Finalization;
 --with Ada.Tags;
 with Ada_Lib.Trace; -- use Ada_Lib.Trace;
 with GNAT.Source_Info;
@@ -231,50 +231,6 @@ package Ada_Lib.Options is
       From                       : in     String := GNAT.Source_Info.Source_Location
    ) return Boolean is abstract;
 
-   generic
-      type Generic_Options_Type  is abstract limited new Interface_Options_Type
-                                    with private;
-
-   package Verification_Package is
-
-      type Options_Type          is abstract limited new Generic_Options_Type
-                                    with record
-         Initialized             : Boolean := False;
-      end record;
-
-      type Options_Access        is access all Options_Type;
-      type Options_Class_Access  is access all Options_Type'class;
-      type Options_Constant_Class_Access
-                                 is access constant Options_Type'class;
-
-      overriding
-      function Initialize (
-         Options                 : in out Options_Type;
-     From                        : in     String := Standard.Ada_Lib.Trace.Here
-      ) return Boolean
-      with Pre => Options.Verify_Preinitialize;
-
-      overriding
-      function Process_Argument (  -- process one argument
-         Options                  : in out Options_Type;
-         Iterator                 : in out Command_Line_Iterator_Interface'class;
-         Argument                 : in     String
-      ) return Boolean;
-
-      overriding
-      function Verify_Initialized (
-         Options                 : in     Options_Type;
-         From                    : in     String := GNAT.Source_Info.Source_Location
-      ) return Boolean;
-
-      overriding
-      function Verify_Preinitialize (
-         Options                 : in     Options_Type;
-         From                    : in     String := GNAT.Source_Info.Source_Location
-      ) return Boolean;
-
-   end Verification_Package;
-
 -- function Ada_Lib_Options
 -- return Interface_Options_Constant_Class_Access;
 
@@ -283,21 +239,16 @@ package Ada_Lib.Options is
    ) return Interface_Options_Class_Access
    with pre => Have_Options;
 
-   function Get_Ada_Lib_Read_Only_Options (
+   function Get_Ada_Lib_Read_Only_Program_Options (
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Interface_Options_Constant_Class_Access
    with pre => Have_Options;
-
-   procedure Set_Ada_Lib_Options (
-      Options                    : in     Interface_Options_Class_Access
-   ) with Pre => Options /= Null and then
-                 not Have_Options;
-
-   type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
+--
+-- type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
 
    -- non class declarations
 
-   function Have_Options return Boolean;
+-- function Have_Options return Boolean;
 
    procedure Parsing_Failed;
    function Parsing_Failed return Boolean;

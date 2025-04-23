@@ -7,8 +7,7 @@ with Ada_Lib.Directory.Test;
 with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
-with Ada_Lib.Help;
---with Ada_Lib.Options; -- .Actual;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Options.GNOGA;
 --with Ada_Lib.Options.Template;
@@ -41,10 +40,11 @@ package body Ada_Lib.Options.AUnit_Lib is
    function Has_Database return Boolean is
    -------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options).all;
+      Options  : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                  renames Ada_Lib.Options.AUnit_Lib.
+                     Aunit_Options_Constant_Class_Access (
+                        Ada_Lib.Options.Actual.
+                           Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_Here (Debug or Trace_Options);
       return (
@@ -400,7 +400,7 @@ begin
 -- AUnit_Lib_Options := Protected_Options'access;
 -- Elaborate := True;
    Debug := Debug or Debug_Options.Debug_All;
-Trace_Options := True;
+--Trace_Options := True;
 --debug := True;
 --Protected_Options.Tester_Debug := True;
    Log_Here (Elaborate or Trace_Options or Debug);

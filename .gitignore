@@ -9,6 +9,7 @@ save/
 new_configuration.cfg
 *.txt
 *.cswi
+*.save
 message
 /obj/
 /lib/
@@ -20,6 +21,10 @@ compile.sh
 list
 ada_lib_tests/alire-save
 ada_lib_tests/alire.toml-save
+/obj/
+/lib/
+/alire/
+/config/
 /obj/
 /lib/
 /alire/
