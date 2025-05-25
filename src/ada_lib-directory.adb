@@ -173,6 +173,7 @@ package body Ada_Lib.Directory is
    end Is_Executable;
 
 begin
-   Log_Here (Elaborate);
 --Debug := True;
+--Elaborate := True;
+   Log_Here (Debug or Elaborate);
 end Ada_Lib.Directory;

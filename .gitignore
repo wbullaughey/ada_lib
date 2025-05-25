@@ -16,6 +16,7 @@ message
 /alire/
 /config/
 /*save/
+ada_lib_gnoga-not_used/
 alire-toml-save
 compile.sh
 list

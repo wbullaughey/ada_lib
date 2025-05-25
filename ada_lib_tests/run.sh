@@ -1,7 +1,12 @@
 #!/bin/bash
-export OUTPUT=list-ada_lib.txt
-echo "arguments $*" | tee $OUTPUT
+export BUILD_MODE=execute
+export UNIT_TEST=TRUE
+export OUTPUT=list-test_ada_lib.txt
 export PROGRAM=bin/test_ada_lib
+
+rm $OUTPUT
+echo $OUTPUT deleted 2>&1 | tee $OUTPUT
+#echo "arguments $*"  2>&1| tee $OUTPUT
 
 case $1 in
 
@@ -14,6 +19,7 @@ case $1 in
       ;;
 
 esac
+echo 1st parameter $1 2>&1| tee -a $OUTPUT
 
 case $1 in
 
@@ -37,16 +43,17 @@ export DATABASE=$1  # local,remote,connect,none
 export KILL=true
 #export VERBOSE="-v"
 
+echo check database  "$DATABASE"  2>&1| tee -a $OUTPUT
 case "$DATABASE" in
 
    "help")
       shift 1
-      $PROGRAM -h $* | tee $OUTPUT
+      $PROGRAM -h $* | tee -a $OUTPUT
       exit
       ;;
 
    "help_test")
-      echo Help Test
+      echo Help Test 2>&1| tee -a $OUTPUT
       export PROGRAM=bin/help_test
       $PROGRAM \
       -h -l -P -r -v -x -@c -@d -@i -@l -@m -@p -@P -@S -@t -@u -@x \
@@ -62,7 +69,7 @@ case "$DATABASE" in
       -T aceElt \
       -u user  \
       -U aAglprstT \
-      2>&1 | tee $OUTPUT
+      2>&1 | tee -a $OUTPUT
       exit
       ;;
 
@@ -84,22 +91,21 @@ case "$DATABASE" in
 
    "suites")
       shift 1
-      echo list suites
+      echo list suites 2>&1| tee -a $OUTPUT
       export COMMAND="$PROGRAM -@l $*"
-      echo "command: $COMMAND"  | tee $OUTPUT
+      echo "command: $COMMAND"  | tee -a $OUTPUT
       $COMMAND 2>&1 | tee -a $OUTPUT
       exit
       ;;
 
    "")
       shift 1
-      echo no database option provided
-      help
+      echo no database option provided 2>&1| tee -a $OUTPUT
       exit
       ;;
 
    *)
-      echo unrecognize database option \"$DATABASE\" allowed: local,remote,none
+      echo unrecognize database option \"$DATABASE\" allowed: local,remote,none 2>&1| tee -a $OUTPUT
       exit
       ;;
 
@@ -111,9 +117,9 @@ export SUITE=$2     # mwd - Main_Window_with_DBDaemon
                     # wrn - Widget_Root_Without_DBDaemon
                     # all - all swites
 export ROUTINE=$3   # all or test routine name
-echo DATABASE $DATABASE
-echo SUITE $SUITE
-echo routine $ROUTINE
+echo DATABASE $DATABASE 2>&1| tee -a $OUTPUT
+echo SUITE $SUITE 2>&1| tee -a $OUTPUT
+echo routine $ROUTINE 2>&1| tee -a $OUTPUT
 
 shift 3
 
@@ -121,6 +127,11 @@ shift 3
 case "$SUITE" in
 
    all)
+      ;;
+
+   "")
+      echo "missing suite"  2>&1| tee -a $OUTPUT
+      exit;
       ;;
 
    *)
@@ -135,17 +146,17 @@ case "$ROUTINE" in
       ;;
 
    -*)
-      echo missing routine
+      echo missing routine 2>&1| tee -a $OUTPUT
       exit;
       ;;
 
    "")
-      echo missing routine
+      echo missing routine 2>&1| tee -a $OUTPUT
       exit;
       ;;
 
    *)
-      echo routine $ROUTINE
+      echo routine $ROUTINE 2>&1| tee -a $OUTPUT
       export ROUTINE_OPTION="-e $ROUTINE"
       ;;
 
@@ -161,14 +172,14 @@ case "$DATABASE" in
        ;;
 
    *)
-       echo kill not set
+       echo kill not set 2>&1| tee -a $OUTPUT
        ;;
 
 esac
-ps ax | grep dbdaemon
-echo DISPLAY $DISPLAY
+#ps ax | grep dbdaemon
+echo DISPLAY $DISPLAY 2>&1| tee -a $OUTPUT
 export COMMAND="$GDB $PROGRAM $* $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
-echo "command: $COMMAND"  | tee $OUTPUT
+echo "command: $COMMAND"  | tee -a $OUTPUT
 
 case "$DISPLAY" in
 
@@ -177,11 +188,11 @@ case "$DISPLAY" in
       ;;
 
    false)
-      $COMMAND &> $OUTPUT
+      $COMMAND 2>&1| tee -a $OUTPUT
       ;;
 
    ignore)
-      $COMMAND
+      $COMMAND 2>&1| tee -a $OUTPUT
       ;;
 
 esac

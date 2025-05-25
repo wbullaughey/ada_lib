@@ -654,5 +654,8 @@ package body Ada_Lib.Parser is
 
    end Name_Value;
 
+begin
+Ada_Lib_LIB_Debug := True'
+   Log_Here (Ada_Lib_LIB_Debug or Elaborate);
 end Ada_Lib.Parser;
 

@@ -70,7 +70,7 @@ package Ada_Lib.Options.Database is
 private
 
    overriding
-   procedure Program_Help (      -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Program_Help (      -- common for all programs that use GNOGA_Options
      Options                    : in      Database_Options_Type;  -- only used for dispatch
      Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type);
 

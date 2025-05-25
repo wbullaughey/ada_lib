@@ -184,7 +184,7 @@ package Ada_Lib.Options is
       Message                    : in     String := "";
       Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 
-   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Interface_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help
@@ -209,7 +209,7 @@ package Ada_Lib.Options is
      Option                      : in     Option_Type'class
    ) return Boolean is abstract;
 
-   procedure Program_Help (      -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Program_Help (      -- common for all programs that use GNOGA_Options
      Options                     : in     Interface_Options_Type;  -- only used for dispatch
      Help_Mode                   : in     Help_Mode_Type) is abstract;
 
@@ -234,15 +234,15 @@ package Ada_Lib.Options is
 -- function Ada_Lib_Options
 -- return Interface_Options_Constant_Class_Access;
 
-   function Get_Ada_Lib_Modifiable_Options (
-      From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Class_Access
-   with pre => Have_Options;
-
-   function Get_Ada_Lib_Read_Only_Program_Options (
-      From                       : in  String := Ada_Lib.Trace.Here
-   ) return Interface_Options_Constant_Class_Access
-   with pre => Have_Options;
+-- function Get_Ada_Lib_Modifiable_Options (
+--    From                       : in  String := Ada_Lib.Trace.Here
+-- ) return Interface_Options_Class_Access
+-- with pre => Have_Options;
+--
+-- function Get_Ada_Lib_Read_Only_Program_Options (
+--    From                       : in  String := Ada_Lib.Trace.Here
+-- ) return Interface_Options_Constant_Class_Access
+-- with pre => Have_Options;
 --
 -- type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
 

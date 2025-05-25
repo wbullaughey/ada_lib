@@ -1,5 +1,6 @@
 with "config/ada_lib_config.gpr";
 with "default_config.gpr";
+with "gnatcoll.gpr";
 
 project Ada_Lib is
 
@@ -7,7 +8,7 @@ project Ada_Lib is
    for Library_Version use Project'Library_Name & ".so." & Ada_Lib_Config.Crate_Version;
    Ada_OS_Include:= external ("ADA_OS_INCLUDE");
 
-   for Source_Dirs use ("src/", "config/", "src/" & Ada_OS_Include);
+   for Source_Dirs use ("src/", "src/" & Ada_OS_Include);
    for Object_Dir use "obj/" & Ada_Lib_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib/" & Ada_Lib_Config.Build_Profile;

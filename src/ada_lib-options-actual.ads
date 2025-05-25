@@ -123,7 +123,7 @@ package Ada_Lib.Options.Actual is
                                  is access constant Program_Options_Type'class;
 
    overriding
-   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Program_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help
@@ -132,6 +132,15 @@ package Ada_Lib.Options.Actual is
 -- package Program_Options_Package
 --                               is new Verification_Package (
 --                                     Abstract_Options_Type);
+
+   function Get_Ada_Lib_Modifiable_Program_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Program_Options_Class_Access;
+
+   function Get_Ada_Lib_Read_Only_Program_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Program_Options_Constant_Class_Access
+   with pre => Have_Ada_Lib_Program_Options;
 
    overriding
    function Initialize (
@@ -169,7 +178,7 @@ package Ada_Lib.Options.Actual is
 -- with Pre => not Have_Ada_Lib_Program_Options;
 
    overriding
-   procedure Program_Help (      -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Program_Help (      -- common for all programs that use GNOGA_Options
       Options                    : in      Program_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Help_Mode_Type);
 
@@ -217,7 +226,7 @@ package Ada_Lib.Options.Actual is
    type Nested_Options_Constant_Class_Access is access constant Nested_Options_Type'class;
 
    overriding
-   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Nested_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help

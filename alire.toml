@@ -1,17 +1,22 @@
 name = "ada_lib"
-description = "Shiny new project"
+description = ""
 version = "0.1.0-dev"
 
-authors = ["Wayne Bullaughey"]
-maintainers = ["Wayne Bullaughey <wlb122@verizon.net>"]
-maintainers-logins = ["wbullaughey"]
-[[depends-on]]
-gnatcoll = "^23.0.0"
+authors = ["Your Name"]
+maintainers = ["Your Name <example@example.com>"]
+maintainers-logins = ["github-username"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
 
 [[depends-on]]
 alr_environment = "*"
 
 [[pins]]
-alr_environment  = { path = ".." }
+alr_environment = { path='..' }
 
+[[depends-on]]
+gnatcoll = "^26.0.0"
 
+[[pins]]
+gnatcoll = { path='../../../../../GNAT/gnatcoll-core' }

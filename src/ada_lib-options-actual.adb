@@ -1,3 +1,4 @@
+with Ada.Assertions;
 with Ada.Exceptions;
 --with Ada.Strings.Maps;
 with Ada.Tags;
@@ -170,25 +171,34 @@ Tag_History (Modifiable_Nested_Options.all'tag);
          Modifiable_Nested_Options);
    end Get_Ada_Lib_Read_Only_Nested_Options;
 
--- ----------------------------------------------------------------
--- function Get_Ada_Lib_Modifiable_Program_Options (
---    From                       : in  String := Ada_Lib.Trace.Here
--- ) return Program_Options_Class_Access is
--- ----------------------------------------------------------------
---
--- begin
---    Log_Here (Debug or Trace_Options, "from " & From);
---    if Debug or Trace_Options then
---       Tag_History (Modifiable_Program_Options.all'tag, From);
---    end if;
---    return Modifiable_Program_Options;
---
--- exception
---    when Fault: others =>
---       Trace_Exception (Fault);
---       raise;
---
--- end Get_Ada_Lib_Modifiable_Program_Options;
+   ----------------------------------------------------------------
+   function Get_Ada_Lib_Modifiable_Program_Options (
+      From                       : in  String := Ada_Lib.Trace.Here
+   ) return Program_Options_Class_Access is
+   ----------------------------------------------------------------
+
+   begin
+      Log_Here (Debug or Trace_Options,
+         (if Modifiable_Program_Options = Null then
+            "Modifiable_Program_Options not set "
+         else
+            "") &
+         "from " & From);
+
+      Ada.Assertions.Assert (Modifiable_Program_Options /= Null,
+         "Modifiable_Program_Options not set");
+
+      if Debug or Trace_Options then
+         Tag_History (Modifiable_Program_Options.all'tag, From);
+      end if;
+      return Modifiable_Program_Options;
+
+   exception
+      when Fault: others =>
+         Trace_Exception (Fault);
+         raise;
+
+   end Get_Ada_Lib_Modifiable_Program_Options;
 
    ----------------------------------------------------------------------------
    function Get_Ada_Lib_Read_Only_Program_Options (
@@ -200,14 +210,17 @@ Tag_History (Modifiable_Nested_Options.all'tag);
       Log_Here (Debug or Trace_Options,
          "modifiable options tag " & Tag_Name (Modifiable_Program_Options.all'tag) &
          " from " & From);
-Tag_History (Modifiable_Program_Options.all'tag);
+      if Debug then
+         Tag_History (Modifiable_Program_Options.all'tag);
+      end if;
+
       return Program_Options_Constant_Class_Access (
          Modifiable_Program_Options);
    end Get_Ada_Lib_Read_Only_Program_Options;
 
    ----------------------------------------------------------------------------
    overriding
-   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Nested_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help
@@ -220,7 +233,7 @@ Tag_History (Modifiable_Program_Options.all'tag);
 
    ----------------------------------------------------------------------------
    overriding
-   procedure Display_Help (            -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help
      Options                     : in     Program_Options_Type;     -- only used for dispatch
      Message                     : in     String := "";  -- leave blank no error help
@@ -579,7 +592,7 @@ Tag_History (Modifiable_Program_Options.all'tag);
          Put_Line ("      C               Ada_Lib.Configuration Trace");
          Put_Line ("      e               Event");
 --       Put_Line ("      g               GNOGA.Debug");
---       Put_Line ("      G               Ada_Lib.GNOGA.Debug");
+--       Put_Line ("      G               GNOGA_Options.Debug");
          Put_Line ("      h               Help");
          Put_Line ("      i               interrupt");
          Put_Line ("      I               Ada_Lib.interface");
@@ -682,7 +695,7 @@ Tag_History (Modifiable_Program_Options.all'tag);
       Ada_Lib.Lock.Debug := True;
       Ada_Lib.EMail.Debug := True;
       Ada_Lib.Mail.Debug := True;
---    Ada_Lib.GNOGA.Debug := True;
+--    GNOGA_Options.Debug := True;
       Ada_Lib.Options.Runstring.Debug := True;
       Ada_Lib.Options.Debug := True;
       Ada_Lib.OS.Trace := True;
@@ -734,10 +747,10 @@ Tag_History (Modifiable_Program_Options.all'tag);
                      Ada_Lib.Event.Debug := True;
 
 --                when 'g' =>
---                   Ada_Lib.GNOGA.Debug := True;
+--                   GNOGA_Options.Debug := True;
 
 --                when 'G' =>
---                   Ada_Lib.GNOGA.Debug := True;
+--                   GNOGA_Options.Debug := True;
 
                   when 'h' =>
                      Ada_Lib.Help.Debug := True;
@@ -844,17 +857,26 @@ Tag_History (Modifiable_Program_Options.all'tag);
       ---------------------------------------------------------------
       overriding
       function Verify_Initialized (
-         Options                    : in     Program_Options_Type;
-         From                       : in     String := GNAT.Source_Info.Source_Location
+         Options     : in     Program_Options_Type;
+         From        : in     String := GNAT.Source_Info.Source_Location
       ) return Boolean is
       ---------------------------------------------------------------
 
+         Verify_Initialized   : constant Boolean := Verification_Options_Type (
+                                 Options).Verify_Initialized;
+
       begin
-         Log_In (Debug, "options address " & Image (Options'address));
-         if Verification_Options_Type (
-               Options).Verify_Initialized then
+         Log_In (Debug, "Verify_Initialized " & Verify_Initialized'img &
+            " Processed " & Options.Processed'img);
+         if Verify_Initialized then
             if Options.Processed then
-               Put_Line ("Options.Processed befor inialization called from " & From);
+               declare
+                  Message  : constant String :=
+                              "Options.Processed befor inialization called from " & From;
+               begin
+                  Log_Here (Message);
+                  Put_Line (Message);
+               end;
             else
                return Log_Out (True, Debug);
             end if;
@@ -873,15 +895,10 @@ Tag_History (Modifiable_Program_Options.all'tag);
    begin
       Log_In (Debug or Trace_Options, "options tag " &
          Tag_Name (Program_Options_Type'class (Options)'tag) & " called from " & From);
-      if Verification_Options_Type (
-            Options).Verify_Initialized then
-         if Options.Processed then
+      if Options.Processed then
             return Log_Out (True, Debug or Trace_Options);
-         else
-            Put_Line ("not Options.Processed called from " & From);
-         end if;
       else
-         Put_Line ("Ada_Lib_Options not initialized at " & Here & " called from " & From);
+         Put_Line ("not Options.Processed called from " & From);
       end if;
       Put_Line (Who & " " & Here);
       return Log_Out (False, Debug or Trace_Options);
@@ -1005,19 +1022,30 @@ Tag_History (Modifiable_Program_Options.all'tag);
       ) return Boolean is
       ---------------------------------------------------------------
 
+         ---------------------------------------------------------------
+         procedure Failed (
+            Text                    : in     String) is
+         ---------------------------------------------------------------
+
+            Message  : constant String := Text &  " called from " & From;
+
+         begin
+            Log_Here (Message);
+            Put_Line (Message);
+         end Failed;
+         ---------------------------------------------------------------
+
       begin
          Log_In (Debug or Trace_Options, "options tag " &
             Tag_Name (Verification_Options_Type'class (Options)'tag));
 
          if Modifiable_Program_Options = Null then
-            Put_Line ("Modifiable_Program_Options not initialized at " & Here &
-            " called from " & From);
+            Failed ("Modifiable_Program_Options not initialized at " & Here);
          else
-            if not Options.Initialized then
-               Put_Line ("Options.Initialized not initialized at " & Here &
-                  " called from " & From);
-            else
+            if Options.Initialized then
                return Log_Out (True, Debug or Trace_Options);
+            else
+               Failed ("Options.Initialized not initialized at " & Here);
             end if;
          end if;
 
@@ -1065,8 +1093,9 @@ Tag_History (Modifiable_Program_Options.all'tag);
 -- end Verification_Package;
 
 begin
---Debug := True;
-Trace_Options := True;
+Debug := True;
+--Trace_Options := True;
+--Elaborate := True;
    Log_Here (Debug or Trace_Options or Elaborate);
 end Ada_Lib.Options.Actual;
 

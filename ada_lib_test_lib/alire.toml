@@ -1,4 +1,4 @@
-name = "ada_lib_tests"
+name = "ada_lib_test_lib"
 description = ""
 version = "0.1.0-dev"
 
@@ -9,14 +9,14 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
-executables = ["ada_lib_tests"]
-
 [[depends-on]]
 ada_lib = "*"
 
 [[pins]]
 ada_lib = { path='..' }
 
+[[pins]]
+alr_environment = { path='../..' }
 
 [[depends-on]]
 gnoga = "~0.1.0-dev"
@@ -35,12 +35,3 @@ gnoga_ada_lib = "~0.1.0-dev"
 
 [[pins]]
 gnoga_ada_lib = { path='../../gnoga_ada_lib' }
-
-[[pins]]
-gnoga_options = { path='../../gnoga_options' }
-
-[[depends-on]]
-ada_lib_test_lib = "~0.1.0-dev"
-
-[[pins]]
-ada_lib_test_lib = { path='../ada_lib_test_lib' }

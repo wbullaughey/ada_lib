@@ -301,12 +301,9 @@ package body Ada_Lib.Options is
    end Parsing_Failed;
 
 begin
-Log_Here ("Unit Testing  " & Ada_Lib.Unit_Testing'img &
-   " Help_Test " & Ada_Lib.Help_Test'img);
-     Debug := Debug or Debug_Options.Debug_All;
 --Debug := true;
---Elaborate := True;
 --Trace_Options := True;
+--Elaborate := True;
 
    Indent_Trace := True;
 --log_here ("Indent_Trace address " & Image (Indent_Trace'address));

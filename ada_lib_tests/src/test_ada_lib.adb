@@ -19,6 +19,7 @@ procedure Test_Ada_Lib is
 
 begin
    Put_Line ("test_ada_lib");
+
    declare
       Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.
                         Aunit_Program_Options_Type (
@@ -29,9 +30,11 @@ begin
 
    begin
 --Debug := True;
-      Ada_Lib.Options.Actual.Set_Ada_Lib_Program_Options (Aunit_Options'unchecked_access);
+      Ada_Lib.Options.Actual.Set_Ada_Lib_Program_Options (
+         Aunit_Options'unchecked_access);
+
       if Aunit_Options.Initialize then
-         Log_Here (Debug);
+         Log_Here (Debug, "help test " & Ada_Lib.Help_Test'img);
          Aunit_Options.Post_Process;
          if Ada_Lib.Help_Test then
             Put_Line ("help test " & (if Ada_Lib.Exception_Occured then

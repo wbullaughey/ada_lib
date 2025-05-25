@@ -226,7 +226,7 @@ package body Ada_Lib.Options.Database is
 
    ---------------------------------------------------------------
    overriding
-   procedure Program_Help (      -- common for all programs that use Ada_Lib.Options.GNOGA
+   procedure Program_Help (      -- common for all programs that use GNOGA_Options
      Options                    : in      Database_Options_Type;  -- only used for dispatch - root of derivation tree
      Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type) is
    pragma Unreferenced (Options);
