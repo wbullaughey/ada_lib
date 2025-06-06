@@ -63,7 +63,10 @@ package body Ada_Lib.Options.Actual is
    begin
       Log_Here (Debug or Trace_Options, "what " & What & " where " & Where);
       Parsing_Failed;
-      raise Failed with Message & (if Message'length > 0 then " " else "") &
+      raise Failed with
+         (if Message'length > 0 then
+            Quote (Message) & " "
+         else "") &
          Quote ("Processing option ", What) & (if Debug or Trace_Options then
             " From " & Where
          else
@@ -82,8 +85,12 @@ package body Ada_Lib.Options.Actual is
    begin
       Log_Here (Debug or Trace_Options, "what " & What & " where " & Where);
       Parsing_Failed;
-      raise Failed with Message & (if Message'length > 0 then " " else "") &
-         Quote ("Processing option ", What) & (if Debug or Trace_Options then
+      raise Failed with
+         (if Message'length > 0 then
+            Quote (Message) & " "
+         else "") &
+         Quote ("Processing option ", What) &
+         (if Debug or Trace_Options then
             " From " & Where
          else
             "");
@@ -104,11 +111,11 @@ package body Ada_Lib.Options.Actual is
          " where " & Where);
       Parsing_Failed;
       raise Failed with (
-         if Message'length > 0 then
-            Message
-         else
-            "Processing " & Option.Image) & (
-         if Debug or Trace_Options then
+         (if Message'length > 0 then
+            Quote (Message) & " "
+         else "") &
+         "Processing " & Option.Image) &
+         (if Debug or Trace_Options then
             " From " & Where
          else
             "");
@@ -127,7 +134,10 @@ package body Ada_Lib.Options.Actual is
    begin
       Log_Here (Debug or Trace_Options, "what " & What & " where " & Where);
       Parsing_Failed;
-      raise Failed with Message & (if Message'length > 0 then " " else "") &
+      raise Failed with
+         (if Message'length > 0 then
+            Quote (Message) & " "
+         else "") &
          Quote ("Trace option ", What) &
          Quote (" not defined for", Trace_Option) &
          (if Debug or Trace_Options then
@@ -446,7 +456,6 @@ Tag_History (Modifiable_Nested_Options.all'tag);
          end if;
       end loop;
 
---    Options.Processed := True;
       Log_Out (Debug or Trace_Options, "processed");
 
    exception
@@ -1093,7 +1102,7 @@ Tag_History (Modifiable_Nested_Options.all'tag);
 -- end Verification_Package;
 
 begin
-Debug := True;
+--Debug := True;
 --Trace_Options := True;
 --Elaborate := True;
    Log_Here (Debug or Trace_Options or Elaborate);

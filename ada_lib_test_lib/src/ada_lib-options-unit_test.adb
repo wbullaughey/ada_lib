@@ -343,7 +343,8 @@ package body Ada_Lib.Options.Unit_Test is
                      if Options.Number_Random_Generators = 0 and then
                            not Ada_Lib.Help_Test then
                         raise Failed with
-                           "number randoom number generators not set";
+                           "number randoom number generators not set at " &
+                           Here;
                      end if;
                      Options.Random_Seed_Mode := Specified_Seed;
                      Log_Here (Trace_Options, "number seeds" &
@@ -370,9 +371,11 @@ package body Ada_Lib.Options.Unit_Test is
                      if Options.Random_Seed_Mode /= Seed_Not_Set then
                         raise Failed with "random seed mode already set";
                      end if;
-                     if Options.Number_Random_Generators = 0 then
+                     if Options.Number_Random_Generators = 0 and then
+                           not Ada_Lib.Help_Test then
                         raise Failed with
-                           "number randoom number generators not set";
+                           "number randoom number generators not set at " &
+                           Here;
                      end if;
                      Options.Random_Seed_Mode := Random_Seed;
 
@@ -399,7 +402,7 @@ package body Ada_Lib.Options.Unit_Test is
             Ada_Lib.Options.Actual.Program_Options_Type (
                Options).Process_Option (Iterator, Option),
             Trace_Options or Debug,
-            "other option" & " Option" & Option.Image);
+            "other option" & " Option " & Option.Image);
       end if;
    end Process_Option;
 

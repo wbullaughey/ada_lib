@@ -1,12 +1,66 @@
-#!/bin/bash
+#!/bin/zsh
 export BUILD_MODE=execute
 export UNIT_TEST=TRUE
 export OUTPUT=list-test_ada_lib.txt
 export PROGRAM=bin/test_ada_lib
+export PARAMETERS=$@
+export DO_TRACE=0
+export APPEND_OUTPUT=""  # first time so output erased
+rm -f TRACE.txt
 
-rm $OUTPUT
-echo $OUTPUT deleted 2>&1 | tee $OUTPUT
-#echo "arguments $*"  2>&1| tee $OUTPUT
+function output() {
+   TRACE=$1
+   shift 1
+   echo "output TRACE $TRACE DO_TRACE $DO_TRACE APPEND TRACE $APPEND_OUTPUT" \
+      2>&1 | tee -a TRACE.txt
+   case $TRACE in
+
+      "LIST")
+         ;;
+
+      "TRACE")
+         if [ "$DO_TRACE" -eq 0 ]; then
+            return
+         fi
+   esac
+   echo $* 2>&1 | tee $APPEND_OUTPUT $OUTPUT
+   export APPEND_OUTPUT=-a  # append from now on
+}
+
+function run() {
+   output TRACE run COMMAND $COMMAND DISPLAY $DISPLAY
+   case "$DISPLAY" in
+
+      true)
+         $COMMAND 2>&1 | tee $APPEND_OUTPUT $OUTPUT
+         ;;
+
+      false)
+         $COMMAND 2>&1| /dev/null
+         ;;
+
+      ignore)
+         output LIST ignore $COMMAND
+         ;;
+
+   esac
+   exit;
+}
+
+output TRACE ada_lib_tests PARAMETERS $PARAMETERS
+
+for PARAMETER in $*; do    # put all '-' options into OPTIONS
+   export FIRST=${PARAMETER:0:1}
+   if [[ "$FIRST" = "-" ]]; then
+     output TRACE option: $PARAMETER
+     export OPTIONS="$OPTIONS $PARAMETER"
+     shift 1
+   else
+      break;
+   fi
+done
+
+output TRACE first parameter $1
 
 case $1 in
 
@@ -19,7 +73,7 @@ case $1 in
       ;;
 
 esac
-echo 1st parameter $1 2>&1| tee -a $OUTPUT
+output TRACE 1st parameter $1
 
 case $1 in
 
@@ -43,34 +97,35 @@ export DATABASE=$1  # local,remote,connect,none
 export KILL=true
 #export VERBOSE="-v"
 
-echo check database  "$DATABASE"  2>&1| tee -a $OUTPUT
+output TRACE check database  "$DATABASE"
 case "$DATABASE" in
 
    "help")
       shift 1
-      $PROGRAM -h $* | tee -a $OUTPUT
-      exit
+      export COMMAND="$PROGRAM $OPTIONS -h"
+      run
       ;;
 
    "help_test")
-      echo Help Test 2>&1| tee -a $OUTPUT
+      output LIST Help Test
       export PROGRAM=bin/help_test
-      $PROGRAM \
+      export COMMAND="$PROGRAM $OPTIONS \
       -h -l -P -r -v -x -@c -@d -@i -@l -@m -@p -@P -@S -@t -@u -@x \
       -a abcCehiIlmMoOpPrRsStT@c@d@D@e@E@l@o@s@t \
       -@D adt \
       -e routine \
       -g aego \
-      -G amo \
+      -G o \
       -L path \
       -R path \
       -s suite \
       -t acCdhilmorRsStT@d@T@t \
-      -T aceElt \
+      -T aceElot \
       -u user  \
-      -U aAglprstT \
-      2>&1 | tee -a $OUTPUT
-      exit
+      -U aAglprstT"
+      export UNIT_TEST=FALSE
+      export BUILD_MODE=help_test
+      run
       ;;
 
    "connect")
@@ -91,21 +146,20 @@ case "$DATABASE" in
 
    "suites")
       shift 1
-      echo list suites 2>&1| tee -a $OUTPUT
+      output  list suites
       export COMMAND="$PROGRAM -@l $*"
       echo "command: $COMMAND"  | tee -a $OUTPUT
-      $COMMAND 2>&1 | tee -a $OUTPUT
-      exit
+      run
       ;;
 
    "")
       shift 1
-      echo no database option provided 2>&1| tee -a $OUTPUT
+      output LIST no database option provided
       exit
       ;;
 
    *)
-      echo unrecognize database option \"$DATABASE\" allowed: local,remote,none 2>&1| tee -a $OUTPUT
+      output LIST unrecognize database option \"$DATABASE\" allowed: local,remote,none
       exit
       ;;
 
@@ -117,9 +171,9 @@ export SUITE=$2     # mwd - Main_Window_with_DBDaemon
                     # wrn - Widget_Root_Without_DBDaemon
                     # all - all swites
 export ROUTINE=$3   # all or test routine name
-echo DATABASE $DATABASE 2>&1| tee -a $OUTPUT
-echo SUITE $SUITE 2>&1| tee -a $OUTPUT
-echo routine $ROUTINE 2>&1| tee -a $OUTPUT
+output LIST DATABASE $DATABASE
+output LIST SUITE $SUITE
+output LIST routine $ROUTINE
 
 shift 3
 
@@ -130,7 +184,7 @@ case "$SUITE" in
       ;;
 
    "")
-      echo "missing suite"  2>&1| tee -a $OUTPUT
+      output LIST "missing suite"
       exit;
       ;;
 
@@ -146,17 +200,17 @@ case "$ROUTINE" in
       ;;
 
    -*)
-      echo missing routine 2>&1| tee -a $OUTPUT
+      output LIST missing routine
       exit;
       ;;
 
    "")
-      echo missing routine 2>&1| tee -a $OUTPUT
+      output LIST missing routine
       exit;
       ;;
 
    *)
-      echo routine $ROUTINE 2>&1| tee -a $OUTPUT
+      output LIST routine $ROUTINE
       export ROUTINE_OPTION="-e $ROUTINE"
       ;;
 
@@ -172,29 +226,14 @@ case "$DATABASE" in
        ;;
 
    *)
-       echo kill not set 2>&1| tee -a $OUTPUT
+       output LIST kill not set
        ;;
 
 esac
 #ps ax | grep dbdaemon
-echo DISPLAY $DISPLAY 2>&1| tee -a $OUTPUT
-export COMMAND="$GDB $PROGRAM $* $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
-echo "command: $COMMAND"  | tee -a $OUTPUT
-
-case "$DISPLAY" in
-
-   true)
-      $COMMAND 2>&1 | tee -a $OUTPUT
-      ;;
-
-   false)
-      $COMMAND 2>&1| tee -a $OUTPUT
-      ;;
-
-   ignore)
-      $COMMAND 2>&1| tee -a $OUTPUT
-      ;;
-
-esac
+output TRACE DISPLAY $DISPLAY
+export COMMAND="$GDB $PROGRAM $OPTIONS $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
+output TRACE "command: $COMMAND"
+run
 
 sleep 1

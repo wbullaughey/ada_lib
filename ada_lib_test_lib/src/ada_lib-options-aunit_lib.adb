@@ -76,10 +76,12 @@ package body Ada_Lib.Options.AUnit_Lib is
    begin
       Log_In (Debug or Trace_Options,
          "Options_Selection " & Options.Options_Selection'img);
+
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters, Options_With_Parameters);
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Options_Without_Parameters);
+
       return Log_Out (
          (case Options.Options_Selection is
 
@@ -99,12 +101,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          ) and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
          Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
-            Options).Initialize and then
-         Options.Process (
-            Include_Options      => True,
-            Include_Non_Options  => False,
-            Modifiers            => String'(
-               1 => Ada_Lib.Help.Modifier)),
+            Options).Initialize,
          Debug or Trace_Options,
             "Options_Selection " & Options.Options_Selection'img);
    end Initialize;
@@ -144,6 +141,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    begin
       Log_In (Trace_Options or Debug, Option.Image &
          " has options " & Has_Option'img &
+         " option selection " & Options.Options_Selection'img &
          " Options address " & Image (Options'address));
 
       if Has_Option then
@@ -177,7 +175,9 @@ package body Ada_Lib.Options.AUnit_Lib is
                   False,
 
                when Ada_Lib_Unit_Test_With_Database =>
-                  Options.Database_Options.Process_Option (Iterator, Option),
+                  Options.Database_Options.Process_Option (
+                     Iterator, Option) or else
+                  Options.Template.Process_Option (Iterator, Option),
 
                when With_Database_Only =>
                   Options.Database_Only.Process_Option (Iterator, Option)

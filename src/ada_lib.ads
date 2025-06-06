@@ -13,5 +13,17 @@ package Ada_Lib is
                         Parse_Environment_Variable (
                            Ada_Lib_Environment.Unit_Test_Kind);
 -- program built to do unit testing
+-- --------------------------------------------------------------
+--                    |        Build_Mode
+--                    |  "execute"  | "help_test" |
+--           -----------------------+----------------------------
+--                    |   False     |   False     |  Help_Test
+--             "TRUE" |-------------+----------------------------
+--                    |   True      |   False     |  Unit_Testing
+-- Unit_Test -----------------------+----------
+--                    |   False     |   True      |  Help_Test
+--            "FALSE" |-------------+----------------------------
+--                    |   False     |   False     |  Unit_Testing
+-- --------------------------------------------------------------
 
 end Ada_Lib;

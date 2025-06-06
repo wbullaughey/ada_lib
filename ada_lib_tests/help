@@ -1,4 +1,3 @@
-test_ada_lib
 test_ada_lib command line options:
     -?                             : this message                    (Ada_Lib)
     -a <trace options>             : Ada_Lib library trace options   (Ada_Lib)
@@ -60,7 +59,8 @@ Ada_Lib.Template.Tests (-T)
       e               evaluate
       E               expand
       l               load
-      t               test
+      o               optons
+      t               template test
 
 GNOGA_Options unit test trace options (-g)
       a               all
@@ -69,8 +69,6 @@ GNOGA_Options unit test trace options (-g)
       o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
 
 GNOGA_Options library trace options (-G)
-      a               all
-      m               GNOGA.Ada_Lib.Trace
       o               GNOGA options
 
 CAC ada_lib trace library options (-a)

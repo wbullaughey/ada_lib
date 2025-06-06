@@ -154,7 +154,11 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Options, Option.Image);
+      Log_In (Debug or Trace_Options, Option.Image &
+         " Options_With_Parameters length " &
+            Options_With_Parameters'length'img &
+         " Options_Without_Parameters length " &
+            Options_Without_Parameters'length'img);
 
       for Element of Options_With_Parameters loop
          if Element = Option then

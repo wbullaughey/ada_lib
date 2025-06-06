@@ -21,26 +21,6 @@ package body Ada_Lib_Environment is
    ) return Boolean is
 ----------------------------------------------------------------------------
 
-   -- False_Value : constant array (Environment_Variable_Kind_Type) of
-   --                String_Constant_Access := (
-   --                new String'("FALSE"),      -- help test
-   --                new String'("HELP TEST")   -- Unit Test
-   --             );
-   -- True_Value : constant array (Environment_Variable_Kind_Type) of
-   --                String_Constant_Access := (
-   --                new String'("TRUE"),    -- Help Test
-   --                new String'("execute")  -- Unit Test-- Help Test
-   --             );                                     -- Unit Test
-   -- Variable : constant array (Environment_Variable_Kind_Type) of
-   --                String_Constant_Access := (
-   --                new String'("BUILD_MODE"),
-   --                new String'("UNIT_TEST")
-   ----             );
-   --
-   --   Table    : constant Array_Type := (
-   --      Help_Test_Kind => (
-   --         Variable    =>
-
       Build_Mode  : constant String := Ada.Environment_Variables.Value (
                      "BUILD_MODE", "execute");
       Unit_Test   : constant String := Ada.Environment_Variables.Value (
@@ -50,15 +30,17 @@ package body Ada_Lib_Environment is
       procedure Bad_Value (
          Variable          : in     String;
          Value             : in     String;
-         From              : in     String) is
+         From              : in     String;
+         Who               : in     String) is
       -------------------------------------------------------------------
 
       begin
          Put ("unexpected value: '" & Value & "' for " &
             Variable & " for kind " & Kind'img);
          if Debug then
-            Put ("from " & From &
-               "at " & GNAT.Source_Info.Source_Location);
+            Put (" who " & Who & " from " & From &
+               " at " & GNAT.Source_Info.Enclosing_Entity &
+               ":" & GNAT.Source_Info.Source_Location);
          end if;
          New_Line;
          GNAT.OS_Lib.OS_Exit (-1);
@@ -70,8 +52,9 @@ package body Ada_Lib_Environment is
       begin
          if Debug then
             Put_Line ("kind " & Kind'img & " build mode '" & Build_Mode &
-               "' unit test '" & Unit_Test & "' from " &
-               GNAT.Source_Info.Source_Location);
+               "' unit test '" & Unit_Test &
+               " at " & GNAT.Source_Info.Enclosing_Entity &
+               ":" & GNAT.Source_Info.Source_Location);
          end if;
 
          case Kind is
@@ -81,16 +64,18 @@ package body Ada_Lib_Environment is
                   if Unit_Test = "FALSE" then   -- unit_test is set but not used
                      Result :=  True;
                   elsif Unit_Test = "TRUE" then
-                     Result :=  True;
+                     Result :=  False;
                   else
                      Bad_Value ("UNIT_TEST", Unit_Test,
+                        GNAT.Source_Info.Enclosing_Entity,
                         GNAT.Source_Info.Source_Location);
                   end if;
                elsif Build_Mode = "execute" then
                   Result :=  False;
                else
                   Bad_Value ("BUILD_MODE", Build_Mode,
-                     GNAT.Source_Info.Source_Location);
+                        GNAT.Source_Info.Enclosing_Entity,
+                        GNAT.Source_Info.Source_Location);
                end if;
 
             when Unit_Test_Kind =>
@@ -101,19 +86,22 @@ package body Ada_Lib_Environment is
                      Result :=  False;
                   else
                      Bad_Value ("UNIT_TEST", Unit_Test,
+                        GNAT.Source_Info.Enclosing_Entity,
                         GNAT.Source_Info.Source_Location);
                   end if;
-               elsif Build_Mode = "HELP_MODE" then
+               elsif Build_Mode = "help_test" then
                   Result :=  False;
                else
                   Bad_Value ("BUILD_MODE", Build_Mode,
-                     GNAT.Source_Info.Source_Location);
+                        GNAT.Source_Info.Enclosing_Entity,
+                        GNAT.Source_Info.Source_Location);
                end if;
          end case;
 
          if Debug then
             Put_Line ("result " & Result'img & " for kind " & Kind'img &
-               "' from " & GNAT.Source_Info.Source_Location);
+               " at " & GNAT.Source_Info.Enclosing_Entity &
+               ":" & GNAT.Source_Info.Source_Location);
          end if;
          return Result;
 
