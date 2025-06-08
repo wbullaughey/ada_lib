@@ -28,19 +28,19 @@ function output() {
 }
 
 function run() {
-   output TRACE run COMMAND $COMMAND DISPLAY $DISPLAY
+   output TRACE run PROGRAM $PROGRAM COMMAND $COMMAND DISPLAY $DISPLAY
    case "$DISPLAY" in
 
       true)
-         $COMMAND 2>&1 | tee $APPEND_OUTPUT $OUTPUT
+         $PROGRAM $COMMAND 2>&1 | tee $APPEND_OUTPUT $OUTPUT
          ;;
 
       false)
-         $COMMAND 2>&1| /dev/null
+         $PROGRAM $COMMAND 2>&1| /dev/null
          ;;
 
       ignore)
-         output LIST ignore $COMMAND
+         output LIST ignore $PROGRAM $COMMAND
          ;;
 
    esac
@@ -102,14 +102,14 @@ case "$DATABASE" in
 
    "help")
       shift 1
-      export COMMAND="$PROGRAM $OPTIONS -h"
+      export COMMAND="$OPTIONS -h"
       run
       ;;
 
    "help_test")
       output LIST Help Test
       export PROGRAM=bin/help_test
-      export COMMAND="$PROGRAM $OPTIONS \
+      export COMMAND="$OPTIONS \
       -h -l -P -r -v -x -@c -@d -@i -@l -@m -@p -@P -@S -@t -@u -@x \
       -a abcCehiIlmMoOpPrRsStT@c@d@D@e@E@l@o@s@t \
       -@D adt \
@@ -147,7 +147,7 @@ case "$DATABASE" in
    "suites")
       shift 1
       output  list suites
-      export COMMAND="$PROGRAM -@l $*"
+      export COMMAND="-@l $*"
       echo "command: $COMMAND"  | tee -a $OUTPUT
       run
       ;;
@@ -232,7 +232,7 @@ case "$DATABASE" in
 esac
 #ps ax | grep dbdaemon
 output TRACE DISPLAY $DISPLAY
-export COMMAND="$GDB $PROGRAM $OPTIONS $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
+export COMMAND="$GDB $OPTIONS $DATABASE_OPTION $SUITE_OPTION $ROUTINE_OPTION  -p 2300" # -S 1
 output TRACE "command: $COMMAND"
 run
 
