@@ -21,10 +21,10 @@ package body Ada_Lib.Timer.Tests is
    function Allocate_Event (
       Offset                     : in     Duration;
       Description                : in     String := ""
-   ) return Test_Timer_Access is
+   ) return Test_Timer_Class_Access is
    ---------------------------------------------------------------------------
 
-      Result                     : constant Test_Timer_Access :=
+      Result                     : constant Test_Timer_Class_Access :=
                                      new Test_Timer_Type;
    begin
       Log_Here (Debug, Quote ("description", Description) &
@@ -109,7 +109,7 @@ package body Ada_Lib.Timer.Tests is
             begin
                for Index in Active_Events'range loop   -- create events
                   declare
-                        Event          : Test_Timer_Access renames
+                        Event          : Test_Timer_Class_Access renames
                                           Active_Events (Index);
                   begin
                      Log_Here (Debug, "index" & Index'img);
@@ -144,7 +144,7 @@ package body Ada_Lib.Timer.Tests is
 
                declare
                   All_Occured       : Boolean := False;
-                  Cancel_Event      : Test_Timer_Type renames
+                  Cancel_Event      : Test_Timer_Type'class renames
                                        Active_Events (Cancel_Event_Index).all;
                   Event_Canceled          : Boolean := False;
                   Schedule_Time     : constant Ada_Lib.Time.Time_Type :=
@@ -166,7 +166,7 @@ package body Ada_Lib.Timer.Tests is
                      if    Index /= Dynamic_Index and then  -- cancled dynamic was freed
                            Index /= Cancel_Event_Index then
                         declare
-                           Event          : Test_Timer_Type renames
+                           Event          : Test_Timer_Type'class renames
                                              Active_Events (Index).all;
                            Active         : constant Boolean := Event.Active;
                            Expected       : constant Boolean := Expect_Active (Index);
@@ -192,7 +192,7 @@ package body Ada_Lib.Timer.Tests is
                      All_Occured := True;
                      for Index in 1 .. Number_Events loop
                         declare
-                           Event    : Test_Timer_Type renames
+                           Event    : Test_Timer_Type'class renames
                                        Active_Events (Index).all;
                            Fault    : constant Ada_Lib.Strings.String_Access :=
                                        Event.Get_Exception;
@@ -242,7 +242,7 @@ package body Ada_Lib.Timer.Tests is
                   for Index in 1 .. Number_Events loop
                      if    Index /= Dynamic_Index then
                         declare
-                           Event       : Test_Timer_Type renames
+                           Event       : Test_Timer_Type'class renames
                                           Active_Events (Index).all;
                            Expected    : constant Ada_Lib.Time.Time_Type :=
                                           Schedule_Time + Event_Times (Index);
@@ -353,7 +353,7 @@ package body Ada_Lib.Timer.Tests is
       begin
          for Index in 1 .. Number_Events loop
             declare
-               Event             : Test_Timer_Access renames Events (Index);
+               Event             : Test_Timer_Class_Access renames Events (Index);
 
             begin
                case Index is
@@ -398,7 +398,7 @@ package body Ada_Lib.Timer.Tests is
 
             for Index in 1 .. Number_Events loop
                declare
-                  Event          : Test_Timer_Type renames Events (Index).all;
+                  Event          : Test_Timer_Type'class renames Events (Index).all;
                   Expected       : constant Ada_Lib.Time.Time_Type :=
                                     Schedule_Time + Event_Times (Index);
                   Offset         : constant Duration :=
@@ -495,20 +495,21 @@ package body Ada_Lib.Timer.Tests is
 
    begin
       Log_In (Debug);
+      Static_Event.Test_Ada_2022 := @ + 1;
       Static_Event.Initialize (
          Description    => "static",
          Wait           => Wait_Time);
 
       for Dynamic in Boolean'range loop
          declare
-            Event                   : constant Test_Timer_Access := (if Dynamic then
+            Event                   : constant Test_Timer_Class_Access := (if Dynamic then
                                           Allocate_EVent (
                                              Description    => "dynamic",
                                              Offset         => Wait_Time)
                                        else
                                           Static_Event'unchecked_access);
          begin
-            Log_Here (Debug);
+            Log_Here (Debug, "dynamic " & Dynamic'img);
             while not Event.Occurred loop
                delay 0.1;
             end loop;
@@ -526,6 +527,10 @@ package body Ada_Lib.Timer.Tests is
                   Trace_Message_Exception (Fault, "assert Occurred");
                   return;
             end;
+
+            if Dynamic then
+               Event.Free;
+            end if;
 
          exception
             when Fault: others =>

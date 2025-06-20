@@ -4,7 +4,7 @@ with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.AUnit_Lib;
 --with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
-with GNOGA.Ada_Lib.Interfaces;
+with GNOGA_Ada_Lib.Interfaces;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.Gui.Base;
 with Gnoga.Gui.Element;
@@ -78,12 +78,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 --                               Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Standard.GNOGA.Ada_Lib.Get_Connection_Data).all;
+                                    GNOGA_Ada_Lib.Get_Connection_Data).all;
       Press_Event             : constant Standard.Gnoga.Gui.Base.
                                  Keyboard_Event_Record := (
                                     Message     => Standard.Gnoga.
                                                    Gui.Base.Key_Down,
-                                    Key_Code    => Standard.GNOGA.Ada_Lib.Interfaces.
+                                    Key_Code    => GNOGA_Ada_Lib.Interfaces.
                                                       Right_Arrow,
                                     Key_Char    => '>',
                                     Alt         => False,
@@ -151,14 +151,14 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Stop_Code                  : constant := 88;
 
    begin
-      Log_In (Debug, Standard.GNOGA.Ada_Lib.Interfaces.Keyboard_Event_Image (Keyboard_Event));
+      Log_In (Debug, GNOGA_Ada_Lib.Interfaces.Keyboard_Event_Image (Keyboard_Event));
 
       if Options.Verbose then
-         Put_Line (Standard.GNOGA.Ada_Lib.Interfaces.Keyboard_Event_Image (Keyboard_Event));
+         Put_Line (GNOGA_Ada_Lib.Interfaces.Keyboard_Event_Image (Keyboard_Event));
       end if;
 
       if Debug or else Options.Verbose then
-         Standard.GNOGA.Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
+         GNOGA_Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
 
       case Keyboard_Event.Message is
@@ -168,19 +168,19 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 
             case Keyboard_Event.Key_Code is
 
-               when Standard.GNOGA.Ada_Lib.Interfaces.Down_Arrow =>
+               when GNOGA_Ada_Lib.Interfaces.Down_Arrow =>
                   Connection_Data.Top_Position := Connection_Data.Top_Position + 1;
                   Connection_Data.Top_View.Top (Connection_Data.Top_Position, "px");
 
-               when Standard.GNOGA.Ada_Lib.Interfaces.Left_Arrow =>
+               when GNOGA_Ada_Lib.Interfaces.Left_Arrow =>
                   Connection_Data.Left_Position := Connection_Data.Left_Position - 1;
                   Connection_Data.Top_View.Left (Connection_Data.Left_Position, "px");
 
-               when Standard.GNOGA.Ada_Lib.Interfaces.Right_Arrow =>
+               when GNOGA_Ada_Lib.Interfaces.Right_Arrow =>
                   Connection_Data.Left_Position := Connection_Data.Left_Position + 1;
                   Connection_Data.Top_View.Left (Connection_Data.Left_Position, "px");
 
-               when Standard.GNOGA.Ada_Lib.Interfaces.Up_Arrow =>
+               when GNOGA_Ada_Lib.Interfaces.Up_Arrow =>
                   Connection_Data.Top_Position := Connection_Data.Top_Position - 1;
                   Connection_Data.Top_View.Top (Connection_Data.Top_Position, "px");
 
@@ -214,7 +214,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 --    Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data   : Window_Connection_Data_Type renames
                            Window_Connection_Data_Access (
-                              Standard.GNOGA.Ada_Lib.Get_Connection_Data).all;
+                              GNOGA_Ada_Lib.Get_Connection_Data).all;
    begin
       Log_In (Debug);
       Pause_On_Flag ("start of test");
@@ -397,7 +397,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 --    Local_Test              : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
       Connection_Data         : Window_Connection_Data_Type renames
                                  Window_Connection_Data_Access (
-                                    Standard.GNOGA.Ada_Lib.Get_Connection_Data).all;
+                                    GNOGA_Ada_Lib.Get_Connection_Data).all;
       Move_Event              : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
                                  Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
                                  X             => 0,
@@ -488,11 +488,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Log_In (Debug, "moveing " & Connection_Data.Moving'img & " event " & Mouse_Event.Message'img);
 
       if Options.Verbose then
-         Put_Line (Standard.GNOGA.Ada_Lib.Interfaces.Mouse_Event_Image (Mouse_Event));
+         Put_Line (GNOGA_Ada_Lib.Interfaces.Mouse_Event_Image (Mouse_Event));
       end if;
 
       if Debug then
-         Standard.GNOGA.Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+         GNOGA_Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
       end if;
 
      case Mouse_Event.Message is
@@ -589,8 +589,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                                     new Window_Connection_Data_Type;
    begin
       Log_In (Debug);
-      Standard.GNOGA.Ada_Lib.Set_Connection_Data (
-         Standard.GNOGA.Ada_Lib.Connection_Data_Class_Access (Connection_Data));
+      GNOGA_Ada_Lib.Set_Connection_Data (
+         GNOGA_Ada_Lib.Connection_Data_Class_Access (Connection_Data));
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
       Connection_Data.Top_View.Create (
@@ -636,7 +636,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 
    begin
       Log (Debug, Here, Who);
-      Standard.GNOGA.Ada_Lib.Clear_Connection_Data;
+      GNOGA_Ada_Lib.Clear_Connection_Data;
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
    end Tear_Down;
 

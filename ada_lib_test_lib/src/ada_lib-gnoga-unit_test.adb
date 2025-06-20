@@ -1,7 +1,7 @@
 --with Ada.Unchecked_Deallocation;
 --with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.Command_Line_Iterator; -- needed for pragma Elaborate_All
-with GNOGA.Ada_Lib.Base;
+with GNOGA_Ada_Lib.Base;
 --with Ada_Lib.GNOGA.Unit_Test;
 --with Ada_Lib.Help;
 with Ada_Lib.Options;
@@ -10,7 +10,7 @@ with GNOGA_Options;
 --with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with GNOGA.Ada_Lib.Base;
+with GNOGA_Ada_Lib.Base;
 with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Window;
 
@@ -19,8 +19,8 @@ with Gnoga.Gui.Window;
 package body Ada_Lib.GNOGA.Unit_Test is
 
 -- procedure Free is new Ada.Unchecked_Deallocation (
---    Object         => Standard.GNOGA.Ada_Lib.Connection_Data_Type'class,
---    Name           => Standard.GNOGA.Ada_Lib.Connection_Data_Class_Access);
+--    Object         => GNOGA_Ada_Lib.Connection_Data_Type'class,
+--    Name           => GNOGA_Ada_Lib.Connection_Data_Class_Access);
 
    procedure Test_Handler (
       Main_Window                : in out Standard.Gnoga.Gui.Window.Window_Type'Class;
@@ -40,14 +40,14 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
---    Test.Connection_Data := Standard.GNOGA.Ada_Lib.Get_Connection_Data;
+--    Test.Connection_Data := GNOGA_Ada_Lib.Get_Connection_Data;
       if not Test.Test_Driver then
          Log_Here (Debug, -- "URL_Opened " & URL_Opened'img &
             " Initialize_GNOGA " & Test.Initialize_GNOGA'img);
          if Test.Initialize_GNOGA then
             Log_Here (Debug);
             Standard.GNOGA.Application.Open_URL;
-            Standard.GNOGA.Ada_Lib.Base.Initialize_GNOGA (Test_Handler'access,
+            GNOGA_Ada_Lib.Base.Initialize_GNOGA (Test_Handler'access,
                Application_Title    => "Unit_Test",
    --          Start_Message_Loop   => True,
                Port                 => Options.HTTP_Port,
@@ -77,8 +77,8 @@ package body Ada_Lib.GNOGA.Unit_Test is
 --       Free (Test.Connection_Data);
 --    end if;
 
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (False);
---    GNOGA.Ada_Lib.Base.Message_Loop_Signal.Wait;
+      GNOGA_Ada_Lib.Base.Set_Main_Created (False);
+--    GNOGA_Ada_Lib.Base.Message_Loop_Signal.Wait;
                                  -- it does not end until end of program
       Log_Out (Debug);
 
@@ -96,9 +96,9 @@ package body Ada_Lib.GNOGA.Unit_Test is
    pragma Unreferenced (Connection);
    ---------------------------------------------------------------
 
-      Connection_Data   : constant Standard.GNOGA.Ada_Lib.
+      Connection_Data   : constant GNOGA_Ada_Lib.
                            Connection_Data_Class_Access :=
-                              Standard.GNOGA.Ada_Lib.Get_Connection_Data;
+                              GNOGA_Ada_Lib.Get_Connection_Data;
       URL               : constant String := Main_Window.Document.URL;
 
    begin
@@ -107,7 +107,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Connection_Data.Main_Window := Main_Window'unchecked_access;
       Main_Window.Connection_Data (Connection_Data);
       Pause_On_Flag ("exit handler");
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (True);
+      GNOGA_Ada_Lib.Base.Set_Main_Created (True);
       Log_Out (Debug);
    end Test_Handler;
 

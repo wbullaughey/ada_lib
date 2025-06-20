@@ -124,11 +124,12 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
    overriding
    procedure Bad_Trace_Option (              -- aborts program
-      Options                    : in     Abstract_Options_Type;
-      Trace_Option               : in     Character;
-      What                       : in     Character;
-      Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here) is
+      Options           : in     Abstract_Options_Type;
+      Trace_Option      : in     Character;
+      What              : in     Character;
+      Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
+      Message           : in     String := "";
+      Where             : in     String := Ada_Lib.Trace.Here) is
    ----------------------------------------------------------------------------
 
    begin
@@ -138,7 +139,11 @@ package body Ada_Lib.Options.Actual is
          (if Message'length > 0 then
             Quote (Message) & " "
          else "") &
-         Quote ("Trace option ", What) &
+         (if Modifier /= Ada.Characters.Latin_1.Nul then
+            " modifier " & Modifier
+         else
+            "") &
+         Quote (" Trace option", What) &
          Quote (" not defined for", Trace_Option) &
          (if Debug or Trace_Options then
             " From " & Where
@@ -176,7 +181,11 @@ package body Ada_Lib.Options.Actual is
       Log_Here (Debug or Trace_Options,
          "modifiable options tag " & Tag_Name (Modifiable_Nested_Options.all'tag) &
          " from " & From);
-Tag_History (Modifiable_Nested_Options.all'tag);
+
+      if Debug then
+         Tag_History (Modifiable_Nested_Options.all'tag);
+      end if;
+
       return Nested_Options_Constant_Class_Access (
          Modifiable_Nested_Options);
    end Get_Ada_Lib_Read_Only_Nested_Options;

@@ -9,7 +9,7 @@ package Ada_Lib.GNOGA.Unit_Test is
       Initialize_GNOGA           : Boolean;
       Test_Driver                : Boolean) is abstract new Ada_Lib.Unit_Test.
                                     Tests.Test_Case_Type with null record;
---    Connection_Data            : Standard.GNOGA.Ada_Lib.Connection_Data_Class_Access := Null;
+--    Connection_Data            : GNOGA_Ada_Lib.Connection_Data_Class_Access := Null;
 -- end record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;

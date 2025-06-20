@@ -3,13 +3,13 @@ with AUnit.Test_Suites;
 --with Ada_Lib.GNOGA;
 -- with Ada_Lib.Unit_Test.Tests;
 --with Ada_Lib.GNOGA.Unit_Test;
-with GNOGA.Ada_Lib;
+with GNOGA_Ada_Lib;
 with Gnoga.Gui.Base;
 
 package Ada_Lib.GNOGA.Unit_Test.Events is
 
    type Event_Connection_Data_Type
-                                 is new Standard.GNOGA.Ada_Lib.Connection_Data_Type with record
+                                 is new GNOGA_Ada_Lib.Connection_Data_Type with record
       Down_Key                   : Standard.GNOGA.Gui.Base.Keyboard_Event_Record;
       Got_Click                  : Boolean := False;
       Got_Key                    : Boolean := False;

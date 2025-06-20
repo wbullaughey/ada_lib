@@ -1,4 +1,4 @@
-with Ada.Command_Line;
+--with Ada.Command_Line;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator.Tests;
 with Ada_Lib.Configuration.Tests;
@@ -27,6 +27,7 @@ with Debug_Options;
 
 package body Ada_Lib.Options.AUnit_Lib is
 
+   Trace_Modifier                : constant Character := '@';
    Trace_Option                  : constant Character := 't';
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
@@ -208,9 +209,10 @@ package body Ada_Lib.Options.AUnit_Lib is
             "ada_lib trace options", Component);
 
       when Ada_Lib.Options.Traces =>
-         Put_Line (Ada.Command_Line.Command_Name & " trace options (-" &
+         Put_Line (Ada_Lib.Trace.Who & " trace options (-" &
             Trace_Option & ")");
          Put_Line ("      a               all");
+         Put_Line ("      A               AUnit debug");
          Put_Line ("      c               configuration");
          Put_Line ("      C               command line iterator");
          Put_Line ("      d               directory compare and copy");
@@ -225,6 +227,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          Put_Line ("      S               Database server Test");
          Put_Line ("      t               Template Test");
          Put_Line ("      T               Timer Test");
+         Put_Line ("      @c              Camera Commands Unit Test");
          Put_Line ("      @d              Debug Test");
          Put_Line ("      @T              Debug Tests");
          Put_Line ("      @t              Debug Test routines");
@@ -288,8 +291,8 @@ package body Ada_Lib.Options.AUnit_Lib is
                               Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
-      Parameter                  : constant String := Iterator.Get_Parameter;
       Extended                   : Boolean := False;
+      Parameter                  : constant String := Iterator.Get_Parameter;
 
    begin
       Log (Trace_Options or Debug, Here, Who & Quote (" Parameter", Parameter));
@@ -306,7 +309,6 @@ package body Ada_Lib.Options.AUnit_Lib is
                   case Trace is
 
                      when 'a' =>
-                        Debug := True;
                         Ada_Lib.Command_Line_Iterator.Tests.Debug := True;
                         Ada_Lib.Configuration.Tests.Debug := True;
                         Ada_Lib.Database.Server.Tests.Debug := True;
@@ -324,7 +326,13 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Trace.Tests.Debug := True;
                         Ada_Lib.Trace.Tests.Debug_Test := True;
                         Ada_Lib.Trace.Tests.Debug_Tests := True;
+                        AUnit.Debug := True;
+                        Debug := True;
+--                      Debug_Options := True;
                         Options.Tester_Debug := True;
+
+                     when 'A' =>
+                        AUnit.Debug := True;
 
                      when 'c' =>
                         Ada_Lib.Configuration.Tests.Debug := True;
@@ -371,7 +379,7 @@ package body Ada_Lib.Options.AUnit_Lib is
       --             when 'u' =>
       --                Ada_Lib.Unit_Test.Debug := True;
 
-                     when '@' =>
+                     when Trace_Modifier =>
                         Extended := True;
 
                      when others =>
@@ -392,7 +400,8 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Trace.Tests.Debug_Tests := True;
 
                      when others =>
-                        Options.Bad_Trace_Option (Trace_Option, Trace);
+                        Options.Bad_Trace_Option (Trace_Option, Trace,
+                           Trace_Modifier);
 
                   end case;
                   Extended := False;

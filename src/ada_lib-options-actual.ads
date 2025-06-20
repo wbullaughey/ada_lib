@@ -46,6 +46,7 @@ package Ada_Lib.Options.Actual is
       Options                    : in     Abstract_Options_Type;
       Trace_Option               : in     Character;
       What                       : in     Character;
+      Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
       Message                    : in     String := "";
       Where                      : in     String := Ada_Lib.Trace.Here);
 

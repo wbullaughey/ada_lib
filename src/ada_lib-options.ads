@@ -181,6 +181,7 @@ package Ada_Lib.Options is
       Options                    : in     Interface_Options_Type;
       Trace_Option               : in     Character;
       What                       : in     Character;
+      Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
       Message                    : in     String := "";
       Where                      : in     String := Ada_Lib.Trace.Here) is abstract;
 

@@ -1,12 +1,12 @@
 with Ada.Characters.Handling;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with GNOGA.Ada_Lib.Interfaces;
+with GNOGA_Ada_Lib.Interfaces;
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with GNOGA.Ada_Lib;
+with GNOGA_Ada_Lib;
 with Gnoga.GUI.Window;
 with Gnoga.Types;
 
@@ -19,7 +19,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    procedure Keyboard_Test (
       Test                       : in out AUnit.Test_Cases.Test_Case'class
-   ) with Pre => Standard.GNOGA.Ada_Lib.Has_Connection_Data;
+   ) with Pre => GNOGA_Ada_Lib.Has_Connection_Data;
 
    procedure Mouse_Move_Handler (
       Object                     : in out Standard.Gnoga.Gui.Base.Base_Type'Class;
@@ -87,7 +87,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --       begin
 --          Data.Mouse_Move_Count := Data.Mouse_Move_Count + 1;
 --          Put_Line ("mouse moved");
---          Standard.GNOGA.Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+--          GNOGA_Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
 --       end;
 --       Log_Out (Debug);
 --    end Move_Handler;
@@ -170,7 +170,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
          Log_Out (Debug, "got click " & Data.Got_Click'img);
       end;
       Put_Line ("mouse event occured");
-      Standard.GNOGA.Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+      GNOGA_Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
    end Click_Event_Handler;
 
    ---------------------------------------------------------------
@@ -202,7 +202,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
       if Debug or else Ada_Lib.Options.Actual.
             Get_Ada_Lib_Read_Only_Program_Options.Verbose then
-         Standard.GNOGA.Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
+         GNOGA_Ada_Lib.Interfaces.Dump_Keyboard_Event (Keyboard_Event);
       end if;
       Log_Out (Debug);
    end Keyboard_Event_Handler;
@@ -221,7 +221,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : constant Event_Connection_Data_Access :=
                                     Event_Connection_Data_Access (
-                                       Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+                                       GNOGA_Ada_Lib.Get_Connection_Data);
       Key                        : constant Character := 'A';
       Down_Key_Event             : constant Standard.Gnoga.Gui.Base.Keyboard_Event_Record := (
                                     Message     => Standard.Gnoga.Gui.Base.Key_Down,
@@ -304,7 +304,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
       Connection_Data
                   : constant Event_Connection_Data_Access :=
-                     Event_Connection_Data_Access (Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+                     Event_Connection_Data_Access (GNOGA_Ada_Lib.Get_Connection_Data);
       Options     : Ada_Lib.Options.Unit_Test.
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
@@ -312,7 +312,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                               Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Data                      : constant Event_Connection_Data_Access :=
-                                    Event_Connection_Data_Access (Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+                                    Event_Connection_Data_Access (GNOGA_Ada_Lib.Get_Connection_Data);
    begin
       Log_In (Debug, (if Connection_Data = Null then
             "data null"
@@ -353,7 +353,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
 --    Data                      : Constant Event_Connection_Data_Access :=
---                                  Event_Connection_Data_Access (Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+--                                  Event_Connection_Data_Access (GNOGA_Ada_Lib.Get_Connection_Data);
 --
 -- begin
 --    Log_In (Debug);
@@ -389,7 +389,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --    Local_Test                 : Event_Test_Type renames Event_Test_Type (Test);
       Connection_Data            : Event_Connection_Data_Type renames
                                     Event_Connection_Data_Access (
-                                       Standard.GNOGA.Ada_Lib.Get_Connection_Data).all;
+                                       GNOGA_Ada_Lib.Get_Connection_Data).all;
 --    Data                       : Constant Event_Connection_Data_Access :=
 --                                  Event_Connection_Data_Access (Local_Test.
 --                                     Connection_Data);
@@ -432,7 +432,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, Standard.GNOGA.Ada_Lib.Interfaces.Mouse_Event_Image (Mouse_Event));
+      Log_In (Debug, GNOGA_Ada_Lib.Interfaces.Mouse_Event_Image (Mouse_Event));
 
       declare
          Data                    : constant Event_Connection_Data_Access :=
@@ -446,7 +446,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                Delta_Y           : constant Integer := Mouse_Event.Y - Data.Last_Y;
 
             begin
-               Standard.GNOGA.Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
+               GNOGA_Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
                Data.Delta_X := Data.Delta_X + Delta_X;
                Data.Delta_Y := Data.Delta_Y + Delta_Y;
                Put_Line ("move" & Data.Mouse_Move_Count'img &
@@ -500,7 +500,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    begin
       Log_In (Debug);
-      Standard.GNOGA.Ada_Lib.Set_Connection_Data (new Event_Connection_Data_Type);
+      GNOGA_Ada_Lib.Set_Connection_Data (new Event_Connection_Data_Type);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
 -- main window not opened during set_up
@@ -531,7 +531,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    begin
       Log (Debug, Here, Who);
-      Standard.GNOGA.Ada_Lib.Clear_Connection_Data;
+      GNOGA_Ada_Lib.Clear_Connection_Data;
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
    end Tear_Down;
 

@@ -61,9 +61,12 @@ package Ada_Lib.Timer is
    procedure Finalize (
       Event             : in out Event_Type);
 
-   overriding
-   procedure Initialize (
+   procedure Free (
       Event             : in out Event_Type);
+
+-- overriding
+-- procedure Initialize (
+--    Event             : in out Event_Type);
 
    procedure Initialize (
       Event                      : in out Event_Type;
@@ -79,7 +82,8 @@ package Ada_Lib.Timer is
 
    procedure Set_Wait (
       Event                      : in out Event_Type;
-      Wait                       : in     Duration);
+      Wait                       : in     Duration;
+      Description                : in     String := "");
 
    function State (
       Event                : in     Event_Type
@@ -89,23 +93,24 @@ package Ada_Lib.Timer is
       State             : in   Boolean);
 
    No_Timeout                    : constant Duration := Duration'last;
-   Trace                         : Boolean := False;
+-- Trace                         : Boolean := False;
 
 private
 
-   task type Timer_Task_Type is
+   task type Timer_Task_Type (
+      Event                      : Event_Class_Access) is
 
       entry Cancel;
 
       entry Get_State (
          Return_State            :    out State_Type);
 
-      entry Initialize(
-         Container               : in     Event_Class_Access);
+--    entry Initialize(
+--       Container               : in     Event_Class_Access);
 
    end Timer_Task_Type;
 
--- type Timer_Task_Access  is access Timer_Task_Type;
+   type Timer_Task_Access  is access Timer_Task_Type;
 
    Uninitialized_Event_Description
                            : aliased String := "uninitialized event";
@@ -113,14 +118,15 @@ private
                                  with record
       Description          : Ada_Lib.Strings.String_Access_All :=
                               Uninitialized_Event_Description'unchecked_access;
---    Dynamic              : Boolean := False;
+      Dynamic              : Boolean := False;
       Exception_Message    : Ada_Lib.Strings.String_Access := Null;
       Exception_Name       : Ada_Lib.Strings.String_Access := Null;
       Initialized          : Boolean := False;
       Repeating            : Boolean := False;
+      Started              : Boolean := False;
       State                : State_Type := Uninitialized;
       Time                 : Ada.Calendar.Time := Null_Time;
-      Timer_Task           : Timer_Task_Type;
+      Timer_Task           : Timer_Task_Access := Null;
       Wait                 : Duration := 0.25;  -- uninitialized timeout
    end record;
 

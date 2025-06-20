@@ -3,7 +3,7 @@ with AUnit.Test_Cases;
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
-with GNOGA.Ada_Lib.Base;
+with GNOGA_Ada_Lib.Base;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Base;
@@ -47,7 +47,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       Connection_Data.Display_Window.Put_Line ("Closing application and every connection!");
 
       Connection_Data.Button.Disabled;
-      Standard.GNOGA.Ada_Lib.Base.Message_Loop_Signal.Completed;
+      GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
    end Button_On_Exit;
 
    ---------------------------------------------------------------
@@ -74,8 +74,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
    begin
       Log_In (Debug, Quote ("URL", URL));
       Pause_On_Flag ("exit handler");
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (True);
-      Standard.GNOGA.Ada_Lib.Base.Message_Loop_Signal.Completed;
+      GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+      GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       Log_Out (Debug);
    end Connect_Browser_Handler;
 
@@ -100,7 +100,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
       Connection_Data            : constant Connection_Class_Access :=
                                     Connection_Class_Access (
-                                       Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+                                       GNOGA_Ada_Lib.Get_Connection_Data);
       URL                        : constant String := Main_Window.Document.URL;
 
    begin
@@ -110,8 +110,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       Connection_Data.Display_Window.Put_Line ("test window content");
       Main_Window.Connection_Data (Connection_Data);
       Pause_On_Flag ("exit handler");
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (True);
-      Standard.GNOGA.Ada_Lib.Base.Message_Loop_Signal.Completed;
+      GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+      GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       Log_Out (Debug);
    end Create_Main_Window_Handler;
 
@@ -138,7 +138,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
       Connection_Data            : constant Connection_Class_Access :=
                                     Connection_Class_Access (
-                                       Standard.GNOGA.Ada_Lib.Get_Connection_Data);
+                                       GNOGA_Ada_Lib.Get_Connection_Data);
       URL                        : constant String := Main_Window.Document.URL;
 
    begin
@@ -156,8 +156,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       Connection_Data.Button.On_Click_Handler (Button_On_Exit'Unrestricted_Access);
       Pause_On_Flag ("handler set");
       Button_On_Exit (Connection_Data.Button);
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (True);
-      Standard.GNOGA.Ada_Lib.Base.Message_Loop_Signal.Completed;
+      GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+      GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       Pause_On_Flag ("exit handler");
       Log_Out (Debug);
    end Main_Window_With_Exit_Button_Handler;
@@ -202,7 +202,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
    begin
       Log_In (Debug);
 --    Test_Completed := False;
-      Standard.GNOGA.Ada_Lib.Set_Connection_Data (new Connection_Type);
+      GNOGA_Ada_Lib.Set_Connection_Data (new Connection_Type);
          -- needs to be set by more specific unit test set_up
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
       Log_Out (Debug);
@@ -232,7 +232,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
    begin
       Log_In (Debug, "handler " & Image (Handler.all'address));
       Standard.GNOGA.Application.Open_URL;
-      Standard.GNOGA.Ada_Lib.Base.Initialize_GNOGA (Handler,
+      GNOGA_Ada_Lib.Base.Initialize_GNOGA (Handler,
          Application_Title    => Window_Name,
          Port                 => Options.GNOGA_Options.HTTP_Port,
          Verbose              => True, -- GNOGA_Options.Verbose
@@ -268,8 +268,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    begin
       Log_In (Debug);
-      Standard.GNOGA.Ada_Lib.Clear_Connection_Data;
-      Standard.GNOGA.Ada_Lib.Base.Set_Main_Created (False);
+      GNOGA_Ada_Lib.Clear_Connection_Data;
+      GNOGA_Ada_Lib.Base.Set_Main_Created (False);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
       Log_Out (Debug);
    end Tear_Down;

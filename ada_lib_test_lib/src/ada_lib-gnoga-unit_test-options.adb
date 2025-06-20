@@ -1,6 +1,6 @@
 --with Ada.Unchecked_Deallocation;
 with Ada.Text_IO;use Ada.Text_IO;
---with GNOGA.Ada_Lib.Base;
+--with GNOGA_Ada_Lib.Base;
 with Ada_Lib.GNOGA.Unit_Test.Events;
 with Ada_Lib.Help;
 --with Ada_Lib.Options;

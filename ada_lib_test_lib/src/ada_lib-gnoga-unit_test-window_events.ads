@@ -1,7 +1,7 @@
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 --with Ada_Lib.GNOGA;
-with GNOGA.Ada_Lib;
+with GNOGA_Ada_Lib;
 with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Element.Form;
 with Gnoga.Gui.View;
@@ -11,7 +11,7 @@ package Ada_Lib.GNOGA.Unit_Test.Window_Events is
    Fault                         : exception;
 
    type Window_Connection_Data_Type
-                                 is new Standard.GNOGA.Ada_Lib.Connection_Data_Type with record
+                                 is new GNOGA_Ada_Lib.Connection_Data_Type with record
       Button                     : Standard.gnoga.Gui.Element.Common.Button_Type;
       Form                       : Standard.gnoga.Gui.Element.Form.Form_Type;
       Delta_X                    : Integer := 0;

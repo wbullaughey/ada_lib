@@ -48,16 +48,19 @@ private
    type Test_Timer_Type          is new Event_Type with record
       Occurred                   : Boolean := False;
       Occured_At                 : Ada_Lib.Time.Time_Type;
+      Test_Ada_2022              : Integer := 0;
    end record;
 
    type Test_Timer_Access        is access all Test_Timer_Type;
+   type Test_Timer_Class_Access  is access all Test_Timer_Type'class;
 
    function Allocate_Event (
       Offset                     : in     Duration;
       Description                : in     String := ""
-   ) return Test_Timer_Access;
+   ) return Test_Timer_Class_Access;
 
-   type Event_Pointers_Type      is array (Positive range <>) of Test_Timer_Access;
+   type Event_Pointers_Type      is array (Positive range <>) of
+                                    Test_Timer_Class_Access;
 
    overriding
    procedure Callback (

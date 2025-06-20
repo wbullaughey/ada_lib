@@ -1,6 +1,7 @@
 --
 --  Copyright (C) 2008, AdaCore
 --
+with Ada.Command_Line;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
@@ -16,9 +17,10 @@ with Gnoga.Application.Multi_Connect;
 procedure Test_Ada_Lib is
 
    Result   : Ada_Lib.OS.OS_Exit_Code_Type := Ada_Lib.OS.No_Error;
+   Program_Name   : constant String := Ada.Command_Line.Command_Name;
 
 begin
-   Put_Line ("test_ada_lib");
+   Put_Line (Program_Name);
 
    declare
       Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.
