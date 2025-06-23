@@ -2,6 +2,7 @@
 with "ada_lib.gpr";
 with "ada_lib_test_lib.gpr";
 with "aunit.gpr";
+with "camera_lib.gpr";
 with "gnoga.gpr";
 with "gnoga_ada_lib.gpr";
 abstract project Ada_Lib_Tests_Config is
