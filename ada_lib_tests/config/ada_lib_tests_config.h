@@ -7,9 +7,9 @@
 
 #define ALIRE_HOST_OS "macos"
 
-#define ALIRE_HOST_ARCH "aarch64"
+#define ALIRE_HOST_ARCH "x86_64"
 
-#define ALIRE_HOST_DISTRO "homebrew"
+#define ALIRE_HOST_DISTRO "distro_unknown"
 
 #define BUILD_PROFILE_RELEASE 1
 #define BUILD_PROFILE_VALIDATION 2

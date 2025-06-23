@@ -19,4 +19,4 @@ alr_environment = { path='..' }
 gnatcoll = "^26.0.0"
 
 [[pins]]
-gnatcoll = { path='../../../../../GNAT/gnatcoll-core' }
+gnatcoll = { path='../vendor/github.com/gnatcoll-core' }
