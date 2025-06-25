@@ -2,6 +2,7 @@
 with "ada_lib.gpr";
 with "ada_lib_test_lib.gpr";
 with "aunit.gpr";
+with "camera_lib.gpr";
 with "gnoga.gpr";
 with "gnoga_ada_lib.gpr";
 abstract project Ada_Lib_Tests_Config is
@@ -10,9 +11,9 @@ abstract project Ada_Lib_Tests_Config is
 
    Alire_Host_OS := "macos";
 
-   Alire_Host_Arch := "x86_64";
+   Alire_Host_Arch := "aarch64";
 
-   Alire_Host_Distro := "distro_unknown";
+   Alire_Host_Distro := "homebrew";
    Ada_Compiler_Switches := External_As_List ("ADAFLAGS", " ");
    Ada_Compiler_Switches := Ada_Compiler_Switches &
           (
@@ -46,6 +47,7 @@ abstract project Ada_Lib_Tests_Config is
            ,"-gnatyt" -- Check token spacing
            ,"-gnatyu" -- Check unnecessary blank lines
            ,"-gnatyx" -- Check extra parentheses
+           ,"-gnatW8" -- UTF-8 encoding for wide characters
           );
 
    type Build_Profile_Kind is ("release", "validation", "development");
