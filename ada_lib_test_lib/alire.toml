@@ -15,6 +15,12 @@ ada_lib = "*"
 [[pins]]
 ada_lib = { path='..' }
 
+[[depends-on]]
+ada_lib_aunit = "*"
+
+[[pins]]
+ada_lib_aunit = { path='../aunit' }
+
 [[pins]]
 alr_environment = { path='../..' }
 

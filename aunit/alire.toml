@@ -1,0 +1,33 @@
+name = "ada_lib_aunit"
+description = ""
+version = "0.1.0-dev"
+
+authors = ["Your Name"]
+maintainers = ["Your Name <example@example.com>"]
+maintainers-logins = ["github-username"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
+
+#[[depends-on]]
+#alr_environment = "*"
+
+#[[pins]]
+#alr_environment = { path='../..' }
+
+[[depends-on]]
+aunit = "~0.1.0-dev"
+
+[[pins]]
+aunit = { path='../../aunit' }
+
+[[depends-on]]
+ada_lib = "*"
+
+[[pins]]
+ada_lib = { path='..' }
+
+[[pins]]
+alr_environment = { path='../..' }
+
+

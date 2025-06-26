@@ -17,6 +17,11 @@ ada_lib = "*"
 [[pins]]
 ada_lib = { path='..' }
 
+[[depends-on]]
+ada_lib_aunit = "*"
+
+[[pins]]
+ada_lib_aunit = { path='../aunit' }
 
 [[depends-on]]
 gnoga = "~0.1.0-dev"
