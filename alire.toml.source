@@ -14,9 +14,14 @@ tags = []
 #[configuration.variables]
 #Build_Host = {type = "String", default = "desktop"}
 
+@[[depends-on]]
+@gnatcoll = "@26.0.0"
+@
+@[[pins]]
+@gnatcoll = { path='../vendor/github.com/gnatcoll-core' }
 
-[[depends-on]]
-gnatcoll = "^25.0.0"
+%[[depends-on]]
+%gnatcoll = "^25.0.0"
 
 [[depends-on]]
 alr_environment = "*"
