@@ -73,7 +73,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    overriding
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
-      Val                     : AUnit.Test_Cases.Routine_Spec
+      Val                     : in     AUnit.Test_Cases.Routine_Spec
    ) with pre => Ada_Lib.Options.Actual.Have_Ada_Lib_Program_Options;
 
    overriding

@@ -1,7 +1,10 @@
 with Ada_lib.Trace; use Ada_Lib.Trace;
+with AUnit.Ada_Lib;
 with AUnit.Simple_Test_Cases;
 
 package body AUnit.Test_Filters.Ada_lib is
+
+   Debug                         : Boolean renames AUnit.Ada_Lib.Debug;
 
    -----------------------------------------------------------
    overriding

@@ -50,11 +50,13 @@ gnoga_options = "~0.1.0-dev"
 [[pins]]
 gnoga_options = { path='../../gnoga_lib/gnoga_options' }
 
-[[depends-on]]
-gnatcoll = "^26.0.0"
+@[[depends-on]]
+@gnatcoll = "^26.0.0"
+@
+@[[pins]]
+@gnatcoll = { path='../../vendor/github.com/gnatcoll-core' }
 
-[[pins]]
-gnatcoll = { path='../../vendor/github.com/gnatcoll-core' }
-
+%[[depends-on]]
+%gnatcoll = "^25.0.0"
 
 

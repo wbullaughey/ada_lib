@@ -11,12 +11,12 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
-#[configuration.variables]
-#Build_Host = {type = "String", default = "desktop"}
-
-
 [[depends-on]]
-gnatcoll = "^25.0.0"
+gnatcoll = "^26.0.0"
+
+[[pins]]
+gnatcoll = { path='../vendor/github.com/gnatcoll-core' }
+
 
 [[depends-on]]
 alr_environment = "*"

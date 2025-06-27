@@ -1,4 +1,5 @@
 with "ada_lib.gpr";
+with "ada_lib_aunit.gpr";
 with "gnoga_ada_lib.gpr";
 with "gnoga_options.gpr";
 with "alr_environment.gpr";

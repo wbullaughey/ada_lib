@@ -1,8 +1,11 @@
 --with Ada_Lib.Options.Unit_Test;
 --with Ada_Lib.Test.Suites;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with AUnit.Ada_Lib;
 
 package body AUnit.Test_Suites.Optional is
+
+   Debug                         : Boolean renames AUnit.Ada_Lib.Debug;
 
    ----------------------------------------------------------------------------
    overriding
