@@ -11,12 +11,9 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
+
 [[depends-on]]
-gnatcoll = "^26.0.0"
-
-[[pins]]
-gnatcoll = { path='../vendor/github.com/gnatcoll-core' }
-
+gnatcoll = "^25.0.0"
 
 [[depends-on]]
 alr_environment = "*"
