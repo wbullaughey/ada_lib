@@ -174,7 +174,7 @@ package body Ada_Lib.Database.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, "which host " & Test.Which_Host'img);
+      Log_In (Debug or Trace_Set_Up, "which host " & Test.Which_Host'img);
 
       Test.Set_Up_Failure (Test.Database /= Null, Here, Who,
          "Test.Database is null");
@@ -208,14 +208,14 @@ package body Ada_Lib.Database.Unit_Test is
       end if;
 
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
       when Fault: others =>
          Trace_Message_Exception (Fault, Who, Here);
          Test.Set_Up_Message_Exception (Fault, Here, Who, "exception " &
             Ada.Exceptions.Exception_Message (Fault));
-         Log_Out (Debug);
+         Log_Out (Debug or Trace_Set_Up);
 
    end Set_Up;
 

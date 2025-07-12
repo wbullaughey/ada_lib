@@ -68,6 +68,8 @@ package body Ada_Lib.Socket_IO.Client is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
@@ -88,7 +90,7 @@ package body Ada_Lib.Socket_IO.Client is
          Host_Entry                 : constant GNAT.Sockets.Host_Entry_Type :=
                                        GNAT.Sockets.Get_Host_By_Name (Server_Name);
       begin
-         Log_Here (Trace, "name found");
+         Log_Here (Tracing, "name found");
          declare
             Host_Address               : constant GNAT.Sockets.Inet_Addr_Type :=
                                           GNAT.Sockets.Addresses (Host_Entry);
@@ -99,28 +101,27 @@ package body Ada_Lib.Socket_IO.Client is
             Status                     : GNAT.Sockets.Selector_Status;
 
          begin
-            Log_Here (Trace, "original handle " &
+            Log_Here (Tracing, "original handle " &
                GNAT.Sockets.Image (Socket.GNAT_Socket));
             GNAT.Sockets.Connect_Socket (Socket.GNAT_Socket, Host_Socket_Address,
                 Connection_Timeout, Null, Status);
 
-            Log_Here (Trace, "connected socket " & Socket.Image &
+            Log_Here (Tracing, "connected socket " & Socket.Image &
                " connected status  " & Status'img);
             if Status /= GNAT.Sockets.Completed then
                raise Failed with "could not connect " & Host_Name;
             end if;
             Socket.Create_Stream (
-               Default_Read_Timeout    => 1.0,
-               Default_Write_Timeout   => 1.0);
---          Socket.Connected := True;
+               Default_Read_Timeout    => Default_Read_Timeout,
+               Default_Write_Timeout   => Default_Write_Timeout);
             Socket.Set_Open;
 
-            Log (Trace, Here, Who & " Status " & Status'img & " exit");
+            Log (Tracing, Here, Who & " Status " & Status'img & " exit");
          end;
       end;
 
       if Expected_Read_Callback /= Null then
-         Log_Here (Trace);
+         Log_Here (Tracing);
          Expected_Read_Callback (Socket'unchecked_access);
       end if;
 
@@ -136,7 +137,7 @@ package body Ada_Lib.Socket_IO.Client is
                end;
             end if;
 
-      Log_Out (Trace, "open " & Socket.Open'img);
+      Log_Out (Trace, "open " & Socket.Open'img & Socket.Image);
 
    exception
       when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
@@ -182,6 +183,8 @@ package body Ada_Lib.Socket_IO.Client is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
@@ -228,6 +231,9 @@ package body Ada_Lib.Socket_IO.Client is
          case Status is
 
             when GNAT.Sockets.Completed =>
+               Socket.Create_Stream (
+                  Default_Read_Timeout    => Default_Read_Timeout,
+                  Default_Write_Timeout   => Default_Write_Timeout);
                Socket.Set_Open;
 
             when GNAT.Sockets.Expired =>
@@ -269,6 +275,8 @@ package body Ada_Lib.Socket_IO.Client is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null) is
@@ -284,7 +292,8 @@ package body Ada_Lib.Socket_IO.Client is
 
          when IP =>
             Socket.Connect (Address.IP_Address, Port, Connection_Timeout,
-               Reuse, Expected_Read_Callback);
+               Default_Read_Timeout, Default_Write_Timeout, Reuse,
+               Expected_Read_Callback);
 
          when Not_Set =>
             Log_Exception (Trace);
@@ -292,7 +301,8 @@ package body Ada_Lib.Socket_IO.Client is
 
          when URL =>
             Socket.Connect (Address.URL_Address.Coerce, Port, Connection_Timeout,
-               Reuse, Expected_Read_Callback);
+               Default_Read_Timeout, Default_Write_Timeout, Reuse,
+               Expected_Read_Callback);
 
       end case;
       Log_Out (Trace);
@@ -323,7 +333,7 @@ package body Ada_Lib.Socket_IO.Client is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, Socket.Image & " address " & Image (Socket'address));
+      Log_In (Trace, Socket.Image);
       Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Finalize;
       Log_Out (Trace);
    end Finalize;

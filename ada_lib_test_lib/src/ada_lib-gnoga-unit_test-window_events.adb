@@ -588,7 +588,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Connection_Data            : constant Window_Connection_Data_Access :=
                                     new Window_Connection_Data_Type;
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       GNOGA_Ada_Lib.Set_Connection_Data (
          GNOGA_Ada_Lib.Connection_Data_Class_Access (Connection_Data));
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
@@ -604,7 +604,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Connection_Data.Top_View.Height (Top_View_Height);
       Connection_Data.Top_View.Left (20);
       Connection_Data.Top_View.Width (Top_View_Width);
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
 

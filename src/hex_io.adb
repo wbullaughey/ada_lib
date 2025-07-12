@@ -29,6 +29,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 --with Ada.Text_IO.Integer_IO;
 with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada.Unchecked_Conversion;
 
@@ -111,26 +112,21 @@ package body Hex_IO is
       This_Line            : Buffer_Type (1 .. Values);
 
       for Buffer'address use Source;
---    On_Line              : Natural := 0;
---    First                : Natural := 0;   -- index in buffer for start of line
---    Last                 : Natural := Line_Limit - 1;
---    Line_Index           : Natural := 1;
       Skipping             : Natural := 0;
       Do_Skipping          : Boolean := False;
       First_Skip           : Boolean := True;
 
    begin
---Put_Line ("size" & Size'img & " Values" & Values'img & " limit" & Line_Limit'img &
--- " data size" & Data_Type'size'img &
--- " buffer first" & Buffer'first'img &
--- " buffer last" & Buffer'last'img &
--- " buffer length" & Buffer'length'img &
--- Quote (" message", Message));
-
       if Message'length > 0 then
          if Include_Task then
             Put (Ada_Lib.Trace.Current_Task & ": ");
          end if;
+
+         if Include_Time then
+            Put ("[" & From_Start (Ada_Lib.Time.Now,
+               Include_Hundreds) & "] ");
+         end if;
+
         Put_Line (Message & " source " & Ada_Lib.Trace.Image (Source'address));
       end if;
 
@@ -158,14 +154,12 @@ package body Hex_IO is
                Skipping := Skipping + 1;
             else     -- print the value
                Put (Hex (Interfaces.Unsigned_64 (Buffer (Index)), Width) & " ");
---Put (Index'img & ":" &Hex (Interfaces.Unsigned_64 (Buffer (Index)), Width) & " ");
             end if;
 
             if    Line_Index = Line_Limit or else  -- last of line
                   Index = Buffer'last then         -- end of buffer
                if Last_Line = This_Line then
                   Do_Skipping := True;
---put_line ("start skipping");
                else
                   if Do_Skipping then
                      Put (Skipping'img);
@@ -188,70 +182,9 @@ package body Hex_IO is
                   " Line_Limit" & Line_Limit'img);
                raise;
          end;
---if index = buffer'last then
---put_line ("end of buffer" & index'img);
---end if;
       end loop;
 
---         if Skipping = 0 then
---            if (  Index > 0 and then
---                  Index = First and then
---                  Last <= Buffer'last) and then
---                  Buffer (First .. Last) = Last_Line then   -- skip whole line
---               Skipping := Line_Limit - 1;
---               Was_Skipping := True;
---            end if;
---
---            if Skipping = 0 then    -- start of skipping but not whole line
---               if On_Line = 0 then  -- start of line
---                  if Was_Skipping then
---                     Put_Line ("*");
---                     if Include_Task then
---                        Put (Ada_Lib.Trace.Current_Task & ": ");
---                     end if;
---                     Was_Skipping := False;  -- end of skippng
-----                   if Include_Task then
-----                      Put (Ada_Lib.Trace.Current_Task & ": ");
-----                   end if;
---                  end if;
---
---                  Put (Hex (Index * (Width / 2), 4) & ": ");   -- address
---               end if;
---
---               Put (Hex (Interfaces.Unsigned_64 (Buffer (Index)), Width) & " ");
---               On_Line := On_Line + 1;
---               if On_Line = Line_Limit then
---                  New_Line;
---                  On_Line := 0;
---               end if;
---            end if;
---         else
---            Skipping := Skipping - 1;
---         end if;
---
---         if Index = Last then
---            Last_Line := Buffer (First .. Last);
---            First := First + Line_Limit;
---            Last := Last + Line_Limit;
---         end if;
---      end loop;
---
---      if On_Line > 0 then
---         New_Line;
---         if Include_Task then
---            Put (Ada_Lib.Trace.Current_Task & ": ");
---         end if;
---      end if;
---      if Was_Skipping then
---         Put_Line ("*");
---         if Include_Task then
---            Put (Ada_Lib.Trace.Current_Task & ": ");
---         end if;
---         Put_Line (Hex (Buffer'Last * (Width / 2), 4) & ": ");
---      end if;
       Flush;
---    Unlock_Trace;
---       Log_Out (Debug);
    end Dump;
 
    -------------------------------------------------------------------

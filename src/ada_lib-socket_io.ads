@@ -1,6 +1,7 @@
 with Ada.Finalization;
 with Ada.Streams;
 with ADA_LIB.Strings.Unlimited;
+with Ada_Lib.Trace;
 with GNAT.Sockets;
 with Hex_IO;
 -- with Interfaces;
@@ -134,6 +135,8 @@ package Ada_Lib.Socket_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
@@ -144,6 +147,8 @@ package Ada_Lib.Socket_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
@@ -154,6 +159,8 @@ package Ada_Lib.Socket_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
@@ -201,7 +208,8 @@ package Ada_Lib.Socket_IO is
    ) return String;
 
    procedure Set_Open (
-      Socket                     : in out Socket_Type);
+      Socket                     : in out Socket_Type;
+      From                      : in     String := Ada_Lib.Trace.Here);
 
    procedure Set_Socket (
       Socket                     : in out Socket_Type;

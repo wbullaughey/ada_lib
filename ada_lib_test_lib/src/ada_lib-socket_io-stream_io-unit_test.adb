@@ -162,7 +162,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                      Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class (
                         Ada_Lib.Options.Actual.Get_Ada_Lib_Modifiable_Program_Options.all);
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       if Options.Number_Random_Generators = 0 then
          Options.Number_Random_Generators := Required_Random_Number_Generators;
       elsif Options.Number_Random_Generators /=
@@ -191,7 +191,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Test.Server_Write_Timeout_Time  := No_Timeout;
       Test.Socket_Count := 0;
 
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
 

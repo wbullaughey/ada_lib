@@ -893,13 +893,13 @@ package body Ada_Lib.Database.Server.Tests is
                                     Table_Class_Access := new Ada_Lib.Database.
                                        Subscription.Tests.Subscription_Table_Type;
    begin
-      Log (Debug, Here, Who & " enter which host " & Test.Which_Host'img);
+      Log (Debug or Trace_Set_Up, Here, Who & " enter which host " & Test.Which_Host'img);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
       Test.Started := Server_State.Create_Server (
          Subscription_Table,
          Options.Database_Options.Get_Host,
          Options.Database_Options.Port);
-      Log (Debug, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up, Here, Who & " exit");
 
    exception
       when Fault: others =>

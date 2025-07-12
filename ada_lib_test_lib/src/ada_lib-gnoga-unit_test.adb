@@ -1,18 +1,9 @@
---with Ada.Unchecked_Deallocation;
---with Ada.Text_IO;use Ada.Text_IO;
---with Ada_Lib.Command_Line_Iterator; -- needed for pragma Elaborate_All
-with GNOGA_Ada_Lib.Base;
---with Ada_Lib.GNOGA.Unit_Test;
---with Ada_Lib.Help;
 with Ada_Lib.Options;
-with GNOGA_Options;
---with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.Options.Runstring;
---with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with GNOGA_Ada_Lib.Base;
 with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Window;
+with GNOGA_Options;
 
 --pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
@@ -37,7 +28,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
       Options                 : GNOGA_Options.GNOGA_Options_Type'class
                                  renames GNOGA_Options.GNOGA_Options.all;
    begin
-      Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
+      Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
 --    Test.Connection_Data := GNOGA_Ada_Lib.Get_Connection_Data;
@@ -56,7 +47,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
             Log_Here (Debug);
          end if;
       end if;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ---------------------------------------------------------------

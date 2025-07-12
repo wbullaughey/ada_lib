@@ -97,14 +97,14 @@ package body Ada_Lib.Unit_Test.Fixtures is
    ----------------------------------------------------------------------------
 
    begin
-      Log ( Debug, Here, Who & " enter");
+      Log ( Debug or Trace_Set_Up, Here, Who & " enter");
 
       Current_Fixture := Test'unchecked_access;
       AUnit.Test_Fixtures.Test_Fixture (Test).Set_Up;
       if Ada_Lib.Trace.Ada_Lib_Lib_Verbose then
          Put_Line ("------------------------------------------------------------------");
       end if;
-      Log ( Debug, Here, Who & " exit");
+      Log ( Debug or Trace_Set_Up, Here, Who & " exit");
 -- Log ( Here, Who & " exit");
 
     exception

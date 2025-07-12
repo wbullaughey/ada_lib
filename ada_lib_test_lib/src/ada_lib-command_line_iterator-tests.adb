@@ -449,10 +449,10 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Ada_Lib.Options.Runstring.Options.Reset;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ---------------------------------------------------------------

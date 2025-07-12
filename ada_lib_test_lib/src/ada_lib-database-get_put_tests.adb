@@ -531,9 +531,9 @@ package body Ada_Lib.Database.Get_Put_Tests is
    ---------------------------------------------------------------
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter which host " & Test.Which_Host'img);
+      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " enter which host " & Test.Which_Host'img);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " exit");
 
    exception
       when Fault: others =>

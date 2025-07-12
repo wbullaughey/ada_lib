@@ -200,12 +200,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
 --    Test_Completed := False;
       GNOGA_Ada_Lib.Set_Connection_Data (new Connection_Type);
          -- needs to be set by more specific unit test set_up
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
 ------------------------------------------------------------------------------

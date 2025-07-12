@@ -19,7 +19,7 @@ package body Ada_Lib.Timer is
       Name     => Ada_Lib.Strings.String_Access_All,
       Object   => String);
 
-Trace                         : Boolean := False;
+   Trace                         : Boolean := False;
 
    ---------------------------------------------------------------------------
    function Active (
@@ -299,13 +299,6 @@ exception
                      Event.State := Canceled;
                   end Cancel;
                or
-                  accept Get_State (
-                     Return_State         :   out State_Type) do
-
-                     Log_Here (Trace, Quote ("description", Event.Description));
-                     Return_State := Event.State;
-                  end Get_State;
-               or
                   delay Event.Wait;          -- delay until timeout
                   Log_Here (Trace, Quote ("description", Event.Description) &
                      " initialized " & Event.Initialized'img);
@@ -327,10 +320,11 @@ exception
          & Quote (" description", Event.Description) & " completed");
 
       Ada_Lib.Trace_Tasks.Stop;
-      Log_Out (Trace, Quote (if Event = Null then
-               "uninitialized"
-            else
-               Quote ("description", Event.Description)));
+--    may cause memory exception
+--    Log_Out (Trace, Quote (if Event = Null then
+--             "uninitialized"
+--          else
+--             Quote ("description", Event.Description)));
 
    exception
       when Fault: others =>
@@ -341,7 +335,7 @@ exception
             Event.Exception_Message := new String'(
                Ada.Exceptions.Exception_Message (Fault));
          end if;
-         Log_Out (Trace);
+         Log_Here (Trace);
 
    end Timer_Task_Type;
 

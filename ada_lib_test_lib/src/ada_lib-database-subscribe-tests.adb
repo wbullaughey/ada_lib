@@ -156,7 +156,7 @@ Not_Implemented;
                                     new Ada_Lib.Database.Subscription.Tests.Subscription_Type;
 
    begin
-      Log_In (Ada_Lib.Test.Debug);
+      Log_In (Ada_Lib.Test.Debug or Trace_Set_Up);
       Subscription_1.Initialize (
          Ada_Tag           => Subscription_1.all'tag,
          DBDaemon_Tag      => Tag_1,
@@ -181,7 +181,7 @@ Not_Implemented;
       Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_2));
       Test.Subscribed := True;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Log_Out (Ada_Lib.Test.Debug);
+      Log_Out (Ada_Lib.Test.Debug or Trace_Set_Up);
    end Set_Up;
 
 -- ---------------------------------------------------------------

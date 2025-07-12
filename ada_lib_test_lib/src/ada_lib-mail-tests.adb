@@ -173,10 +173,10 @@ null;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
       when Fault: others =>
@@ -192,10 +192,10 @@ null;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
       when Fault: others =>

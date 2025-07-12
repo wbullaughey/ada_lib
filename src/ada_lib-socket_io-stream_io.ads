@@ -30,6 +30,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Kind                       : Buffer_Kind_Type;
       Description                : Ada_Lib.Strings.String_Constant_Access) is
 
+      procedure Dump;
 
       function Empty(
          Throw_Expression        : in     Boolean
@@ -93,6 +94,10 @@ package Ada_Lib.Socket_IO.Stream_IO is
 
    type Stream_Socket_Access     is access all Stream_Socket_Type;
 
+   procedure Dump_Input_Buffer (
+      Socket                     : in out Stream_Socket_Type;
+      From                       : in     String := Ada_Lib.Trace.Here);
+
    overriding
    procedure Close (
       Socket                     : in out Stream_Socket_Type);
@@ -103,6 +108,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Server_Name                : in     String;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
@@ -114,6 +121,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       IP_Address                 : in     IP_Address_Type;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null
@@ -125,6 +134,8 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Address                    : in     Address_Type'class;
       Port                       : in     Port_Type;
       Connection_Timeout         : in     Timeout_Type := 1.0;
+      Default_Read_Timeout       : in     Timeout_Type := 1.0;
+      Default_Write_Timeout      : in     Timeout_Type := 1.0;
       Reuse                      : in     Boolean := False;
       Expected_Read_Callback     : access procedure (
          Socket                  : in     Socket_Class_Access) := Null

@@ -316,7 +316,7 @@ package Ada_Lib.Trace is
    Debug_Trace                   : Boolean := False;
    Detail                        : Boolean := False;
    Elaborate                     : Boolean := False;
-   Include_Hundreds             : Boolean := False;
+   Include_Hundreds              : Boolean := False;
    Include_Program               : Boolean := False;
    Include_Task                  : Boolean := False;
    Include_Time                  : Boolean := True;

@@ -287,7 +287,8 @@ package body Ada_Lib.Socket_IO is
 
    ---------------------------------------------------------------------------
    procedure Set_Open (
-      Socket                     : in out Socket_Type) is
+      Socket                     : in out Socket_Type;
+      From                      : in     String := Ada_Lib.Trace.Here) is
    ---------------------------------------------------------------------------
 
    begin

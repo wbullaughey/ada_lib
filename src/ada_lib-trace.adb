@@ -246,31 +246,25 @@ package body Ada_Lib.Trace is
    --------------------------------------------------------------------
 
    begin
---ada.Text_io.put_line (here & " Include_Program " & Include_Program'img);
       T (Debug_Trace, "indent " & Indent'img &
          " level" & Task_Data.Level'img & Quote (" text", Text));
 
       if Include_Program then
---ada.Text_io.put_line (here);
          Task_Data.Buffer.Append (Ada.Command_Line.Command_Name & "=> ");
       end if;
 
       if Include_Task then
---ada.Text_io.put_line (here);
          declare
             Current_Task_ID      : constant Ada.Task_Identification.Task_ID :=
                                     Ada.Task_Identification.Current_Task;
 
          begin
---ada.Text_io.put_line (here);
             Task_Data.Buffer.Append (
                Ada.Task_Identification.Image (Current_Task_ID) & ": ");
          end;
       end if;
---ada.Text_io.put_line (here);
 
       if Include_Time then
---ada.Text_io.put_line (here);
          Task_Data.Buffer.Append ("[" & From_Start (Ada_Lib.Time.Now,
             Include_Hundreds) & "] ");
       end if;
@@ -278,7 +272,6 @@ package body Ada_Lib.Trace is
       Task_Data.Buffer.Append (Where & " " & Who & " (" &
          Ada_Lib.Strings.Trim (Task_Data.Level'img) & ") " & Text);
 
---ada.Text_io.put_line (here);
       T(Debug_Trace, "length" & Task_Data.Buffer.Length'img);
       if Task_Data.Buffer.Length > 0 then
          declare
@@ -286,43 +279,33 @@ package body Ada_Lib.Trace is
                                     Task_Data.Buffer.Element (
                                        Task_Data.Buffer.Length) = LF;
          begin
---ada.Text_io.put_line (here);
             T (Debug_Trace, "has lf " & Has_LF'img);
             if not Has_LF then
                Task_Data.Buffer.Append (LF);
             end if;
---ada.Text_io.put_line (here);
 
---          if Has_LF then
-               if Indent and then Indent_Trace and then Task_Data.Level > 0 then
-                  declare
-                     Padding           : constant String (1 .. Positive (
-                                          Task_Data.Level * Indent_Amount)) := (
-                                             others => ' ');
-                  begin
-                     Task_Data.Buffer.Append (Padding);
+            if Indent and then Indent_Trace and then Task_Data.Level > 0 then
+               declare
+                  Padding           : constant String (1 .. Positive (
+                                       Task_Data.Level * Indent_Amount)) := (
+                                          others => ' ');
+               begin
+                  Task_Data.Buffer.Append (Padding);
 
-                  exception
-                     when Fault: others =>
---ada.Text_io.put_line (here);
-                        Trace_Message_Exception (Fault,
-                           Quote ("text", Text), Where & " " & Who);
-                        Ada_Lib.OS.Immediate_Halt (
-                           Ada_Lib.OS.Exception_Exit);
+               exception
+                  when Fault: others =>
+                     Trace_Message_Exception (Fault,
+                        Quote ("text", Text), Where & " " & Who);
+                     Ada_Lib.OS.Immediate_Halt (
+                        Ada_Lib.OS.Exception_Exit);
 
-                  end;
-               end if;
+               end;
+            end if;
 
---ada.Text_io.put_line (here);
-               T (Debug_Trace, Quote ("buffer", Task_Data.Buffer));
---ada.Text_io.put_line (here);
-               Output_File.Output (Task_Data.Buffer.Coerce);
---ada.Text_io.put_line (here);
-               Output_File.Flush;
---ada.Text_io.put_line (here);
-               Task_Data.Buffer := Ada_Lib.Strings.Unlimited.Null_String;
---          end if;
---ada.Text_io.put_line (here);
+            T (Debug_Trace, Quote ("buffer", Task_Data.Buffer));
+            Output_File.Output (Task_Data.Buffer.Coerce);
+            Output_File.Flush;
+            Task_Data.Buffer := Ada_Lib.Strings.Unlimited.Null_String;
 
          exception
             when Fault: others =>
@@ -334,7 +317,6 @@ package body Ada_Lib.Trace is
       end if;
 
       if Check_Address /= System.Null_Address then
---ada.Text_io.put_line (here);
          declare
             Value                : Interfaces.Unsigned_64;
             for Value'address use Check_Address;
@@ -350,11 +332,10 @@ package body Ada_Lib.Trace is
 
          end;
       end if;
---ada.Text_io.put_line (here);
 
    exception
+
       when Fault: others =>
---ada.Text_io.put_line (here);
          Trace_Message_Exception (Fault, Quote ("text", Text) &
             " buffer length" & Task_Data.Buffer.Length'img,
             Where & " " & Who);

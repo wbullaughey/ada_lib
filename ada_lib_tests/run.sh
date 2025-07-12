@@ -18,5 +18,5 @@ export HELP_TEST=" \
    -U aAglprstT"
 export USE_DBDAEMON=TRUE
 
-source ../../global_run.sh $OUTPUT $PROGRAM $DO_TRACE $HELP_TEST $USE_DBDAEMON $*
+source ../../global_run.sh $OUTPUT $PROGRAM $DO_TRACE $HELP_TEST $USE_DBDAEMON TRUE $*
 

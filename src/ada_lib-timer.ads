@@ -102,8 +102,8 @@ private
 
       entry Cancel;
 
-      entry Get_State (
-         Return_State            :    out State_Type);
+--    entry Get_State (
+--       Return_State            :    out State_Type);
 
 --    entry Initialize(
 --       Container               : in     Event_Class_Access);
@@ -125,7 +125,7 @@ private
       Repeating            : Boolean := False;
       Started              : Boolean := False;
       State                : State_Type := Uninitialized;
-      Time                 : Ada.Calendar.Time := Null_Time;
+--    Time                 : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;
       Wait                 : Duration := 0.25;  -- uninitialized timeout
    end record;

@@ -1,12 +1,11 @@
 with Ada.Characters.Handling;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with GNOGA_Ada_Lib.Interfaces;
 with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with GNOGA_Ada_Lib;
+with GNOGA_Ada_Lib.Interfaces;
 with Gnoga.GUI.Window;
 with Gnoga.Types;
 
@@ -499,7 +498,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       GNOGA_Ada_Lib.Set_Connection_Data (new Event_Connection_Data_Type);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
 
@@ -507,7 +506,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 --    if Test.Connection_Data.Main_Window = Null then
 --       raise Failed with "Null main window raised at " & Here;
 --    end if;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ---------------------------------------------------------------

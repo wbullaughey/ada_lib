@@ -43,7 +43,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                         Ada_Lib_Unit_Test_Options_Class_Access (
                            Ada_Lib.Options.Actual.Get_Ada_Lib_Modifiable_Program_Options).all;
    begin
-      Log_In (Debug, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      Log_In (Debug or Trace_Set_Up, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
 
       for Index in 1 .. Options.Number_Random_Generators loop
          Log_Here (Debug, "reset random gemerator mode " &
@@ -58,7 +58,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
 --    Ada_Lib.Unit_Testing := True;
       Root_Test.Test_Type (Test).Set_Up;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Set_Up;
 
    ----------------------------------------------------------------------------
@@ -226,10 +226,10 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_In (Debug);
+         Log_In (Debug or Trace_Set_Up);
 --       Ada_Lib.Unit_Testing := True;
          Test.Set_Up_Succeeded := True;
-         Log_Out (Debug);
+         Log_Out (Debug or Trace_Set_Up);
       end Set_Up;
 
       ----------------------------------------------------------------------------

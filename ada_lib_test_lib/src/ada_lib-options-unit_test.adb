@@ -563,6 +563,7 @@ package body Ada_Lib.Options.Unit_Test is
                Debug := True;
                Ada_Lib.GNOGA.Unit_Test.Debug := True;
                Ada_Lib.Test.Debug := True;
+               Ada_Lib.Trace.Trace_Set_Up := True;
                Ada_Lib.Trace.Trace_Tests := True;
                Ada_Lib.Unit_Test.Debug := True;
                Options.Debug := True;
