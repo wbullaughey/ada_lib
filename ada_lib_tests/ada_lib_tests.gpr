@@ -4,7 +4,7 @@ with "gnoga_ada_lib.gpr";
 with "gnoga_options.gpr";
 with "alr_environment.gpr";
 with "aunit.gpr";
---with "config/ada_lib_tests_config.gpr";
+with "config/ada_lib_tests_config.gpr";
 with "default_config.gpr";
 --with "gnatcoll.gpr";
 with "gnoga.gpr";
