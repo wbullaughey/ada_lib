@@ -12,13 +12,6 @@ website = ""
 tags = []
 
 [[depends-on]]
-gnatcoll = "^26.0.0"
-
-[[pins]]
-gnatcoll = { path='../vendor/github.com/gnatcoll-core' }
-
-
-[[depends-on]]
 alr_environment = "*"
 
 [[pins]]
