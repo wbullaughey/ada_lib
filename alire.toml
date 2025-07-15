@@ -17,4 +17,3 @@ alr_environment = { path='..' }
 
 [[depends-on]]
 gnatcoll = "*"
-
