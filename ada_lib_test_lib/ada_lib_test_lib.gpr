@@ -7,6 +7,7 @@ with "aunit.gpr";
 with "config/ada_lib_test_lib_config.gpr";
 with "default_config.gpr";
 with "gnoga.gpr";
+with "gnatcoll.gpr";
 --with "xmlada";
 
 project Ada_Lib_Test_Lib is

@@ -9,12 +9,6 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
-#[[depends-on]]
-#alr_environment = "*"
-
-#[[pins]]
-#alr_environment = { path='../..' }
-
 [[depends-on]]
 aunit = "~0.1.0-dev"
 
