@@ -50,10 +50,5 @@ ada_lib_test_lib = "~0.1.0-dev"
 [[pins]]
 ada_lib_test_lib = { path='../ada_lib_test_lib' }
 
-[[depends-on]]
-camera_lib = "~0.1.0-dev"
-
-[[pins]]
-camera_lib = { path='../lib' }
 
 
