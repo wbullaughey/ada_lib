@@ -1362,6 +1362,10 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                      end if;
 
                         -- put will block until room for whole buffer is available
+                     if Tracing then
+                        Dump ("GNAT socket received",
+                           Data (Data'first .. Expected_Length));
+                     end if;
                      Put (Stream_Pointer.Input_Buffer, Data);
                   end;
                end if;
