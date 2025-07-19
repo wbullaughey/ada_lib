@@ -114,6 +114,7 @@ package body Hex_IO is
       for Buffer'address use Source;
       Skipping             : Natural := 0;
       Do_Skipping          : Boolean := False;
+      First_Line           : Boolean := True;
       First_Skip           : Boolean := True;
 
    begin
@@ -171,6 +172,10 @@ package body Hex_IO is
                end if;
 
                if not Do_Skipping or else First_Skip then
+                  if First_Line then
+                     Put (": " & Message);
+                     First_Line := False;
+                  end if;
                   New_Line;
                end if;
             end if;
