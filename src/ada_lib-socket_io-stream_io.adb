@@ -573,7 +573,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Log_Here (Trace, "zero length read");
       else
          if Test_Condition or Tracing then
-            Dump ("read", Buffer (Buffer'first .. Last));
+            Dump ("read completed", Buffer (Buffer'first .. Last));
          end if;
       end if;
 
