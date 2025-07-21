@@ -1564,6 +1564,7 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
                               end if;
                         end;
                      end loop;
+                     Log_Here (Tracing);
                   end;
 
 --             when Closed =>
