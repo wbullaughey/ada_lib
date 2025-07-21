@@ -53,6 +53,7 @@ package Ada_Lib.Socket_IO is
    No_Timeout                    : constant Duration := Duration'last;
    Reuse_Address                 : Option_Type renames GNAT.Sockets.Reuse_Address;
    Trace                         : aliased Boolean := False;
+   Trace_IO                      : aliased Boolean := False;
    Tracing                       : aliased Boolean := False;
 
    type Socket_Interface  is limited Interface;
