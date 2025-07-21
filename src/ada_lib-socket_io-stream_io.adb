@@ -1362,7 +1362,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                      end if;
 
                         -- put will block until room for whole buffer is available
-                     if Tracing then
+                     if Tracing or Trace_IO then
                         Dump ("GNAT socket received",
                            Data (Data'first .. Expected_Length));
                      end if;
@@ -1521,10 +1521,6 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                   begin
                      loop  -- until whole buffer sent
                         begin
-                           if Tracing then
-                              Dump ("GNAT socket send", Data (Start_Send .. Last));
-                           end if;
-
 pragma Assert (Stream_Pointer /= Null, "stream pointer null");
 pragma Assert (Stream_Pointer.socket /= Null, "socket null");
 pragma Assert (Stream_Pointer.socket.Is_Open, "socket not open");
@@ -1533,6 +1529,10 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
                            Log_Here (Trace, Stream_Pointer.Socket.Image);
                            if not Stream_Pointer.Socket.GNAT_Socket_Open then
                               raise IO_Failed with "GNAT Socket closed " & Stream_Pointer.Socket.Image;
+                           end if;
+
+                           if Tracing or Trace_IO then
+                              Dump ("GNAT socket send", Data (Start_Send .. Last));
                            end if;
 
                            GNAT.Sockets.Send_Socket (

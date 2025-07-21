@@ -646,6 +646,8 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "s              Strings");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "S              Socket_IO IO");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "t              Ada_Lib.Text");
 
       end case;
@@ -720,6 +722,8 @@ package body Ada_Lib.Options.Actual is
       Ada_Lib.OS.Run.Debug := True;
       Ada_Lib.Parser.Debug := True;
       Ada_Lib.Socket_IO.Trace := True;
+      Ada_Lib.Socket_IO.Trace_IO := True;
+      Ada_Lib.Socket_IO.Tracing := True;
       Ada_Lib.Strings.Debug := True;
       Ada_Lib.Timer.Set_Trace (True);
       Ada_Lib.Trace_Tasks.Debug := True;
@@ -856,6 +860,9 @@ package body Ada_Lib.Options.Actual is
 
                   when 's' =>
                      Ada_Lib.Strings.Debug := True;
+
+                  when 'S' =>
+                     Ada_Lib.Socket_IO.Trace_IO := True;
 
                   when 't' =>
                      Ada_Lib.Text.Debug := True;
