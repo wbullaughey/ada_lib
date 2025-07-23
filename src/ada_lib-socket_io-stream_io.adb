@@ -1483,6 +1483,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
             begin
                Stream_Pointer.Output_Buffer.Get (Data, Event, Last);
+Log_Here (Tracing, "last" & Last'img);
 
             exception
                when Fault: Aborted =>     -- socket got closed
