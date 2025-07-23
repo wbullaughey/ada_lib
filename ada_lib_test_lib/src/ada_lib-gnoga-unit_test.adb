@@ -1,4 +1,4 @@
-with Ada_Lib.Options;
+--with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with GNOGA_Ada_Lib.Base;
 with Gnoga.Application.Multi_Connect;
