@@ -1451,7 +1451,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          begin
             Log_Here (Trace,
                Quote ("descritpion", Stream_Pointer.Socket.Description) & " " &
-               " state " & State'img &
+               " state " & State'img & " " &
                Stream_Pointer.Socket.Image);
             case State is
 

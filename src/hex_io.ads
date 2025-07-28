@@ -25,7 +25,7 @@ package Hex_IO is
 
    procedure Dump_64 (
       Source                     : in     System.Address;
-      Size                       : in     Positive;        -- size in bits
+      Size                       : in     Positive := 64;        -- size in bits
       Width                      : in     Positive := 64;
       Message                    : in     String := "");
 

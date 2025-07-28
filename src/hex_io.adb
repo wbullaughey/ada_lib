@@ -255,7 +255,7 @@ package body Hex_IO is
    -------------------------------------------------------------------
    procedure Dump_64 (
       Source                     : in   System.Address;
-      Size                       : in   Positive;
+      Size                       : in   Positive := 64;
       Width                      : in   Positive := 64;
       Message                    : in     String := "") is
    -------------------------------------------------------------------
