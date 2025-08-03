@@ -226,13 +226,13 @@ package body Ada_Lib.Database.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, "close database");
+      Log_In (Debug or Trace_Set_Up, "close database");
       if Test.Which_Host /= No_Host and then Test.Has_Database then
          Test.Database.Delete_All;
       end if;
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
 
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ----------------------------------------------------------------------------

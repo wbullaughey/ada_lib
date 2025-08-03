@@ -57,7 +57,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
+      Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
       if Test.Initialize_GNOGA then
          Standard.Gnoga.Application.Multi_Connect.End_Application;
@@ -71,7 +71,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
       GNOGA_Ada_Lib.Base.Set_Main_Created (False);
 --    GNOGA_Ada_Lib.Base.Message_Loop_Signal.Wait;
                                  -- it does not end until end of program
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
 
    exception
       when Fault: others =>

@@ -165,14 +165,14 @@ package body Ada_Lib.Unit_Test.Fixtures is
    ----------------------------------------------------------------------------
 
    begin
-      Log ( Debug, Here, Who & " enter");
+      Log ( Debug or Trace_Set_Up, Here, Who & " enter");
 
 --    if Ada_Lib.Database.Unit_Test.Is_DBDaemon_Running then
 --       raise Ada_Lib.Unit_Test.Fixtures.Failed with "dbdaemon not closed at " & Here & " " & Who;
 --    end if;
 
       AUnit.Test_Fixtures.Test_Fixture (Test).Tear_Down;
-      Log ( Debug, Here, Who & " exit");
+      Log ( Debug or Trace_Set_Up, Here, Who & " exit");
    end Tear_Down;
 
    ----------------------------------------------------------------------------

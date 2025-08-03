@@ -28,10 +28,10 @@ package body Ada_Lib.Unit_Test.Tests is
    ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Test.Options := Null;
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------

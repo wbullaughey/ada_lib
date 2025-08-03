@@ -41,7 +41,7 @@ package body Ada_Lib.Help.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Trace_Options or Debug);
+      Log_In (Trace_Set_Up or Debug);
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
          Routine        => Test_Help'access,
@@ -51,7 +51,7 @@ package body Ada_Lib.Help.Tests is
          Routine        => Test_Prefix_Help'access,
          Routine_Name   => AUnit.Format ("Test_Prefix_Help")));
 
-      Log_Out (Trace_Options or Debug);
+      Log_Out (Trace_Set_Up or Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -74,7 +74,9 @@ package body Ada_Lib.Help.Tests is
    ---------------------------------------------------------------
 
    begin
+      Log_In (Trace_Set_Up or Debug);
       Ada_Lib.Help.Reset;
+      Log_Out (Trace_Set_Up or Debug);
    end Tear_Down;
 
    ---------------------------------------------------------------
@@ -117,7 +119,7 @@ package body Ada_Lib.Help.Tests is
 
       begin
          Put_Line (Line);
-         Log_Here (Trace_Options or Debug, "counter" & Counter'img &
+         Log_Here (Trace_Set_Up or Debug, "counter" & Counter'img &
             " expected last " & Natural'(Expected'last)'img);
          if Counter > Expected'last then
             Assert (False, "too many lines (" & Counter'img &
@@ -191,7 +193,7 @@ package body Ada_Lib.Help.Tests is
 
       begin
          Put_Line (Quote ("line", Line) & " counter" & Counter'img);
-         Log_Here (Trace_Options or Debug, "counter" & Counter'img &
+         Log_Here (Trace_Set_Up or Debug, "counter" & Counter'img &
             " expected last " & Natural'(Expected'last)'img);
          if Counter > Expected'last then
             Assert (False, "too many lines (" & Counter'img & " ) generated");

@@ -250,9 +250,10 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_Here (Debug);
+         Log_In (Debug or Trace_Set_Up);
          Test.Set_Up_Succeeded := False;
          Test.Torn_Down := True;
+         Log_Out (Debug or Trace_Set_Up);
       end Tear_Down;
 
       ----------------------------------------------------------------------------
@@ -286,10 +287,9 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_Here (Debug, "Torn_Down " & Test.Torn_Down'img &
+         return Log_Here (Test.Torn_Down and then not Test.Tear_Down_Failed,
+            Debug, "Torn_Down " & Test.Torn_Down'img &
             " Tear_Down_Failed " & Test.Tear_Down_Failed'img);
-
-         return Test.Torn_Down and then not Test.Tear_Down_Failed;
 
       end Verify_Torn_Down;
 

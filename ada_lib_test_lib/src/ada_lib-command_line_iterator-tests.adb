@@ -475,9 +475,9 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------

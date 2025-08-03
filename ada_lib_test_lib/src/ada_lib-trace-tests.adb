@@ -614,8 +614,10 @@ package body Ada_Lib.Trace.Tests is
    ---------------------------------------------------------------
 
    begin
+      Log_In (Debug_Tests or Trace_Set_Up);
       Output_Package.Clear (Test.Output.List);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Log_Out (Debug_Tests or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------

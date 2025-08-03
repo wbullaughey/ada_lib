@@ -1102,10 +1102,10 @@ package body Ada_Lib.Database.Server.Tests is
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
    begin
-      Log (Debug, Here, Who & " enter");
+      Log (Debug or Trace_Set_Up, Here, Who & " enter");
 
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
-      Log (Debug, Here, Who & " delete value");
+      Log (Debug or Trace_Set_Up, Here, Who & " delete value");
       Test.Get_Database.Delete (Name_1, Ada_Lib.Database.No_Vector_Index);
 
       if Server /= Null then
@@ -1116,7 +1116,7 @@ package body Ada_Lib.Database.Server.Tests is
       end if;
 
       Pause (Pause_Flag and Debug, "Pause before Tear Down cleanup", Here, Debug);
-      Log (Debug, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up, Here, Who & " exit");
    end Tear_Down;
 
 -- ---------------------------------------------------------------

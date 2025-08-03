@@ -555,7 +555,7 @@ package body Ada_Lib.Trace is
 
    begin
       Put (
-         Enable      => Enable,
+         Enable      => Enable or Trace_Exceptions,
          Context     => Raise_Exception,
          Text        => Message & LF,
          Where       => Where,
@@ -573,7 +573,7 @@ package body Ada_Lib.Trace is
 
    begin
       Put (
-         Enable      => Enable,
+         Enable      => Enable or Trace_Exceptions,
          Context     => Report_Exception,
          Text        => LF & "exception: " &
                            Ada.Exceptions.Exception_Name (Fault) & LF &
@@ -1072,7 +1072,7 @@ package body Ada_Lib.Trace is
    --------------------------------------------------------------------
 
    begin
-      Trace_Message_Exception (Debug, Fault, "", Where);
+      Trace_Message_Exception (Debug or Trace_Exceptions, Fault, "", Where);
    end Trace_Exception;
 
    --------------------------------------------------------------------
@@ -1096,7 +1096,7 @@ package body Ada_Lib.Trace is
    begin
       Ada_Lib.Exception_Occured := True;
 
-      if Debug then
+      if Debug or Trace_Exceptions then
          Locked_Package.Trace_Message_Exception (Fault, Message, Where);
       end if;
    end Trace_Message_Exception;

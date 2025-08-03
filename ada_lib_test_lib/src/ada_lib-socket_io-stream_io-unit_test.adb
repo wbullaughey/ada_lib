@@ -683,7 +683,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug, "sockets" & Test.Socket_Count'img);
+      Log_In (Debug or Trace_Set_Up, "sockets" & Test.Socket_Count'img);
 
       for Index in 1 .. Test.Socket_Count loop
          Log_Here (Debug, "close " & Test.Sockets (Index).Image &
@@ -699,7 +699,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
          end;
       end loop;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------

@@ -7,7 +7,7 @@ with Ada_Lib.OS;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test;
+with Ada_Lib.Unit_Test.Test_Cases;
 with Debug_Options;
 
 package body Ada_Lib.Options.Unit_Test is
@@ -457,13 +457,15 @@ package body Ada_Lib.Options.Unit_Test is
             Trace_Option & ")");
          Put_Line ("      a               all");
          Put_Line ("      A               all unit tests");
+         Put_Line ("      e               Ada_Lib.Trace.Trace_Exceptions");
          Put_Line ("      g               Ada_Lib.GNOGA.Unit_Test.Debug");
-         Put_Line ("      l               Ada_Lib.Unit_Test.Debug Library");
          Put_Line ("      p               test programs");
          Put_Line ("      r               Runtime_Options");
          Put_Line ("      s               Trace Set_Up Tear_Down");
          Put_Line ("      t               Ada_Lib.Test.Debug");
          Put_Line ("      T               Ada_Lib.Trace.Debug_Trace");
+         Put_Line ("      u               Ada_Lib.Unit_Test.Debug Library");
+         Put_Line ("      U               Ada_Lib.Unit_Test.Test_Cases.Debug Library");
          New_Line;
          Put_Line ("Enable suites disabled by default (-S)");
          Put_Line ("      a               enable all");
@@ -563,19 +565,21 @@ package body Ada_Lib.Options.Unit_Test is
                Debug := True;
                Ada_Lib.GNOGA.Unit_Test.Debug := True;
                Ada_Lib.Test.Debug := True;
+               Ada_Lib.Trace.Trace_Exceptions := True;
                Ada_Lib.Trace.Trace_Set_Up := True;
                Ada_Lib.Trace.Trace_Tests := True;
                Ada_Lib.Unit_Test.Debug := True;
+               Ada_Lib.Unit_Test.Test_Cases.Debug := True;
                Options.Debug := True;
 
             when 'A' =>
                Ada_Lib.Trace.Trace_Tests := True;
 
+            when 'e' =>
+               Ada_Lib.Trace.Trace_Exceptions := True;
+
             when 'g' =>
                Ada_Lib.GNOGA.Unit_Test.Debug := True;
-
-            when 'l' =>
-               Ada_Lib.Unit_Test.Debug := True;
 
             when 'r' =>
                Debug := True;
@@ -591,6 +595,12 @@ package body Ada_Lib.Options.Unit_Test is
 
             when 'T' =>
                Ada_Lib.Trace.Debug_Trace := True;
+
+            when 'u' =>
+               Ada_Lib.Unit_Test.Debug := True;
+
+            when 'U' =>
+               Ada_Lib.Unit_Test.Test_Cases.Debug := True;
 
             when others =>
                declare

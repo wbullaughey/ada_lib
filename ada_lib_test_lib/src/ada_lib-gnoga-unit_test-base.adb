@@ -267,11 +267,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       GNOGA_Ada_Lib.Clear_Connection_Data;
       GNOGA_Ada_Lib.Base.Set_Main_Created (False);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
 ------------------------------------------------------------------------------

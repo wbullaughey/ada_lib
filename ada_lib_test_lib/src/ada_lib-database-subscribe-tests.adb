@@ -284,8 +284,10 @@ Not_Implemented;
    ---------------------------------------------------------------
 
    begin
+      Log_In (Ada_Lib.Test.Debug or Trace_Set_Up);
       Test.Table.Delete_All;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Log_Out (Ada_Lib.Test.Debug or Trace_Set_Up);
    end Tear_Down;
 
 begin

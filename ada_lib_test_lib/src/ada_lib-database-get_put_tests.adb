@@ -551,11 +551,11 @@ package body Ada_Lib.Database.Get_Put_Tests is
 --    Options                    : constant Standard.GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter");
+      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " enter");
       Pause (Pause_Flag, "Pause before Tear Down cleanup", Here, Ada_Lib.Test.Debug);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
 --       Test.Get_Database.Delete (Value_Name);
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " exit");
    end Tear_Down;
 
    ---------------------------------------------------------------

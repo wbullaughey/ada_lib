@@ -330,10 +330,11 @@ package Ada_Lib.Trace is
                                           Seconds => Ada.Calendar.Day_Duration'last);
    Pause_Flag                    : Boolean := False;
    Test_Condition                : Boolean := False;
+   Trace_Exceptions              : Boolean := False;
    Trace_Levels                  : Boolean := False;
+   Trace_Options                 : Boolean := False;
    Trace_Set_Up                  : Boolean := False;
    Trace_Tests                   : Boolean := False;
-   Trace_Options                 : Boolean := False;
 
    type Traces_Type        is (
       Containers,

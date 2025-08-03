@@ -183,13 +183,13 @@ package body Ada_Lib.Configuration.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug or Trace_Set_Up);
       if Test.Configuration.Is_Open then
          Log_Here (Debug);
          Test.Configuration.Close;
       end if;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug);
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ---------------------------------------------------------------

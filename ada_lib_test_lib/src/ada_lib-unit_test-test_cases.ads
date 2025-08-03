@@ -120,4 +120,6 @@ package Ada_Lib.Unit_Test.Test_Cases is
 -- function Was_There_An_Async_Failure
 -- return Boolean;
 
+   Debug                         : Boolean := False;
+
 end Ada_Lib.Unit_Test.Test_Cases;

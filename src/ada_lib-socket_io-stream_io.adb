@@ -496,9 +496,9 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
             begin
                Log_Here (Trace, "Buffer_Empty " & Buffer_Empty'img &
-                  " Timeout_Length " & Timeout_Length'img);
---                " Start_Get" & Start_Get'img);
---                " last" & Last'img);
+                  " Timeout_Length " & Timeout_Length'img &
+                  " Start_Get" & Start_Get'img &
+                  " buffer last" & Buffer'Last'img);
 
                if    Buffer_Empty and then
                      Timeout_Length = 0.0 then  -- return data current in buffer
