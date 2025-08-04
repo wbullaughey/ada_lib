@@ -5,12 +5,11 @@ package Ada_Lib.GNOGA.Unit_Test is
 
    Failed                        : exception;
 
+   type GNOGA_Tests_Interface    is interface;
+
    type GNOGA_Tests_Type (
       Initialize_GNOGA           : Boolean;
-      Test_Driver                : Boolean) is abstract new Ada_Lib.Unit_Test.
-                                    Tests.Test_Case_Type with null record;
---    Connection_Data            : GNOGA_Ada_Lib.Connection_Data_Class_Access := Null;
--- end record;
+      Test_Driver                : Boolean) is abstract tagged null record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;
