@@ -1,15 +1,17 @@
 ----with Ada_Lib.Socket_IO;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test;
 
 package Ada_Lib.GNOGA.Unit_Test is
 
    Failed                        : exception;
 
-   type GNOGA_Tests_Interface    is interface;
+   type GNOGA_Tests_Interface    is limited interface;
 
    type GNOGA_Tests_Type (
-      Initialize_GNOGA           : Boolean;
-      Test_Driver                : Boolean) is abstract tagged null record;
+      Initialize_GNOGA  : Boolean;
+      Test_Driver       : Boolean) is abstract limited new
+                  Ada_Lib.Unit_Test.AUnit_Tests_Type and
+                  GNOGA_Tests_Interface with null record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;
@@ -25,10 +27,10 @@ package Ada_Lib.GNOGA.Unit_Test is
    overriding
    procedure Set_Up (
       Test                       : in out GNOGA_Tests_Type
-   ) with Post => Test.Verify_Set_Up;
+   ) with Post => Ada_Lib.Unit_Test.AUnit_Tests_Type'class (
+      Test).Verify_Set_Up;
 
    Debug                         : aliased Boolean := False;
--- Debug_Options                 : aliased Boolean := False;
--- GNOGA_Options                 : GNOGA_Options_Constant_Class_Access := Null;
+
 
 end Ada_Lib.GNOGA.Unit_Test;

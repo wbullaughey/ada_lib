@@ -30,7 +30,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
          " test driver " & Test.Test_Driver'img);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.AUnit_Tests_Type (Test).Set_Up;
 --    Test.Connection_Data := GNOGA_Ada_Lib.Get_Connection_Data;
       if not Test.Test_Driver then
          Log_Here (Debug, -- "URL_Opened " & URL_Opened'img &
@@ -58,7 +58,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
 
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.AUnit_Tests_Type (Test).Tear_Down;
       if Test.Initialize_GNOGA then
          Standard.Gnoga.Application.Multi_Connect.End_Application;
          delay 0.2;  -- let server stop

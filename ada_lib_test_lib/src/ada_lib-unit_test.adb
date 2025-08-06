@@ -7,7 +7,7 @@ with AUnit.Assertions;
 
 package body Ada_Lib.Unit_Test is
 
-   use type Ada.Containers.Count_Type;
+-- use type Ada.Containers.Count_Type;
 
    type String_Access            is access constant String;
 
@@ -284,6 +284,16 @@ exception
       Test_Failed := True;
    end Set_Failed;
 
+   ----------------------------------------------------------------------------
+   overriding
+   procedure Set_Up (
+      Test                       : in out AUnit_Tests_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Test.Set_Up_Completed := True;
+   end Set_Up;
+
    -----------------------------------------------------------
    procedure Suite (
       Name                       : in     String) is
@@ -296,6 +306,16 @@ exception
          Suite    => new String'(Name)));
       Log_Out (Debug);
    end Suite;
+
+   ----------------------------------------------------------------------------
+   overriding
+   procedure Tear_Down (
+      Test                       : in out AUnit_Tests_Type) is
+   ----------------------------------------------------------------------------
+
+   begin
+      Test.Tear_Down_Completed := True;
+   end Tear_Down;
 
    ----------------------------------------------------------------------------
    function Test_Name (
@@ -312,8 +332,28 @@ exception
       return Result;
    end Test_Name;
 
+   ----------------------------------------------------------------------------
+   function Verify_Set_Up (
+      Test                       : in     AUnit_Tests_Type
+   )  return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Test.Set_Up_Completed;
+   end Verify_Set_Up;
+
+   ----------------------------------------------------------------------------
+   function Verify_Tear_Down (
+      Test                       : in     AUnit_Tests_Type
+   )  return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Test.Tear_Down_Completed;
+   end Verify_Tear_Down;
+
 begin
---Debug := True;
+Debug := True;
 --Trace_Options := True;
    Log_Here (Trace_Options or Elaborate);
 end Ada_Lib.Unit_Test;
