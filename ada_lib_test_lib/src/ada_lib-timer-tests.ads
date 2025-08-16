@@ -48,6 +48,7 @@ private
    type Test_Timer_Type          is new Event_Type with record
       Occurred                   : Boolean := False;
       Occured_At                 : Ada_Lib.Time.Time_Type;
+      Start_At                   : Ada_Lib.Time.Time_Type;
       Test_Ada_2022              : Integer := 0;
    end record;
 

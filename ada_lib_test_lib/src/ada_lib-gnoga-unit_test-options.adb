@@ -94,7 +94,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
          Put_Line ("GNOGA_Options unit test trace options (-" &
             Trace_Option & ")");
          Put_Line ("      a               all");
-         Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig");
+         Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event.Debug");
          Put_Line ("      g               GNOGA_Options.Debug (main window)");
          Put_Line ("      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options");
          New_Line;

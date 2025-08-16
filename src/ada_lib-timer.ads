@@ -74,7 +74,12 @@ package Ada_Lib.Timer is
       Description                : in     String := "";
       Dynamic                    : in     Boolean := False;
       Repeating                  : in     Boolean := False
-   ) with Pre => Wait > 0.0;
+   ) with Pre => Wait > 0.0 and then
+                 not Initialized (Event);
+
+   function Initialized (
+      Event                : in     Event_Type
+   ) return Boolean;
 
    procedure Set_Description (
       Event                      : in out Event_Type;
@@ -85,9 +90,15 @@ package Ada_Lib.Timer is
       Wait                       : in     Duration;
       Description                : in     String := "");
 
+   function Start_Time (
+      Event                : in     Event_Type
+   ) return Ada.Calendar.Time
+   with Pre => Initialized (Event);
+
    function State (
       Event                : in     Event_Type
-   ) return State_Type;
+   ) return State_Type
+   with Pre => Initialized (Event);
 
    procedure Set_Trace (
       State             : in   Boolean);
@@ -125,7 +136,7 @@ private
       Repeating            : Boolean := False;
       Started              : Boolean := False;
       State                : State_Type := Uninitialized;
---    Time                 : Ada.Calendar.Time := Null_Time;
+      Start_Time           : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;
       Wait                 : Duration := 0.25;  -- uninitialized timeout
    end record;

@@ -50,7 +50,9 @@ package Ada_Lib.GNOGA.Unit_Test.Events is
    function Suite return Standard.AUnit.Test_Suites.Access_Test_Suite;
 
    overriding
-   procedure Tear_Down (Test : in out Event_Test_Type);
+   procedure Tear_Down (Test : in out Event_Test_Type
+   ) with Pre => not Test.Verify_Tear_Down,
+          Post => Test.Verify_Tear_Down;
 
    Debug                         : Boolean := False;
    Suite_Name                    : constant String := "GNOGA_Events";

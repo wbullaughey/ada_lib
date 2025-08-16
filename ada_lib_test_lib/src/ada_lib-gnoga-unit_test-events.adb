@@ -474,7 +474,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
+      Log_In (Debug, "test tag " & Tag_Name (event_test_type'class (Test)'tag));
+      Tag_History (Debug, Event_Test_Type'class (Test)'tag);
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
          Routine        => Keyboard_Test'access,

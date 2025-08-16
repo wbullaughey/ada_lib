@@ -59,6 +59,7 @@ package body Ada_Lib.GNOGA.Unit_Test is
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
       Ada_Lib.Unit_Test.AUnit_Tests_Type (Test).Tear_Down;
+log_here;
       if Test.Initialize_GNOGA then
          Standard.Gnoga.Application.Multi_Connect.End_Application;
          delay 0.2;  -- let server stop

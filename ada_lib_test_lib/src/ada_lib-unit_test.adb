@@ -291,7 +291,9 @@ exception
    ----------------------------------------------------------------------------
 
    begin
+      Log_Here (Debug or Trace_Set_Up);
       Test.Set_Up_Completed := True;
+      Test.Tear_Down_Completed := False;
    end Set_Up;
 
    -----------------------------------------------------------
@@ -314,7 +316,10 @@ exception
    ----------------------------------------------------------------------------
 
    begin
+      Log_In (Debug or Trace_Set_Up);
       Test.Tear_Down_Completed := True;
+      Test.Set_Up_Completed := False;
+      Log_Out (Debug or Trace_Set_Up);
    end Tear_Down;
 
    ----------------------------------------------------------------------------
@@ -339,7 +344,7 @@ exception
    ----------------------------------------------------------------------------
 
    begin
-      return Test.Set_Up_Completed;
+      return Log_Here (Test.Set_Up_Completed, Debug);
    end Verify_Set_Up;
 
    ----------------------------------------------------------------------------
@@ -349,11 +354,11 @@ exception
    ----------------------------------------------------------------------------
 
    begin
-      return Test.Tear_Down_Completed;
+      return Log_Here (Test.Tear_Down_Completed, Debug);
    end Verify_Tear_Down;
 
 begin
-Debug := True;
+--Debug := True;
 --Trace_Options := True;
    Log_Here (Trace_Options or Elaborate);
 end Ada_Lib.Unit_Test;

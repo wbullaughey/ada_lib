@@ -71,6 +71,26 @@ package body Ada_Lib.Timer.Tests is
                                     False);     -- event canceled
       Event_Times                : constant Array (1 .. Number_Events) of Duration := (
                                        1.5, 0.5, 1.0);
+
+      ---------------------------------------------------------------
+      function Failure_Message (
+         Index                   : in     Natural;
+         Offset                  : in     Duration;
+         Event                   : Test_Timer_Type
+      ) return String is
+      ---------------------------------------------------------------
+
+   begin
+         return
+            "event" & Index'img &
+            " Occurred at wrong time. Offset " & Offset'img  &
+            " expected active " & Expect_Active (Index)'img &
+            " cancel event " & Boolean'(Index =
+               Cancel_Event_Index)'img &
+            Quote (" description ", Event.Description.all);
+      end Failure_Message;
+      ---------------------------------------------------------------
+
    begin
       Log_In (Debug);
       declare
@@ -133,10 +153,10 @@ package body Ada_Lib.Timer.Tests is
                               Description    => "static" & Index'img,
                               Wait           => Event_Times (Index));
                      end if;
-
                      Log_Here (Debug, "index" & Index'img &
                         " state " & Event.State'img &
                         " wait " & Event.Wait'img &
+                        " start " & From_Start (Event.Start_Time, True) &
                         Quote (" description", Event.Description));
 
                   end;
@@ -147,8 +167,6 @@ package body Ada_Lib.Timer.Tests is
                   Cancel_Event      : Test_Timer_Type'class renames
                                        Active_Events (Cancel_Event_Index).all;
                   Event_Canceled          : Boolean := False;
-                  Schedule_Time     : constant Ada_Lib.Time.Time_Type :=
-                                       Ada_Lib.Time.Now;
                   Failed_Time       : constant Ada_Lib.Time.Time_Type :=
                                        Ada_Lib.Time.Now + 1.75;   -- after last event
                begin
@@ -163,7 +181,8 @@ package body Ada_Lib.Timer.Tests is
                   for Index in Active_Events'range loop
                      Log_Here (Debug, "index" & Index'img &
                         " dynamic" & Dynamic_Index'img);
-                     if    Index /= Dynamic_Index and then  -- cancled dynamic was freed
+                     if    Index /= Dynamic_Index and then
+                           -- cancled dynamic was freed
                            Index /= Cancel_Event_Index then
                         declare
                            Event          : Test_Timer_Type'class renames
@@ -240,32 +259,31 @@ package body Ada_Lib.Timer.Tests is
                                              -- all events completed or canceled
                   Log_Here (Debug);
                   for Index in 1 .. Number_Events loop
-                     if    Index /= Dynamic_Index then
+--                   if    Index = Dynamic_Index then
                         declare
                            Event       : Test_Timer_Type'class renames
                                           Active_Events (Index).all;
                            Expected    : constant Ada_Lib.Time.Time_Type :=
-                                          Schedule_Time + Event_Times (Index);
+                                       Event.Start_Time + Event_Times (Index);
                            Offset      : constant Duration := (if Event.Occurred then
                                              abs (Expected - Event.Occured_At)
                                           else
                                              0.0);
                         begin
                            Log_Here (Debug, "index" & Index'img &
+                           " start time " & From_Start (Event.Start_Time, True) &
                               " expected " & From_Start (Expected, True) &
                               (if Event.Occurred then
                                     " occured at " & From_Start (Event.Occured_At, True) &
                                     " offset " & Offset'img
                                  else
                                     " not occured") &
-                              " Schedule time " & From_Start (Schedule_Time, True) &
                               " event time " & Event_Times (Index)'img);
 
-                           Assert (Offset < Criteria,
-                              "event" & Index'img & " Occurred at wrong time. Offset " &
-                                 Offset'img);
+                        Assert (Offset < Criteria, Failure_Message (
+                           Index, Offset, Test_Timer_Type (Event)));
                         end;
-                     end if;
+--                   end if;
                   end loop;
                   Log_Here (Debug);
 
@@ -347,8 +365,6 @@ package body Ada_Lib.Timer.Tests is
          Wait           => Event_Times (3));
       declare
          Events                  : Event_Pointers_Type (1 .. Number_Events);
-         Schedule_Time           : constant Ada_Lib.Time.Time_Type :=
-                                    Ada_Lib.Time.Now;
 
       begin
          for Index in 1 .. Number_Events loop
@@ -400,14 +416,14 @@ package body Ada_Lib.Timer.Tests is
                declare
                   Event          : Test_Timer_Type'class renames Events (Index).all;
                   Expected       : constant Ada_Lib.Time.Time_Type :=
-                                    Schedule_Time + Event_Times (Index);
+                                    Event.Start_Time + Event_Times (Index);
                   Offset         : constant Duration :=
                                     abs (Expected - Event.Occured_At);
                begin
                   Log_Here (Debug, "test"& Index'img &
                      " expected " & From_Start (Expected, True) &
                      " occured at " & From_Start (Event.Occured_At, True) &
-                     " Schedule time " & From_Start (Schedule_Time, True) &
+                     " start time " & From_Start (Event.Start_Time, True) &
                      " event time " & Event_Times (Index)'img &
                      " offset " & Offset'img);
 

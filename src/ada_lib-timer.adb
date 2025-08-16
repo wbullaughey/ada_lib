@@ -1,7 +1,7 @@
 with Ada.Exceptions;
 --with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
---with Ada_Lib.Time;
+with Ada_Lib.Time;
 --with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
 
@@ -216,6 +216,16 @@ exception
    end Initialize;
 
    ---------------------------------------------------------------------------
+   function Initialized (
+      Event                : in     Event_Type
+   ) return Boolean is
+   ---------------------------------------------------------------------------
+
+   begin
+      return Event.Initialized;
+   end Initialized;
+
+   ---------------------------------------------------------------------------
    procedure Set_Description (
       Event                      : in out Event_Type;
       Description                : in     String) is
@@ -256,6 +266,16 @@ exception
    end Set_Wait;
 
    ---------------------------------------------------------------------------
+   function Start_Time (
+      Event                : in     Event_Type
+   ) return Ada.Calendar.Time is
+   ---------------------------------------------------------------------------
+
+   begin
+      return Event.Start_Time;
+   end Start_Time;
+
+   ---------------------------------------------------------------------------
    function State (
       Event                : in     Event_Type
    ) return State_Type is
@@ -289,8 +309,10 @@ exception
                " at " & Here;
 
          when Waiting =>
+            Event.Start_Time := Ada_Lib.Time.Now;
             while Event.State = Waiting loop -- if null then canceled before set
                Log_Here (Trace, Quote ("description", Event.Description) &
+                  " start time " & From_Start (True) &
                   " start loop delay time " & Event.Wait'img &
                   " address " & Image (Event.all'address));
                select

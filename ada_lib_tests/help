@@ -78,7 +78,7 @@ Ada_Lib.Template.Tests (-T)
 
 GNOGA_Options unit test trace options (-g)
       a               all
-      e               Ada_Lib.GNOGA.Unit_Test.Event.Debig
+      e               Ada_Lib.GNOGA.Unit_Test.Event.Debug
       g               GNOGA_Options.Debug (main window)
       o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options
 
@@ -117,17 +117,20 @@ CAC ada_lib trace library options (-a)
       @l              Template Load
       @o              Trace_Options
       @s              Strings
+      @S              Socket_IO IO
       @t              Ada_Lib.Text
 Ada_Lib unit test library trace options (-U)
       a               all
       A               all unit tests
+      e               Ada_Lib.Trace.Trace_Exceptions
       g               Ada_Lib.GNOGA.Unit_Test.Debug
-      l               Ada_Lib.Unit_Test.Debug Library
       p               test programs
       r               Runtime_Options
       s               Trace Set_Up Tear_Down
       t               Ada_Lib.Test.Debug
       T               Ada_Lib.Trace.Debug_Trace
+      u               Ada_Lib.Unit_Test.Debug Library
+      U               Ada_Lib.Unit_Test.Test_Cases.Debug Library
 
 Enable suites disabled by default (-S)
       a               enable all
