@@ -229,6 +229,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
          Log_In (Debug or Trace_Set_Up);
 --       Ada_Lib.Unit_Testing := True;
          Test.Set_Up_Succeeded := True;
+         Test.Torn_Down := False;
          Log_Out (Debug or Trace_Set_Up);
       end Set_Up;
 
@@ -274,24 +275,25 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_Here (Debug, "Set_Up " & Test.Set_Up_Succeeded'img &
-            " Set_Up_FAiled " & Test.Set_Up_FAiled'img);
-
-         return Test.Set_Up_Succeeded and then not Test.Set_Up_Failed;
+         return Log_Here (Test.Set_Up_Succeeded and then not Test.Set_Up_Failed,
+            Debug or Trace_Pre_Post_Conditions,
+            "Set_Up_Succeeded " & Test.Set_Up_Succeeded'img &
+            " Set_Up_Failed " & Test.Set_Up_Failed'img);
       end Verify_Set_Up;
 
       ----------------------------------------------------------------------------
-      function Verify_Torn_Down (
+      function Verify_Tear_Down (
          Test                       : in     Test_Type
       ) return Boolean is
       ----------------------------------------------------------------------------
 
       begin
          return Log_Here (Test.Torn_Down and then not Test.Tear_Down_Failed,
-            Debug, "Torn_Down " & Test.Torn_Down'img &
+            Debug or Trace_Pre_Post_Conditions,
+            "Torn_Down " & Test.Torn_Down'img &
             " Tear_Down_Failed " & Test.Tear_Down_Failed'img);
 
-      end Verify_Torn_Down;
+      end Verify_Tear_Down;
 
    end Root_Test;
 

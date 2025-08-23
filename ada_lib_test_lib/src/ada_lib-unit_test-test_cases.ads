@@ -46,7 +46,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
          Test                       : in     Test_Type
       ) return Boolean;
 
-      function Verify_Torn_Down (
+      function Verify_Tear_Down (
          Test                       : in     Test_Type
       ) return Boolean;
 

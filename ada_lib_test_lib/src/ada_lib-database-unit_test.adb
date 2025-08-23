@@ -96,7 +96,7 @@ package body Ada_Lib.Database.Unit_Test is
    ----------------------------------------------------------------
 
    begin
-      return Test.Database /= Null;
+      return Log_Here (Test.Database /= Null, Debug or Trace_Pre_Post_Conditions);
    end Has_Database;
 
    ----------------------------------------------------------------

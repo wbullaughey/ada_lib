@@ -68,14 +68,14 @@ package Ada_Lib.Timer is
 -- procedure Initialize (
 --    Event             : in out Event_Type);
 
-   procedure Initialize (
-      Event                      : in out Event_Type;
-      Wait                       : in     Duration;
-      Description                : in     String := "";
-      Dynamic                    : in     Boolean := False;
-      Repeating                  : in     Boolean := False
-   ) with Pre => Wait > 0.0 and then
-                 not Initialized (Event);
+-- procedure Initialize (
+--    Event                      : in out Event_Type;
+--    Wait                       : in     Duration;
+--    Description                : in     String := "";
+--    Dynamic                    : in     Boolean := False;
+--    Repeating                  : in     Boolean := False
+-- ) with Pre => Wait > 0.0 and then
+--               not Initialized (Event);
 
    function Initialized (
       Event                : in     Event_Type
@@ -85,10 +85,14 @@ package Ada_Lib.Timer is
       Event                      : in out Event_Type;
       Description                : in     String);
 
-   procedure Set_Wait (
+   procedure Start (
       Event                      : in out Event_Type;
       Wait                       : in     Duration;
-      Description                : in     String := "");
+      Description                : in     String := "";
+      Dynamic                    : in     Boolean := False;
+      Repeating                  : in     Boolean := False
+   ) with Pre => Wait > 0.0 and then
+                 not Initialized (Event);
 
    function Start_Time (
       Event                : in     Event_Type
@@ -103,6 +107,10 @@ package Ada_Lib.Timer is
    procedure Set_Trace (
       State             : in   Boolean);
 
+   function Wait_Time (
+      Event                : in     Event_Type
+   ) return Duration;
+
    No_Timeout                    : constant Duration := Duration'last;
 -- Trace                         : Boolean := False;
 
@@ -113,11 +121,7 @@ private
 
       entry Cancel;
 
---    entry Get_State (
---       Return_State            :    out State_Type);
-
---    entry Initialize(
---       Container               : in     Event_Class_Access);
+      entry Start ;
 
    end Timer_Task_Type;
 
@@ -134,7 +138,7 @@ private
       Exception_Name       : Ada_Lib.Strings.String_Access := Null;
       Initialized          : Boolean := False;
       Repeating            : Boolean := False;
-      Started              : Boolean := False;
+--    Started              : Boolean := False;
       State                : State_Type := Uninitialized;
       Start_Time           : Ada.Calendar.Time := Null_Time;
       Timer_Task           : Timer_Task_Access := Null;

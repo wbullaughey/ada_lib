@@ -1,34 +1,34 @@
 with Ada.Exceptions;
 with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with AUnit.Test_Cases;
+--with AUnit.Test_Cases;
 
 package Ada_Lib.Unit_Test is
 
    Failed                        : exception;
 
-   -- derive all aunit tests from this type
-   type AUnit_Tests_Type   is abstract new AUnit.Test_Cases.Test_Case with private;
+-- -- derive all aunit tests from this type
+-- type AUnit_Testfs_Type   is abstract new AUnit.Test_Cases.Test_Case with private;
 
-   overriding
-   procedure Set_Up (
-      Test                       : in out AUnit_Tests_Type
-   ) with Pre => not Test.Verify_Set_Up,
-          Post => Test.Verify_Set_Up;
-
-   overriding
-   procedure Tear_Down (
-      Test                       : in out AUnit_Tests_Type
-   ) with Pre => not Test.Verify_Tear_Down,
-          Post => Test.Verify_Tear_Down;
-
-   function Verify_Set_Up (
-      Test                       : in     AUnit_Tests_Type
-   )  return Boolean;
-
-   function Verify_Tear_Down (
-      Test                       : in     AUnit_Tests_Type
-   )  return Boolean;
+-- overriding
+-- procedure Set_Up (
+--    Test                       : in out AUnit_Tests_Type
+-- ) with Pre => not Test.Verify_Set_Up,
+--        Post => Test.Verify_Set_Up;
+--
+-- overriding
+-- procedure Tear_Down (
+--    Test                       : in out AUnit_Tests_Type
+-- ) with Pre => not Test.Verify_Tear_Down,
+--        Post => Test.Verify_Tear_Down;
+--
+-- function Verify_Set_Up (
+--    Test                       : in     AUnit_Tests_Type
+-- )  return Boolean;
+--
+-- function Verify_Tear_Down (
+--    Test                       : in     AUnit_Tests_Type
+-- )  return Boolean;
 
    type Suite_Action_Access      is access procedure (
       Suite                      : in     String;
@@ -66,22 +66,22 @@ package Ada_Lib.Unit_Test is
    procedure Set_Failed (
       From                       : in     String := Ada_Lib.Trace.Here);
 
-   procedure Suite (
-      Name                       : in     String);
+     procedure Suite (
+        Name                       : in     String);
 
-   function Test_Name (
-      Suite_Name                 : in     String;
-      Routine_Name               : in     String
-   ) return String;
+     function Test_Name (
+        Suite_Name                 : in     String;
+        Routine_Name               : in     String
+     ) return String;
 
    Debug                         : Boolean := False;
 
-private
-
-   -- derive all aunit tests from this type
-   type AUnit_Tests_Type   is abstract new AUnit.Test_Cases.Test_Case with record
-      Set_Up_Completed     : Boolean := False;
-      Tear_Down_Completed  : Boolean := False;
-   end record;
+--private
+--
+--   -- derive all aunit tests from this type
+--   type AUnit_Tests_Type   is abstract new AUnit.Test_Cases.Test_Case with record
+--      Set_Up_Completed     : Boolean := False;
+--      Tear_Down_Completed  : Boolean := False;
+--   end record;
 
 end Ada_Lib.Unit_Test;

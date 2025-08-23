@@ -1,3 +1,4 @@
+with Ada.Calendar.Formatting;
 with Ada.Characters.Latin_1;
 with Ada.Command_Line;
 with Ada.Task_Identification;
@@ -377,14 +378,17 @@ package body Ada_Lib.Trace is
    function From_Start (
       Time                 : in   Ada.Calendar.Time;
       Hundreds            : in   Boolean := False;
-      Show_Days            : in   Boolean := False
+      Show_Days            : in   Boolean := False;
+      From                 : in     String := GNAT.Source_Info.Source_Location
    ) return String is
    --------------------------------------------------------------------
 
+--offset : constant duration := Time - Start_Time;
    begin
       if Time = No_Time then
          return "no time";
       else
+--put_line ("time " & time'img & " start time " & Start_Time'img & " from start " & offset'img);
          return Image ((
             if Start_Time = No_Time then
                0.0
@@ -1454,6 +1458,9 @@ package body Ada_Lib.Trace is
    Include_Task := True;
    Include_Time := True;
    Indent_Trace := True;
-   Log_Here (Debug_Trace or Elaborate or Trace_Options or Trace_Tests);
-
+   Log_Here (Debug_Trace or Elaborate or Trace_Options or Trace_Tests,
+      "start time " & Start_Time'img);
+--put_line ("clock" & Ada.Calendar.Clock'img);
+--Put_Line("Formatted: " &
+--    Ada.Calendar.Formatting.Image(Start_Time));
 end Ada_Lib.Trace;

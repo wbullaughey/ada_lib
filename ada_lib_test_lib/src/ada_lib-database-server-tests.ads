@@ -108,7 +108,7 @@ private
    overriding
    procedure Tear_Down (         -- closes, frees database
       Test                       : in out Server_Test_Type)
-      with post => Verify_Set_Up (Test);
+      with post => Verify_Tear_Down (Test);
 
    procedure Timeout_Get (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);

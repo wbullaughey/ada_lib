@@ -1,5 +1,6 @@
 with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Event.Unit_Test;
 with Ada_Lib.GNOGA.Unit_Test;
 with Ada_Lib.Help;
 --with GNOGA_Options;
@@ -79,7 +80,8 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
 
    begin
-      return Unit_Test_Options /= Null;
+      return Log_Here (Unit_Test_Options /= Null,
+         Debug or Trace_Pre_Post_Conditions);
    end Have_Unit_Test_Options;
 
    ----------------------------------------------------------------------------
@@ -458,8 +460,10 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      a               all");
          Put_Line ("      A               all unit tests");
          Put_Line ("      e               Ada_Lib.Trace.Trace_Exceptions");
+         Put_Line ("      E               Ada_Lib.Evemt.Unit_Test.Debug");
          Put_Line ("      g               Ada_Lib.GNOGA.Unit_Test.Debug");
          Put_Line ("      p               test programs");
+         Put_Line ("      P               Trace Pre and Post Condtion functions");
          Put_Line ("      r               Runtime_Options");
          Put_Line ("      s               Trace Set_Up Tear_Down");
          Put_Line ("      t               Ada_Lib.Test.Debug");
@@ -563,9 +567,11 @@ package body Ada_Lib.Options.Unit_Test is
 
             when 'a' =>
                Debug := True;
+               Ada_Lib.Event.Unit_Test.Debug := True;
                Ada_Lib.GNOGA.Unit_Test.Debug := True;
                Ada_Lib.Test.Debug := True;
                Ada_Lib.Trace.Trace_Exceptions := True;
+               Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
                Ada_Lib.Trace.Trace_Set_Up := True;
                Ada_Lib.Trace.Trace_Tests := True;
                Ada_Lib.Unit_Test.Debug := True;
@@ -578,6 +584,9 @@ package body Ada_Lib.Options.Unit_Test is
             when 'e' =>
                Ada_Lib.Trace.Trace_Exceptions := True;
 
+            when 'E' =>
+               Ada_Lib.Event.Unit_Test.Debug := True;
+
             when 'g' =>
                Ada_Lib.GNOGA.Unit_Test.Debug := True;
 
@@ -586,6 +595,9 @@ package body Ada_Lib.Options.Unit_Test is
 
             when 'p' =>
                Options.Debug := True;
+
+            when 'P' =>
+               Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
 
             when 's' =>
                Ada_Lib.Trace.Trace_Set_Up := True;

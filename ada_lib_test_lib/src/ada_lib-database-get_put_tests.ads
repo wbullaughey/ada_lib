@@ -73,7 +73,7 @@ private
    overriding
    procedure Tear_Down (
       Test                       : in out Database_Test_Type)
-      with post => Verify_Torn_Down (Test);
+      with post => Verify_Tear_Down (Test);
 
    procedure Timeout_Get (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);

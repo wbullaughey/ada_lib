@@ -18,7 +18,7 @@ package Ada_Lib.Unit_Test.Fixtures is
       Test                       : in     Base_Test_Fixtures_Type
    ) return Boolean is abstract;
 
-   function Verify_Torn_Down (
+   function Verify_Tear_Down (
       Test                       : in     Base_Test_Fixtures_Type
    ) return Boolean is abstract;
 

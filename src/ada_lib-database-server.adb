@@ -178,7 +178,7 @@ package body Ada_Lib.Database.Server is
    exception
       when Tasking_Error =>
          Tasking_Error_Occured;
-         raise Failed with "close server failed";
+--       raise Failed with "close server failed";
 
    end Close;
 
@@ -480,10 +480,13 @@ package body Ada_Lib.Database.Server is
    ---------------------------------------------------------------------------------
 
    begin
-      Log_Here (Trace_All, "Is_Started " & Server.Is_Started'img &
-         " Read_Database.Is_Open " & Server.Read_Database.Is_Open'img &
-         " Write_Database.Is_Open " & Server.Write_Database.Is_Open'img);
-      return Server.Is_Started and then Server.Read_Database.Is_Open and then Server.Write_Database.Is_Open;
+      return Log_Here (
+         Server.Is_Started and then Server.Read_Database.Is_Open and then
+            Server.Write_Database.Is_Open,
+         Trace_All or Trace_Pre_Post_Conditions,
+            "Is_Started " & Server.Is_Started'img &
+            " Read_Database.Is_Open " & Server.Read_Database.Is_Open'img &
+            " Write_Database.Is_Open " & Server.Write_Database.Is_Open'img);
    end Is_Open;
 
    ---------------------------------------------------------------------------------

@@ -409,8 +409,7 @@ package body Ada_Lib.Database.Server.State is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug);
-      return Server.Server /= Null;
+      return Log_Here (Server.Server /= Null, Debug or Trace_Pre_Post_Conditions);
    end Is_Server_Allocated;
 
    ---------------------------------------------------------------
@@ -427,7 +426,16 @@ package body Ada_Lib.Database.Server.State is
             Log_Here ("server not opened");
          end if;
       end if;
-      return Server.Server /= Null and then Server.Server.Is_Open;
+      return Log_Here (Server.Server /= Null and then Server.Server.Is_Open,
+         Debug or Trace_Pre_Post_Conditions,
+         "Server " & (if Server.Server = Null then
+            "null"
+         else
+            "set") &
+         "server" & (if Server.Server.Is_Open then
+            ""
+         else
+            " not") & " open");
    end Is_Server_Open;
 
    ---------------------------------------------------------------
@@ -448,7 +456,13 @@ package body Ada_Lib.Database.Server.State is
    ---------------------------------------------------------------
 
    begin
-      return Server.Server = Null or else Server.Server.Is_Stopped;
+      return Log_Here (Server.Server = Null or else Server.Server.Is_Stopped,
+         Debug or Trace_Pre_Post_Conditions,
+         "server " & (if Server.Server = Null then
+            "null"
+         else
+            "set") &
+         " Is_Stopped " & Server.Server.Is_Stopped'img);
    end Is_Server_Stopped;
 
 
@@ -477,7 +491,9 @@ package body Ada_Lib.Database.Server.State is
    ---------------------------------------------------------------
 
    begin
-      return Ada_Lib.Strings.Unlimited.length (Server.Host_Name) > 0;
+      return Log_Here (Ada_Lib.Strings.Unlimited.length (Server.Host_Name) > 0,
+         Debug or Trace_Pre_Post_Conditions,
+         Quote ("Host Name", Server.Host_Name));
    end Is_Host_Known;
 
 --   ---------------------------------------------------------------

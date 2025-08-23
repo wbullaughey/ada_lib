@@ -158,7 +158,6 @@ begin
       if not Have_Host then
          Log_Here (Debug, "no host found");
       end if;
-Log_Here;
       Test_Suite.Run (AUnit_Options, Results, Outcome);
 
       Log_Here (Debug, "Mode " & Options.Mode'img);

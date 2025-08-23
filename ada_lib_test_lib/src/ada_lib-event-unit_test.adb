@@ -72,14 +72,18 @@ package body Ada_Lib.Event.Unit_Test is
       overriding
       procedure Callback (
          Event             : in out Check_Event_Type) is
-      pragma Unreferenced (Event);
+--    pragma Unreferenced (Event);
       ------------------------------------------------------------
 
       begin
-         Log_In (Debug);
+         Log_In (Debug, Event.Description &
+            " wait " & Event.Wait_Time'img &
+            " started at " & From_Start (Event.Start_Time, Hundreds => True));
+
          if not Test_Event.Event_Occured then
             Log_Out (Debug);
-            Assert (False, "Wait_For_Event did not occure");
+            Assert (False, "Wait_For_Event " &
+               Event.Description & " did not occure");
          end if;
          Log_Out (Debug);
       end Callback;
@@ -88,11 +92,13 @@ package body Ada_Lib.Event.Unit_Test is
       overriding
       procedure Callback (
          Event             : in out Delay_Event_Type) is
-      pragma Unreferenced (Event);
       ------------------------------------------------------------
 
       begin
-         Log_In (Debug);
+         Log_In (Debug, Event.Description &
+            " wait " & Event.Wait_Time'img &
+            " started at " & From_Start (Event.Start_Time, Hundreds => True));
+
          Test_Event.Set_Event;
          Log_Out (Debug);
       end Callback;
@@ -105,10 +111,10 @@ package body Ada_Lib.Event.Unit_Test is
 
       begin
          Log_Here (Debug);
-         Check_Timer.Initialize (
+         Check_Timer.Start (
             Description    => "check",
             Wait           => Check_Time);
-         Delay_Timer.Initialize (
+         Delay_Timer.Start (
             Description    => "Delay",
             Wait           => Delay_Time);
          Test_Event.Wait_For_Event;

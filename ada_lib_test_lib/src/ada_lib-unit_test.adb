@@ -284,17 +284,17 @@ exception
       Test_Failed := True;
    end Set_Failed;
 
-   ----------------------------------------------------------------------------
-   overriding
-   procedure Set_Up (
-      Test                       : in out AUnit_Tests_Type) is
-   ----------------------------------------------------------------------------
-
-   begin
-      Log_Here (Debug or Trace_Set_Up);
-      Test.Set_Up_Completed := True;
-      Test.Tear_Down_Completed := False;
-   end Set_Up;
+-- ----------------------------------------------------------------------------
+-- overriding
+-- procedure Set_Up (
+--    Test                       : in out AUnit_Tests_Type) is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    Log_Here (Debug or Trace_Set_Up);
+--    Test.Set_Up_Completed := True;
+--    Test.Tear_Down_Completed := False;
+-- end Set_Up;
 
    -----------------------------------------------------------
    procedure Suite (
@@ -309,18 +309,18 @@ exception
       Log_Out (Debug);
    end Suite;
 
-   ----------------------------------------------------------------------------
-   overriding
-   procedure Tear_Down (
-      Test                       : in out AUnit_Tests_Type) is
-   ----------------------------------------------------------------------------
-
-   begin
-      Log_In (Debug or Trace_Set_Up);
-      Test.Tear_Down_Completed := True;
-      Test.Set_Up_Completed := False;
-      Log_Out (Debug or Trace_Set_Up);
-   end Tear_Down;
+-- ----------------------------------------------------------------------------
+-- overriding
+-- procedure Tear_Down (
+--    Test                       : in out AUnit_Tests_Type) is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    Log_In (Debug or Trace_Set_Up);
+--    Test.Tear_Down_Completed := True;
+--    Test.Set_Up_Completed := False;
+--    Log_Out (Debug or Trace_Set_Up);
+-- end Tear_Down;
 
    ----------------------------------------------------------------------------
    function Test_Name (
@@ -337,25 +337,25 @@ exception
       return Result;
    end Test_Name;
 
-   ----------------------------------------------------------------------------
-   function Verify_Set_Up (
-      Test                       : in     AUnit_Tests_Type
-   )  return Boolean is
-   ----------------------------------------------------------------------------
-
-   begin
-      return Log_Here (Test.Set_Up_Completed, Debug);
-   end Verify_Set_Up;
-
-   ----------------------------------------------------------------------------
-   function Verify_Tear_Down (
-      Test                       : in     AUnit_Tests_Type
-   )  return Boolean is
-   ----------------------------------------------------------------------------
-
-   begin
-      return Log_Here (Test.Tear_Down_Completed, Debug);
-   end Verify_Tear_Down;
+-- ----------------------------------------------------------------------------
+-- function Verify_Set_Up (
+--    Test                       : in     AUnit_Tests_Type
+-- )  return Boolean is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return Log_Here (Test.Set_Up_Completed, Debug);
+-- end Verify_Set_Up;
+--
+-- ----------------------------------------------------------------------------
+-- function Verify_Tear_Down (
+--    Test                       : in     AUnit_Tests_Type
+-- )  return Boolean is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return Log_Here (Test.Tear_Down_Completed, Debug);
+-- end Verify_Tear_Down;
 
 begin
 --Debug := True;

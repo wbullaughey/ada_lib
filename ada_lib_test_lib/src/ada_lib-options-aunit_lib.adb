@@ -46,10 +46,11 @@ package body Ada_Lib.Options.AUnit_Lib is
                      Aunit_Options_Constant_Class_Access (
                         Ada_Lib.Options.Actual.
                            Get_Ada_Lib_Read_Only_Program_Options).all;
+      Options_Selection
+               : Ada_Lib.Options.AUnit_Lib.Options_Selection_Type renames
+                  Options.Options_Selection;
    begin
-      Log_Here (Debug or Trace_Options);
-      return (
-         case Options.Options_Selection is
+      return Log_Here ((case Options_Selection is
 
             when Ada_Lib_Unit_Test_Only =>
                False,
@@ -61,9 +62,9 @@ package body Ada_Lib.Options.AUnit_Lib is
                False,
 
             when With_Database_Only =>
-               Options.Database_Only.Has_Database
-
-         );
+               Options.Database_Only.Has_Database),
+         Debug or Trace_Options or Trace_Pre_Post_Conditions,
+         "Options_Selection " & Options.Options_Selection'img);
    end Has_Database;
 
    ----------------------------------------------------------------------------

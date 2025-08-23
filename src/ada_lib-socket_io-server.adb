@@ -206,8 +206,9 @@ package body Ada_Lib.Socket_IO.Server is
       Result                     : constant Boolean :=
                                     Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Is_Open;
    begin
-      Log_Here (Trace, "result " & Result'img);
-      return Result;
+      return Log_Here (Result,
+         Trace or Trace_Pre_Post_Conditions,
+         "result " & Result'img);
    end Is_Open;
 
 -- ---------------------------------------------------------------------------

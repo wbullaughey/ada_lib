@@ -62,7 +62,8 @@ package Ada_Lib.Trace is
    function From_Start (
       Time                 : in   Ada.Calendar.Time;
       Hundreds            : in   Boolean := False;
-      Show_Days            : in   Boolean := False
+      Show_Days            : in   Boolean := False;
+      From                 : in     String := GNAT.Source_Info.Source_Location
    ) return String;
 
    function From_Start (
@@ -333,6 +334,7 @@ package Ada_Lib.Trace is
    Trace_Exceptions              : Boolean := False;
    Trace_Levels                  : Boolean := False;
    Trace_Options                 : Boolean := False;
+   Trace_Pre_Post_Conditions     : Boolean := False;
    Trace_Set_Up                  : Boolean := False;
    Trace_Tests                   : Boolean := False;
 

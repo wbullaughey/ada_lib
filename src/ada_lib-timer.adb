@@ -188,32 +188,32 @@ exception
 --    Log_Here (Trace, "state " & Event.State'img);
 -- end Initialize;
 
-   ---------------------------------------------------------------------------
-   procedure Initialize (
-      Event                      : in out Event_Type;
-      Wait                       : in     Duration;
-      Description                : in     String := "";
-      Dynamic                    : in     Boolean := False;
-      Repeating                  : in     Boolean := False) is
-   ---------------------------------------------------------------------------
-
-   begin
-      Log_In (Trace, Quote ("description", Description) &
-         " wait " & Wait'img);
-      Event.Dynamic := Dynamic;
-      Event.Repeating := Repeating;
-      Event.Set_Description (Description);
-      Event.State := Waiting;
-      Event.Wait := Wait;
-      Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
-      Event.Initialized := True;
-      while not Event.Started loop
-         delay 0.1;
-         Log_Here (Trace);
-      end loop;
-      delay 0.1;  -- make sure task gets into select
-      Log_Out (Trace, "address " & Image (Event'address));
-   end Initialize;
+--   ---------------------------------------------------------------------------
+--   procedure Initialize (
+--      Event                      : in out Event_Type;
+--      Wait                       : in     Duration;
+--      Description                : in     String := "";
+--      Dynamic                    : in     Boolean := False;
+--      Repeating                  : in     Boolean := False) is
+--   ---------------------------------------------------------------------------
+--
+--   begin
+--      Log_In (Trace, Quote ("description", Description) &
+--         " wait " & Wait'img);
+--      Event.Dynamic := Dynamic;
+--      Event.Repeating := Repeating;
+--      Event.Set_Description (Description);
+--      Event.State := Waiting;
+--      Event.Wait := Wait;
+--      Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
+--      Event.Initialized := True;
+----    while not Event.Started loop
+----       delay 0.1;
+----       Log_Here (Trace);
+----    end loop;
+----    delay 0.1;  -- make sure task gets into select
+--      Log_Out (Trace, "address " & Image (Event'address));
+--   end Initialize;
 
    ---------------------------------------------------------------------------
    function Initialized (
@@ -250,20 +250,28 @@ exception
    end Set_Trace;
 
    ---------------------------------------------------------------------------
-   procedure Set_Wait (
+   procedure Start (
       Event                      : in out Event_Type;
       Wait                       : in     Duration;
-      Description                : in     String := "") is
+      Description                : in     String := "";
+      Dynamic                    : in     Boolean := False;
+      Repeating                  : in     Boolean := False) is
    ---------------------------------------------------------------------------
 
    begin
-      Log_Here (Trace, "wait " & Wait'img &
+      Log_In (Trace, "wait " & Wait'img &
          " initialized " & Event.Initialized'img);
-      if not Event.Initialized then
-         Event.Initialize (Wait, Description, False, False);
-      end if;
+      Event.Dynamic := Dynamic;
+      Event.Repeating := Repeating;
+      Event.Set_Description (Description);
+      Event.Start_Time := Ada_Lib.Time.Now;
+      Event.State := Waiting;
       Event.Wait := Wait;
-   end Set_Wait;
+      Event.Timer_Task := new Timer_Task_Type (Event'unchecked_access);
+      Event.Initialized := True;
+      Event.Timer_Task.Start;
+      Log_Out (Trace);
+   end Start;
 
    ---------------------------------------------------------------------------
    function Start_Time (
@@ -286,13 +294,25 @@ exception
    end State;
 
    ---------------------------------------------------------------------------
+   function Wait_Time (
+      Event                : in     Event_Type
+   ) return Duration is
+   ---------------------------------------------------------------------------
+
+   begin
+      return Event.Wait;
+   end Wait_Time;
+
+   ---------------------------------------------------------------------------
    task body Timer_Task_Type is
 
---    Event          : Event_Class_Access := Null;
    begin
-      Log_In (Trace, "task started ");
+      Log_In (Trace); -- , "task started ");
       Ada_Lib.Trace_Tasks.Start ("timer task", Here);
-      Event.Started := True;
+
+      accept Start;
+
+--    Event.Started := True;
 
       Log_Here (Trace, "wait " & Event.Wait'img &
          Quote ( " description", Event.Description) &

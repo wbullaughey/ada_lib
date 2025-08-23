@@ -309,7 +309,8 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
 
    begin
-      return Modifiable_Program_Options /= Null;
+      return Log_Here (Modifiable_Program_Options /= Null,
+         Debug or Trace_Pre_Post_Conditions);
    end Have_Ada_Lib_Program_Options;
 
    ----------------------------------------------------------------------------
@@ -891,7 +892,9 @@ package body Ada_Lib.Options.Actual is
                                  Options).Verify_Initialized;
 
       begin
-         Log_In (Debug, "Verify_Initialized " & Verify_Initialized'img &
+         Log_In (Debug or (
+            (not Verify_Initialized) and Trace_Pre_Post_Conditions),
+            "Verify_Initialized " & Verify_Initialized'img &
             " Processed " & Options.Processed'img);
          if Verify_Initialized then
             if Options.Processed then
@@ -907,7 +910,7 @@ package body Ada_Lib.Options.Actual is
             end if;
          end if;
 
-         return Log_Out (False, Debug);
+         return Log_Out (False, Debug or Trace_Pre_Post_Conditions);
       end Verify_Initialized;
 
    ---------------------------------------------------------------
@@ -1068,7 +1071,8 @@ package body Ada_Lib.Options.Actual is
             Failed ("Modifiable_Program_Options not initialized at " & Here);
          else
             if Options.Initialized then
-               return Log_Out (True, Debug or Trace_Options);
+               return Log_Out (True, Debug or Trace_Options or
+                  Trace_Pre_Post_Conditions);
             else
                Failed ("Options.Initialized not initialized at " & Here);
             end if;
@@ -1077,7 +1081,8 @@ package body Ada_Lib.Options.Actual is
          if Debug or Trace_Options then
             Tag_History (Verification_Options_Type'class (Options)'tag);
          end if;
-         return Log_Out (False, Debug or Trace_Options);
+         return Log_Out (False, Debug or Trace_Options or
+            Trace_Pre_Post_Conditions);
       end Verify_Initialized;
 
       ---------------------------------------------------------------

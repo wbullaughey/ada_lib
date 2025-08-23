@@ -507,7 +507,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                end if;
 
                if Throw_Exception then
-                  Timeout_Event.Initialize (Timeout_Length,
+                  Timeout_Event.Start (Timeout_Length,
                   "stream " & Stream.Image & " read timeout",
                      False, False);
                end if;

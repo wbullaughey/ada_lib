@@ -1,146 +1,151 @@
 --with Ada.Text_IO; use  Ada.Text_IO;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Lock is
 
    -------------------------------------------------------------------
    overriding
-   function New_Lock (
-      Object                     : in out Lock_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
+   function Is_Locked (                -- used value on Lock
+      Lock                    : in     Lock_Type;
+      From                    : in     String := GNAT.Source_Info.Source_Location
    ) return Boolean is
    -------------------------------------------------------------------
 
    begin
-      if Object.Locked then
-         return False;
-      else
-         Object.Locked := True;
-         return True;
-      end if;
-   end New_Lock;
-
-   -------------------------------------------------------------------
-   function Get_Task_Id (
-      Object                     : in     Lock_Type
-   ) return Ada.Task_Identification.Task_Id is
-   -------------------------------------------------------------------
-
-   begin
-      return Object.Lock_Object.Get_Task_Id;
-   end Get_Task_Id;
-
-   -------------------------------------------------------------------
-   overriding
-   function Has_Lock (
-      Object                     : in     Lock_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean is
-   -------------------------------------------------------------------
-
-      Result                     : constant Boolean :=
-                                    Object.Lock_Object.Has_Lock (From);
-   begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task) & " result " & result'img);
-      return Result;
-   end Has_Lock;
-
-   -------------------------------------------------------------------
-   overriding
-   function Is_Locked (                -- used value on Object
-      Object                     : in     Lock_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean is
-   -------------------------------------------------------------------
-
-   begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task) & " locked " & object.locked'img);
-      return Object.Locked;
+      return Log_Here (Lock.Protected_Lock.Is_Locked, Debug,
+         "called from " & From);
    end Is_Locked;
 
    -------------------------------------------------------------------
    overriding
-   procedure Lock (
-      Object                     : in out Lock_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location) is
+   function Lock (
+      Lock           : in out Lock_Type;
+      Timeout        : in     Duration := 0.0;
+      From           : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean is
    -------------------------------------------------------------------
 
-      Current_Task               : constant Ada.Task_Identification.Task_Id :=
-                                       Ada.Task_Identification.Current_Task;
+   begin
+      Log_In (Debug, "timeout " & Timeout'img & " from " & From);
+      Lock.Timer.Start_Timeout(Lock.Protected_Lock, Timeout);
+
+      select
+         Lock.Protected_Lock.Lock; -- set the lock
+         return Log_Out (True, Debug);
+      or
+         delay Timeout;
+         return Log_Out (False, Debug);
+      end select;
+   end Lock;
+
+   -------------------------------------------------------------------
+   -- raises exception if object already locked
+   overriding
+   procedure Lock (
+      Lock                 : in out Lock_Type;
+      From                 : in     String := GNAT.Source_Info.Source_Location) is
+   -------------------------------------------------------------------
 
    begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Current_Task) & " locked " & object.locked'img);
-      if not Object.Locked then      -- wait if locked by some other task
-         Object.Lock_Object.Wait_Lock (Current_Task, From);
-         Object.Locked := True;
+      Log_In (Debug, "from " & From);
+      if not Lock.Lock (0.0) then
+         raise Already_Locked with "from " & From;
       end if;
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Current_Task) & " locked " & object.locked'img);
+      Log_Out (Debug);
    end Lock;
 
    -------------------------------------------------------------------
    overriding
+   function Try_Lock (
+      Lock                     : in out Lock_Type;
+      From                       : in     String := GNAT.Source_Info.Source_Location
+   ) return Boolean is
+   -------------------------------------------------------------------
+
+      Got_Lock                   : Boolean;
+
+   begin
+      Log_In (Debug, "from " & From);
+      Lock.Protected_Lock.Try_Lock (Got_Lock);
+      return Log_Out (Got_Lock, Debug);
+   end Try_Lock;
+
+-------------------------------------
+   overriding
    procedure Unlock (
-      Object                     : in out Lock_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location) is
+      Lock               : in out Lock_Type;
+      From                 : in     String := GNAT.Source_Info.Source_Location) is
    -------------------------------------------------------------------
 
    begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task) & " locked " & object.locked'img);
-      Object.Lock_Object.Unlock (From);
-      Object.Locked := False;
+      Log_Here (Debug, "from " & From);
+      Lock.Protected_Lock.Unlock;
    end Unlock;
 
-   protected body Protected_Lock is
    -------------------------------------------------------------------
+   protected body Protected_Lock_Type is
 
-      ---------------------------------------------------------------
-      function Get_Task_Id return Ada.Task_Identification.Task_Id is
-      ---------------------------------------------------------------
-
-      begin
-         return Ada.Task_Identification.Current_Task;
-      end Get_Task_Id;
-
-      ---------------------------------------------------------------
-      function Has_Lock (
-         From                    : in     String := Standard.Ada_Lib.Trace.Here
-      ) return Boolean is
-      pragma Unreferenced (From);
-      ---------------------------------------------------------------
+      -------------------------------------------------------------------
+      entry Lock when not Locked is
+      -------------------------------------------------------------------
 
       begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task) & " locked " & locked'img);
-         return Locked;
-      end Has_Lock;
+         Locked := True;
+      end Lock;
 
-      ---------------------------------------------------------------
-      procedure Unlock (
-         From                    : in     String) is
-      pragma Unreferenced (From);
-      ---------------------------------------------------------------
+      -------------------------------------------------------------------
+      procedure Try_Lock (
+         Got_Lock       :   out Boolean) is
+      -------------------------------------------------------------------
 
       begin
---put_Line (GNAT.Source_Info.Source_Location & ":"&Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task) & " locked " & locked'img);
-         if not Locked then
-            raise Not_Locked with "not locked at " &
-               GNAT.Source_Info.Source_Location;
+         if Locked then
+            Got_Lock := False;
+         else
+            Locked := True;
+            Got_Lock := True;
          end if;
+      end Try_Lock;
+
+      -------------------------------------------------------------------
+      procedure Unlock is
+      -------------------------------------------------------------------
+
+      begin
          Locked := False;
       end Unlock;
 
-      ---------------------------------------------------------------
-      entry Wait_Lock (
-         Current_Task_ID         : in     Ada.Task_Identification.Task_Id;
-         From                    : in     String
-      ) when not Locked is
-      pragma Unreferenced (From);
-      ---------------------------------------------------------------
-
+      -------------------------------------------------------------------
+      function Is_Locked return Boolean is
+      -------------------------------------------------------------------
       begin
---put_Line (GNAT.Source_Info.Source_Location & " locked " & locked'img);
-         Locked := True;
-         Task_ID := Current_Task_ID;
-      end Wait_Lock;
+         return Locked;
+      end Is_Locked;
 
-   end Protected_Lock;
+   end Protected_Lock_Type;
+
+   -------------------------------------------------------------------
+   task body Timeout_Task_Type is
+
+   begin
+      Log_In (Debug);
+      loop
+         select
+            accept Start_Timeout (
+               Protected_Lock : in out Protected_Lock_Type;
+               Timeout        : in     Duration) do
+
+               Log_Here (Debug, "timeout " & Timeout'img);
+               delay Timeout;
+
+               if Protected_Lock.Is_Locked then
+                  Log_Here (Debug);
+               end if;
+            end Start_Timeout;
+         or
+            terminate;
+         end select;
+      end loop;
+   end Timeout_Task_Type;
 
 end Ada_Lib.Lock;

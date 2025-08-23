@@ -29,7 +29,7 @@ package body Ada_Lib.Timer.Tests is
    begin
       Log_Here (Debug, Quote ("description", Description) &
          " offset " & Offset'img);
-      Result.Initialize (
+      Result.Start (
             Description    => Description,
             Dynamic        => True,
             Wait           => Offset);
@@ -129,7 +129,7 @@ package body Ada_Lib.Timer.Tests is
             begin
                for Index in Active_Events'range loop   -- create events
                   declare
-                        Event          : Test_Timer_Class_Access renames
+                     Event             : Test_Timer_Class_Access renames
                                           Active_Events (Index);
                   begin
                      Log_Here (Debug, "index" & Index'img);
@@ -149,14 +149,14 @@ package body Ada_Lib.Timer.Tests is
                                  Description    => "dynamic event",
                                  Offset         => Event_Times (Dynamic_Index));
                      else
-                        Event.Initialize (
+                        Event.Start (
                               Description    => "static" & Index'img,
                               Wait           => Event_Times (Index));
                      end if;
                      Log_Here (Debug, "index" & Index'img &
                         " state " & Event.State'img &
                         " wait " & Event.Wait'img &
-                        " start " & From_Start (Event.Start_Time, True) &
+                        " start " & From_Start (Event.Start_Time) &
                         Quote (" description", Event.Description));
 
                   end;
@@ -325,7 +325,7 @@ package body Ada_Lib.Timer.Tests is
          Static_Event            : aliased Test_Timer_Type;
 
       begin
-         Static_Event.Initialize (
+         Static_Event.Start (
             Description    => "static",
             Wait           => 0.2);
          Log_Here (Debug, "state " & Static_Event.State'img);
@@ -357,10 +357,10 @@ package body Ada_Lib.Timer.Tests is
    begin
 
       Log_In (Debug);
-      Event_1.Initialize (
+      Event_1.Start (
          Description    => "static 1",
          Wait           => Event_Times (1));
-      Event_3.Initialize (
+      Event_3.Start (
          Description    => "static 3",
          Wait           => Event_Times (3));
       declare
@@ -512,7 +512,7 @@ package body Ada_Lib.Timer.Tests is
    begin
       Log_In (Debug);
       Static_Event.Test_Ada_2022 := @ + 1;
-      Static_Event.Initialize (
+      Static_Event.Start (
          Description    => "static",
          Wait           => Wait_Time);
 
@@ -585,40 +585,42 @@ package body Ada_Lib.Timer.Tests is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Wait_Canceled              : Boolean := False;
-      Wait_Event                 : Test_Timer_Type;
-
-      procedure Timed_Out;
-
-      package Timeout is new Timeout_Package (Timed_Out);
-
-      Timeout_Event              : Timeout.Timeout_Timer_Type;
-
-      ---------------------------------------------------------------
-      procedure Timed_Out is
-      ---------------------------------------------------------------
-
-      begin
-         Log_Here (Debug);
-         Wait_Canceled := True;
-         Assert (Wait_Event.Cancel, "could not cancel wait event");
-      end Timed_Out;
-      ---------------------------------------------------------------
-
    begin
       Log_In (Debug);
-      Timeout_Event.Initialize (
-         Description    => "timeout event",
-         Wait           => 0.5);
-      Wait_Event.Initialize (
-         Description    => "wait event",
-         Wait           => 0.2);
+      declare
+         Wait_Canceled              : Boolean := False;
+         Wait_Event                 : Test_Timer_Type;
 
---    Wait_Event.Wait_For_Event;
-      Log_Here (Debug);
-      Assert (Timeout_Event.Cancel, "could not cancel timeout event");
-      Assert (not Wait_Canceled, "wait event got canceled");
+         procedure Timed_Out;
 
+         package Timeout is new Timeout_Package (Timed_Out);
+
+         Timeout_Event              : Timeout.Timeout_Timer_Type;
+
+         ---------------------------------------------------------------
+         procedure Timed_Out is
+         ---------------------------------------------------------------
+
+         begin
+            Log_Here (Debug);
+            Wait_Canceled := True;
+            Assert (Wait_Event.Cancel, "could not cancel wait event");
+         end Timed_Out;
+         ---------------------------------------------------------------
+
+      begin
+         Timeout_Event.Start (
+            Description    => "timeout event",
+            Wait           => 0.5);
+         Wait_Event.Start (
+            Description    => "wait event",
+            Wait           => 0.2);
+
+   --    Wait_Event.Wait_For_Event;
+         Log_Here (Debug);
+         Assert (Timeout_Event.Cancel, "could not cancel timeout event");
+         Assert (not Wait_Canceled, "wait event got canceled");
+      end;
       Log_Out (Debug);
 
    exception

@@ -27,7 +27,7 @@ Suite_Name                    : constant String := "Trace";
 
    overriding
    procedure Tear_Down (Test : in out Test_Type)
-   with post => Verify_Torn_Down (Test);
+   with post => Verify_Tear_Down (Test);
 
    Debug                         : Boolean := False;
    Debug_Test                    : Boolean := False;

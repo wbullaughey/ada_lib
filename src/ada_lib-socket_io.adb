@@ -260,10 +260,10 @@ package body Ada_Lib.Socket_IO is
    ---------------------------------------------------------------------------
 
    begin
-     Log_Here (Tracing, "open " & Socket.Open'img &
+     return Log_Here (Socket.Open,
+         Tracing or Trace_Pre_Post_Conditions,
+         "open " & Socket.Open'img &
         " address " & Image (Socket'address));
-
-     return Socket.Open;
    end Is_Open;
 
 -- ---------------------------------------------------------------------------

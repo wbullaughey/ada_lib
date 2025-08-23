@@ -1,3 +1,4 @@
+with Ada.Directories;
 with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Text_IO; use Ada.Text_IO;
@@ -206,9 +207,7 @@ package body Ada_Lib.OS.Tests is
          declare
             Lines                      : Natural := 0;
             Parameters                 : constant String := "ls " &
-                                          Ada_Lib.OS.Run.Path.
-                                             Remote_Home_Directory &
-                                          "/Projects/applications/ada_lib/ada_lib_tests/src";
+                                          Ada.Directories.Current_Directory & "/src";
             Remote_Program             : constant String := "/usr/bin/ssh";
             Result                     : Boolean := False;
             Return_Code                : OS_Exit_Code_Type;
@@ -230,7 +229,7 @@ package body Ada_Lib.OS.Tests is
                Parameters  => Parameters,
                Output_File => Ada_Lib.OS.Run.Path.Log_File);
 
-            Log (Trace, Here, Who & " Return_Code" & Return_Code'img);
+            Log (Trace, Here, Who & " Return_Code " & Return_Code'img);
             if Return_Code /= No_Error then
                Assert (False, "Could not run program " & Remote_Program &
                   " on Host '" & Options.Database_Options.Remote_Host.Coerce);

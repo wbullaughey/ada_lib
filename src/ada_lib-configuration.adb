@@ -108,9 +108,9 @@ package body Ada_Lib.Configuration is
    ---------------------------------------------------------------
 
    begin
-      Log_Here (Trace, "opened " & Configuration.Opened'img &
+      return Log_Here (Configuration.Opened, Trace or Trace_Pre_Post_Conditions,
+         "opened " & Configuration.Opened'img &
          " configuration " & Image (Configuration'address));
-      return Configuration.Opened;
    end Is_Open;
 
    ---------------------------------------------------------------

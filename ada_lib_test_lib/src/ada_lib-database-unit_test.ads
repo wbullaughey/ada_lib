@@ -102,7 +102,7 @@ package Ada_Lib.Database.Unit_Test is
    overriding
    procedure Tear_Down (
       Test                       : in out Test_Case_Type)
-   with post => Verify_Torn_Down (Test);
+   with post => Verify_Tear_Down (Test);
 
    overriding
    function Test (

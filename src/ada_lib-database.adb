@@ -785,11 +785,12 @@ package body Ada_Lib.Database is
     ---------------------------------------------------------------------------
 
     begin
-      Log (Trace_All, Here, Who & " " & Image (Database'address) &
+      return Log_Here (Database.Socket_Opened and then Database.Selector_Created,
+         Trace_All or Trace_Pre_Post_Conditions,
+          Image (Database'address) &
          " socket opened " & Database.Socket_Opened'img &
          " selector created " & Database.Selector_Created'img &
          " initialized " & Database.Initialized'img & Log_Label (Database));
-      return Database.Socket_Opened and then Database.Selector_Created;
     end Is_Open;
 
     ---------------------------------------------------------------------------
