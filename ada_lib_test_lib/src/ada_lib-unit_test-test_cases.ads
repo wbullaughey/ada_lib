@@ -4,6 +4,7 @@ with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
+with Gnoga_Ada_Lib;
 
 package Ada_Lib.Unit_Test.Test_Cases is
 
@@ -36,7 +37,8 @@ package Ada_Lib.Unit_Test.Test_Cases is
 
       overriding
       procedure Tear_Down (
-         Test                       : in out Test_Type);
+         Test                       : in out Test_Type)
+      with Post => not Gnoga_Ada_Lib.Has_Connection_Data;
 
       procedure Tear_Down_Failed (
          Test                       : in out Test_Type;

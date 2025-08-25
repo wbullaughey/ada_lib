@@ -580,7 +580,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    begin
       Log (Debug or Trace_Set_Up, Here, Who);
-      GNOGA_Ada_Lib.Clear_Connection_Data;
+--    GNOGA_Ada_Lib.Clear_Connection_Data;
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
    end Tear_Down;
 
