@@ -23,10 +23,10 @@ package Ada_Lib.Lock_Interface is
       From                 : in     String := GNAT.Source_Info.Source_Location
    ) is abstract;
 
-   function Try_Lock (
-      Object               : in out Lock_Interface;
-      From                 : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean is abstract;
+-- function Try_Lock (
+--    Object               : in out Lock_Interface;
+--    From                 : in     String := GNAT.Source_Info.Source_Location
+-- ) return Boolean is abstract;
 
    procedure Unlock (
       Object               : in out Lock_Interface;

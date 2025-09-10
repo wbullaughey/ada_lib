@@ -38,7 +38,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
       overriding
       procedure Tear_Down (
          Test                       : in out Test_Type)
-      with Post => not Gnoga_Ada_Lib.Has_Connection_Data;
+      with Post => Test.Verify_Tear_Down;
 
       procedure Tear_Down_Failed (
          Test                       : in out Test_Type;

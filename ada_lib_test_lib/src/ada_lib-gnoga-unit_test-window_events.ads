@@ -66,7 +66,9 @@ package Ada_Lib.GNOGA.Unit_Test.Window_Events is
    function Suite return Standard.AUnit.Test_Suites.Access_Test_Suite;
 
    overriding
-   procedure Tear_Down (Test : in out Window_Event_Test_Type);
+   procedure Tear_Down (
+      Test : in out Window_Event_Test_Type
+   ) with post => Test.Verify_Tear_Down;
 
    Suite_Name                    : constant String := "GNOGA_Window_Events";
 

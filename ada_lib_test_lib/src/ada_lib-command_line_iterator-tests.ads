@@ -32,7 +32,9 @@ package Ada_Lib.Command_Line_Iterator.Tests is
    function Suite return AUnit.Test_Suites.Access_Test_Suite;
 
    overriding
-   procedure Tear_Down (Test : in out Test_Type);
+   procedure Tear_Down (
+      Test : in out Test_Type
+   ) with post => Test.Verify_Tear_Down;
 
    Debug                         : Boolean := False;
 

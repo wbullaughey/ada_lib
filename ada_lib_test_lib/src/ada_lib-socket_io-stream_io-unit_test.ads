@@ -42,7 +42,9 @@ package Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    function Suite return Standard.AUnit.Test_Suites.Access_Test_Suite;
 
    overriding
-   procedure Tear_Down (Test     : in out Socket_Test_Type);
+   procedure Tear_Down (
+      Test     : in out Socket_Test_Type
+   ) with post => Test.Verify_Tear_Down;
 
    Debug                         : Boolean := False;
    Suite_Name                    : constant String := "Socket_Stream";

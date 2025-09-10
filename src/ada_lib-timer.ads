@@ -64,9 +64,9 @@ package Ada_Lib.Timer is
    procedure Free (
       Event             : in out Event_Type);
 
--- overriding
--- procedure Initialize (
---    Event             : in out Event_Type);
+   overriding
+   procedure Initialize (
+      Event             : in out Event_Type);
 
 -- procedure Initialize (
 --    Event                      : in out Event_Type;
@@ -89,7 +89,7 @@ package Ada_Lib.Timer is
       Event                      : in out Event_Type;
       Wait                       : in     Duration;
       Description                : in     String := "";
-      Dynamic                    : in     Boolean := False;
+      Dynamic                    : in     Boolean;
       Repeating                  : in     Boolean := False
    ) with Pre => Wait > 0.0 and then
                  not Initialized (Event);

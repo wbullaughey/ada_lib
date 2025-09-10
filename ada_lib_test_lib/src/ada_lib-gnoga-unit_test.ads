@@ -16,7 +16,9 @@ package Ada_Lib.GNOGA.Unit_Test is
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;
 
    overriding
-   procedure Tear_Down (Test : in out GNOGA_Tests_Type);
+   procedure Tear_Down (
+      Test : in out GNOGA_Tests_Type
+   ) with post => Test.Verify_Tear_Down;
 
 -- overriding
 -- function Verify_Set_Up (

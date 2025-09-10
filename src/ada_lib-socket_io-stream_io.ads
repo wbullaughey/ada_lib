@@ -294,7 +294,7 @@ private
    procedure Read (
       Stream                     : in out Stream_Type;
       Item                       :    out Buffer_Type;
-      Last                       : out Index_Type        -- index in Item
+      Last                       :    out Index_Type        -- index in Item
    ) with pre => Stream.Was_Created and then
                  Item'length > 0;
 

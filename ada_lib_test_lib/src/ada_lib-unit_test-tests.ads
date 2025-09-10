@@ -16,7 +16,8 @@ package Ada_Lib.Unit_Test.Tests is
 
    overriding
    procedure Tear_Down (
-      Test                       : in out Test_Case_Type);
+      Test                       : in out Test_Case_Type
+   ) with post => Test.Verify_Tear_Down;
 
    function Verify_Presetup (
       Test                       : in     Test_Case_Type

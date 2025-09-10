@@ -1,4 +1,5 @@
 with Ada.Exceptions;
+with Ada_Lib.Strings.Unlimited;
 --with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 with Ada_Lib.Time;
@@ -119,9 +120,13 @@ package body Ada_Lib.Timer is
       Event             : in out Event_Type) is
    ---------------------------------------------------------------------------
 
+      Save_Description  : Ada_Lib.Strings.Unlimited.String_Type :=
+                           Ada_Lib.Strings.Unlimited.Coerce ("no description");
+
    begin
       Log_In (Trace, Quote ("description", Event.Description) &
          " state " & Event.State'img &
+         " dynamic " & Event.Dynamic'img &
          " address " & Image (Event'address));
 
       case Event.State is
@@ -136,15 +141,31 @@ package body Ada_Lib.Timer is
       if Event.Description /=
             Uninitialized_Event_Description'unchecked_access then
          Log_Here (Trace);
-         Free (Event.Description);
+         begin
+            Save_Description.Construct (Event.Description.all);
+            Free (Event.Description);
+            Log_Here (Trace);
+         exception
+            when Fault: others =>
+               Trace_Message_Exception (Fault, "bad description");
+               Save_Description.Construct ("bad description address");
+         end;
+
       end if;
-      Log_Out (Trace);
+      Log_Out (Trace, Quote ("description", Save_Description));
 
 exception
    when FAult: others =>
-      Trace_Exception (Fault, Here);
-      Log_Exception (Trace, Fault);
-      raise;
+      declare
+         Message  : constant String := "address " & Image (Event'address) &
+            Quote (" description", Save_Description) &
+            " dynamic " & Event.Dynamic'img;
+
+      begin
+         Trace_Message_Exception (Trace, Fault, Message);
+         Log_Exception (Trace, Fault, Message);
+         raise;
+      end;
 
    end Finalize;
 
@@ -178,15 +199,16 @@ exception
                " message " & Event.Exception_Message.all));
    end Get_Exception;
 
--- ---------------------------------------------------------------------------
--- overriding
--- procedure Initialize (
---    Event             : in out Event_Type) is
--- ---------------------------------------------------------------------------
---
--- begin
---    Log_Here (Trace, "state " & Event.State'img);
--- end Initialize;
+   ---------------------------------------------------------------------------
+   overriding
+   procedure Initialize (
+      Event             : in out Event_Type) is
+   ---------------------------------------------------------------------------
+
+   begin
+      Log_Here (Trace, "address " & Image (Event'address) &
+         " dynamic " & Event.Dynamic'img);
+   end Initialize;
 
 --   ---------------------------------------------------------------------------
 --   procedure Initialize (
@@ -232,12 +254,17 @@ exception
    ---------------------------------------------------------------------------
 
    begin
+      Log_In (Trace, "address " & Image (Event'address) &
+         Quote (" description", Description) &
+         " dynamic " & Event.Dynamic'img);
       if    Event.Description /= Null and then
             Event.Description /= Uninitialized_Event_Description'
                unchecked_access then
+         Log_Here (Trace, Quote ("replace description", Event.Description));
          Free (Event.Description);
       end if;
       Event.Description := new String'(Description);
+      Log_Out (Trace);
    end Set_Description;
 
    ---------------------------------------------------------------------------
@@ -254,7 +281,7 @@ exception
       Event                      : in out Event_Type;
       Wait                       : in     Duration;
       Description                : in     String := "";
-      Dynamic                    : in     Boolean := False;
+      Dynamic                    : in     Boolean;
       Repeating                  : in     Boolean := False) is
    ---------------------------------------------------------------------------
 
@@ -316,6 +343,7 @@ exception
 
       Log_Here (Trace, "wait " & Event.Wait'img &
          Quote ( " description", Event.Description) &
+         " dynamic " & Event.Dynamic'img &
          " repeating " & Event.Repeating'img &
          " state " & Event.State'img);
 
@@ -332,6 +360,7 @@ exception
             Event.Start_Time := Ada_Lib.Time.Now;
             while Event.State = Waiting loop -- if null then canceled before set
                Log_Here (Trace, Quote ("description", Event.Description) &
+                  " dynamic " & Event.Dynamic'img &
                   " start time " & From_Start (True) &
                   " start loop delay time " & Event.Wait'img &
                   " address " & Image (Event.all'address));
@@ -362,11 +391,7 @@ exception
          & Quote (" description", Event.Description) & " completed");
 
       Ada_Lib.Trace_Tasks.Stop;
---    may cause memory exception
---    Log_Out (Trace, Quote (if Event = Null then
---             "uninitialized"
---          else
---             Quote ("description", Event.Description)));
+      Log_Out (Trace);
 
    exception
       when Fault: others =>

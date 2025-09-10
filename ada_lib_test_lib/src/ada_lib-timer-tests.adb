@@ -151,6 +151,7 @@ package body Ada_Lib.Timer.Tests is
                      else
                         Event.Start (
                               Description    => "static" & Index'img,
+                              Dynamic        => False,
                               Wait           => Event_Times (Index));
                      end if;
                      Log_Here (Debug, "index" & Index'img &
@@ -327,6 +328,7 @@ package body Ada_Lib.Timer.Tests is
       begin
          Static_Event.Start (
             Description    => "static",
+            Dynamic        => False,
             Wait           => 0.2);
          Log_Here (Debug, "state " & Static_Event.State'img);
       end;
@@ -359,9 +361,11 @@ package body Ada_Lib.Timer.Tests is
       Log_In (Debug);
       Event_1.Start (
          Description    => "static 1",
+         Dynamic        => False,
          Wait           => Event_Times (1));
       Event_3.Start (
          Description    => "static 3",
+         Dynamic        => False,
          Wait           => Event_Times (3));
       declare
          Events                  : Event_Pointers_Type (1 .. Number_Events);
@@ -514,6 +518,7 @@ package body Ada_Lib.Timer.Tests is
       Static_Event.Test_Ada_2022 := @ + 1;
       Static_Event.Start (
          Description    => "static",
+         Dynamic        => False,
          Wait           => Wait_Time);
 
       for Dynamic in Boolean'range loop
@@ -611,9 +616,11 @@ package body Ada_Lib.Timer.Tests is
       begin
          Timeout_Event.Start (
             Description    => "timeout event",
+            Dynamic        => False,
             Wait           => 0.5);
          Wait_Event.Start (
             Description    => "wait event",
+            Dynamic        => False,
             Wait           => 0.2);
 
    --    Wait_Event.Wait_For_Event;

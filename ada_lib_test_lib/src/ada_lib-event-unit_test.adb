@@ -113,9 +113,11 @@ package body Ada_Lib.Event.Unit_Test is
          Log_Here (Debug);
          Check_Timer.Start (
             Description    => "check",
+            Dynamic        => False,
             Wait           => Check_Time);
          Delay_Timer.Start (
             Description    => "Delay",
+            Dynamic        => False,
             Wait           => Delay_Time);
          Test_Event.Wait_For_Event;
          Log_Here (Debug);

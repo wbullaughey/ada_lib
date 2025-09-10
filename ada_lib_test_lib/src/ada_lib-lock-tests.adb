@@ -186,7 +186,7 @@ package body Ada_Lib.Lock.Tests is
          Assert (Got_Lock, "did not get lock");
       end;
       -- try locking again whould fail
-      Assert (not Lock.Try_Lock, "got second lock");
+      Assert (not Lock.Lock, "got second lock");
       -- try timeout
       Assert (not Lock.Lock (0.2), "got second lock");
       -- try unconditional lock, should cause exception

@@ -1,3 +1,4 @@
+with Ada.Real_Time;
 with Ada_Lib.Lock_Interface;
 --with Ada_Lib.Trace;
 --with Ada.Task_Identification;
@@ -7,8 +8,12 @@ with GNAT.Source_Info;
 package Ada_Lib.Lock is
 Pragma Elaborate_Body;
 
+   use type Ada.Real_Time.Time;
+
    Already_Locked          : exception;
    Not_Locked              : exception;
+
+   Min_Lock_Time           : constant Duration := 0.0;
 
    type Lock_Type (
       Description          : Ada_Lib.Strings.String_Constant_Access
@@ -26,7 +31,7 @@ Pragma Elaborate_Body;
    overriding
    function Lock (
       Lock                 : in out Lock_Type;
-      Timeout              : in     Duration := 0.0;
+      Timeout              : in     Duration := Min_Lock_Time;
       From                 : in     String := GNAT.Source_Info.Source_Location
    ) return Boolean;
 
@@ -36,11 +41,11 @@ Pragma Elaborate_Body;
       Lock                 : in out Lock_Type;
       From                 : in     String := GNAT.Source_Info.Source_Location);
 
-   overriding
-   function Try_Lock (              -- returns true if wasn't locked
-      Lock                 : in out Lock_Type;
-      From                 : in     String := GNAT.Source_Info.Source_Location
-   ) return Boolean;
+-- overriding
+-- function Try_Lock (              -- returns true if wasn't locked
+--    Lock                 : in out Lock_Type;
+--    From                 : in     String := GNAT.Source_Info.Source_Location
+-- ) return Boolean;
 
    overriding
    procedure Unlock (
@@ -70,20 +75,10 @@ private
 
    type Protected_Lock_Access is access all Protected_Lock_Type;
 
-   -- Task to enforce timeout on the lock
-   task type Timeout_Task_Type is
-
-      entry Start_Timeout (
-         Protected_Lock : in out Protected_Lock_Type;
-         Timeout        : in     Duration);
-
-   end Timeout_Task_Type;
-
    type Lock_Type (
       Description       : Ada_Lib.Strings.String_Constant_Access
    ) is limited new Ada_Lib.Lock_Interface.Lock_Interface with record
       Protected_Lock    : Protected_Lock_Type;
-      Timer             : Timeout_Task_Type;
    end record;
 
 end Ada_Lib.Lock;
