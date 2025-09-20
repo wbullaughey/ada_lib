@@ -288,7 +288,7 @@ begin
    if Trace_Tests then
       Debug := True;
    end if;
-Debug := True;
+--Debug := True;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.GNOGA.Unit_Test.Base;
 

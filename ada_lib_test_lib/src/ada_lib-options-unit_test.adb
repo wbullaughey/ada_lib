@@ -463,7 +463,6 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      E               Ada_Lib.Evemt.Unit_Test.Debug");
          Put_Line ("      g               Ada_Lib.GNOGA.Unit_Test.Debug");
          Put_Line ("      p               test programs");
-         Put_Line ("      P               Trace Pre and Post Condtion functions");
          Put_Line ("      r               Runtime_Options");
          Put_Line ("      s               Trace Set_Up Tear_Down");
          Put_Line ("      t               Ada_Lib.Test.Debug");
@@ -595,9 +594,6 @@ package body Ada_Lib.Options.Unit_Test is
 
             when 'p' =>
                Options.Debug := True;
-
-            when 'P' =>
-               Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
 
             when 's' =>
                Ada_Lib.Trace.Trace_Set_Up := True;

@@ -645,6 +645,8 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "o              Trace_Options");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "p              Trace Pre and Post Condtion functions");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "s              Strings");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "S              Socket_IO IO");
@@ -728,6 +730,7 @@ package body Ada_Lib.Options.Actual is
       Ada_Lib.Strings.Debug := True;
       Ada_Lib.Timer.Set_Trace (True);
       Ada_Lib.Trace_Tasks.Debug := True;
+      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
       Debug := True;
 
    end Set_All;
@@ -858,6 +861,9 @@ package body Ada_Lib.Options.Actual is
 
                   when 'o' =>
                      Trace_Options := True;
+
+                  when 'p' =>
+                     Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
 
                   when 's' =>
                      Ada_Lib.Strings.Debug := True;
