@@ -75,7 +75,7 @@ package body Ada_Lib.Directory is
       Result                     : constant Boolean := Ada.Directories.Exists (Name);
 
    begin
-      Log_In (Debug, Quote ("Name", Name) & " result " & Result'img);
+      Log_Here (Debug, Quote ("Name", Name) & " result " & Result'img);
       return Result;
    end Exists;
 

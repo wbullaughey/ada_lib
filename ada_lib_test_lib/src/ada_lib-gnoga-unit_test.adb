@@ -59,17 +59,12 @@ package body Ada_Lib.GNOGA.Unit_Test is
    begin
       Log_In (Debug or Trace_Set_Up, "Initialize_GNOGA " & Test.Initialize_GNOGA'img);
       if Test.Initialize_GNOGA then
-log_here;
          Standard.Gnoga.Application.Multi_Connect.End_Application;
          delay 0.2;  -- let server stop
-log_here;
       end if;
-log_here;
 
       GNOGA_Ada_Lib.Base.Set_Main_Created (False);
-log_here;
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
-log_here;
       Log_Out (Debug or Trace_Set_Up);
 
    exception
