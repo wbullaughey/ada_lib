@@ -4,7 +4,7 @@ with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
-with Gnoga_Ada_Lib;
+--with Gnoga_Ada_Lib;
 
 package Ada_Lib.Unit_Test.Test_Cases is
 

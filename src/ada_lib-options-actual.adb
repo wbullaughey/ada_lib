@@ -1070,7 +1070,8 @@ package body Ada_Lib.Options.Actual is
          ---------------------------------------------------------------
 
       begin
-         Log_In (Debug or Trace_Options, "options tag " &
+         Log_In (Debug or Trace_Options or Trace_Pre_Post_Conditions,
+            "options tag " &
             Tag_Name (Verification_Options_Type'class (Options)'tag));
 
          if Modifiable_Program_Options = Null then

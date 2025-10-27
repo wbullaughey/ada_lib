@@ -1,4 +1,4 @@
-with Ada.Calendar.Formatting;
+--with Ada.Calendar.Formatting;
 with Ada.Characters.Latin_1;
 with Ada.Command_Line;
 with Ada.Task_Identification;
@@ -381,6 +381,7 @@ package body Ada_Lib.Trace is
       Show_Days            : in   Boolean := False;
       From                 : in     String := GNAT.Source_Info.Source_Location
    ) return String is
+   pragma Unreferenced (From);
    --------------------------------------------------------------------
 
 --offset : constant duration := Time - Start_Time;
@@ -762,6 +763,7 @@ package body Ada_Lib.Trace is
          Text        => Why & " not implemented" & LF,
          Where       => Here,
          Who         => Who);
+      Pause_On_Flag ("not implemented called from " & Here);
       Ada_Lib.OS.Immediate_Halt(Ada_Lib.OS.Not_Implemented_Exit);
    end Not_Implemented;
 
@@ -1357,8 +1359,8 @@ package body Ada_Lib.Trace is
                Task_Entry           : Task_Type renames
                                        Tasks (Task_Index);
             begin
-               Format_Output (Output_File, "pause called from ", From, "",
-                  Task_Entry, False);
+               Format_Output (Output_File, Prompt & " pause called from " &
+                  From, Here, Who, Task_Entry, False);
 
                declare
                   Answer               : constant Character :=

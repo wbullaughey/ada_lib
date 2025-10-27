@@ -275,6 +275,16 @@ package Ada_Lib.Trace is
       From                       : in     String := GNAT.Source_Info.
                                              Source_Location);
 
+   generic
+
+      type Object_Class_Access is
+
+      procedure Tag_History (
+         Enable                     : in     Boolean;
+         Object                     : in     Object_Class_Access;
+         From                       : in     String := GNAT.Source_Info.
+                                             Source_Location);
+
    procedure Tag_History (
       Enable                     : in     Boolean;
       Tag_Value                  : in     Ada.Tags.Tag;
