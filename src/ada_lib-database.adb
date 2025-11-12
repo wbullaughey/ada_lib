@@ -919,7 +919,7 @@ package body Ada_Lib.Database is
             Log_Here (Trace_All, "Status" & Status'img & " timeout " &
                Connection_Timeout'img);
 
-            case (Status) is
+            case Status is
 
                 when GNAT.Sockets.Completed =>
                     Database.Stream := GNAT.Sockets.Stream (Database.Socket);

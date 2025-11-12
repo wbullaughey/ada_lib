@@ -24,7 +24,7 @@ with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Trace_Tasks;
-with Debug_Options;
+--with Debug_Options;
 
 --pragma Elaborate_All (Ada_Lib.Lock);
 --pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);

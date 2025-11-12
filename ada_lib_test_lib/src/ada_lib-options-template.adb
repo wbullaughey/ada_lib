@@ -3,7 +3,7 @@ with Ada_Lib.Help;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Template;
-with Ada_Lib.Test;
+--with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test; --.GNOGA;
 --with Debug_Options;

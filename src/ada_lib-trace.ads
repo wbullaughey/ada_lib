@@ -277,13 +277,18 @@ package Ada_Lib.Trace is
 
    generic
 
-      type Object_Class_Access is
+      type Object_Type is tagged private;
 
-      procedure Tag_History (
+   package Tag_Package is
+
+      type Object_Class_Access   is access constant Object_Type'class;
+
+      procedure Generic_Tag_History (
          Enable                     : in     Boolean;
          Object                     : in     Object_Class_Access;
          From                       : in     String := GNAT.Source_Info.
-                                             Source_Location);
+                                                Source_Location);
+   end Tag_Package;
 
    procedure Tag_History (
       Enable                     : in     Boolean;

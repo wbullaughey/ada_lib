@@ -1448,6 +1448,23 @@ package body Ada_Lib.Trace is
       end Protected_Type;
 
    end Locked_Package;
+
+   ---------------------------------------------------------------
+   package body Tag_Package is
+
+      ---------------------------------------------------------------
+      procedure Generic_Tag_History (
+         Enable                     : in     Boolean;
+         Object                     : in     Object_Class_Access;
+         From                       : in     String := GNAT.Source_Info.
+                                                Source_Location) is
+      ---------------------------------------------------------------
+
+      begin
+         Tag_History (Enable, Object.all'tag, From);
+      end Generic_Tag_History;
+
+   end Tag_Package;
    ---------------------------------------------------------------
 
    begin

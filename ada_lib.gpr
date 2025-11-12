@@ -4,12 +4,15 @@ with "default_config.gpr";
 
 project Ada_Lib is
 
+   type Build_Mode_Type is ("aunit", "execute", "help_test");
+   Build_Mode : Build_Mode_Type := external ("BUILD_MODE", "execute");
+
    for Library_Name use "Ada_Lib";
    for Library_Version use Project'Library_Name & ".so." & Ada_Lib_Config.Crate_Version;
    Ada_OS_Include:= external ("ADA_OS_INCLUDE");
 
    for Source_Dirs use ("src/", "src/" & Ada_OS_Include);
-   for Object_Dir use "obj/" & Ada_Lib_Config.Build_Profile;
+   for Object_Dir use "obj/" & Build_Mode;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib/" & Ada_Lib_Config.Build_Profile;
 

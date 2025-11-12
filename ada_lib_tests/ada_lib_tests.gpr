@@ -37,7 +37,7 @@ project Ada_Lib_Tests is
    package Builder is
       case ALR_Environment.Build_Mode is
 
-         when "execute" =>
+         when "aunit" | "execute" =>
             for Executable ("test_ada_lib.adb") use "test_ada_lib";
 
          when "help_test" =>

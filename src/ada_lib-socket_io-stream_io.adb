@@ -9,7 +9,6 @@ with Interfaces;
 
 package body Ada_Lib.Socket_IO.Stream_IO is
 
--- use type Ada_Lib.Strings.String_Access_All;
    use type Ada_Lib.Strings.String_Constant_Access;
 -- use type Data_Type;
    use type Index_Type;
