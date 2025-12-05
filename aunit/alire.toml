@@ -7,6 +7,9 @@ maintainers = ["Your Name <example@example.com>"]
 maintainers-logins = ["github-username"]
 licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
+
+project-files = "ada_lib_aunit.gpr"
+
 tags = []
 
 [[depends-on]]
@@ -23,5 +26,14 @@ ada_lib = { path='..' }
 
 [[pins]]
 alr_environment = { path='../..' }
+
+#[[depends-on]]
+#gnoga_options = "*"
+#
+#[[pins]]
+#gnoga_options = { path='../../gnoga_lib/gnoga_options' }
+
+[[depends-on]]
+gnatcoll = "*"
 
 

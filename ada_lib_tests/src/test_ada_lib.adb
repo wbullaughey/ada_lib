@@ -10,7 +10,7 @@ with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
 --with Ada_Lib.Timer;
-with Ada_lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
 with Gnoga.Application.Multi_Connect;
 

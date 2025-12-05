@@ -9,6 +9,8 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
+project-files = "ada_lib_test_lib.gpr"
+
 [[depends-on]]
 ada_lib = "*"
 

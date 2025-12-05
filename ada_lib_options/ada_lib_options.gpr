@@ -1,17 +1,9 @@
-with "ada_lib.gpr";
-with "ada_lib_aunit.gpr";
 with "alr_environment.gpr";
-with "aunit.gpr";
---with "config/ada_lib_test_lib_config.gpr";
-with "gnatcoll.gpr";
-with "gnoga.gpr";
-with "gnoga_ada_lib.gpr";
-with "gnoga_options.gpr";
---with "xmlada";
+project Ada_Lib_Options is
 
-project Ada_Lib_Test_Lib is
-   for Library_Name use "Ada_Lib_Test_Lib";
-   for Library_Version use Project'Library_Name & ".so." & ALR_Environment.Crate_Version;
+   for Library_Name use "Ada_Lib_Options";
+   for Library_Version use Project'Library_Name & ".so." &
+       Alr_Environment.Crate_Version;
 
    for Source_Dirs use ("src/", "config/");
    for Object_Dir use "obj/" & Alr_Environment.Build_Profile;
@@ -20,12 +12,11 @@ project Ada_Lib_Test_Lib is
 
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=
-     external ("TEST_LIB_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+     external ("ADA_LIB_OPTIONS_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("Ada") use
-         Alr_Environment.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Alr_Environment.Ada_Compiler_Switches;
    end Compiler;
 
    package Binder is
@@ -36,4 +27,4 @@ project Ada_Lib_Test_Lib is
       for Artifacts (".") use ("share");
    end Install;
 
- end Ada_Lib_Test_Lib;
+end Ada_Lib_Options;

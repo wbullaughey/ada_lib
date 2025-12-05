@@ -1,20 +1,20 @@
-with "config/ada_lib_config.gpr";
-with "default_config.gpr";
---with "gnatcoll.gpr";
+with "ada_lib_options";
+with "alr_environment.gpr";
+with "aunit.gpr";
+--with "gnoga_options";
+with "gnatcoll";
 
 project Ada_Lib is
 
-   type Build_Mode_Type is ("aunit", "execute", "help_test");
-   Build_Mode : Build_Mode_Type := external ("BUILD_MODE", "execute");
-
    for Library_Name use "Ada_Lib";
-   for Library_Version use Project'Library_Name & ".so." & Ada_Lib_Config.Crate_Version;
+   for Library_Version use Project'Library_Name & ".so." &
+       Alr_Environment.Crate_Version;
    Ada_OS_Include:= external ("ADA_OS_INCLUDE");
 
-   for Source_Dirs use ("src/", "src/" & Ada_OS_Include);
-   for Object_Dir use "obj/" & Build_Mode;
+   for Source_Dirs use ("src/", "src/" & Ada_OS_Include, "../src", "src/unit_test");
+   for Object_Dir use "obj/" & Alr_Environment.Build_Profile;
    for Create_Missing_Dirs use "True";
-   for Library_Dir use "lib/" & Ada_Lib_Config.Build_Profile;
+   for Library_Dir use "lib/" & ALR_Environment.Build_Mode;
 
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=
@@ -22,7 +22,8 @@ project Ada_Lib is
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("Ada") use Default_Config.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use
+         Alr_Environment.Ada_Compiler_Switches;
    end Compiler;
 
    package Binder is

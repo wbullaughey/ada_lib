@@ -179,7 +179,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
       Log_Here (Debug or Trace_Options,
-         "modifiable options tag " & Tag_Name (Modifiable_Nested_Options.all'tag) &
+         "modifiable options " & Tag_Name (Modifiable_Nested_Options.all'tag) &
          " from " & From);
 
       if Debug then
@@ -300,7 +300,8 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
 
    begin
-      return Modifiable_Nested_Options /= Null;
+      return Log_Here (Modifiable_Nested_Options /= Null,
+         Debug or Trace_Pre_Post_Conditions, "Modifiable_Nested_Options not set");
    end Have_Ada_Lib_Nested_Options;
 
    ----------------------------------------------------------------------------
@@ -310,7 +311,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
       return Log_Here (Modifiable_Program_Options /= Null,
-         Debug or Trace_Pre_Post_Conditions);
+         Debug or Trace_Pre_Post_Conditions, "Ada options not set");
    end Have_Ada_Lib_Program_Options;
 
    ----------------------------------------------------------------------------
@@ -356,6 +357,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
       Log_Here (Debug or Trace_Options, "options post processing completed");
+      Set_Options_Completed;
    end Post_Process;
 
    ----------------------------------------------------------------------------
@@ -647,6 +649,8 @@ package body Ada_Lib.Options.Actual is
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "p              Trace Pre and Post Condtion functions");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
+                           "P              Trace Pre and Post Condtion false");
+         Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "s              Strings");
          Put_Line ("      " & Ada_Lib.Help.Modifier &
                            "S              Socket_IO IO");
@@ -680,9 +684,7 @@ package body Ada_Lib.Options.Actual is
 
    begin
       Log_In (Debug or Trace_Options, Tag_Name (Options.all'tag));
-      if Debug or Trace_Options then
-         Tag_History (Options.all'tag);
-      end if;
+      Tag_History (Debug or Trace_Options, Options.all'tag);
       Modifiable_Nested_Options := Options;
       Log_Out (Debug or Trace_Options); --, Modifiable_Options_Address);
 
@@ -865,6 +867,9 @@ package body Ada_Lib.Options.Actual is
                   when 'p' =>
                      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
 
+                  when 'P' =>
+                     Ada_Lib.Trace.Trace_Pre_Post_False := True;
+
                   when 's' =>
                      Ada_Lib.Strings.Debug := True;
 
@@ -916,7 +921,8 @@ package body Ada_Lib.Options.Actual is
             end if;
          end if;
 
-         return Log_Out (False, Debug or Trace_Pre_Post_Conditions);
+         return Log_Out (False, Debug or Trace_Pre_Post_Conditions,
+            "options not verified");
       end Verify_Initialized;
 
    ---------------------------------------------------------------
@@ -1007,6 +1013,18 @@ package body Ada_Lib.Options.Actual is
       Not_Implemented;
    end Update_Filter;
 
+   ----------------------------------------------------------------------------
+   function Was_Initialized (
+      Options                 : in     Verification_Options_Type
+   ) return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      Tag_History (Debug or Trace_Options,
+         Verification_Options_Type'class (Options)'tag);
+      return Log_Here (Options.Initialized,
+         Debug or Trace_Options or Trace_Pre_Post_Conditions);
+   end Was_Initialized;
    ----------------------------------------------------------------
 
 -- package body Verification_Package is
@@ -1079,7 +1097,7 @@ package body Ada_Lib.Options.Actual is
          else
             if Options.Initialized then
                return Log_Out (True, Debug or Trace_Options or
-                  Trace_Pre_Post_Conditions);
+                  Trace_Pre_Post_Conditions, "Ada options not initialized");
             else
                Failed ("Options.Initialized not initialized at " & Here);
             end if;
@@ -1089,7 +1107,7 @@ package body Ada_Lib.Options.Actual is
             Tag_History (Verification_Options_Type'class (Options)'tag);
          end if;
          return Log_Out (False, Debug or Trace_Options or
-            Trace_Pre_Post_Conditions);
+            Trace_Pre_Post_Conditions, "Verify_Initialized failed");
       end Verify_Initialized;
 
       ---------------------------------------------------------------

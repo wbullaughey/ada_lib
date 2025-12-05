@@ -16,6 +16,8 @@ package Ada_Lib.Options is
                                        Run_Tests);
 
    type Option_Kind_Type         is (Nil_Option, Plain, Modified);
+   type Suboption_Type           is (Plain, Modified);
+
 
    No_Option                     : constant Character :=
                                     Ada.Characters.Latin_1.NUL;

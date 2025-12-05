@@ -106,6 +106,11 @@ package Ada_Lib.Options.Actual is
       From                    : in     String := GNAT.Source_Info.Source_Location
    ) return Boolean;
 
+   function Was_Initialized (
+      Options                 : in     Verification_Options_Type
+   ) return Boolean;
+
+
 -- end Verification_Package;
 
    -- type to application options

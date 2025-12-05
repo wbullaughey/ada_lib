@@ -44,11 +44,6 @@ gnoga_ada_lib = { path='../../gnoga_lib/gnoga_ada_lib' }
 [[pins]]
 gnoga_options = { path='../../gnoga_lib/gnoga_options' }
 
-[[depends-on]]
-ada_lib_test_lib = "~0.1.0-dev"
-
-[[pins]]
-ada_lib_test_lib = { path='../ada_lib_test_lib' }
 
 
 
