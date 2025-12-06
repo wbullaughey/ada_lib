@@ -1,3 +1,4 @@
+# windows build
 set LIB=static
 set ARCHITECTURE=windows
 set GCC_ARCHITECTURE=windows
