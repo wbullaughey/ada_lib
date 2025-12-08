@@ -131,7 +131,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    function Process_Option (
       Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -414,7 +414,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 begin
 -- AUnit_Lib_Options := Protected_Options'access;
 -- Elaborate := True;
-   Debug := Debug or Debug_Options.Debug_All;
+   Debug := Debug or Ada_Lib.Options.Debug_All;
 --Trace_Options := True;
 --debug := True;
 --Protected_Options.Tester_Debug := True;

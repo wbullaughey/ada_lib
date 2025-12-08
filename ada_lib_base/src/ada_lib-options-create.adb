@@ -1,76 +1,78 @@
+--with Ada.Assertions;
 with Ada.Characters.Handling;
 --with Ada.Exceptions;
 --with Ada.Strings.Maps;
 --with Ada.Tags;
 --with Ada.Text_IO;use Ada.Text_IO;
-----with Ada_Lib.Configuration;
+--with Ada_Lib.Command_Line_Iterator;
+--with Ada_Lib.Configuration;
 --with Ada_Lib.Database.Connection;
 --with Ada_Lib.Directory;
 --with Ada_Lib.EMail;
 --with Ada_Lib.Event;
---with Ada_Lib.GNOGA;
 --with Ada_Lib.Help;
 --with Ada_Lib.Interrupt;
 --with Ada_Lib.Lock;
 --with Ada_Lib.Mail;
+with Ada_Lib.Options.Actual;
 --with Ada_Lib.Options.Runstring;
 --with Ada_Lib.OS;
 --with Ada_Lib.Parser;
 --with Ada_Lib.OS.Run;
---with Ada_Lib.Socket_IO.Stream_IO;
+--with Ada_Lib.Socket_IO;
 with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Template;
 --with Ada_Lib.Text;
 --with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Trace_Tasks;
---with Debug_Options;
 
 --pragma Elaborate_All (Ada_Lib.Lock);
---pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
-package body Ada_Lib.Options is
+package body Ada_Lib.Options.Create is
 
    use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Root_Option_Type;
 
    Parameter_Parsing_Failed      : Boolean := False;
 
-   ----------------------------------------------------------------------------
-   function Create_Option (
-      Option                     : in     Character;
-      Modifier                   : in     Character;
-      From                       : in     String := Ada_Lib.Trace.Here
-   ) return Option_Type is
-   ----------------------------------------------------------------------------
-
-      Result                     : constant Option_Type := Option_Type'(
-                                    Kind     => (if Modifier = Unmodified then
-                                                   Plain
-                                                else
-                                                   Modified),
-                                    Modifier => Modifier,
-                                    Option   => Option);
-   begin
-      Log_Here (Debug or Trace_Options, Quote ("option", Option) &
-         (if Modifier = Unmodified then
-            " no modifier"
-         else
-            Quote (" modifier", Modifier)) & " " &
-         Result.Image & " from " & From);
-
-      return Result;
-   end Create_Option;
+--   ----------------------------------------------------------------------------
+---- overriding
+--   function Create_Option (
+--      Option                     : in     Character;
+--      Modifier                   : in     Character;
+--      From                       : in     String := Ada_Lib.Trace.Here
+--   ) return Root_Option_Type is
+--   ----------------------------------------------------------------------------
+--
+--      Result                     : constant Root_Option_Type := Root_Option_Type'(
+--                                    Kind     => (if Modifier = Unmodified then
+--                                                   Plain
+--                                                else
+--                                                   Modified),
+--                                    Modifier => Modifier,
+--                                    Option   => Option);
+--   begin
+--      Log_Here (Debug or Trace_Options, Quote ("option", Option) &
+--         (if Modifier = Unmodified then
+--            " no modifier"
+--         else
+--            Quote (" modifier", Modifier)) & " " &
+--         Result.Image & " from " & From);
+--
+--      return Result;
+--   end Create_Option;
 
    ----------------------------------------------------------------------------
    function Create_Options (
       Option                     : in     Character;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
-   ) return Options_Access is
+   ) return Root_Options_Access is
    ----------------------------------------------------------------------------
 
-      Result                     : constant Options_Access :=
-                                    New Options_Type (1 .. 1);
+      Result                     : constant Root_Option_Class_Access :=
+                                    New Root_Options_Type (1 .. 1);
 
    begin
       Result.all := Create_Options (Option, Modifier, From);
@@ -82,7 +84,7 @@ package body Ada_Lib.Options is
       Option                     : in     Character;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
-   ) return Options_Type is
+   ) return Root_Options_Access is
    ----------------------------------------------------------------------------
 
    begin
@@ -93,11 +95,7 @@ package body Ada_Lib.Options is
          " from " & From));
 
       return Options_Type'(
-         1 => Option_Type' (
-            Kind     => (if Modifier = Unmodified then
-                           Plain
-                        else
-                           Modified),
+         1 =>  Ada_Lib.Options.Actual.Create_Option (
             Modifier => Modifier,
             Option   => Option));
    end Create_Options;
@@ -107,21 +105,23 @@ package body Ada_Lib.Options is
       Source                     : in     String;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
-   ) return Ada_Lib.Options.Options_Type is
+   ) return Root_Options_Access is
    ----------------------------------------------------------------------------
 
       Count                      : Natural := 0;
       Options                    : Options_Type (1 .. 100);
 
    begin
-      Log_In (Debug or Trace_Options, Quote ("source", Source) & (if Modifier = Unmodified then
+      Log_In (Debug or Trace_Options, Quote ("source", Source) & (
+         if Modifier = Unmodified then
             " no modifier"
          else
             Quote (" modifier", Modifier)) &
          " from " & From);
       for Option of Source loop
          Count := Count + 1;
-            Options (Count) := Create_Option (Option, Modifier, From);
+            Options (Count) := Ada_Lib.Options.Actual.Create_Option (
+               Option, Modifier, From);
       end loop;
 
       Log_Out (Debug or Trace_Options, "count" & Count'img);
@@ -133,12 +133,12 @@ package body Ada_Lib.Options is
       Source                     : in     String;
       Modifier                   : in     Character;
       From                       : in     String := Ada_Lib.Trace.Here
-   ) return Ada_Lib.Options.Options_Access is
+   ) return Root_Options_Access is
    ----------------------------------------------------------------------------
 
-      Options                    : constant Ada_Lib.Options.Options_Type :=
+      Options                    : constant Options_Type :=
                                     Create_Options (Source, Modifier, From);
-      Result                     : constant Ada_Lib.Options.Options_Access :=
+      Result                     : constant Root_Option_Class_Access :=
                                     new Options_Type (1 .. Options'last);
    begin
       Result.all := Options;
@@ -147,7 +147,7 @@ package body Ada_Lib.Options is
 
    ----------------------------------------------------------------------------
    function Has_Option (
-      Option                     : in     Option_Type;
+      Option                     : in     Root_Option_Type'class;
       Options_With_Parameters    : in     Options_Type;
       Options_Without_Parameters : in     Options_Type
    ) return Boolean is
@@ -161,14 +161,14 @@ package body Ada_Lib.Options is
             Options_Without_Parameters'length'img);
 
       for Element of Options_With_Parameters loop
-         if Element = Option then
+         if Element.all = Option then
             return Log_Out (True, Debug or Trace_Options,
                "options address " & Image (Option'address));
          end if;
       end loop;
 
       for Element of Options_Without_Parameters loop
-         if Element = Option then
+         if Element.all = Option then
             return Log_Out (True, Debug or Trace_Options);
          end if;
       end loop;
@@ -185,7 +185,7 @@ package body Ada_Lib.Options is
 
    ----------------------------------------------------------------------------
    function Image (
-      Option                     : in     Option_Type;
+      Option                     : in     Root_Option_Type;
       Quote                      : in     Boolean := True
    ) return String is
    ----------------------------------------------------------------------------
@@ -225,7 +225,7 @@ package body Ada_Lib.Options is
 
    ----------------------------------------------------------------------------
    function Less (
-      Left, Right                : in     Option_Type
+      Left, Right                : in     Root_Option_Type
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -269,7 +269,7 @@ package body Ada_Lib.Options is
 
    ----------------------------------------------------------------------------
    function Modified (
-      Option                     : in     Option_Type
+      Option                     : in     Root_Option_Type
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -279,7 +279,7 @@ package body Ada_Lib.Options is
 
    ----------------------------------------------------------------------------
    function Modifier (
-      Option                     : in     Option_Type
+      Option                     : in     Root_Option_Type
    ) return Character is
    ----------------------------------------------------------------------------
 
@@ -305,42 +305,9 @@ package body Ada_Lib.Options is
    end Parsing_Failed;
 
 begin
---Debug := true;
+--Debug := True;
 --Trace_Options := True;
 --Elaborate := True;
+   Log_Here (Debug or Trace_Options or Elaborate);
+end Ada_Lib.Options.Create;
 
-   Indent_Trace := True;
---log_here ("Indent_Trace address " & Image (Indent_Trace'address));
-   Log_Here (Debug or Elaborate or Trace_Options);
-
---declare
---options : aliased Options_Type;
---begin
---Log_Here;
---Program_Options_Package.set_ada_lib_options (options'unchecked_access);
---if not options.verify_preinitialize then
---put_line ("verify_preinitialize failed");
---end if;
---Log_Here (if options.initialize then "initialized" else "failed");
---if not options.verify_initialized then
---put_line ("verify_initialize failed");
---end if;
---if not options.Verify_Preprocess then
---put_line ("Verify_Preprocess failed");
---end if;
---if not options.process (
---Include_Options      => True,
---Include_Non_Options  => False) then
---put_line ("process failed");
---end if;
---Log_Here;
---if not options.Verify_Postprocess then
---put_line ("Verify_Postprocess failed");
---end if;
---Log_Here;
---
---exception
---when Fault: others =>
---Trace_Exception (Fault);
---end;
-end Ada_Lib.Options;

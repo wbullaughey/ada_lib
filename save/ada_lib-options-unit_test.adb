@@ -403,7 +403,7 @@ package body Ada_Lib.Options.Unit_Test is
 
 begin
 --Elaborate := True;
-   Debug := Debug_Options.Debug_All;
+   Debug := Ada_Lib.Options.Debug_All;
 --Debug := True;
 --Protected_Options.Debug := True;
 --Trace_Options := True;

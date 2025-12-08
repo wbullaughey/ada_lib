@@ -11,7 +11,7 @@ project Ada_Lib is
        Alr_Environment.Crate_Version;
    Ada_OS_Include:= external ("ADA_OS_INCLUDE");
 
-   for Source_Dirs use ("src/", "src/" & Ada_OS_Include, "../src", "src/unit_test");
+   for Source_Dirs use ("src/", "../src", "src/unit_test");
    for Object_Dir use "obj/" & Alr_Environment.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib/" & ALR_Environment.Build_Mode;

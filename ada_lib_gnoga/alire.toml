@@ -8,11 +8,11 @@ maintainers-logins = ["wbullaughey"]
 
 project-files = "ada_lib_gnoga.gpr"
 
-[[depends-on]]
-ada_lib = "*"
-
-[[pins]]
-ada_lib = { path='..' }
+#[[depends-on]]
+#ada_lib = "*"
+#
+#[[pins]]
+#ada_lib = { path='..' }
 
 [[depends-on]]
 gnoga = "~0.1.0-dev"
@@ -32,5 +32,10 @@ ada_lib_base = "~0.1.0-dev"
 [[pins]]
 ada_lib_base = { path="../ada_lib_base" }
 
+[[depends-on]]
+ada_lib_options = "~0.1.0-dev"
+
+[[pins]]
+ada_lib_options = { path="../ada_lib_options" }
 
 

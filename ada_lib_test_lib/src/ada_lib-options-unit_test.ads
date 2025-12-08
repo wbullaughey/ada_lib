@@ -1,5 +1,5 @@
 with Ada_Lib.Options.Actual;
-with GNOGA_Options;
+with Ada_Lib.Options.GNOGA_Options;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Filters.Ada_Lib;
 
@@ -41,7 +41,7 @@ package Ada_Lib.Options.Unit_Test is
       Exit_On_Done      : Boolean := False;  -- exit test application after
                                              -- all unit tests complete
       Filter            : aliased AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
-      GNOGA_Options     : Standard.GNOGA_Options.GNOGA_Options_Type;
+      GNOGA_Options     : Ada_Lib.Options.GNOGA_Options.GNOGA_Options_Type;
       Mode              : Mode_Type := Run_Tests;  -- run unit tests
       Manual            : Boolean := False;  -- GUI interactions must be
                                              -- performed manually
@@ -91,7 +91,7 @@ package Ada_Lib.Options.Unit_Test is
    function Process_Option (  -- process one option
      Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
      Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 

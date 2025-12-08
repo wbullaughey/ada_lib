@@ -37,7 +37,7 @@ package Ada_Lib.Options.Actual is
    overriding
    procedure Bad_Option (        -- raises Failed exception
       Options                    : in     Abstract_Options_Type;
-      Option                     : in     Ada_Lib.Options.Option_Type'class;
+      Option                     : in     Root_Option_Type'class;
       Message                    : in     String := "";
       Where                      : in     String := Ada_Lib.Trace.Here);
 
@@ -53,6 +53,79 @@ package Ada_Lib.Options.Actual is
    overriding
    procedure Update_Filter (
       Options                    : in out Abstract_Options_Type) ;
+
+  type Option_Type              is new Root_Option_Type with null record;
+
+  type Option_Access             is access Option_Type;
+
+  function Create_Option (
+     Option                     : in     Character;
+     Modifier                   : in     Character;
+     From                       : in     String := Ada_Lib.Trace.Here
+  ) return Root_Option_Class_Access;
+
+  overriding
+  function Image (
+     Option                     : in     Option_Type;
+     Quote                      : in     Boolean := True
+  ) return String;
+
+  overriding
+  function Less (
+     Left, Right                : in     Option_Type
+  ) return Boolean;
+
+  overriding
+  function Modified (
+     Option                     : in     Option_Type
+  ) return Boolean;
+
+  overriding
+  function Modifier (
+     Option                     : in     Option_Type
+  ) return Character;
+
+-- package Create_Options is
+--
+--    type Options_Type             is array (Positive range <>) of Option_Type;
+--    type Options_Access           is access Options_Type;
+--
+--    function Create_Options (     -- create a single options with a character
+--      Option                     : in     Character;
+--      Modifier                   : in     Character;
+--      From                       : in     String := Ada_Lib.Trace.Here
+--    ) return Options_Type;
+--
+--    function Create_Options (     -- create multiple options from a string
+--      Source                     : in     String;
+--      Modifier                   : in     Character;
+--      From                       : in     String := Ada_Lib.Trace.Here
+--    ) return Options_Access;
+--
+--    function Create_Options (     -- create a single options
+--      Option                     : in     Character;
+--      Modifier                   : in     Character;
+--      From                       : in     String := Ada_Lib.Trace.Here
+--    ) return Options_Access;
+--
+--    function Create_Options (    -- create a single options with a character
+--      Source                     : in     String;
+--      Modifier                   : in     Character;
+--      From                       : in     String := Ada_Lib.Trace.Here
+--    ) return Options_Type;
+--
+   function Has_Option (   -- tests if option is registered for a catagory
+     Option                     : in     Option_Type;
+     Options_With_Parameters    : in     Root_Option_Class_Access;
+     Options_Without_Parameters : in     Root_Option_Class_Access
+   ) return Boolean;
+
+--    function Image (
+--      Options                    : in     Options_Type;
+--      Quote                      : in     Boolean := True
+--    ) return String;
+--
+-- end Create_Options;
 
 -- generic
 --    type Generic_Options_Type  is abstract limited new Interface_Options_Type
@@ -178,7 +251,7 @@ package Ada_Lib.Options.Actual is
    function Process_Option (  -- process one option
       Options                    : in out Program_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Option_Type'class
+      Option                     : in     Root_Option_Type'class
    ) return Boolean
    with pre => Options.Initialized;
 -- with Pre => not Have_Ada_Lib_Program_Options;
@@ -257,7 +330,7 @@ package Ada_Lib.Options.Actual is
    function Process_Option (
       Options                    : in out Nested_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Option_Type'class
+      Option                     : in     Root_Option_Type'class
    ) return Boolean;
 
    procedure Set_Ada_Lib_Nested_Options (

@@ -1,5 +1,6 @@
 with Ada.Characters.Latin_1;
 with Ada.Text_IO; use  Ada.Text_IO;
+--with Ada_Lib.Options;
 with Ada_Lib.OS_Strings;
 with Ada_Lib.Strings;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -173,9 +174,9 @@ package body Ada_Lib.OS is
 
 begin
 --Trace := True;
-   if Trace then
-      Put_Line ("help test " & Help_Test'img &
-         " Unit_Testing " & Unit_Testing'img & " " &
-         GNAT.Source_Info.Source_Location);
-   end if;
+-- if Trace then
+--    Put_Line (" Unit_Testing " & Unit_Testing'img & " " &
+--       GNAT.Source_Info.Source_Location);
+-- end if;
+   Log_Here (Elaborate or else Trace);
 end Ada_Lib.OS;

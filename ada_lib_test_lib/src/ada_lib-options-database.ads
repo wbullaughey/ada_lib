@@ -54,7 +54,7 @@ package Ada_Lib.Options.Database is
    function Process_Option (
       Options                    : in out Database_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 

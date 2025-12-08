@@ -1,6 +1,7 @@
 with Ada.Environment_Variables;
 with Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Options;
 with GNAT.OS_Lib;
 with GNAT.Source_Info;
 
@@ -14,6 +15,9 @@ package body Ada_Lib_Environment is
 -- end record;
 --
 -- type Array_Type               is array (Environment_Variable_Kind_Type) of Record_Type;
+
+   Debug    : Boolean renames Ada_Lib.Options.Ada_Lib_Environment.Debug;
+
 
 ----------------------------------------------------------------------------
    function Parse_Environment_Variable (

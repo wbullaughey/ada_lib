@@ -7,7 +7,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.OS;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Debug_Options;
+-- with Debug_Options;
 
 package body Ada_Lib.Command_Line_Iterator is
 
@@ -391,7 +391,7 @@ package body Ada_Lib.Command_Line_Iterator is
       overriding
       function Get_Option (
          Iterator          : in   Abstract_Iterator_Type
-      ) return Ada_Lib.Options.Option_Type'class is
+      ) return Ada_Lib.Options.Actual.Option_Type'class is
       -------------------------------------------------------------------
 
       begin
@@ -831,7 +831,7 @@ package body Ada_Lib.Command_Line_Iterator is
    end Make;
 
 begin
-   Debug := Debug or Debug_Options.Debug_All;
+   Debug := Debug or Ada_Lib.Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
 --Elaborate := True;

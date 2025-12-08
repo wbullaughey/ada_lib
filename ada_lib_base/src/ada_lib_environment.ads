@@ -7,6 +7,4 @@ package Ada_Lib_Environment is
       Kind  : in     Environment_Variable_Kind_Type
    ) return Boolean;
 
-   Debug                : Boolean := False;
-
 end Ada_Lib_Environment;

@@ -1,4 +1,4 @@
-with Ada_Lib.Options;
+with Ada_Lib.Options.Actual;
 with Ada_Lib.Trace;
 
 package Ada_Lib.Help is
@@ -6,7 +6,7 @@ package Ada_Lib.Help is
    Failed                        : exception;
 
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Option_Type;
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -29,7 +29,6 @@ package Ada_Lib.Help is
 
    procedure Reset;
 
-   Debug                         : Boolean := False;
    Modifier                      : constant Character := '@';
    Modifiers                     : constant String := "@";
 

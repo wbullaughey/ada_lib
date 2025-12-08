@@ -72,7 +72,7 @@ package Ada_Lib.Command_Line_Iterator is
       overriding
       function Get_Option (
          Iterator          : in   Abstract_Iterator_Type
-      ) return Ada_Lib.Options.Option_Type'class
+      ) return Ada_Lib.Options.Actual.Option_Type'class
       with Pre => Option_States (Iterator.Get_State);
 
       -- parameter of an option
@@ -172,7 +172,7 @@ package Ada_Lib.Command_Line_Iterator is
          Include_Non_Options     : Boolean;
          Include_Options         : Boolean;
          Modifiers               : Character_Set;
-         Option                  : Ada_Lib.Options.Option_Type;
+         Option                  : Ada_Lib.Options.Actual.Option_Type;
          Option_Prefix           : Character;
          Parameter_Index         : Positive;
          State                   : Iterator_State_Type;

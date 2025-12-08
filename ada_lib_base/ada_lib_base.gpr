@@ -1,4 +1,5 @@
 with "alr_environment.gpr";
+with "ada_lib_options.gpr";
 
 project Ada_Lib_Base is
 

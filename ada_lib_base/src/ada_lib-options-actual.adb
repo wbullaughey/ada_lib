@@ -4,48 +4,53 @@ with Ada.Exceptions;
 with Ada.Tags;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Command_Line_Iterator;
-with Ada_Lib.Configuration;
-with Ada_Lib.Database.Connection;
-with Ada_Lib.Directory;
-with Ada_Lib.EMail;
-with Ada_Lib.Event;
+--with Ada_Lib.Configuration;
+--with Ada_Lib.Database.Connection;
+--with Ada_Lib.Directory;
+--with Ada_Lib.EMail;
+--with Ada_Lib.Event;
 with Ada_Lib.Help;
-with Ada_Lib.Interrupt;
-with Ada_Lib.Lock;
-with Ada_Lib.Mail;
-with Ada_Lib.Options.Runstring;
+--with Ada_Lib.Interrupt;
+--with Ada_Lib.Lock;
+--with Ada_Lib.Mail;
+with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Runstring;
 with Ada_Lib.OS;
-with Ada_Lib.Parser;
-with Ada_Lib.OS.Run;
-with Ada_Lib.Socket_IO;
-with Ada_Lib.Strings;
-with Ada_Lib.Template;
-with Ada_Lib.Text;
-with Ada_Lib.Timer;
+with Ada_Lib.Options.Runstring;
+--with Ada_Lib.Parser;
+--with Ada_Lib.OS.Run;
+--with Ada_Lib.Socket_IO;
+--with Ada_Lib.Strings;
+--with Ada_Lib.Template;
+--with Ada_Lib.Text;
+--with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Trace_Tasks;
+--with Ada_Lib.Trace_Tasks;
 
-pragma Elaborate_All (Ada_Lib.Lock);
+--pragma Elaborate_All (Ada_Lib.Lock);
 
 package body Ada_Lib.Options.Actual is
 
    use type Ada.Tags.Tag;
+   use type Ada_Lib.Options.Create.Options_Type;
+
+   procedure Parsing_Failed;
 
    Initialize_Recursed           : Boolean := False;
    Modifiable_Nested_Options     : Nested_Options_Class_Access := Null;
    Modifiable_Program_Options    : Program_Options_Class_Access := Null;
    Test_Condition_Flag           : constant Character := 'c';
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                          Create_Options ('a', Unmodified);
+                                    Ada_Lib.Options.Create.Options_Type :=
+                                       Ada_Lib.Options.Create.Create_Options (
+                                          'a', Unmodified);
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options (
-                                             "hPv",
-                                             Unmodified) &
-                                          Ada_Lib.Options.Create_Options (
-                                             "iptx" & Test_Condition_Flag,
-                                             Ada_Lib.Help.Modifier);
+                                    Ada_Lib.Options.Create.Options_Type :=
+                                       Ada_Lib.Options.Create.Create_Options (
+                                          "hPv", Unmodified) &
+                                       Ada_Lib.Options.Create.Create_Options (
+                                          "iptx" & Test_Condition_Flag,
+                                          Ada_Lib.Help.Modifier);
 -- Parameter_Parsing_Failed      : Boolean := False;
 
 
@@ -100,7 +105,7 @@ package body Ada_Lib.Options.Actual is
    overriding
    procedure Bad_Option (        -- raises Failed exception
       Options                    : in     Abstract_Options_Type;
-      Option                     : in     Option_Type'class;
+      Option                     : in     Root_Option_Type'class;
       Message                    : in     String := "";
       Where                      : in     String := Ada_Lib.Trace.Here) is
    ----------------------------------------------------------------------------
@@ -323,17 +328,19 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
 
       Message        : constant String := " from " & From &
-         " options with parameters " & Image (Options_With_Parameters) &
-         " with out " & Image (Options_Without_Parameters);
+         " options with parameters " &
+         Ada_lib.Options.Create.Image (Options_With_Parameters) &
+         " with out " &
+         Ada_lib.Options.Create.Image (Options_Without_Parameters);
 
    begin
      Log_In_Checked (Initialize_Recursed, Debug or Trace_Options, Message);
 
-      Ada_Lib.Options.Runstring.Options.Register (
-         Ada_Lib.Options.Runstring.With_Parameters,
+      Runstring.Options.Register (
+         Runstring.With_Parameters,
          Options_With_Parameters);
-      Ada_Lib.Options.Runstring.Options.Register (
-         Ada_Lib.Options.Runstring.Without_Parameters,
+      Runstring.Options.Register (
+         Runstring.Without_Parameters,
          Options_Without_Parameters);
 
       return Log_Out_Checked (Initialize_Recursed,
@@ -424,7 +431,7 @@ package body Ada_Lib.Options.Actual is
          begin
             if Iterator.Is_Option then
                declare
-                  Option         : constant Ada_Lib.Options.Option_Type'class :=
+                  Option         : constant Root_Option_Type'class :=
                                     Iterator.Get_Option;
                   Message        : constant String := Option.Image & " not defined";
 
@@ -458,7 +465,7 @@ package body Ada_Lib.Options.Actual is
 
             when Fault: others =>
                Trace_Exception (Debug or Trace_Options, Fault);
-               if not Ada_Lib.Help_Test then
+               if not Options.Help_Test then
                   raise;
                end if;
 
@@ -483,16 +490,16 @@ package body Ada_Lib.Options.Actual is
    function Process_Option (
       Options                    : in out Program_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Option_Type'class
+      Option                     : in     Root_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
    begin
       Log_In (Trace_Options or Debug, "option '" & Option.Image &
          " kind " & Option.Kind'img &
-         " Help_Test " & Ada_Lib.Help_Test'img);
+         " Help_Test " & Options.Help_Test'img);
 
-      if Ada_Lib.Options.Has_Option (Option, Options_With_Parameters,
+      if Has_Option (Option, Options_With_Parameters,
             Options_Without_Parameters) then
          if Option.Kind = Ada_Lib.Options.Plain then
             case Option.Option is
@@ -501,7 +508,7 @@ package body Ada_Lib.Options.Actual is
                   Options.Trace_Parse (Iterator);
 
                when 'h' =>
-                  if not Ada_Lib.Help_Test then
+                  if not Options.Help_Test then
                      Get_Ada_Lib_Read_Only_Program_Options.Display_Help;
                   end if;
 
@@ -554,7 +561,7 @@ package body Ada_Lib.Options.Actual is
    function Process_Option (
       Options                    : in out Nested_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Option_Type'class
+      Option                     : in     Root_Option_Type'class
    ) return Boolean is
    pragma Unreferenced (Iterator);
    ----------------------------------------------------------------------------
@@ -668,12 +675,12 @@ package body Ada_Lib.Options.Actual is
 --
 -- begin
 --    return Program_Options_Constant_Class_Access (
---       Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options);
+--       Get_Ada_Lib_Read_Only_Program_Options);
 -- exception
 --    when Fault: others =>
 --       Trace_Message_Exception (Fault, "Get_Ada_Lib_Read_Only_Program_Options " & Tag_Name (
---          Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options.all'tag));
---       Tag_History (Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options.all'tag);
+--          Get_Ada_Lib_Read_Only_Program_Options.all'tag));
+--       Tag_History (Get_Ada_Lib_Read_Only_Program_Options.all'tag);
 --       raise;
 -- end Get_Ada_Lib_Read_Only_Program_Options;
 
@@ -710,30 +717,31 @@ package body Ada_Lib.Options.Actual is
    ----------------------------------------------------------------------------
 
    begin
-      Ada_Lib.Command_Line_Iterator.Debug := True;
-      Ada_Lib.Configuration.Trace := True;
-      Ada_Lib.Interrupt.Debug := True;
-      Ada_Lib.Database.Connection.Debug := True;
-      Ada_Lib.Database.Set_Trace (True, True);
-      Ada_Lib.Database.Trace_Get_Post := True;
-      Ada_Lib.Help.Debug := True;
-      Ada_Lib.Lock.Debug := True;
-      Ada_Lib.EMail.Debug := True;
-      Ada_Lib.Mail.Debug := True;
---    GNOGA_Options.Debug := True;
-      Ada_Lib.Options.Runstring.Debug := True;
-      Ada_Lib.Options.Debug := True;
-      Ada_Lib.OS.Trace := True;
-      Ada_Lib.OS.Run.Debug := True;
-      Ada_Lib.Parser.Debug := True;
-      Ada_Lib.Socket_IO.Trace := True;
-      Ada_Lib.Socket_IO.Trace_IO := True;
-      Ada_Lib.Socket_IO.Tracing := True;
-      Ada_Lib.Strings.Debug := True;
-      Ada_Lib.Timer.Set_Trace (True);
-      Ada_Lib.Trace_Tasks.Debug := True;
-      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
-      Debug := True;
+not_implemented;
+--      Ada_Lib.Command_Line_Iterator.Debug := True;
+--      Ada_Lib.Configuration.Trace := True;
+--      Ada_Lib.Interrupt.Debug := True;
+--      Ada_Lib.Database.Connection.Debug := True;
+--      Ada_Lib.Database.Set_Trace (True, True);
+--      Ada_Lib.Database.Trace_Get_Post := True;
+--      Ada_Lib.Help.Debug := True;
+--      Ada_Lib.Lock.Debug := True;
+--      Ada_Lib.EMail.Debug := True;
+--      Ada_Lib.Mail.Debug := True;
+----    GNOGA_Options.Debug := True;
+--      Ada_Lib.Options.Runstring.Debug := True;
+--      Ada_Lib.Options.Debug := True;
+--      Ada_Lib.OS.Trace := True;
+--      Ada_Lib.OS.Run.Debug := True;
+--      Ada_Lib.Parser.Debug := True;
+--      Ada_Lib.Socket_IO.Trace := True;
+--      Ada_Lib.Socket_IO.Trace_IO := True;
+--      Ada_Lib.Socket_IO.Tracing := True;
+--      Ada_Lib.Strings.Debug := True;
+--      Ada_Lib.Timer.Set_Trace (True);
+--      Ada_Lib.Trace_Tasks.Debug := True;
+--      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
+--      Debug := True;
 
    end Set_All;
 
@@ -750,144 +758,145 @@ package body Ada_Lib.Options.Actual is
    begin
       Log_In (Debug or Ada_Lib_Trace_Trace or Trace_Options,
          Quote ("parameter", Parameter));
-      for Trace of Parameter loop
-         Log_Here (Debug or Ada_Lib_Trace_Trace or Trace_Options, " Extended " &
-            Extended'img & Quote (" trace", Trace));
-
-         case Extended is
-
-            when False =>
-               case Trace is
-
-                  when 'a' =>
-                     Set_All;
-
-                  when 'b' =>
-                     Ada_Lib.Database.Debug_Subscribe := True;
-
-                  when 'c' =>
-                     Ada_Lib.Command_Line_Iterator.Debug := True;
-
-                  when 'C' =>
-                     Ada_Lib.Configuration.Trace := True;
-
-                  when 'e' =>
-                     Ada_Lib.Event.Debug := True;
-
---                when 'g' =>
---                   GNOGA_Options.Debug := True;
-
---                when 'G' =>
---                   GNOGA_Options.Debug := True;
-
-                  when 'h' =>
-                     Ada_Lib.Help.Debug := True;
-
-                  when 'i' =>
-                     Ada_Lib.Interrupt.Debug := True;
-
-                  when 'I' =>
-                     Ada_Lib.Options.Debug := True;
-
-                  when 'l' =>
-                     Ada_Lib.Lock.Debug := True;
-
-                  when 'm' =>
-                     Ada_Lib.Timer.Set_Trace (True);
-
-                  when 'M' =>
-                     Ada_Lib.EMail.Debug := True;
-                     Ada_Lib.Mail.Debug := True;
-
-                  when 'o' =>
-                     Ada_Lib.OS.Trace := True;
-
-                  when 'O' =>
-                     Debug := True;
-
-                  when 'p' =>
-                     Ada_Lib.Parser.Debug := True;
-
-                  when 'P' =>
-                     Ada_Lib.Database.Trace_Get_Post := True;
-
-                  when 'r' =>
-                     Ada_Lib.OS.Run.Debug := True;
-                     Ada_Lib.Database.Connection.Debug := True;
-
-                  when 'R' =>
-                     Ada_Lib.Options.Runstring.Debug := True;
-
-                  when 's' =>
-                     Ada_Lib.Socket_IO.Trace := True;
-
-                  when 'S' =>
-                     Ada_Lib.Socket_IO.Tracing := True;
-
-                  when 't' =>
-                     Ada_Lib_Trace_Trace := True;
-
-                  when 'T' =>
-                     Ada_Lib.Trace_Tasks.Debug := True;
-
-                  when Ada_Lib.Help.Modifier =>
-                     Extended := True;
-
-                  when others =>
-                     Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
-                        Trace));
-
-               end case;
-
-            when True =>
-
-               case Trace is
-
-                  when 'c' =>
-                     Ada_Lib.Template.Trace_Compile := True;
-
-                  when 'd' =>
-                     Ada_Lib.Trace.Detail := True;
-
-                  when 'D' =>
-                     Ada_Lib.Directory.Debug := True;
-
-                  when 'e' =>
-                     Ada_Lib.Template.Trace_Evaluate := True;
-
-                  when 'E' =>
-                     Ada_Lib.Template.Trace_Expand := True;
-
-                  when 'l' =>
-                     Ada_Lib.Template.Trace_Load := True;
-
-                  when 'o' =>
-                     Trace_Options := True;
-
-                  when 'p' =>
-                     Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
-
-                  when 'P' =>
-                     Ada_Lib.Trace.Trace_Pre_Post_False := True;
-
-                  when 's' =>
-                     Ada_Lib.Strings.Debug := True;
-
-                  when 'S' =>
-                     Ada_Lib.Socket_IO.Trace_IO := True;
-
-                  when 't' =>
-                     Ada_Lib.Text.Debug := True;
-
-                  when others =>
-                     Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
-                        Trace));    -- aborts program
-
-               end case;
-               Extended := False;
-
-         end case;
-      end loop;
+not_implemented;
+--      for Trace of Parameter loop
+--         Log_Here (Debug or Ada_Lib_Trace_Trace or Trace_Options, " Extended " &
+--            Extended'img & Quote (" trace", Trace));
+--
+--         case Extended is
+--
+--            when False =>
+--               case Trace is
+--
+--                  when 'a' =>
+--                     Set_All;
+--
+--                  when 'b' =>
+--                     Ada_Lib.Database.Debug_Subscribe := True;
+--
+--                  when 'c' =>
+--                     Ada_Lib.Command_Line_Iterator.Debug := True;
+--
+--                  when 'C' =>
+--                     Ada_Lib.Configuration.Trace := True;
+--
+--                  when 'e' =>
+--                     Ada_Lib.Event.Debug := True;
+--
+----                when 'g' =>
+----                   GNOGA_Options.Debug := True;
+--
+----                when 'G' =>
+----                   GNOGA_Options.Debug := True;
+--
+--                  when 'h' =>
+--                     Ada_Lib.Help.Debug := True;
+--
+--                  when 'i' =>
+--                     Ada_Lib.Interrupt.Debug := True;
+--
+--                  when 'I' =>
+--                     Ada_Lib.Options.Debug := True;
+--
+--                  when 'l' =>
+--                     Ada_Lib.Lock.Debug := True;
+--
+--                  when 'm' =>
+--                     Ada_Lib.Timer.Set_Trace (True);
+--
+--                  when 'M' =>
+--                     Ada_Lib.EMail.Debug := True;
+--                     Ada_Lib.Mail.Debug := True;
+--
+--                  when 'o' =>
+--                     Ada_Lib.OS.Trace := True;
+--
+--                  when 'O' =>
+--                     Debug := True;
+--
+--                  when 'p' =>
+--                     Ada_Lib.Parser.Debug := True;
+--
+--                  when 'P' =>
+--                     Ada_Lib.Database.Trace_Get_Post := True;
+--
+--                  when 'r' =>
+--                     Ada_Lib.OS.Run.Debug := True;
+--                     Ada_Lib.Database.Connection.Debug := True;
+--
+--                  when 'R' =>
+--                     Ada_Lib.Options.Runstring.Debug := True;
+--
+--                  when 's' =>
+--                     Ada_Lib.Socket_IO.Trace := True;
+--
+--                  when 'S' =>
+--                     Ada_Lib.Socket_IO.Tracing := True;
+--
+--                  when 't' =>
+--                     Ada_Lib_Trace_Trace := True;
+--
+--                  when 'T' =>
+--                     Ada_Lib.Trace_Tasks.Debug := True;
+--
+--                  when Ada_Lib.Help.Modifier =>
+--                     Extended := True;
+--
+--                  when others =>
+--                     Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
+--                        Trace));
+--
+--               end case;
+--
+--            when True =>
+--
+--               case Trace is
+--
+--                  when 'c' =>
+--                     Ada_Lib.Template.Trace_Compile := True;
+--
+--                  when 'd' =>
+--                     Ada_Lib.Trace.Detail := True;
+--
+--                  when 'D' =>
+--                     Ada_Lib.Directory.Debug := True;
+--
+--                  when 'e' =>
+--                     Ada_Lib.Template.Trace_Evaluate := True;
+--
+--                  when 'E' =>
+--                     Ada_Lib.Template.Trace_Expand := True;
+--
+--                  when 'l' =>
+--                     Ada_Lib.Template.Trace_Load := True;
+--
+--                  when 'o' =>
+--                     Trace_Options := True;
+--
+--                  when 'p' =>
+--                     Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
+--
+--                  when 'P' =>
+--                     Ada_Lib.Trace.Trace_Pre_Post_False := True;
+--
+--                  when 's' =>
+--                     Ada_Lib.Strings.Debug := True;
+--
+--                  when 'S' =>
+--                     Ada_Lib.Socket_IO.Trace_IO := True;
+--
+--                  when 't' =>
+--                     Ada_Lib.Text.Debug := True;
+--
+--                  when others =>
+--                     Options.Bad_Option (Quote ("unexpected Ada_Lib trace option",
+--                        Trace));    -- aborts program
+--
+--               end case;
+--               Extended := False;
+--
+--         end case;
+--      end loop;
       Log_Out (Debug or Ada_Lib_Trace_Trace or Trace_Options);
    end Trace_Parse;
 
@@ -1146,6 +1155,277 @@ package body Ada_Lib.Options.Actual is
       end Verify_Preinitialize;
 
 -- end Verification_Package;
+
+   ----------------------------------------------------------------------------
+   function Create_Option (
+      Option                     : in     Character;
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
+   ) return Root_Option_Class_Access is
+   ----------------------------------------------------------------------------
+
+      Result                     : constant Root_Option_Class_Access :=
+                                    new Option_Type;
+   begin
+      Result.Kind := (if Modifier = Unmodified then
+                           Plain
+                        else
+                           Modified);
+      Result.Modifier := Modifier;
+      Result.Option := Option;
+
+      Log_Here (Debug or Trace_Options, Quote ("option", Option) &
+         (if Modifier = Unmodified then
+            " no modifier"
+         else
+            Quote (" modifier", Modifier)) & " " &
+         Result.Image & " from " & From);
+
+      return Result;
+   end Create_Option;
+
+   ----------------------------------------------------------------------------
+   function Create_Options (
+      Option                     : in     Character;
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
+   ) return Root_Option_Class_Access is
+   ----------------------------------------------------------------------------
+
+      Result                     : constant Root_Option_Access :=
+                                    New Options_Type (1 .. 1);
+
+   begin
+      Result.all := Create_Options (Option, Modifier, From);
+      return Result;
+   end Create_Options;
+
+   ----------------------------------------------------------------------------
+   function Create_Options (    -- create a single options
+      Option                     : in     Character;
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
+   ) return Options_Type is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_Here (Debug or Trace_Options, Quote ("option", Option) & (if Modifier = Unmodified then
+            " no modifier"
+         else
+            Quote (" modifier", Modifier) &
+         " from " & From));
+
+      return Options_Type'(
+         1 => Option_Type' (
+            Kind     => (if Modifier = Unmodified then
+                           Plain
+                        else
+                           Modified),
+            Modifier => Modifier,
+            Option   => Option));
+   end Create_Options;
+
+   ----------------------------------------------------------------------------
+   function Create_Options (
+      Source                     : in     String;
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
+   ) return Option_Type is
+   ----------------------------------------------------------------------------
+
+      Count                      : Natural := 0;
+      Options                    : Options_Type (1 .. 100);
+
+   begin
+      Log_In (Debug or Trace_Options, Quote ("source", Source) & (if Modifier = Unmodified then
+            " no modifier"
+         else
+            Quote (" modifier", Modifier)) &
+         " from " & From);
+      for Option of Source loop
+         Count := Count + 1;
+            Options (Count) := Create_Option (Option, Modifier, From);
+      end loop;
+
+      Log_Out (Debug or Trace_Options, "count" & Count'img);
+      return Options (1 .. Count);
+   end Create_Options;
+
+   ----------------------------------------------------------------------------
+   function Create_Options (
+      Source                     : in     String;
+      Modifier                   : in     Character;
+      From                       : in     String := Ada_Lib.Trace.Here
+   ) return Ada_Lib.Options.Options_Access is
+   ----------------------------------------------------------------------------
+
+      Options                    : constant Option_Type :=
+                                    Create_Options (Source, Modifier, From);
+      Result                     : constant Ada_Lib.Options.Options_Access :=
+                                    new Options_Type (1 .. Options'last);
+   begin
+      Result.all := Options;
+      return Result;
+   end Create_Options;
+
+   ----------------------------------------------------------------------------
+   function Has_Option (
+      Option                     : in     Option_Type;
+      Options_With_Parameters    : in     OpRoot_Option_Class_Accesstions_Type;
+      Options_Without_Parameters : in     Root_Option_Class_Access
+   ) return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_In (Debug or Trace_Options, Option.Image &
+         " Options_With_Parameters length " &
+            Options_With_Parameters'length'img &
+         " Options_Without_Parameters length " &
+            Options_Without_Parameters'length'img);
+
+      for Element of Options_With_Parameters loop
+         if Element = Option then
+            return Log_Out (True, Debug or Trace_Options,
+               "options address " & Image (Option'address));
+         end if;
+      end loop;
+
+      for Element of Options_Without_Parameters loop
+         if Element = Option then
+            return Log_Out (True, Debug or Trace_Options);
+         end if;
+      end loop;
+      return Log_Out (False, Debug or Trace_Options);
+   end Has_Option;
+
+-- ----------------------------------------------------------------------------
+-- function Have_Options return Boolean is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return Modifiable_Options /= Null;
+-- end Have_Options;
+
+   ----------------------------------------------------------------------------
+   function Image (
+      Option                     : in     Option_Type;
+      Quote                      : in     Boolean := True
+   ) return String is
+   ----------------------------------------------------------------------------
+
+      Text                       : constant String := (case Option.Kind is
+                                    when Modified => String'(
+                                       Option.Modifier, Option.Option),
+                                    when Plain    => String'(1 => Option.Option),
+                                    when Nil_Option   => (
+                                       if Quote then "" else "Null"));
+   begin
+      return (if Quote then
+            Ada_Lib.Trace.Quote ("option", Text)
+         else
+            Text);
+   end Image;
+
+   ----------------------------------------------------------------------------
+   function Image (
+      Options                    : in     Options_Type;
+      Quote                      : in     Boolean := True
+   ) return String is
+   ----------------------------------------------------------------------------
+
+      Result                     : Ada_Lib.Strings.Unlimited.String_Type;
+
+   begin
+      for Option of Options loop
+         Result := Result & " " & Option.Image (False);
+      end loop;
+
+      return (if Quote then
+         Ada_Lib.Trace.Quote ("options", Result)
+      else
+         Result.Coerce);
+   end Image;
+
+   ----------------------------------------------------------------------------
+   function Less (
+      Left, Right                : in     Option_Type
+   ) return Boolean is
+   ----------------------------------------------------------------------------
+
+      use Ada.Characters.Handling;
+
+      Left_Letter                : constant Character :=
+                                    To_Upper (Left.Option);
+      Right_Letter               : constant Character :=
+                                    To_Upper (Right.Option);
+      Left_Upper                 : constant Boolean :=
+                                    Is_Upper (Left.Option);
+      Right_Upper                : constant Boolean :=
+                                    Is_Upper (Right.Option);
+
+   begin
+      return (if Left.Kind = Right.Kind then
+            (if Left_Letter = Right_Letter then
+               (if Left_Upper = Right_Upper then
+                  True
+               else
+                  Right_Upper)
+            else
+               Left_Letter < Right_Letter)
+         else
+            Left.Kind < Right.Kind);
+   end Less;
+
+-- ----------------------------------------------------------------------------
+-- function Modifiable_Options_Address
+-- return String is
+-- ----------------------------------------------------------------------------
+--
+-- begin
+--    return "Modifiable_Options address is " &
+--       (if Modifiable_Options = Null then
+--          "null "
+--       else
+--          Image (Modifiable_Options.all'address));
+--
+-- end Modifiable_Options_Address;
+
+   ----------------------------------------------------------------------------
+   function Modified (
+      Option                     : in     Option_Type
+   ) return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Option.Kind = Modified;
+   end Modified;
+
+   ----------------------------------------------------------------------------
+   function Modifier (
+      Option                     : in     Option_Type
+   ) return Character is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Option.Modifier;
+   end Modifier;
+
+   ----------------------------------------------------------------------------
+   procedure Parsing_Failed is
+   ----------------------------------------------------------------------------
+
+   begin
+      Log_Here (Debug or Trace_Options);
+      Parameter_Parsing_Failed := True;
+   end Parsing_Failed;
+
+   ----------------------------------------------------------------
+   function Parsing_Failed return Boolean is
+   ----------------------------------------------------------------
+
+   begin
+      return Parameter_Parsing_Failed;
+   end Parsing_Failed;
 
 begin
 --Debug := True;

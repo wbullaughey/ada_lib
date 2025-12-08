@@ -1,15 +1,16 @@
-
+--with Ada_Lib.Options.Create;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Debug_Options;
+-- with Debug_Options;
 
 package body Ada_Lib.Options.Runstring is
 
--- use type Ada_Lib.Options.Option_Type;
+-- use type Element_Type;
+   use type Ada_Lib.Options.Actual.Option_Type;
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
    function Find_Registration (
       Registrations           : in     Registrations_Type;
-      Option                  : in     Ada_Lib.Options.Option_Type
+      Option                  : in     Ada_Lib.Options.Actual.Option_Type
    ) return Constant_Reference_Type;
 
    -------------------------------------------------------------------
@@ -27,7 +28,7 @@ package body Ada_Lib.Options.Runstring is
    -------------------------------------------------------------------
    function Find_Registration (
       Registrations              : in     Registrations_Type;
-      Option                     : in     Ada_Lib.Options.Option_Type
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type
    ) return Constant_Reference_Type is
    -------------------------------------------------------------------
 
@@ -95,7 +96,7 @@ package body Ada_Lib.Options.Runstring is
 
       -------------------------------------------------------------------
       function Has_Parameter (
-         Option                  : in     Ada_Lib.Options.Option_Type
+         Option                  : in     Ada_Lib.Options.Actual.Option_Type
       ) return Boolean is
       -------------------------------------------------------------------
 
@@ -114,7 +115,7 @@ package body Ada_Lib.Options.Runstring is
 
       -------------------------------------------------------------------
       function Is_Registered (
-         Option                  : in     Ada_Lib.Options.Option_Type
+         Option                  : in     Root_Option_Type
       ) return Boolean is
       -------------------------------------------------------------------
 
@@ -142,7 +143,7 @@ package body Ada_Lib.Options.Runstring is
       -------------------------------------------------------------------
       procedure Register (
          Kind                    : in     Kind_Type;
-         Options                 : in     Ada_Lib.Options.Options_Type;
+         Options                 : in     Ada_Lib.Options.Create.Options_Type;
          From                    : in     String:= Ada_Lib.Trace.Here) is
       -------------------------------------------------------------------
 
@@ -155,11 +156,11 @@ package body Ada_Lib.Options.Runstring is
                "registrations" & Registrations.Length'img);
             for Option of Options loop
                Log_Here (Debug or trace_options, Option.Image);
-               if Is_Registered (Option) then
+               if Is_Registered (Option.all) then
                   Log_Exception (Debug or trace_options);
                   raise Duplicate_Options with Option.Image &
                      " a parameter defined at " &
-                     Registration (Option) &
+                     Registration (Option.all) &
                      " called from " & From;
                end if;
             end loop;
@@ -182,7 +183,7 @@ package body Ada_Lib.Options.Runstring is
             begin
                Element.From.Construct (From);
                Element.Kind := Kind;
-               Element.Option := Option;
+               Element.Option := Option.all;
                Registrations.Append (Element);
             end;
          end loop;
@@ -193,7 +194,7 @@ package body Ada_Lib.Options.Runstring is
 
       -------------------------------------------------------------------
       function Registration (
-         Option                  : in     Ada_Lib.Options.Option_Type
+         Option                  : in     Ada_Lib.Options.Actual.Option_Type
       ) return String is
       -------------------------------------------------------------------
 
@@ -221,7 +222,7 @@ package body Ada_Lib.Options.Runstring is
    end Registration_Type;
 
 begin
-     Debug := Debug or Debug_Options.Debug_All;
+     Debug := Debug or Ada_Lib.Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
 --Elaborate := True;

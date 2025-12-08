@@ -1,16 +1,16 @@
 with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Event.Unit_Test;
+--with Ada_Lib.Event.Unit_Test;
 --with Ada_Lib.GNOGA.Unit_Test;
-with Ada_Lib.Help;
+--with Ada_Lib.Help;
 --with GNOGA_Options;
-with Ada_Lib.OS;
-with Ada_Lib.Options.Runstring;
-with Ada_Lib.Test;
+--with Ada_Lib.OS;
+--with Ada_Lib.Options.Runstring;
+--with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Test_Cases;
-with AUnit.Ada_Lib;
-with Debug_Options;
+--with Ada_Lib.Unit_Test.Test_Cases;
+--with AUnit.Ada_Lib; debug moved to Ada_Lib.Options.Aunit
+--with Debug_Options;
 
 package body Ada_Lib.Options.Unit_Test is
 
@@ -210,7 +210,7 @@ package body Ada_Lib.Options.Unit_Test is
    function Process_Option (
       Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -683,7 +683,7 @@ package body Ada_Lib.Options.Unit_Test is
 begin
 --Ada_Lib.Trace.Trace_Tests := True;
 --Elaborate := True;
-   Debug := Debug or Debug_Options.Debug_All;
+   Debug := Debug or Ada_Lib.Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
    Log_Here (Debug or Elaborate or Trace_Options);

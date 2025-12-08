@@ -1,4 +1,6 @@
 with "alr_environment.gpr";
+--with "ada_lib_base.gpr";
+
 project Ada_Lib_Options is
 
    for Library_Name use "Ada_Lib_Options";

@@ -3,17 +3,17 @@ with Ada.Containers.Indefinite_Ordered_Sets;
 -- with Ada.Exceptions;
 --with Ada.Strings.Maps.Constants;
 with Ada.Text_IO;use Ada.Text_IO;
---with Ada_Lib.Options;
+--with Ada_Lib.Options.Actual;
 with Ada_Lib.OS;
 --with Ada_Lib.Options.Runstring;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
-with Debug_Options;
+-- with Debug_Options;
 
 package body Ada_Lib.Help is
 
-   use type Ada_Lib.Options.Option_Type;
+   use type Ada_Lib.Options.Actual.Option_Type;
 
    subtype Line_Type             is String;
 
@@ -22,7 +22,7 @@ package body Ada_Lib.Help is
       Description_Length         : Positive;
       Component_Length           : Natural;
       Source_Line_Length         : Positive) is record
-      Option                     : Ada_Lib.Options.Option_Type;
+      Option                     : Ada_Lib.Options.Actual.Option_Type;
       Parameter                  : Line_Type (1 .. Parameter_Length);
       Description                : Line_Type (1 .. Description_Length);
       Component                  : Line_Type (1 .. Component_Length);
@@ -46,13 +46,15 @@ package body Ada_Lib.Help is
       "<"   => Less_Than,
       "="   => Equal);
 
+   Debug                         : Boolean renames
+                                    Ada_Lib.Options.Help.Debug;
    Lines                         : Line_Package.Set;
    Maximum_Description_Length    : Natural := 0;
    Maximum_Parameter_Length      : Natural := 0;
 
    ----------------------------------------------------------------------------
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Option_Type;
+      Option                     : in     Ada_Lib.Options.Actual.Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -150,7 +152,7 @@ package body Ada_Lib.Help is
    ----------------------------------------------------------------------------
 
    begin
-      Add_Option (Ada_Lib.Options.Create_Option (Option, Modifier), Parameter,
+      Add_Option (Ada_Lib.Options.Actual.Create_Option (Option, Modifier), Parameter,
          Description, Component, Source_Line);
    end Add_Option;
 
@@ -260,7 +262,7 @@ package body Ada_Lib.Help is
 
    ----------------------------------------------------------------------------
 begin
-     Debug := Debug or Debug_Options.Debug_All;
+     Debug := Debug or Ada_Lib.Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
    Log_Here (Debug or Trace_Options or Elaborate);
