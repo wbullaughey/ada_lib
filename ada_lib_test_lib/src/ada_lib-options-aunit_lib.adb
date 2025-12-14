@@ -31,10 +31,10 @@ package body Ada_Lib.Options.AUnit_Lib is
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                           Ada_Lib.Options.Create_Options (
-                                             Trace_Option, Unmodified);
+                                             Trace_Option, Unmodified_flag);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Null_Options;
+                                          Ada_Lib.Options.Null_Flag_List;
 
    -------------------------------------------------------------------------
    function Has_Database return Boolean is

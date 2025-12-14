@@ -38,4 +38,12 @@ ada_lib_options = "~0.1.0-dev"
 [[pins]]
 ada_lib_options = { path="../ada_lib_options" }
 
+[[depends-on]]
+ada_lib_test_lib = "~0.1.0-dev"
+
+[[pins]]
+ada_lib_test_lib = { path="../ada_lib_base" }
+
+
+
 

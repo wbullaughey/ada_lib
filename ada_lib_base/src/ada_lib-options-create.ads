@@ -7,39 +7,16 @@ with Ada_Lib.Trace; -- use Ada_Lib.Trace;
 
 package Ada_Lib.Options.Create is
 
-   function Create_Options (     -- create a single options with a character
+   function Create_One (       -- create a single option
      Option                     : in     Character;
      Modifier                   : in     Character;
      From                       : in     String := Ada_Lib.Trace.Here
-   ) return Root_Options_Access;
+   ) return Flag_List_Type;
 
-   function Create_Options (     -- create multiple options from a string
+   function Create_Multiple (     -- create multiple options from a string
      Source                     : in     String;
      Modifier                   : in     Character;
      From                       : in     String := Ada_Lib.Trace.Here
-   ) return Root_Options_Access;
-
-   function Create_Options (     -- create a single options
-     Option                     : in     Character;
-     Modifier                   : in     Character;
-     From                       : in     String := Ada_Lib.Trace.Here
-   ) return Root_Options_Access;
-
-   function Create_Options (    -- create a single options with a character
-     Source                     : in     String;
-     Modifier                   : in     Character;
-     From                       : in     String := Ada_Lib.Trace.Here
-   ) return Root_Options_Access;
-
-   function Has_Option (   -- tests if option is registered for a catagory
-     Option                     : in     Root_Option_Type'class;
-     Options_With_Parameters    : in     Options_Type;
-     Options_Without_Parameters : in     Options_Type
-   ) return Boolean;
-
-   function Image (
-     Options                    : in     Options_Type;
-     Quote                      : in     Boolean := True
-   ) return String;
+   ) return Flag_List_Type;
 
 end Ada_Lib.Options.Create;

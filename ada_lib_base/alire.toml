@@ -11,11 +11,11 @@ website = ""
 
 project-files = "ada_lib_base.gpr"
 
-#[[depends-on]]
-#alr_environment = "*"
-#
-#[[pins]]
-#alr_environment = { path='../..' }
+[[depends-on]]
+alr_environment = "*"
+
+[[pins]]
+alr_environment = { path='../..' }
 
 [[depends-on]]
 ada_lib_options = "~0.1.0-dev"

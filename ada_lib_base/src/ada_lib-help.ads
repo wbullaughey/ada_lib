@@ -6,7 +6,7 @@ package Ada_Lib.Help is
    Failed                        : exception;
 
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type;
+      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -19,7 +19,7 @@ package Ada_Lib.Help is
       Description                : in     String;
       Component                  : in     String := "";
       Modifier                   : in     Character :=
-                                             Ada_Lib.Options.Unmodified;
+                                             Ada_Lib.Options.Unmodified_Flag;
       Source_Line                : in     String := Ada_Lib.Trace.Here
    ) with Pre => Description'length > 0;
 

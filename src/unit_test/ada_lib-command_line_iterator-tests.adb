@@ -33,7 +33,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
                                     Create_Options (Options_With_Modifiers,
                                        Ada_Lib.Help.Modifier) &
                                     Create_Options (Options_Without_Modifiers,
-                                       Unmodified);
+                                       Unmodified_flag);
       Expected_All_Options       : constant String := Ada_Lib.Help.
                                     Modifier & "bac";
    begin
@@ -77,11 +77,11 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters, Create_Options (With_Parameters,
-            Unmodified));
+            Unmodified_flag));
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (
-            Without_Parameters, Unmodified));
+            Without_Parameters, Unmodified_flag));
       Log_Here (Debug);
 
       declare
@@ -317,10 +317,10 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters, Create_Options (
-         With_Parameters, Unmodified));
+         With_Parameters, Unmodified_flag));
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (
-            Without_Parameters, Unmodified));
+            Without_Parameters, Unmodified_flag));
 
       Log_Here (Debug);
 
@@ -498,11 +498,11 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters, Create_Options (
-            With_Parameters, Unmodified));
+            With_Parameters, Unmodified_flag));
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters, Create_Options (
-            Without_Parameters, Unmodified));
+            Without_Parameters, Unmodified_flag));
       Log_Here (Debug);
 
       declare

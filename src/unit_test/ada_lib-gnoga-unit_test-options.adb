@@ -16,9 +16,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
 
    Trace_Option            : constant Character := 'g';
    Options_With_Parameters : aliased constant
-                              Ada_Lib.Options.Actual.Options_Type :=
+                              Ada_Lib.Options.Actual.Flag_Option_Type :=
                                  Ada_Lib.Options.Create_Options (Trace_Option,
-                                    Ada_Lib.Options.Unmodified);
+                                    Ada_Lib.Options.Unmodified_flag);
 
    -------------------------------------------------------------------
    overriding
@@ -42,7 +42,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    function Process_Option (
       Options                    : in out GNOGA_Unit_Test_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type'class
    ) return Boolean is
    ---------------------------------------------------------------
 

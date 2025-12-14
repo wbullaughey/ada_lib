@@ -12,77 +12,50 @@ package Ada_Lib.Options.Actual is
    function Have_Ada_Lib_Program_Options
    return Boolean;
 
-   type Abstract_Options_Type is abstract limited new Interface_Options_Type
-                                 with null record;
+-- type Abstract_Runtime_Options_Type limited new Abstract_Option_Type
+--                               with null record;
+--
+-- type Abstract_Options_Class_Access
+--                               is access all Abstract_Runtime_Options_Type'class;
+-- type Abstract_Options_Constant_Class_Access
+--                               is access constant Abstract_Runtime_Options_Type'class;
 
-   type Abstract_Options_Class_Access
-                                 is access all Abstract_Options_Type'class;
-   type Abstract_Options_Constant_Class_Access
-                                 is access constant Abstract_Options_Type'class;
+  type Flag_Option_Type              is new Base_Flag_Option_Type with null record;
 
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
-      What                       : in     Character;
-      Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
+  type Flag_Option_Access           is access Flag_Option_Type;
+  type Flag_Option_Class_Access     is access Flag_Option_Type'class;
 
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
-      What                       : in     String;
-      Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
-
-   overriding
-   procedure Bad_Option (        -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
-      Option                     : in     Root_Option_Type'class;
-      Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
-
-   overriding
-   procedure Bad_Trace_Option (  -- raises Failed exception
-      Options                    : in     Abstract_Options_Type;
-      Trace_Option               : in     Character;
-      What                       : in     Character;
-      Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
-      Message                    : in     String := "";
-      Where                      : in     String := Ada_Lib.Trace.Here);
-
-   overriding
-   procedure Update_Filter (
-      Options                    : in out Abstract_Options_Type) ;
-
-  type Option_Type              is new Root_Option_Type with null record;
-
-  type Option_Access             is access Option_Type;
-
-  function Create_Option (
+  function Allocate_Option (       -- create a single option
      Option                     : in     Character;
      Modifier                   : in     Character;
      From                       : in     String := Ada_Lib.Trace.Here
-  ) return Root_Option_Class_Access;
+  ) return Flag_Option_Access;
+
+   function Allocate_Option (
+      Option                     : in     Character;
+      Modifier                   : in     Character;
+      From                       : in     String := Here
+   ) return Flag_Option_Type;
 
   overriding
   function Image (
-     Option                     : in     Option_Type;
+     Option                     : in     Flag_Option_Type;
      Quote                      : in     Boolean := True
   ) return String;
 
   overriding
   function Less (
-     Left, Right                : in     Option_Type
+     Left, Right                : in     Flag_Option_Type
   ) return Boolean;
 
   overriding
   function Modified (
-     Option                     : in     Option_Type
+     Option                     : in     Flag_Option_Type
   ) return Boolean;
 
   overriding
   function Modifier (
-     Option                     : in     Option_Type
+     Option                     : in     Flag_Option_Type
   ) return Character;
 
 -- package Create_Options is
@@ -114,10 +87,11 @@ package Ada_Lib.Options.Actual is
 --      From                       : in     String := Ada_Lib.Trace.Here
 --    ) return Options_Type;
 --
+   overriding
    function Has_Option (   -- tests if option is registered for a catagory
-     Option                     : in     Option_Type;
-     Options_With_Parameters    : in     Root_Option_Class_Access;
-     Options_Without_Parameters : in     Root_Option_Class_Access
+      Option                        : in     Flag_Option_Type;
+      Options_With_Parameters       : in     Flag_List_Type'class;
+      Options_Without_Parameters    : in     Flag_List_Type'class
    ) return Boolean;
 
 --    function Image (
@@ -128,13 +102,13 @@ package Ada_Lib.Options.Actual is
 -- end Create_Options;
 
 -- generic
---    type Generic_Options_Type  is abstract limited new Interface_Options_Type
+--    type Generic_Options_Type  limited new Abstract_Option_Type
 --                                  with private;
 --
 -- package Verification_Package is
 
-   type Verification_Options_Type
-         is abstract limited new Abstract_Options_Type with record
+   type Verification_Options_Type is abstract
+         limited new Abstract_Runtime_Options_Type with record
       Initialized             : Boolean := False;
    end record;
 
@@ -142,6 +116,60 @@ package Ada_Lib.Options.Actual is
    type Verification_Options_Class_Access  is access all Verification_Options_Type'class;
    type Verification_Options_Constant_Class_Access
                               is access constant Verification_Options_Type'class;
+
+   overriding
+   procedure Bad_Option (        -- raises Failed exception
+      Options                    : in     Verification_Options_Type;
+      What                       : in     Character;
+      Message                    : in     String := "";
+      Where                      : in     String := Ada_Lib.Trace.Here);
+
+   overriding
+   procedure Bad_Option (        -- raises Failed exception
+      Options                    : in     Verification_Options_Type;
+      What                       : in     String;
+      Message                    : in     String := "";
+      Where                      : in     String := Ada_Lib.Trace.Here);
+
+   overriding
+   procedure Bad_Option (        -- raises Failed exception
+      Options                    : in     Verification_Options_Type;
+      Option                     : in     Base_Flag_Option_Type'class;
+      Message                    : in     String := "";
+      Where                      : in     String := Ada_Lib.Trace.Here);
+
+   overriding
+   procedure Bad_Trace_Option (  -- raises Failed exception
+      Options                    : in     Verification_Options_Type;
+      Trace_Option               : in     Character;
+      What                       : in     Character;
+      Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
+      Message                    : in     String := "";
+      Where                      : in     String := Ada_Lib.Trace.Here);
+
+-- procedure Bad_Option (
+--    Options                    : in     Verification_Options_Type;
+--    What                       : in     Character;
+--    Message                    : in     String := "";
+--    Where                      : in     String := Ada_Lib.Trace.Here);
+--
+-- procedure Bad_Option (
+--    Options                    : in     Verification_Options_Type;
+--    What                       : in     String;
+--    Message                    : in     String := "";
+--    Where                      : in     String := Ada_Lib.Trace.Here);
+--
+-- procedure Bad_Option (
+--    Options                    : in     Verification_Options_Type;
+--    Option                     : in     Base_Flag_Option_Type'class;
+--    Message                    : in     String := "";
+--    Where                      : in     String := Ada_Lib.Trace.Here);
+
+-- overriding
+-- function Has_Option (   -- added 2/22/24 to resolve issue with multple option lists
+--    Options                    : in     Verification_Options_Type;
+--    Option                     : in     Verification_Options_Type
+-- ) return Boolean;
 
 -- function Get_Ada_Lib_Modifiable_Verification_Options (
 --    From                       : in  String := Ada_Lib.Trace.Here
@@ -168,6 +196,15 @@ package Ada_Lib.Options.Actual is
    ) return Boolean;
 
    overriding
+   procedure Trace_Parse (
+      Options                    : in out Verification_Options_Type;
+      Iterator                   : in out Command_Line_Iterator_Interface'class);
+
+   overriding
+   procedure Update_Filter (
+      Options                    : in out Verification_Options_Type);
+
+   overriding
    function Verify_Initialized (
       Options                 : in     Verification_Options_Type;
       From                    : in     String := GNAT.Source_Info.Source_Location
@@ -187,7 +224,7 @@ package Ada_Lib.Options.Actual is
 -- end Verification_Package;
 
    -- type to application options
-   type Program_Options_Type  is abstract limited new Verification_Options_Type with record
+   type Program_Options_Type  is limited new Verification_Options_Type with record
       Help_Test               : Boolean := False;  -- used to test help options
       In_Help                 : Boolean := False;
       Processed               : Boolean := False;
@@ -210,7 +247,7 @@ package Ada_Lib.Options.Actual is
 
 -- package Program_Options_Package
 --                               is new Verification_Package (
---                                     Abstract_Options_Type);
+--                                     Abstract_Runtime_Options_Type);
 
    function Get_Ada_Lib_Modifiable_Program_Options (
       From                       : in  String := Ada_Lib.Trace.Here
@@ -220,6 +257,11 @@ package Ada_Lib.Options.Actual is
       From                       : in  String := Ada_Lib.Trace.Here
    ) return Program_Options_Constant_Class_Access
    with pre => Have_Ada_Lib_Program_Options;
+
+   overriding
+   function Image (
+     Options                     : in     Program_Options_Type
+   ) return String;
 
    overriding
    function Initialize (
@@ -251,7 +293,7 @@ package Ada_Lib.Options.Actual is
    function Process_Option (  -- process one option
       Options                    : in out Program_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Root_Option_Type'class
+      Option                     : in     Base_Flag_Option_Type'class
    ) return Boolean
    with pre => Options.Initialized;
 -- with Pre => not Have_Ada_Lib_Program_Options;
@@ -295,10 +337,10 @@ package Ada_Lib.Options.Actual is
 
 -- package Nested_Options_Package
 --                               is new Verification_Package (
---                                     Abstract_Options_Type);
+--                                     Abstract_Runtime_Options_Type);
    -- type used for options nested in other options
-   type Nested_Options_Type   is abstract limited new Verification_Options_Type
-                                 with null record;
+   type Nested_Options_Type      is limited new Verification_Options_Type
+                                    with null record;
 
    type Nested_Options_Access is access all Nested_Options_Type;
    type Nested_Options_Class_Access is access all Nested_Options_Type'class;
@@ -322,6 +364,11 @@ package Ada_Lib.Options.Actual is
    with pre => Have_Ada_Lib_Nested_Options;
 
    overriding
+   function Image (
+     Options                     : in     Nested_Options_Type
+   ) return String;
+
+   overriding
    procedure Program_Help (
       Options                    : in      Nested_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type);
@@ -330,7 +377,7 @@ package Ada_Lib.Options.Actual is
    function Process_Option (
       Options                    : in out Nested_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Root_Option_Type'class
+      Option                     : in     Base_Flag_Option_Type'class
    ) return Boolean;
 
    procedure Set_Ada_Lib_Nested_Options (
@@ -338,4 +385,9 @@ package Ada_Lib.Options.Actual is
    ) with Pre => Options /= Null and then
                  not Have_Ada_Lib_Nested_Options;
 
+   Null_Flag_Option              : constant Flag_Option_Type :=
+                                    Flag_Option_Type'(
+                                       Kind     => Nil_Option,
+                                       Modifier => Unmodified_flag,
+                                       Option   => Not_Flag_Option);
 end Ada_Lib.Options.Actual;

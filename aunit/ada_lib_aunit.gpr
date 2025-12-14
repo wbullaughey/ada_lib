@@ -1,4 +1,4 @@
-with "ada_lib.gpr";
+--with "ada_lib.gpr";
 with "alr_environment.gpr";
 with "aunit.gpr";
 

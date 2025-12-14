@@ -1,6 +1,6 @@
 with Ada.Containers.Doubly_Linked_Lists;
-with Ada_Lib.Options.Actual;
-with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Create;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 
@@ -18,7 +18,7 @@ package Ada_Lib.Options.Runstring is
    type Element_Type          is record
       From                    : Ada_Lib.Strings.Unlimited.String_Type;
       Kind                    : Kind_Type;
-      Option                  : Ada_Lib.Options.Actual.Option_Type;
+      Option                  : Base_Flag_Option_Class_Access;
    end record;
 
    type Element_Access        is access all Element_Type;
@@ -51,20 +51,20 @@ package Ada_Lib.Options.Runstring is
       ) return String;
 
       function Has_Parameter (
-         Option                  : in     Ada_Lib.Options.Actual.Option_Type
+         Option                  : in     Base_Flag_Option_Type'class
       ) return Boolean;
 
       function Is_Registered (   -- tests if option was registered for the whole program
-         Option                  : in     Root_Option_Type
+         Option                  : in     Base_Flag_Option_Type'class
       ) return Boolean;
 
       procedure Register (
          Kind                    : in     Kind_Type;
-         Options                 : in     Ada_Lib.Options.Create.Options_Type;
+         Options                 : in     Flag_List_Type'class;
          From                    : in     String := Ada_Lib.Trace.Here);
 
       function Registration (
-         Option                  : in     Ada_Lib.Options.Actual.Option_Type
+         Option                  : in     Base_Flag_Option_Type'class
       ) return String;
 
       procedure Reset;                 -- clears sets if need different iterator sets

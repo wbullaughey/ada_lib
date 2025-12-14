@@ -31,10 +31,22 @@ ada_lib_options = "~0.1.0-dev"
 ada_lib_options = { path='ada_lib_options' }
 
 [[depends-on]]
+gnoga_options = "~0.1.0-dev"
+
+[[pins]]
+gnoga_options = { path='../gnoga_lib/gnoga_options' }
+
+[[depends-on]]
 aunit = "~0.1.0-dev"
 
 [[pins]]
 aunit = { path='../aunit' }
+
+[[depends-on]]
+ada_lib_aunit = "~0.1.0-dev"
+
+[[pins]]
+ada_lib_aunit = { path='aunit' }
 
 [[depends-on]]
 gnatcoll = "*"

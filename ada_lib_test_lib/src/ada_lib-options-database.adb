@@ -11,11 +11,11 @@ package body Ada_Lib.Options.Database is
    Options_With_Parameters       : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                        Ada_Lib.Options.Create_Options (
-                                          "LprRu", Unmodified);
+                                          "LprRu", Unmodified_flag);
    Options_Without_Parameters    : aliased constant
                                     Ada_Lib.Options.Options_Type :=
                                        Ada_Lib.Options.Create_Options (
-                                          "l", Unmodified);
+                                          "l", Unmodified_flag);
 
    Debug                         : Boolean renames Ada_Lib.Database.Trace_All;
 

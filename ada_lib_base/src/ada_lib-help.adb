@@ -13,7 +13,7 @@ with Command_Name;
 
 package body Ada_Lib.Help is
 
-   use type Ada_Lib.Options.Actual.Option_Type;
+   use type Ada_Lib.Options.Actual.Flag_Option_Type;
 
    subtype Line_Type             is String;
 
@@ -22,7 +22,7 @@ package body Ada_Lib.Help is
       Description_Length         : Positive;
       Component_Length           : Natural;
       Source_Line_Length         : Positive) is record
-      Option                     : Ada_Lib.Options.Actual.Option_Type;
+      Option                     : Ada_Lib.Options.Actual.Flag_Option_Type;
       Parameter                  : Line_Type (1 .. Parameter_Length);
       Description                : Line_Type (1 .. Description_Length);
       Component                  : Line_Type (1 .. Component_Length);
@@ -54,7 +54,7 @@ package body Ada_Lib.Help is
 
    ----------------------------------------------------------------------------
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type;
+      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -147,13 +147,15 @@ package body Ada_Lib.Help is
       Description                : in     String;
       Component                  : in     String := "";
       Modifier                   : in     Character :=
-                                             Ada_Lib.Options.Unmodified;
+                                             Ada_Lib.Options.Unmodified_Flag;
       Source_Line                : in     String := Ada_Lib.Trace.Here) is
    ----------------------------------------------------------------------------
 
+      Flag                       : Ada_Lib.Options.Actual.Flag_Option_Type;
+
    begin
-      Add_Option (Ada_Lib.Options.Actual.Create_Option (Option, Modifier), Parameter,
-         Description, Component, Source_Line);
+      Ada_Lib.Options.Actual.Create_Option (Flag, Option, Modifier);
+      Add_Option (Flag, Parameter, Description, Component, Source_Line);
    end Add_Option;
 
    ----------------------------------------------------------------------------

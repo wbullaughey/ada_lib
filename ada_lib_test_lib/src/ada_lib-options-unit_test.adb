@@ -2,10 +2,11 @@ with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
 --with Ada_Lib.Event.Unit_Test;
 --with Ada_Lib.GNOGA.Unit_Test;
---with Ada_Lib.Help;
+with Ada_Lib.Help;
 --with GNOGA_Options;
 --with Ada_Lib.OS;
---with Ada_Lib.Options.Runstring;
+with Ada_Lib.Options.Create;
+with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
@@ -20,19 +21,33 @@ package body Ada_Lib.Options.Unit_Test is
    Driver_List_Option         : constant Character := 'D';
    Trace_Option               : constant Character := 'U';
    Trace_Prefix               : constant Character := '@';
-   Options_With_Parameters
-                              : aliased constant Ada_Lib.Options.Options_Type :=
-                                 Ada_Lib.Options.Create_Options (
-                                    "es" & Trace_Option, Unmodified) &
-                                 Ada_Lib.Options.Create_Options (
+-- Options_With_Parameters
+--                            : aliased constant Ada_Lib.Options.Options_Type :=
+--                               Ada_Lib.Options.Create_Options (
+--                                  "es" & Trace_Option, Unmodified_flag) &
+--                               Ada_Lib.Options.Create_Options (
+--                                  "AnR", Ada_Lib.Help.Modifier);
+   Options_With_Parameters    : aliased constant
+                                 Ada_Lib.Options.Flag_List_Type :=
+                                    Ada_Lib.Options.Create.Create_Multiple (
+                                       "es" & Trace_Option,
+                                       Ada_Lib.Options.Unmodified_flag) &
+                                 Ada_Lib.Options.Create.Create_Multiple (
                                     "AnR", Ada_Lib.Help.Modifier);
-   Options_Without_Parameters : aliased constant
-                                 Ada_Lib.Options.Options_Type :=
-                                    Ada_Lib.Options.Create_Options (
-                                       "x", Unmodified) &
-                                    Ada_Lib.Options.Create_Options (
-                                       Driver_List_Option & "lmPSu",
-                                       Ada_Lib.Help.Modifier);
+-- Options_Without_Parameters : aliased constant
+--                               Ada_Lib.Options.Options_Type :=
+--                                  Ada_Lib.Options.Create_Options (
+--                                     "x", Unmodified_flag) &
+--                                  Ada_Lib.Options.Create_Options (
+--                                     Driver_List_Option & "lmPSu",
+--                                     Ada_Lib.Help.Modifier);
+   Options_Without_Parameters    : aliased constant
+                                    Flag_List_Type :=
+                                       Create.Create_Multiple (
+                                          "x", Unmodified_flag) &
+                                       Create.Create_Multiple (
+                                          Driver_List_Option & "lmPSu",
+                                          Ada_Lib.Help.Modifier);
 
    Initialized_Recursed       : Boolean := False;
    Unit_Test_Options          : Ada_Lib_Unit_Test_Options_Class_Access := Null;
@@ -95,8 +110,8 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
 
       Message        : constant String := " from " & From &
-         " options with parameters " & Image (Options_With_Parameters) &
-         " with out " & Image (Options_Without_Parameters);
+         " options with parameters " & Options_With_Parameters.Image &
+         " with out " & Options_Without_Parameters.Image;
 
    begin
      Log_In_Checked (Initialized_Recursed, Debug or Trace_Options, Message);
@@ -210,7 +225,7 @@ package body Ada_Lib.Options.Unit_Test is
    function Process_Option (
       Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
