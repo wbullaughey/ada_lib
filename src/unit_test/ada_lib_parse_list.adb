@@ -4,7 +4,7 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Parse_List;
 with Ada_Lib.Set;
 
-procedure Ada_Lib.Parse_List is
+procedure Ada_Lib_Parse_List is
 
    type Id_Type            is range 1 .. 1000;
 
@@ -95,4 +95,4 @@ begin
    Test ("1-x", False);
    Test ("x-10", False);
    Test ("1.0", False);
-end Ada_Lib.Parse_List;
+end Ada_Lib_Parse_List;

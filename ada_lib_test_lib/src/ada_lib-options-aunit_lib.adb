@@ -8,6 +8,7 @@ with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 --with GNOGA_Options;
 --with Ada_Lib.Options.Template;
@@ -21,7 +22,7 @@ with Ada_Lib.Trace.Tests; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test; --.GNOGA;
 --with AUnit.Ada_Lib.Options;
 --with Command_Name;
-with Debug_Options;
+--with Debug_Options;
 
 --pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
 
@@ -29,11 +30,11 @@ package body Ada_Lib.Options.AUnit_Lib is
 
    Trace_Option                  : constant Character := 't';
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                          Ada_Lib.Options.Create_Options (
-                                             Trace_Option, Unmodified_flag);
+                                    Flag_List_Type :=
+                                       Create.Create_One (
+                                          Trace_Option, Unmodified_flag);
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
+                                    Flag_List_Type :=
                                           Ada_Lib.Options.Null_Flag_List;
 
    -------------------------------------------------------------------------
@@ -131,7 +132,7 @@ package body Ada_Lib.Options.AUnit_Lib is
    function Process_Option (
       Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option                     : in     Base_Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 

@@ -175,7 +175,7 @@ package body Ada_Lib.OS is
 begin
 --Trace := True;
 -- if Trace then
---    Put_Line (" Unit_Testing " & Unit_Testing'img & " " &
+--    Put_Line (" Ada_Lib.Options.Ada_Lib_Environment.Unit_Testing " & Ada_Lib.Options.Ada_Lib_Environment.Unit_Testing'img & " " &
 --       GNAT.Source_Info.Source_Location);
 -- end if;
    Log_Here (Elaborate or else Trace);

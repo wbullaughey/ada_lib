@@ -13,6 +13,7 @@ with Command_Name;
 
 package body Ada_Lib.Help is
 
+-- use type Ada_Lib.Options.Base_Flag_Option_Type;
    use type Ada_Lib.Options.Actual.Flag_Option_Type;
 
    subtype Line_Type             is String;

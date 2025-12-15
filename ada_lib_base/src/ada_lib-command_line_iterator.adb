@@ -7,7 +7,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.OS;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
--- with Debug_Options;
 
 package body Ada_Lib.Command_Line_Iterator is
 

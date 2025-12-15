@@ -1,5 +1,6 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Help;
+with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 --with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Template;
@@ -17,13 +18,12 @@ package body Ada_Lib.Options.Template is
                                  -- only used for Help_Test
    Trace_Help_Options_With_Parameters
                            : aliased constant
-                              Standard.Ada_Lib.Options.Options_Type :=
-                                    Ada_Lib.Options.Create_Options (
-                                       Trace_Option, Unmodified_flag);
-   Options_Without_Parameters
-                           : aliased constant
-                                 Standard.Ada_Lib.Options.Options_Type :=
-                                    Standard.Ada_Lib.Options.Null_Flag_List;
+                              Flag_List_Type :=
+                                 Create.Create_One (
+                                 Trace_Option, Unmodified_flag);
+   Options_Without_Parameters    : aliased constant
+                                    Flag_List_Type :=
+                                          Ada_Lib.Options.Null_Flag_List;
 
    ----------------------------------------------------------------------------
    overriding
@@ -36,7 +36,7 @@ package body Ada_Lib.Options.Template is
    begin
       Log_In (Debug);
       Template_Options_Constant := Options'unchecked_access;
-      if Ada_Lib.Help_Test then
+      if Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
          Ada_Lib.Options.Runstring.Options.Register (
             Ada_Lib.Options.Runstring.With_Parameters,
             Trace_Help_Options_With_Parameters);
@@ -54,7 +54,7 @@ package body Ada_Lib.Options.Template is
       Options           : in out Template_Options_Type;
       Iterator          : in out Ada_Lib.Options.
                                     Command_Line_Iterator_Interface'class;
-      Option            : in     Ada_Lib.Options.Actual.Flag_Option_Type'class
+      Option            : in     Ada_Lib.Options.Base_Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -62,10 +62,10 @@ package body Ada_Lib.Options.Template is
 
    begin
       Log_In (Trace_Options or Debug, Option.Image &
-      " help_test " & Ada_Lib.Help_Test'img &
+      " help_test " & Ada_Lib.Options.Ada_Lib_Environment.Help_Test'img &
          " Options address " & Image (Options'address));
 
-      if Ada_Lib.Help_Test then
+      if Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
          declare
             Has_On_Options : constant Boolean :=
                               Has_Option (Option,
@@ -119,7 +119,7 @@ package body Ada_Lib.Options.Template is
       case Help_Mode is
 
          when Ada_Lib.Options.Program =>
-            if Ada_Lib.Help_Test then
+            if Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
                New_Line;
                Ada_Lib.Help.Add_Option (Trace_Option, "options", -- t
                   "enables trace template unit tests", Component);

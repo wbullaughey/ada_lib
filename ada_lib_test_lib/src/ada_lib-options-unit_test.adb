@@ -1,16 +1,16 @@
 with Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
---with Ada_Lib.Event.Unit_Test;
---with Ada_Lib.GNOGA.Unit_Test;
+with Ada_Lib.Event.Unit_Test;
+with Ada_Lib.GNOGA.Unit_Test;
 with Ada_Lib.Help;
 --with GNOGA_Options;
---with Ada_Lib.OS;
+with Ada_Lib.OS;
 with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
---with Ada_Lib.Test;
+with Ada_Lib.Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Unit_Test.Test_Cases;
---with AUnit.Ada_Lib; debug moved to Ada_Lib.Options.Aunit
+with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Ada_Lib; -- debug moved to Ada_Lib.Options.Aunit
 --with Debug_Options;
 
 package body Ada_Lib.Options.Unit_Test is
@@ -223,9 +223,9 @@ package body Ada_Lib.Options.Unit_Test is
    -- processes options it knows about and calls parent for others
    overriding
    function Process_Option (
-      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type;
-      Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type'class
+      Options  : in out Ada_Lib_Unit_Test_Program_Options_Type;
+      Iterator : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
+      Option   : in     Ada_Lib.Options.Base_Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -235,7 +235,7 @@ package body Ada_Lib.Options.Unit_Test is
       ----------------------------------------------------------------------------
 
       begin
-         if not Ada_Lib.Help_Test then
+         if not Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
             Options.Bad_Option ("bad options: Routine (-e) or Suite Name (-s) " &
                "cannot be combined" &
                " with List_Suites (-@l) or Driver_Suites (-@d) called from " & From);
@@ -360,7 +360,7 @@ package body Ada_Lib.Options.Unit_Test is
 
                   when 'R' => -- set random seed to argument
                      if Options.Number_Random_Generators = 0 and then
-                           not Ada_Lib.Help_Test then
+                           not Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
                         raise Failed with
                            "number randoom number generators not set at " &
                            Here;
@@ -391,7 +391,7 @@ package body Ada_Lib.Options.Unit_Test is
                         raise Failed with "random seed mode already set";
                      end if;
                      if Options.Number_Random_Generators = 0 and then
-                           not Ada_Lib.Help_Test then
+                           not Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
                         raise Failed with
                            "number randoom number generators not set at " &
                            Here;
@@ -575,7 +575,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
 
       Parameter                  : constant String := Iterator.Get_Parameter;
-      Suboption                  : Suboption_Type := Plain;
+      Suboption                  : Flag_Option_Kind_Type := Plain;
 
 
    begin
@@ -584,7 +584,7 @@ package body Ada_Lib.Options.Unit_Test is
          Log_Here (Trace_Options or Debug, Quote ("trace", Trace));
 
          case Suboption is
-            when Ada_Lib.Options.Plain =>
+            when Plain =>
 
                case Trace is
 
@@ -650,11 +650,11 @@ package body Ada_Lib.Options.Unit_Test is
 
                end case;
 
-         when Ada_Lib.Options.Modified =>
+         when Modified =>
                case Trace is
 
                   when 'a' =>
-                     AUnit.Ada_Lib.Debug := True;
+                     Standard.AUnit.Ada_Lib.Debug := True;
 
                   when others =>
                      Options.Bad_Option (Quote (
@@ -665,6 +665,10 @@ package body Ada_Lib.Options.Unit_Test is
 
                end case;
                Suboption := Ada_Lib.Options.Plain;
+
+         when Nil_Option =>
+            Not_Implemented;
+
          end case;
 
       end loop;

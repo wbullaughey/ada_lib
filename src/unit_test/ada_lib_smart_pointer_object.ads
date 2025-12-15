@@ -2,7 +2,7 @@ with Ada_Lib.Smart_Pointer;
 
 pragma Elaborate_All (Ada_Lib.Smart_Pointer);
 
-package Ada_Lib.Pmart_Pointer_Object is
+package Ada_Lib_Pmart_Pointer_Object is
 
    type Object_Type        is tagged record
       Field             : Integer;
@@ -14,4 +14,4 @@ package Ada_Lib.Pmart_Pointer_Object is
       Base_Type   => Object_Type,
       Base_Access => Object_Access);
 
-end Ada_Lib.Pmart_Pointer_Object;
+end Ada_Lib_Pmart_Pointer_Object;

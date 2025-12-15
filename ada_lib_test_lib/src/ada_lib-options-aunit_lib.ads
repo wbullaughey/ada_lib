@@ -3,6 +3,7 @@ with Ada_Lib.Options.Database;
 with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.Template;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Tests;
 --with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
@@ -10,14 +11,14 @@ with AUnit.Test_Suites;
 -- options for unit tests of Ada_Lib
 package Ada_Lib.Options.AUnit_Lib is
 
-   type DBDamon_Test_Suite       is new AUnit.Test_Suites.Test_Suite
+   type DBDamon_Test_Suite       is new Standard.AUnit.Test_Suites.Test_Suite
                                     with null record;
 
    type DBDamon_Test_Access      is access DBDamon_Test_Suite;
 
    function New_Suite return DBDamon_Test_Access;
 
-   type Non_DBDamon_Test_Suite   is new AUnit.Test_Suites.Test_Suite with null record;
+   type Non_DBDamon_Test_Suite   is new Standard.AUnit.Test_Suites.Test_Suite with null record;
 
    type Non_DBDamon_Test_Access  is access Non_DBDamon_Test_Suite;
 
@@ -99,7 +100,7 @@ private
    function Process_Option (
       Options                    : in out Aunit_Program_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option                     : in     Base_Flag_Option_Type'class
    ) return Boolean
    with pre => Options.Initialized;
 

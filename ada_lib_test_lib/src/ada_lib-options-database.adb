@@ -1,6 +1,7 @@
 with Ada.Exceptions;
 --with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
+with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
@@ -9,13 +10,13 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 package body Ada_Lib.Options.Database is
 
    Options_With_Parameters       : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                       Ada_Lib.Options.Create_Options (
+                                    Flag_List_Type :=
+                                       Create.Create_Multiple (
                                           "LprRu", Unmodified_flag);
    Options_Without_Parameters    : aliased constant
-                                    Ada_Lib.Options.Options_Type :=
-                                       Ada_Lib.Options.Create_Options (
-                                          "l", Unmodified_flag);
+                                    Flag_List_Type :=
+                                       Create.Create_One (
+                                          'l', Unmodified_flag);
 
    Debug                         : Boolean renames Ada_Lib.Database.Trace_All;
 
@@ -27,7 +28,7 @@ package body Ada_Lib.Options.Database is
    begin
       if    (  Options.Has_Local_DBDaemon or else
                Options.Local_DBDaemon_Path.Length > 0) and then
-            not Ada_Lib.Help_Test then
+            not Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
          raise Multiple_Hosts with "from " & Here;
       end if;
    end Cant_Be_Local;
@@ -41,7 +42,7 @@ package body Ada_Lib.Options.Database is
       if    (  Options.Remote_Host.Length > 0 or else
                Options.Remote_User.Length > 0 or else
                Options.Remote_DBDaemon_Path.Length > 0) and then
-            not Ada_Lib.Help_Test then
+            not Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
          raise No_Host with "Application does not suport a remote host, " &
             "remote user or a remote dbdaemon path from " & Here;
       end if;
@@ -114,7 +115,7 @@ package body Ada_Lib.Options.Database is
    function Process_Option (
       Options                    : in out Database_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option                     : in     Base_Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------
 

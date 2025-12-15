@@ -1,7 +1,7 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Smart_Pointer_Object;
 
-procedure Ada_Lib.Smart_Pointer is
+procedure Ada_Lib_Smart_Pointer is
 
    package Object          renames Ada_Lib.Smart_Pointer_Object;
    package Pointer            renames Ada_Lib.Smart_Pointer_Object.Pointer;
@@ -46,4 +46,4 @@ begin
       Put_Line ("exit block");
    end;
    Put_Line ("exit program");
-end Ada_Lib.Smart_Pointer;
+end Ada_Lib_Smart_Pointer;

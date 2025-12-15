@@ -1,5 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 --with Ada_Lib.Help;
+with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Create;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -12,7 +14,7 @@ package body Ada_Lib.Help.Tests is
    type String_Pointer           is access constant String;
 
    type Test_Case_Type           is record
-      Option                     : Option_Type;
+      Option                     : Ada_Lib.Options.Flag_List_Type;
       Parameter                  : String_Pointer;
       Description                : String_Pointer;
    end record;
@@ -87,17 +89,17 @@ package body Ada_Lib.Help.Tests is
 
       Test_Case                  : constant Test_Cases_Type := (
          Test_Case_Type'(
-            Option      => Create_Option ('b', Unmodified_flag),
+            Option      => Options.Create.Create_One ('b', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('c', Unmodified_flag),
+            Option      => Options.Create.Create_One ('c', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("c parameter"),
             Description => new String'("c option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('a', Unmodified),
+            Option      => Options.Create.Create_One ('a', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("a parameter"),
             Description => new String'("a option")
          )
@@ -155,22 +157,22 @@ package body Ada_Lib.Help.Tests is
 
       Test_Case                  : constant Test_Cases_Type := (
          Test_Case_Type'(
-            Option      => Create_Option ('B', Modifier),
+            Option      => Options.Create.Create_One ('B', Modifier),
             Parameter   => new String'(Modifier & "B parameter"),
             Description => new String'(Modifier & "B option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('a', Modifier),
+            Option      => Options.Create.Create_One ('a', Modifier),
             Parameter   => new String'(Modifier & "a parameter"),
             Description => new String'(Modifier & "a option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('b', Unmodified),
+            Option      => Options.Create.Create_One ('b', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),
          Test_Case_Type'(
-            Option      => Create_Option ('b', Modifier),
+            Option      => Options.Create.Create_One ('b', Modifier),
             Parameter   => new String'(Modifier & "b parameter"),
             Description => new String'(Modifier & "b option")
          )

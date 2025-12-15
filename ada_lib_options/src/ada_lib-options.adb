@@ -90,7 +90,8 @@ return "";
    -------------------------------------------------------------------
 
    begin
-      pragma Assert (False, "not implemented at " & Here & " by " & Who);
+      pragma Assert (False, "not implemented at " & Here &
+         " by " & Who & " for " & Why);
    end Not_Implemented;
 
    ----------------------------------------------------------------------------

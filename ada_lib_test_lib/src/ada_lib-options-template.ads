@@ -1,6 +1,7 @@
 --with AUnit.Test_Filters;
 with Ada_Lib.Options.Actual;
 --with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Tests;
 
 -- options for unit test of Ada_Lib
@@ -33,7 +34,7 @@ package Ada_Lib.Options.Template is
       Options           : in out Template_Options_Type;
       Iterator          : in out Ada_Lib.Options.
                                     Command_Line_Iterator_Interface'class;
-      Option            : in     Ada_Lib.Options.Actual.Option_Type'class
+      Option            : in     Base_Flag_Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 

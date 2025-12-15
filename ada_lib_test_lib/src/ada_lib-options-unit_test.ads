@@ -1,11 +1,8 @@
 with Ada_Lib.Options.Actual;
---with GNOGA_Options;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with AUnit.Test_Filters.Ada_Lib;
-
---with Ada_Lib.Database.Connection;
---with GNAT.Source_Info;
+with GNOGA_Options;
 
 -- provides options for all unit testing
 package Ada_Lib.Options.Unit_Test is
@@ -41,8 +38,8 @@ package Ada_Lib.Options.Unit_Test is
       Debug_Options     : Boolean := False;  -- debug unit test options
       Exit_On_Done      : Boolean := False;  -- exit test application after
                                              -- all unit tests complete
-      Filter            : aliased AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
-      GNOGA_Options     : GNOGA_Options.GNOGA_Options_Type;
+      Filter            : aliased Standard.AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
+      GNOGA_Options     : Standard.GNOGA_Options.GNOGA_Options_Type;
       Mode              : Mode_Type := Run_Tests;  -- run unit tests
       Manual            : Boolean := False;  -- GUI interactions must be
                                              -- performed manually
@@ -92,7 +89,7 @@ package Ada_Lib.Options.Unit_Test is
    function Process_Option (  -- process one option
      Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
      Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type'class
+      Option                     : in     Ada_Lib.Options.Base_Flag_Option_Type'class
    ) return Boolean
    with pre => Options.Verify_Initialized;
 

@@ -302,8 +302,8 @@ begin
       Debug := Trace_Tests;
    end if;
 --Debug := True;
-   Log_Here (Trace_Options or Elaborate, "unit testing " & Unit_Testing'img &
-         " Ada_Lib.Help_Test " & Help_Test'img &
+   Log_Here (Trace_Options or Elaborate, "unit testing " & Ada_Lib.Options.Ada_Lib_Environment.Unit_Testing'img &
+         " Ada_Lib.Options.Ada_Lib_Environment.Help_Test " & Ada_Lib.Options.Ada_Lib_Environment.Help_Test'img &
       "Environment_Variables help test " & Ada.Environment_Variables.Value (
          "BUILD_MODE", "execute") &
       "Environment_Variables unit test " & Ada.Environment_Variables.Value (
