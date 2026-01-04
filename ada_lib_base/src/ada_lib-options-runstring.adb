@@ -1,17 +1,22 @@
-with Ada_Lib.Options.Actual;
+with Ada.Characters.Latin_1;
+with Ada_Lib.Options.Flags;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+--with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
--- with Debug_Options;
+with Hex_IO;
 
 package body Ada_Lib.Options.Runstring is
 
--- use type Element_Type;
--- use type Abstract_Runtime_Options_Type'class;
    use type Ada_Lib.Strings.Unlimited.String_Type;
 
    function Find_Registration (
       Registrations           : in     Registrations_Type;
       Option                  : in     Base_Flag_Option_Type'class
    ) return Constant_Reference_Type;
+
+   Debug       : Boolean renames Ada_Lib_Options_Runstring.Debug;
+   Debug_All   : Boolean renames Ada_Lib_Options.Debug_All;
+   LF                   : Character renames Ada.Characters.Latin_1.LF;
 
    -------------------------------------------------------------------
    overriding
@@ -24,6 +29,47 @@ package body Ada_Lib.Options.Runstring is
       return Left.Option = Right.Option and then
              Left.Kind = Right.Kind;
    end "=";
+
+   -------------------------------------------------------------------
+   function Image (
+      Element                 : in     Element_Type
+   ) return String is
+   -------------------------------------------------------------------
+
+   begin
+      return Element.Option.Image & (case Element.Kind is
+
+         when With_Parameters =>
+            " with parameter",
+
+         when Without_Parameters =>
+            "");
+   end Image;
+
+   -------------------------------------------------------------------
+   function Image (
+      Registrations        : in     Registrations_Type
+   ) return String is
+   -------------------------------------------------------------------
+
+      Result   : Ada_Lib.Strings.Unlimited.String_Type;
+
+      ----------------------------------------------------------------
+      procedure List (
+         Position      :     in Registrations_Package.Cursor) is
+      ----------------------------------------------------------------
+
+      begin
+         Result := Result & "   " &
+            Registrations_Package.Element (Position).Image & LF;
+      end List;
+      ----------------------------------------------------------------
+
+   begin
+      Registrations_Package.Iterate (
+         Registrations_Package.List (Registrations), List'access);
+      return Result.Coerce;
+   end Image;
 
    -------------------------------------------------------------------
    function Find_Registration (
@@ -154,8 +200,7 @@ package body Ada_Lib.Options.Runstring is
 
          begin
             Log_In (Debug or Trace_Options,
-            "registrations" & Registrations.Length'img);
-            Log_Here (Debug or Trace_Options, Option.Image);
+               "registrations" & Registrations.Length'img);
             if Is_Registered (Option) then
                Log_Exception (Debug or Trace_Options);
                raise Duplicate_Options with Option.Image &
@@ -163,7 +208,7 @@ package body Ada_Lib.Options.Runstring is
                   Registration (Option) &
                   " called from " & From;
             end if;
-            Log_Out (Debug or Trace_Options);
+            Log_Out (Debug or Trace_Options, "unique option " & Option.Image);
          end Check_Duplicates;
 
          ------------------------------------------------------------
@@ -177,22 +222,25 @@ package body Ada_Lib.Options.Runstring is
             Log_Here (Debug or Trace_Options, Option.Image & " kind " & Kind'img);
             Element.From.Construct (From);
             Element.Kind := Kind;
-            Element.Option := new Actual.Flag_Option_Type'(
-               Actual.Flag_Option_Type (Option));
+            Element.Option := new Flags.Flag_Option_Type'(
+               Flags.Flag_Option_Type (Option));
             Registrations.Append (Element);
          end Register_Option;
 
       begin
-         Log_In (Debug or Trace_Options, "Kind " & Kind'img &
+         Log_In (Debug or Trace_Options,
+            "options " & Options.Image &
+            " Kind " & Kind'img &
             " registrations" & Registrations.Length'img &
---          " address " & Image (Registrations'address) &
+            " address " & Hex_IO.Hex (Registrations'address) &
             " called from " & From);
 
          Options.Iterate (Check_Duplicates'access);
          Options.Iterate (Register_Option'access);
 
          Log_Out (Debug or Trace_Options,
-            "registrations" & Registrations.Length'img);
+            "registrations" & Registrations.Length'img &
+            " registrations " & LF & "options: " & LF & Registrations.Image);
       end Register;
 
       -------------------------------------------------------------------
@@ -225,7 +273,7 @@ package body Ada_Lib.Options.Runstring is
    end Registration_Type;
 
 begin
-     Debug := Debug or Ada_Lib.Options.Debug_All;
+     Debug := Debug or Debug_All;
 --Debug := True;
 --Trace_Options := True;
 --Elaborate := True;

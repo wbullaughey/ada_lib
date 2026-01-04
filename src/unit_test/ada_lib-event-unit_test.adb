@@ -1,4 +1,5 @@
 with Ada.Exceptions;
+with Ada_Lib.Time;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -78,7 +79,7 @@ package body Ada_Lib.Event.Unit_Test is
       begin
          Log_In (Debug, Event.Description &
             " wait " & Event.Wait_Time'img &
-            " started at " & From_Start (Event.Start_Time, Hundreds => True));
+            " started at " & Ada_Lib.Time.From_Start (Event.Start_Time, Hundreds => True));
 
          if not Test_Event.Event_Occured then
             Log_Out (Debug);
@@ -97,7 +98,7 @@ package body Ada_Lib.Event.Unit_Test is
       begin
          Log_In (Debug, Event.Description &
             " wait " & Event.Wait_Time'img &
-            " started at " & From_Start (Event.Start_Time, Hundreds => True));
+            " started at " & Ada_Lib.Time.From_Start (Event.Start_Time, Hundreds => True));
 
          Test_Event.Set_Event;
          Log_Out (Debug);

@@ -1,3 +1,4 @@
+with Ada_Lib.Strings;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Auto_Lock is
@@ -9,7 +10,7 @@ package body Ada_Lib.Auto_Lock is
    -------------------------------------------------------------------
 
    begin
-      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Image (Object'address));
+      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Ada_Lib.Strings.Image (Object'address));
       if Object.Got_Lock then
          Object.Reference.Unlock;
       end if;
@@ -23,7 +24,7 @@ package body Ada_Lib.Auto_Lock is
    -------------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib_Lib_Debug, "address " & Image (Object'address));
+      Log_In (Ada_Lib_Lib_Debug, "address " & Ada_Lib.Strings.Image (Object'address));
       if Object.Reference.Is_Locked then
          Object.Got_Lock := False;
       else
@@ -49,7 +50,7 @@ package body Ada_Lib.Auto_Lock is
    -------------------------------------------------------------------
 
    begin
-      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Image (Object'address));
+      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Ada_Lib.Strings.Image (Object'address));
       Object.Reference.Lock;
       Log (Ada_Lib_Lib_Debug, Here, Who & " exit");
    end Initialize;
@@ -61,7 +62,7 @@ package body Ada_Lib.Auto_Lock is
    -------------------------------------------------------------------
 
    begin
-      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Image (Object'address));
+      Log (Ada_Lib_Lib_Debug, Here, Who & " enter " & Ada_Lib.Strings.Image (Object'address));
       Object.Reference.Unlock;
       Log (Ada_Lib_Lib_Debug, Here, Who & " exit");
    end Finalize;

@@ -1,4 +1,5 @@
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Nested;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Trace;
 --with Ada_Lib.Socket_IO;
 --with Ada_Lib.Unit_Test.Tests;
@@ -8,7 +9,7 @@ package Ada_Lib.GNOGA.Unit_Test.Options is
    Failed                        : exception;
 
    type GNOGA_Unit_Test_Options_Type
-                                 is Limited new Ada_Lib.Options.Actual.
+                                 is Limited new Ada_Lib.Options.Nested.
                                     Nested_Options_Type with null record;
 
    type GNOGA_Options_Constant_Class_Access

@@ -1,15 +1,20 @@
-with Ada.Exceptions;
+--with Ada.Exceptions;
 with Ada.Numerics.Float_Random;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Program;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Parser;
 with Ada_Lib.Strings;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Time;
-with AUnit.Assertions; use AUnit.Assertions;
+with AUnit.Assertions; -- use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
---with hex_io;
+
+pragma Elaborate (Ada_Lib.Parser);
+
 package body Ada_Lib.Trace.Tests is
 
    Test_Exception                : exception;
@@ -59,6 +64,13 @@ package body Ada_Lib.Trace.Tests is
       Text                       : in     String
    ) return Parsed_Time_Type;
 
+   Debug       : Boolean renames Ada_Lib.Options.Unit_Test.
+                  Ada_Lib_Options_Trace_Tests.Debug      ;
+   Debug_Test  : Boolean renames Ada_Lib.Options.Unit_Test.
+                  Ada_Lib_Options_Trace_Tests.Debug_Test ;
+   Debug_Tests : Boolean renames Ada_Lib.Options.Unit_Test.
+                  Ada_Lib_Options_Trace_Tests.Debug_Tests;
+
    ---------------------------------------------------------------
    procedure Check_Output (
       Output                     : in     Output_Package.List;
@@ -76,7 +88,7 @@ package body Ada_Lib.Trace.Tests is
       for Line of Output loop
          Line_Count := Line_Count + 1;
          if Line_Count > Expected'length then
-            Assert (False, Quote ("too many output lines", Line));
+            AUnit.Assertions.Assert (False, Quote ("too many output lines", Line));
          end if;
 
          declare
@@ -97,14 +109,14 @@ package body Ada_Lib.Trace.Tests is
                " expected seconds " & Expected_Seconds'img &
                " expected hundreds " & Expected_Hundreds'img &
                " raw expected" & Raw_Expected'img);
-            if Ada_Lib.Options.Actual.
-                  Get_Ada_Lib_Read_Only_Program_Options.Verbose then
+            if Ada_Lib.Options.Program.
+                  Get_Read_Only_Program_Options.Verbose then
                Ada.Text_IO.Put_Line (Quote ("line", Line));
             end if;
 
             if Exception_Test then
                declare
-                  Stop           : constant Natural := Ada.Strings.Fixed.Index (
+                  Stop        : constant Natural := Ada.Strings.Fixed.Index (
                                     Expected_Line, "*");
                   Text           : constant String := Line.Coerce;
                   Main_Task      : constant Natural := Ada.Strings.Fixed.Index (
@@ -124,25 +136,32 @@ package body Ada_Lib.Trace.Tests is
                                        Text
                                     else
                                        Text (Caught_At .. Text'Last));
-                  Pattern        : constant String := (if Stop = 0 then
+                  Pattern        : constant String := Strings.Up_Shift (
+                                    (if Stop = 0 then
                                        Expected_Line (Expected_Line'first ..
                                           Expected_Line'last)
                                     else
                                        Expected_Line (Expected_Line'first ..
-                                          Stop - 1));
-                  Trimmed        : constant String := (if Stop = 0 then
+                                          Stop - 1)));
+                  Trimmed        : constant String := Strings.Up_Shift (
+                                    (if Stop = 0 then
                                        Compare (Compare'first .. Compare'last - 1)
                                     else
-                                       Compare (Compare'first .. Compare'first + Stop - 2));
+                                       Compare (Compare'first ..
+                                          Compare'first + Stop - 2)));
+                  Test           : constant Boolean :=
+                                    Trimmed = Pattern;
+
                begin
-                  Log_Here(Debug_Tests, "stop" & Stop'img & Quote (" text", Text) &
+                  Log_Here(Debug_Tests, "test " & Test'img &
+                     " stop" & Stop'img & Quote (" text", Text) &
                      " main_task" & Main_Task'img & " ada_lib" & Ada_Lib'img &
                      " caugh_at" & Caught_At'img &
-                     Quote (" compare", Compare) & Quote (" pattern", Pattern) &
-                     Quote (" trimmed", Trimmed));
-
-                  Assert (Trimmed = Pattern,
-                     Quote ("unexpected line", Trimmed) &
+                     Quote (" compare", Compare) &
+                     Quote (" pattern", Pattern) & " length" & Pattern'length'img &
+                     Quote (" trimmed", Trimmed) & " length" & Trimmed'length'img);
+                     AUnit.Assertions.Assert (TEst,
+                     Quote ("trimmed line", Trimmed) &
                      Quote (" Pattern", Pattern) & " line" & Line_Count'img);
                end;
             else
@@ -170,24 +189,24 @@ package body Ada_Lib.Trace.Tests is
                   Log_Here (Debug_Tests, Quote ("line", Output_line) &
                      " (" & Open_Perenthesis'img & " )" & Closed_Perenthesis'img &
                      " start" & Start_Pattern'img & Stop_Pattern'img);
-                  Assert (Open_Perenthesis > 1, "bad open perenthesis" &
+                  AUnit.Assertions.Assert (Open_Perenthesis > 1, "bad open perenthesis" &
                      Open_Perenthesis'img & " line" & Line_Count'img);
-                  Assert (Closed_Perenthesis > Open_Perenthesis + 1,
+                  AUnit.Assertions.Assert (Closed_Perenthesis > Open_Perenthesis + 1,
                      "bad closed perenthesis" & Open_Perenthesis'img & " line" & Line_Count'img);
-                  Assert (Start_Pattern > Closed_Perenthesis,
+                  AUnit.Assertions.Assert (Start_Pattern > Closed_Perenthesis,
                      "bad start pattern" & Start_Pattern'img & " line" & Line_Count'img);
-                  Assert (Stop_Pattern < Output_Line'length, "bad stop pattern" &
+                  AUnit.Assertions.Assert (Stop_Pattern < Output_Line'length, "bad stop pattern" &
                      Stop_Pattern'img);
                   Log_Here (Debug_Tests,
                      "Parsed_Time.Seconds " & Parsed_Time.Seconds'img &
                      " Parsed_Time.Hundreds " & Parsed_Time.Hundreds'img);
-                  Assert (Parsed_Time.Minutes = 0,
+                  AUnit.Assertions.Assert (Parsed_Time.Minutes = 0,
                      "should not have any minutes. line" & Line_Count'img);
-                  Assert (Parsed_Time.Seconds = Expected_Seconds,
+                  AUnit.Assertions.Assert (Parsed_Time.Seconds = Expected_Seconds,
                      "wrong number of seconds got " & Parsed_Time.Seconds'img &
                      " expected " & Expected_Seconds'img &
                      ". line" & Line_Count'img);
-                  Assert (abs (Parsed_Time.Hundreds - Expected_Hundreds) <= 3,
+                  AUnit.Assertions.Assert (abs (Parsed_Time.Hundreds - Expected_Hundreds) <= 3,
                      "wrong number of hundreds got " & Parsed_Time.Hundreds'img &
                      " expected " & Expected_Hundreds'img &
                      ". line" & Line_Count'img);
@@ -204,9 +223,9 @@ package body Ada_Lib.Trace.Tests is
                                              Output_Line (Start_Pattern + 2 ..
                                                 Stop_Pattern - 1);
                      begin
-                        Assert (Level = Expected_Level, " wrong level" & Level'img &
+                        AUnit.Assertions.Assert (Level = Expected_Level, " wrong level" & Level'img &
                            " expected" & Expected_Level'img);
-                        Assert (Stripped = Expected_Line, "unexpected" &
+                        AUnit.Assertions.Assert (Stripped = Expected_Line, "unexpected" &
                            Quote (" Stripped", Stripped) &
                            Quote (" expected", Expected_Line));
                      end;
@@ -216,7 +235,7 @@ package body Ada_Lib.Trace.Tests is
          end;
       end loop;
 
-      Assert (Line_Count = Expected'last, " wrong number (" & Line_Count'img &
+      AUnit.Assertions.Assert (Line_Count = Expected'last, " wrong number (" & Line_Count'img &
          ") of lines received. expected" & Expected'last'img);
       Log_Out (Debug_Tests);
 
@@ -276,14 +295,14 @@ package body Ada_Lib.Trace.Tests is
       end;
       End_Test (Local_Test);
       Check_Output (Local_Test.Output.List, True, Expected_Output,
-         From_Start (Start_Time));
+         Ada_Lib.Time.From_Start (Start_Time));
       T (Debug, "Out");
 
    exception
 
       when Fault: others =>
          Trace_Message_Exception (Debug, Fault, "error in library");
-         Assert (False, "library failed with exception message: " &
+         AUnit.Assertions.Assert (False, "library failed with exception message: " &
             Ada.Exceptions.Exception_Message (Fault) &
             " name " & Ada.Exceptions.Exception_Name (Fault));
 
@@ -351,17 +370,17 @@ package body Ada_Lib.Trace.Tests is
                " parsed minutes" & Parsed_Time.Minutes'img &
                " seconds" & Parsed_Time.Seconds'img &
                " Hundreds" & Parsed_Time.Hundreds'img);
-            Assert (Parsed_Time.Hours = Test.Hours, "test" & index'img &
+            AUnit.Assertions.Assert (Parsed_Time.Hours = Test.Hours, "test" & index'img &
                " wrong hours got" & Parsed_Time.Hours'img &
                " expected" & Test.Hours'img);
-            Assert (Parsed_Time.Minutes = Test.Minutes, "test" & index'img &
+            AUnit.Assertions.Assert (Parsed_Time.Minutes = Test.Minutes, "test" & index'img &
                " wrong minutes got" & Parsed_Time.Minutes'img &
                " expected" & Test.Minutes'img);
-            Assert (Parsed_Time.Seconds = Test.Seconds, "test" & index'img &
+            AUnit.Assertions.Assert (Parsed_Time.Seconds = Test.Seconds, "test" & index'img &
                " wrong seconds got" & Parsed_Time.Seconds'img &
                " expected" & Test.Seconds'img);
             if Test.Include_Hundreds then
-               Assert (Parsed_Time.Hundreds = Test.Hundreds, "test" & index'img &
+               AUnit.Assertions.Assert (Parsed_Time.Hundreds = Test.Hundreds, "test" & index'img &
                   " wrong Hundreds got" & Parsed_Time.Hundreds'img &
                   " expected" & Test.Hundreds'img);
             end if;
@@ -400,14 +419,17 @@ package body Ada_Lib.Trace.Tests is
                                     Ada.Numerics.Float_Random.Random (
                                        Randome_Generator);
             begin
-               Log_Here (Debug, "expected " &
+               Ada.Text_IO.Put ("   " &
                   (if ID = 0 then
                         "main"
                      else
                         "thread" & ID'img) &
-                     " delay " & Time'img & " count" & Counter'img);
+                     " delay " & Ada_Lib.Strings.Image (Duration (Time),
+                        Hundreds => True) &
+                     " count" & Counter'img);
                delay Duration (Time);
             end;
+            Ada.Text_IO.New_Line;
          end loop;
          Log_Out (Debug);
 
@@ -415,7 +437,7 @@ package body Ada_Lib.Trace.Tests is
 
          when Fault: others =>
             Trace_Message_Exception (Fault, "error in library");
-            Assert (False, "library failed with exception message: " &
+            AUnit.Assertions.Assert (False, "library failed with exception message: " &
                Ada.Exceptions.Exception_Message (Fault) &
                " name " & Ada.Exceptions.Exception_Name (Fault));
       end Thread_Body;
@@ -443,14 +465,12 @@ package body Ada_Lib.Trace.Tests is
          Tasks                   : array (1 .. Number_Tasks) of Task_Type;
 
       begin
-         Log_Here ("expected");
+         Ada.Text_IO.Put_Line ("expected");
          for Index in Tasks'range loop
-            Log_Here ("expected");
             Tasks (Index).Start (Index);
-            Log_Here ("expected");
          end loop;
          Thread_Body (0);
-         Log_Out (False);
+         Ada.Text_IO.New_Line;
       end;
       End_Test (Local_Test);
    end Multi_Thread;
@@ -559,14 +579,14 @@ package body Ada_Lib.Trace.Tests is
       Log_Here ("expected " & Tag_Output (Expected_Output (8).Line.all));
       End_Test (Local_Test);
       Check_Output (Local_Test.Output.List, False, Expected_Output,
-         From_Start (Start_Time));
+         Ada_Lib.Time.From_Start (Start_Time));
       Log_Out (Debug_Tests, "Out");
 
    exception
 
       when Fault: others =>
          Trace_Message_Exception (Fault, "error in library");
-         Assert (False, "library failed with exception message: " &
+         AUnit.Assertions.Assert (False, "library failed with exception message: " &
             Ada.Exceptions.Exception_Message (Fault) &
             " name " & Ada.Exceptions.Exception_Name (Fault));
 
@@ -590,7 +610,8 @@ package body Ada_Lib.Trace.Tests is
 
       Test_Suite                 : constant AUnit.Test_Suites.Access_Test_Suite :=
                                     new AUnit.Test_Suites.Test_Suite;
-      Tests                      : constant Test_Access := new Test_Type;
+      Tests                      : constant AUnit.Assertions.Test_Access :=
+                                    new Test_Type;
 
    begin
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
@@ -614,10 +635,10 @@ package body Ada_Lib.Trace.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug_Tests or Trace_Set_Up);
+      Log_In (Debug_Tests or Trace_Set_Up_Tear_Down);
       Output_Package.Clear (Test.Output.List);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug_Tests or Trace_Set_Up);
+      Log_Out (Debug_Tests or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
    ---------------------------------------------------------------

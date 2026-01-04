@@ -1,6 +1,7 @@
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.OS.Run;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 --with Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions;
@@ -291,7 +292,7 @@ exception
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    Log_Here (Debug or Trace_Set_Up);
+--    Log_Here (Debug or Trace_Set_Up_Tear_Down);
 --    Test.Set_Up_Completed := True;
 --    Test.Tear_Down_Completed := False;
 -- end Set_Up;
@@ -316,10 +317,10 @@ exception
 -- ----------------------------------------------------------------------------
 --
 -- begin
---    Log_In (Debug or Trace_Set_Up);
+--    Log_In (Debug or Trace_Set_Up_Tear_Down);
 --    Test.Tear_Down_Completed := True;
 --    Test.Set_Up_Completed := False;
---    Log_Out (Debug or Trace_Set_Up);
+--    Log_Out (Debug or Trace_Set_Up_Tear_Down);
 -- end Tear_Down;
 
    ----------------------------------------------------------------------------

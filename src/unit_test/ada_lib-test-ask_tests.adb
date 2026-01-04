@@ -2,6 +2,7 @@ with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.Test.Tests;
 with Ask;
 with AUnit.Assertions; use AUnit.Assertions;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Test;
@@ -13,6 +14,8 @@ package body Ada_Lib.Test.Ask_Tests is
 -- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
 
    function Near is new Ada_Lib.Test.Near (Float);
+
+   Debug : Boolean renames Options.Unit_Test.Ada_Lib_Ask_Tests.Debug;
 
    ---------------------------------------------------------------
    procedure Basic_Operations(

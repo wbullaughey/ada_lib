@@ -145,7 +145,7 @@ package Hex_IO is
 
    function Modular_Hex_Address (
       Address           : in   System.Address;
-      Width             : in   Positive
+      Width             : in   Positive   -- in bytes
    ) return String;
 
    Debug                : Boolean := False;

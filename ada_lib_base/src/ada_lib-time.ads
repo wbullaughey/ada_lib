@@ -5,6 +5,28 @@ package Ada_Lib.Time is
    subtype Duration_Type         is Duration;
    subtype Time_Type             is Ada.Calendar.Time;
 
+   function From_Start
+   return Duration;
+
+   function From_Start (
+      Time                 : in   Ada.Calendar.Time
+   ) return Duration;
+
+   function From_Start (
+      Time                 : in   Ada.Calendar.Time;
+      Hundreds            : in   Boolean := False;
+      Show_Days            : in   Boolean := False;
+      From                 : in     String := GNAT.Source_Info.Source_Location
+   ) return String;
+
+   function From_Start (
+      Hundreds            : in   Boolean := False;
+      Show_Days            : in   Boolean := False
+   ) return String;
+
+   function Get_Start_Time
+   return Ada.Calendar.Time;
+
    function Image (
       Time                       : in   Ada.Calendar.Time;
       Hundreths                  : in   Boolean := False

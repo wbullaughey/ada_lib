@@ -1,8 +1,12 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada_Lib.Options;
 with Ada_Lib.OS;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+
+-- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.Database.Server is
 
@@ -41,15 +45,19 @@ package body Ada_Lib.Database.Server is
       From                       : in     String := Here);
    pragma No_Return (Tasking_Error_Occured);
 
--- Read_Timeout                  : constant Duration := 1.0;
--- Server_Task_ID                : Ada.Task_Identification.Task_ID := Ada.Task_Identification.Null_Task_Id;
-   Server_Tasking_Error          : Boolean := False;
--- Subscribe_Timeout            : Duration := 0.0;
-   Task_Exit_Timeout             : constant Duration := 0.5;
-   Task_Shutdown_Timeout        : constant Duration := 0.5;
--- Timeout_Mode                  : Timeout_Mode_Type := Disabled;
-   Update_Wait_Time              : constant Duration := 0.25;
-   Write_Timeout                 : constant Duration := 0.25;
+-- Read_Timeout            :constant Duration := 1.0;
+-- Server_Task_ID          :Ada.Task_Identification.Task_ID := Ada.Task_Identification.Null_Task_Id;
+   Server_Tasking_Error    :Boolean := False;
+-- Subscribe_Timeout       :Duration := 0.0;
+   Task_Exit_Timeout       :constant Duration := 0.5;
+   Task_Shutdown_Timeout   :constant Duration := 0.5;
+-- Timeout_Mode            :Timeout_Mode_Type := Disabled;
+   Trace                   : Boolean renames
+                              Options.Ada_Lib_Database.Server_Trace;
+   Trace_All               : Boolean renames
+                              Options.Ada_Lib_Database.Server_Trace;
+   Update_Wait_Time        :constant Duration := 0.25;
+   Write_Timeout           :constant Duration := 0.25;
 
    ---------------------------------------------------------------------------------
    procedure Add_Subscription (
@@ -254,7 +262,7 @@ package body Ada_Lib.Database.Server is
 
 
    begin
-      Log_In (Trace, "Updater address " & image (Updater.all'address));
+      Log_In (Trace, "Updater address " & Ada_Lib.Strings.image (Updater.all'address));
       Server.Subscriber.Delete (Updater, Result);
       Log_Out (Trace, "result " & Result'img);
       return Result;
@@ -690,7 +698,7 @@ package body Ada_Lib.Database.Server is
 
    begin
       if Server_Tasking_Error then
-         raise Subscriber_Time_Out with "no subscripe input for " & Image (Poll_Timeout.Get_Subscribe_Timeout) &
+         raise Subscriber_Time_Out with "no subscripe input for " & Ada_Lib.Strings.Image (Poll_Timeout.Get_Subscribe_Timeout) &
             " caught at " & From;
       else
          raise Tasking_Error with "server task raised exception caught at " & From;
@@ -909,8 +917,8 @@ package body Ada_Lib.Database.Server is
 
       begin
          Log_In (Trace_All, " current mode " & Timeout_Mode'img &
-            " new mode " & Mode'img & " current timeout " & Image (Subscribe_Timeout) &
-            " new timeout " & Image (Timeout));
+            " new mode " & Mode'img & " current timeout " & Ada_Lib.Strings.Image (Subscribe_Timeout) &
+            " new timeout " & Ada_Lib.Strings.Image (Timeout));
          case Mode is                  -- new mode
 
             when Active =>
@@ -1041,7 +1049,7 @@ end Poll_Timeout;
          if Poll_Timeout.Get_Mode = Active then
             Poll_Timeout.Update_Abort_Timoout;
          end if;
-         Log_Out (Trace_All, "Timeout_Mode " & Poll_Timeout.Get_Mode'img & " Abort_Time " & Image (Poll_Timeout.Get_Abort_Time, True));
+         Log_Out (Trace_All, "Timeout_Mode " & Poll_Timeout.Get_Mode'img & " Abort_Time " & Ada_Lib.Strings.Image (Poll_Timeout.Get_Abort_Time, True));
       end Reset_Timeout;
 
       ---------------------------------------------------------------------------------
@@ -1089,7 +1097,7 @@ end Poll_Timeout;
            Idle_Timeout             : in     Duration;
            Result                   :    out Boolean) do
 
-            Log_In (Trace_All, Host & " idle timeout " & Image (Idle_Timeout) &
+            Log_In (Trace_All, Host & " idle timeout " & Ada_Lib.Strings.Image (Idle_Timeout) &
                " Timeout Mode " & Poll_Timeout.Get_Mode'img);
 
             Table := Subscription_Table;
@@ -1181,7 +1189,7 @@ end Poll_Timeout;
                      pragma Unreferenced (Result);
                      ---------------------------------------------------------------------------------
 
-                        Log_In (Trace_All, "Updater address " & image (Updater.all'address));
+                        Log_In (Trace_All, "Updater address " & Ada_Lib.Strings.image (Updater.all'address));
 --                      Database.Delete (Name, Index, Timeout);   -- decided not to delete from database 1/9/22
 --                      Delete_By_Updater (Updater, Result); -- deleted
                         Reset_Timeout;
@@ -1376,8 +1384,8 @@ end Poll_Timeout;
 --                   ---------------------------------------------------------------------------------
 --
 --                      Log (Trace_All, Here, Who & " current mode " & Timeout_Mode'img &
---                         " new mode " & Mode'img & " current timeout " & Image (Poll_Timeout.Get_Subscribe_Timeout) &
---                         " new timeout " & Image (Timeout));
+--                         " new mode " & Mode'img & " current timeout " & Ada_Lib.Strings.Image (Poll_Timeout.Get_Subscribe_Timeout) &
+--                         " new timeout " & Ada_Lib.Strings.Image (Timeout));
 --                      case Mode is                  -- new mode
 --
 --                         when Active =>

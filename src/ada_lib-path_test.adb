@@ -4,6 +4,8 @@ with Ada.IO_Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.OS;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package body Ada_Lib.Path_Test is
 
    Bad_Path_File           :exception;

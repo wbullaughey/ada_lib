@@ -1,6 +1,6 @@
 with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
@@ -76,7 +76,7 @@ package Ada_Lib.Unit_Test.Test_Cases is
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
       Val                     : in     AUnit.Test_Cases.Routine_Spec
-   ) with pre => Ada_Lib.Options.Actual.Have_Ada_Lib_Program_Options;
+   ) with pre => Ada_Lib.Options.Have_Ada_Lib_Program_Options;
 
    overriding
    procedure Set_Up (
@@ -121,7 +121,5 @@ package Ada_Lib.Unit_Test.Test_Cases is
 
 -- function Was_There_An_Async_Failure
 -- return Boolean;
-
-   Debug                         : Boolean := False;
 
 end Ada_Lib.Unit_Test.Test_Cases;

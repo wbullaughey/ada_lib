@@ -5,8 +5,11 @@ with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Unit_Test;
 -- with Ada_Lib.Mail.GMail;
 with Ada_Lib.OS;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 -- with Ada_Lib.Unit_Test.Test_Cases;
+
+-- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.Mail.Tests is
 
@@ -173,10 +176,10 @@ null;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
       when Fault: others =>
@@ -192,10 +195,10 @@ null;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
       when Fault: others =>
@@ -229,10 +232,10 @@ null;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Test.Credential.Close;
       Test_Type (Test).Tear_Down;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
 begin

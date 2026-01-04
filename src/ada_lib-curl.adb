@@ -1,10 +1,12 @@
 with Ada_Lib.OS.Run;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package body Ada_Lib.CURL is
-    
+
    procedure Run (
-      Source                     : in     string                 
+      Source                     : in     string
    ) is
 
    begin
@@ -13,7 +15,7 @@ package body Ada_Lib.CURL is
       declare
          Result                  : constant String :=
                                     Ada_Lib.OS.Run.Spawn (
-                                       Program     => "/bin/bash", 
+                                       Program     => "/bin/bash",
                                        Parameters => Source);
       begin
          Log_Out (Debug, Result);

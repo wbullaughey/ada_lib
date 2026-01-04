@@ -3,6 +3,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.OS;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package body Ada_Lib.Unit_Test.Fixtures is
 
 -- use Ada_Lib.Strings.Unlimited;
@@ -97,14 +99,14 @@ package body Ada_Lib.Unit_Test.Fixtures is
    ----------------------------------------------------------------------------
 
    begin
-      Log ( Debug or Trace_Set_Up, Here, Who & " enter");
+      Log ( Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter");
 
       Current_Fixture := Test'unchecked_access;
       AUnit.Test_Fixtures.Test_Fixture (Test).Set_Up;
       if Ada_Lib.Trace.Ada_Lib_Lib_Verbose then
          Put_Line ("------------------------------------------------------------------");
       end if;
-      Log ( Debug or Trace_Set_Up, Here, Who & " exit");
+      Log ( Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
 -- Log ( Here, Who & " exit");
 
     exception
@@ -165,14 +167,14 @@ package body Ada_Lib.Unit_Test.Fixtures is
    ----------------------------------------------------------------------------
 
    begin
-      Log ( Debug or Trace_Set_Up, Here, Who & " enter");
+      Log ( Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter");
 
 --    if Ada_Lib.Database.Unit_Test.Is_DBDaemon_Running then
 --       raise Ada_Lib.Unit_Test.Fixtures.Failed with "dbdaemon not closed at " & Here & " " & Who;
 --    end if;
 
       AUnit.Test_Fixtures.Test_Fixture (Test).Tear_Down;
-      Log ( Debug or Trace_Set_Up, Here, Who & " exit");
+      Log ( Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
    end Tear_Down;
 
    ----------------------------------------------------------------------------

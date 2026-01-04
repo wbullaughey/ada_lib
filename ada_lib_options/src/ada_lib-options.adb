@@ -1,6 +1,19 @@
+with Ada.Assertions;
+with Ada.Strings.Unbounded;
+with Ada.Text_IO; use  Ada.Text_IO;
+
 package body Ada_Lib.Options is
 
+   function Who
+   return String renames GNAT.Source_Info.Enclosing_Entity;
+
+   Modifiable_Program_Options    : Abstract_Runtime_Options_Class_Access := Null;
    Parameter_Parsing_Failed      : Boolean := False;
+
+   Debug                : Boolean renames Ada_Lib_Options.Debug;
+-- Debug_All            : Boolean renames Ada_Lib_Options.Debug_All;
+-- Debug_Options        : Boolean renames Ada_Lib_Options.Debug_Options;
+-- Use_Options_Prefix   : Boolean renames Ada_Lib_Options.Use_Options_Prefix;
 
    ----------------------------------------------------------------------------
    function "&" (
@@ -8,34 +21,24 @@ package body Ada_Lib.Options is
    ) return Flag_List_Type is
    ----------------------------------------------------------------------------
 
+      Result                     : Flag_List_Type;
+
    begin
-pragma Assert (false, here);
-return Null_Flag_List;
+      Result.Options := new Base_Options_Array (1 ..
+         Left.Options.all'length + Right.Options.all'length);
+
+      Result.Options.all (1 .. Left.Options.all'length) := Left.Options.all;
+      Result.Options.all (Left.Options.all'length + 1 ..
+         Left.Options.all'length + Right.Options.all'length) := Right.Options.all;
+      return Result;
    end "&";
-
-   ----------------------------------------------------------------------------
-   procedure Create_Options (
-      Flag                    :    out Flag_List_Type;
-      Options                 : in     Base_Options_Array;
-      From                    : in     String := Here) is
-   ----------------------------------------------------------------------------
-
-      Index                   : Natural := 0;
-
-   begin
-      Flag.Options := new Base_Options_Array (1 .. Options'last);
-      for Option of Options loop
-         Index := Index + 1;
-         Flag.Options (Index) := Option;
-      end loop;
-   end Create_Options;
 
    ----------------------------------------------------------------------------
    procedure Create_Option (
       Flag                       :    out Base_Flag_Option_Type;
       Option                     : in     Character;
       Modifier                   : in     Character;
-      From                       : in     String := Here) is
+      From                       : in     String := Options_Here) is
    ----------------------------------------------------------------------------
 
    begin
@@ -48,14 +51,102 @@ return Null_Flag_List;
    end Create_Option;
 
    ----------------------------------------------------------------------------
-   function Image (
-      Flat                    : in        Flag_List_Type
-   ) return String is
+   procedure Create_Options (
+      Flag                    :    out Flag_List_Type;
+      Options                 : in     Base_Options_Array;
+      From                    : in     String := Options_Here) is
+   ----------------------------------------------------------------------------
+
+      Index                   : Natural := 0;
+
+   begin
+      Flag.Options := new Base_Options_Array (1 .. Options'last);
+      for Option of Options loop
+         Index := Index + 1;
+         Flag.Options (Index) := Option;
+      end loop;
+   end Create_Options;
+
+   ----------------------------------------------------------------
+   function Get_Ada_Lib_Modifiable_Program_Options (
+      From                       : in  String := Options_Here
+   ) return Abstract_Runtime_Options_Class_Access is
+   ----------------------------------------------------------------
+
+   begin
+      Option_Log (Debug, Who & " called from " & From);
+      Ada.Assertions.Assert (Modifiable_Program_Options /= Null,
+         "Modifiable_Program_Options not set");
+      return Modifiable_Program_Options;
+
+   end Get_Ada_Lib_Modifiable_Program_Options;
+
+   ----------------------------------------------------------------------------
+   function Get_Ada_Lib_Read_Only_Program_Options (
+      From                       : in  String := Options_Here
+   ) return Abstract_Runtime_Options_Constant_Class_Access is
    ----------------------------------------------------------------------------
 
    begin
-not_implemented;
-return "";
+      Option_Log (Debug, Who & " called from " & From);
+      Ada.Assertions.Assert (Modifiable_Program_Options /= Null,
+         "Modifiable_Program_Options not set");
+      return Abstract_Runtime_Options_Constant_Class_Access (
+         Modifiable_Program_Options);
+   end Get_Ada_Lib_Read_Only_Program_Options;
+
+   ----------------------------------------------------------------------------
+   function Has_Options (
+      Flag                    : in        Flag_List_Type
+   ) return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Flag.Options /= Null;
+   end Has_Options;
+
+   ----------------------------------------------------------------------------
+   function Have_Ada_Lib_Program_Options
+   return Boolean is
+   ----------------------------------------------------------------------------
+
+   begin
+      return Modifiable_Program_Options /= Null;
+   end Have_Ada_Lib_Program_Options;
+
+   ----------------------------------------------------------------------------
+   function Image (
+      Flag                    : in        Flag_List_Type
+   ) return String is
+   ----------------------------------------------------------------------------
+
+      use Ada.Strings.Unbounded;
+
+      Result   : Unbounded_String;
+
+      -------------------------------------------------------------------------
+      procedure Callback (
+         Option                  : in     Base_Flag_Option_Type'class) is
+      -------------------------------------------------------------------------
+
+      begin
+         case Option.Kind is
+
+            when Plain =>
+               Result := Result & Option.Option & ',';
+
+            when Modified =>
+               Result := Result & Option.Modifier & Option.Option & ',';
+
+            when Nil_Option =>
+               Null;
+         end case;
+      end Callback;
+      -------------------------------------------------------------------------
+
+   begin
+      Flag.Iterate (Callback'access);
+      return To_String (Result);
    end Image;
 
    ----------------------------------------------------------------------------
@@ -80,6 +171,41 @@ return "";
    begin
       return Flags.Options.all'length;
    end Length;
+
+   -------------------------------------------------------------------
+   function Option (
+      Flags                      : in     Flag_List_Type;
+      Index                      : in     Natural
+   ) return Character is
+   -------------------------------------------------------------------
+
+   begin
+      return Flags.Options.all (Index).Option;
+   end Option;
+
+   -------------------------------------------------------------------
+   function Modifier (
+      Flags                      : in     Flag_List_Type;
+      Index                      : in     Natural
+   ) return Character is
+   -------------------------------------------------------------------
+
+   begin
+      return Flags.Options.all (Index).Modifier;
+   end Modifier;
+
+   -------------------------------------------------------------------
+   procedure Option_Log (
+      Enable                     : in     Boolean := True;
+      Message           : in     String := "";
+      Where             : in     String := GNAT.Source_Info.Source_Location) is
+   -------------------------------------------------------------------
+
+   begin
+      if Enable then
+         Put_Line ("message '" & Message & "' from " & Where);
+      end if;
+   end Option_Log;
 
    -------------------------------------------------------------------
    -- raises assert
@@ -111,6 +237,20 @@ return "";
 --    Log_Here (Debug or Trace_Options, "Parameter_Parsing_Failed " & Parameter_Parsing_Failed'img);
       return Parameter_Parsing_Failed;
    end Parsing_Failed;
+
+   ----------------------------------------------------------------
+   procedure Set_Ada_Lib_Program_Options (
+      Options                    : in     Abstract_Runtime_Options_Class_Access) is
+   ----------------------------------------------------------------
+
+   begin
+      Option_Log (Debug, Who & " called from ");
+      Modifiable_Program_Options := Options;
+   end Set_Ada_Lib_Program_Options;
+
+begin
+--Debug := True;
+   Trace.Include_Task := True;
 
 end Ada_Lib.Options;
 

@@ -1,8 +1,4 @@
 with Ada.Characters.Latin_1;
---with  Ada.Characters.Latin_1;
---with Ada.Finalization;
---with Ada.Tags;
---with Ada_Lib.Trace; -- use Ada_Lib.Trace;
 with GNAT.Source_Info;
 with Interfaces;
 
@@ -10,10 +6,13 @@ package Ada_Lib.Options is
 
    Failed                        : exception;
 
-   function Here
+   function Have_Ada_Lib_Program_Options
+   return Boolean;
+
+   function Options_Here
    return String renames GNAT.Source_Info.Source_Location;
 
-   type Help_Mode_Type           is (Program, Traces);
+   type Help_Mode_Type           is (Program_Mode, Trace_Mode);
 
    type Mode_Type                is (Driver_Suites, List_Suites, Print_Suites,
                                        Run_Tests);
@@ -41,25 +40,47 @@ package Ada_Lib.Options is
 
    function "&" (
       Left, Right                : in        Flag_List_Type
-   ) return Flag_List_Type;
+   ) return Flag_List_Type
+   with Pre    => Left.Has_Options and then
+                  Right.Has_Options;
 
    procedure Create_Options (
       Flag                    :    out Flag_List_Type;
       Options                 : in     Base_Options_Array;
-      From                    : in     String := Here);
+      From                    : in     String := Options_Here
+   ) with Post    => Flag.Has_Options;
+
+   function Has_Options (
+      Flag                    : in        Flag_List_Type
+   ) return Boolean;
 
    function Image (
-      Flat                    : in        Flag_List_Type
-   ) return String;
+      Flag                    : in        Flag_List_Type
+   ) return String
+   with Pre    => Flag.Has_Options;
 
    procedure Iterate (
       Flags                      : in     Flag_List_Type;
       Callback                   : access procedure (
-         Option                  : in     Base_Flag_Option_Type'class));
+         Option                  : in     Base_Flag_Option_Type'class))
+   with Pre    => Flags.Has_Options;
 
    function Length (
       Flags                      : in     Flag_List_Type
-   ) return Natural;
+   ) return Natural
+   with Pre    => Flags.Has_Options;
+
+   function Option (
+      Flags                      : in     Flag_List_Type;
+      Index                      : in     Natural
+   ) return Character
+   with Pre    => Flags.Has_Options;
+
+   function Modifier (
+      Flags                      : in     Flag_List_Type;
+      Index                      : in     Natural
+   ) return Character
+   with Pre    => Flags.Has_Options;
 
    type Base_Flag_Option_Type    is abstract tagged record
      Kind                        : Flag_Option_Kind_Type := Nil_Option;
@@ -71,12 +92,13 @@ package Ada_Lib.Options is
       Flag                       :    out Base_Flag_Option_Type;
       Option                     : in     Character;
       Modifier                   : in     Character;
-      From                       : in     String := Here);
+      From                       : in     String := Options_Here);
 
      function Has_Option (   -- tests if option is registered for a catagory
         Option                     : in     Base_Flag_Option_Type;
         Options_With_Parameters    : in     Flag_List_Type'class;
-        Options_Without_Parameters : in     Flag_List_Type'class
+        Options_Without_Parameters : in     Flag_List_Type'class;
+      From                          : in     String := Options_Here
      ) return Boolean is abstract;
 
      function Image (
@@ -109,7 +131,7 @@ package Ada_Lib.Options is
      procedure Dump_Iterator (
         Iterator                : in     Command_Line_Iterator_Interface;
         What                    : in     String;
-        Where                   : in     String := Here
+        Where                   : in     String := Options_Here
      ) is abstract;
 
      function Get_Argument (
@@ -166,19 +188,19 @@ package Ada_Lib.Options is
       Options                    : in     Abstract_Runtime_Options_Type;
       What                       : in     Character;
       Message                    : in     String := "";
-      Where                      : in     String := Here) is abstract;
+      Where                      : in     String := Options_Here) is abstract;
 
    procedure Bad_Option (        -- raises Failed exception
       Options                    : in     Abstract_Runtime_Options_Type;
       What                       : in     String;
       Message                    : in     String := "";
-      Where                      : in     String := Here) is abstract;
+      Where                      : in     String := Options_Here) is abstract;
 
    procedure Bad_Option (        -- raises Failed exception
       Options                    : in     Abstract_Runtime_Options_Type;
       Option                     : in     Base_Flag_Option_Type'class;
       Message                    : in     String := "";
-      Where                      : in     String := Here) is abstract;
+      Where                      : in     String := Options_Here) is abstract;
 
    procedure Bad_Trace_Option (  -- raises Failed exception
       Options                    : in     Abstract_Runtime_Options_Type;
@@ -186,25 +208,25 @@ package Ada_Lib.Options is
       What                       : in     Character;
       Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
       Message                    : in     String := "";
-      Where                      : in     String := Here) is abstract;
+      Where                      : in     String := Options_Here) is abstract;
 
 -- procedure Bad_Option (
 --    Options                    : in     Abstract_Runtime_Options_Type;
 --    What                       : in     Character;
 --    Message                    : in     String := "";
---    Where                      : in     String := Here) is abstract;
+--    Where                      : in     String := Options_Here) is abstract;
 --
 -- procedure Bad_Option (
 --    Options                    : in     Abstract_Runtime_Options_Type;
 --    What                       : in     String;
 --    Message                    : in     String := "";
---    Where                      : in     String := Here) is abstract;
+--    Where                      : in     String := Options_Here) is abstract;
 --
 -- procedure Bad_Option (
 --    Options                    : in     Abstract_Runtime_Options_Type;
 --    Option                     : in     Abstract_Runtime_Options_Type'class;
 --    Message                    : in     String := "";
---    Where                      : in     String := Here) is abstract;
+--    Where                      : in     String := Options_Here) is abstract;
 
 -- function Has_Option (   -- added 2/22/24 to resolve issue with multple option lists
 --    Options                    : in     Abstract_Runtime_Options_Type;
@@ -217,13 +239,23 @@ package Ada_Lib.Options is
 --    What                       : in     Character;
 --    Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
 --    Message                    : in     String := "";
---    Where                      : in     String := Here) is abstract;
+--    Where                      : in     String := Options_Here) is abstract;
 --
    procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Abstract_Runtime_Options_Type;  -- only used for dispatch
      Message                     : in     String := "";   -- leave blank no error help
      Halt                        : in     Boolean := True) is abstract;
+
+   function Get_Ada_Lib_Modifiable_Program_Options (
+      From                       : in  String := Options_Here
+   ) return Abstract_Runtime_Options_Class_Access
+   with Pre    => Have_Ada_Lib_Program_Options;
+
+   function Get_Ada_Lib_Read_Only_Program_Options (
+      From                       : in  String := Options_Here
+   ) return Abstract_Runtime_Options_Constant_Class_Access
+   with pre => Have_Ada_Lib_Program_Options;
 
    function Image (
      Options                     : in     Abstract_Runtime_Options_Type
@@ -233,7 +265,7 @@ package Ada_Lib.Options is
    -- indirect decentdent should return initialize of parent
    function Initialize (
      Options                     : in out Abstract_Runtime_Options_Type;
-     From                        : in     String := Here
+     From                        : in     String := Options_Here
    ) return Boolean is abstract;
 
    function Process_Argument (  -- process one argument
@@ -252,6 +284,11 @@ package Ada_Lib.Options is
      Options                     : in     Abstract_Runtime_Options_Type;  -- only used for dispatch
      Help_Mode                   : in     Help_Mode_Type) is abstract;
 
+   procedure Set_Ada_Lib_Program_Options (
+      Options                    : in     Abstract_Runtime_Options_Class_Access
+   ) with Pre => Options /= Null and then
+                 not Have_Ada_Lib_Program_Options;
+
    procedure Trace_Parse (
       Options                    : in out Abstract_Runtime_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class
@@ -266,68 +303,59 @@ package Ada_Lib.Options is
    ) return Boolean is abstract;
 
    function Verify_Preinitialize (
-      Options                    : in     Abstract_Runtime_Options_Type;
-      From                       : in     String := GNAT.Source_Info.Source_Location
+      Options           : in     Abstract_Runtime_Options_Type;
+      From              : in     String := GNAT.Source_Info.Source_Location
    ) return Boolean is abstract;
 
---   function Create_Options (     -- create multiple options from a string
---      Source                     : in     String;
---      Modifier                   : in     Character;
---      From                       : in     String := Here
---   ) return Options_Access;
---
---   function Create_Options (     -- create a single options
---      Option                     : in     Character;
---      Modifier                   : in     Character;
---      From                       : in     String := Here
---   ) return Options_Access;
---
---   function Create_Options (    -- create a single options with a character
---      Source                     : in     String;
---      Modifier                   : in     Character;
---      From                       : in     String := Here
---   ) return Flag_List_Type;
---
---
---   function Image (
---      Options                    : in     Flag_List_Type;
---      Quote                      : in     Boolean := True
---   ) return String;
---
+   procedure Option_Log (
+      Enable            : in     Boolean := True;
+      Message           : in     String := "";
+      Where             : in     String := GNAT.Source_Info.Source_Location);
 
--- function Ada_Lib_Options
--- return Base_Flag_Option_Constant_Class_Access;
-
--- function Get_Ada_Lib_Modifiable_Options (
---    From                       : in  String := Here
--- ) return Base_Flag_Option_Class_Access
--- with pre => Have_Options;
---
--- function Get_Ada_Lib_Read_Only_Program_Options (
---    From                       : in  String := Here
--- ) return Base_Flag_Option_Constant_Class_Access
--- with pre => Have_Options;
---
----- type Registration_Type        is abstract new Ada.Finalization.Controlled with null record;
---
---   -- non class declarations
---
----- function Have_Options return Boolean;
---
    -- raises assert
    procedure Not_Implemented (
-      Why                        : in     String := "";
-      Here                       : in     String := GNAT.Source_Info.Source_Location;
-      Who                        : in     String := GNAT.Source_Info.Enclosing_Entity);
+      Why               : in     String := "";
+      Here              : in     String := GNAT.Source_Info.Source_Location;
+      Who               : in     String := GNAT.Source_Info.Enclosing_Entity);
 
   procedure Parsing_Failed;
   function Parsing_Failed return Boolean;
 
-   Debug                         : Boolean := False;
-   Debug_All                     : constant Boolean := False;
-   Debug_Options                 : constant Boolean := False;
-   Null_Flag_List                : constant Flag_List_Type;
-   Use_Options_Prefix            : constant Boolean := True;
+   Null_Flag_List                   : constant Flag_List_Type;
+
+   package Ada_Lib_Command_Line_Iterator is
+      Debug                      : Boolean := False;
+      Tests_Debug                : Boolean := False;
+   end Ada_Lib_Command_Line_Iterator;
+
+   package Ada_Lib_Configuration is
+      Trace                      : Boolean := False;
+   end Ada_Lib_Configuration;
+
+   package Ada_Lib_Database is
+      Connection_Debug           : Boolean := False;
+      Debug_Subscribe            : Boolean := False;
+      Event_Trace                : Boolean := False;
+      Server_Trace               : Boolean := False;
+      Server_Trace_All           : Boolean := False;
+      Trace                      : Boolean := False;
+      Trace_All                  : Boolean := False;
+      Trace_Get_Post             : Boolean := False;
+      Updater_Trace              : Boolean := False;
+      Wild_Trace                 : Boolean := False;
+   end Ada_Lib_Database;
+
+   package Ada_Lib_Directory is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Directory;
+
+   package Ada_Lib_EMail is
+      Debug                      : Boolean := False;
+   end Ada_Lib_EMail;
+
+   package Ada_Lib_Event is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Event;
 
    package Ada_Lib_Environment is
 
@@ -339,20 +367,122 @@ package Ada_Lib.Options is
 --                            Ada_Lib_Environment.Unit_Test_Kind);
 
    end Ada_Lib_Environment;
+
+   package Ada_Lib_GNOGA is  -- options for the Ada_Lib GNOGA library
+      Debug                      : aliased Boolean := False;
+      Base_Debug                 : aliased Boolean := False;
+   end Ada_Lib_GNOGA;
+
+   package Ada_Lib_Help is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Help;
+
+   package Ada_Lib_Interrupt is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Interrupt;
+
+   package Ada_Lib_Lock is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Lock;
+
+   package Ada_Lib_Mail is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Mail;
+
+   package Ada_Lib_Options is
+      Debug                         : Boolean := False;
+      Debug_All                     : constant Boolean := False;
+      Debug_Options                 : constant Boolean := False;
+      Use_Options_Prefix            : constant Boolean := True;
+   end Ada_Lib_Options;
+
+   package Ada_Lib_Options_Flags is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Options_Flags;
+
+   package Ada_Lib_Options_Program is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Options_Program;
+
+-- package Ada_Lib_Options_Unit_Test is
+--    Debug                         : Boolean := False;
+-- end Ada_Lib_Options_Unit_Test;
+
+   package Ada_Lib_Options_Runstring is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Options_Runstring;
+
+   package Ada_Lib_Options_Template is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Options_Template;
+
+-- package Ada_Lib_Options_Trace_Tests is
+--    Debug                         : Boolean := False;
+--    Debug_Test                    : Boolean := False;
+--    Debug_Tests                   : Boolean := False;
+-- end Ada_Lib_Options_Trace_Tests;
+
+   package Ada_Lib_Options_Verification is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Options_Verification;
+
+   package Ada_Lib_OS is
+      Trace                         : Boolean := False;
+      Run_Debug                     : Boolean := False;
+   end Ada_Lib_OS;
+
+   package Ada_Lib_Parser is
+      Debug                      : Boolean := False;
+   end Ada_Lib_Parser;
+
+   package Ada_Lib_Socket_IO is
+      Trace                         : Boolean := False;
+      Trace_IO                      : Boolean := False;
+      Tracing                       : Boolean := False;
+   end Ada_Lib_Socket_IO;
+
+   package Ada_Lib_Strings is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Strings;
+
+   package Ada_Lib_Template is
+      Trace_Compile                 : Boolean := False;
+      Trace_Evaluate                : Boolean := False;
+      Trace_Expand                  : Boolean := False;
+      Trace_Load                    : Boolean := False;
+   end Ada_Lib_Template;
+
+   package Ada_Lib_Text is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Text;
+
+   package Ada_Lib_Timer is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Timer;
+
+   package Ada_Lib_Trace_Tasks is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Trace_Tasks;
+
    package Aunit is
       Debug                      : Boolean := False;
    end Aunit;
 
-   package Help is
-      Debug                      : Boolean := False;
-   end Help;
+   package GNOGA is  -- options for the GNOGA Library
+--    Ada_Lib_Debug     : aliased Boolean := False; -- GNOGA library
+      Debug             : aliased Boolean := False; -- GNOGA library
+      Server_Debug      : aliased Boolean := False; -- GNOGA server
+      Options_Debug     : aliased Boolean := False; -- GNOGA Options
+--    GNOGA_Trace             : aliased Boolean := False;
+                                 -- GNOGA Unit Test app
+   end GNOGA;
 
-   package GNOGA_Options is
-      Debug                         : aliased Boolean := False;
-      GNOGA_Ada_Lib_Debug           : aliased Boolean := False;
-      GNOGA_Ada_Lib_Base_Debug      : aliased Boolean := False;
-      Debug_Options                 : aliased Boolean := False;
-   end GNOGA_Options;
+   package Trace is
+      Include_Hundreds              : Boolean := False;
+      Include_Task                  : Boolean := False;
+      Include_Time                  : Boolean := True;
+      Inhibit_Trace                 : Boolean := False;
+   end TRace;
 
 private
 
@@ -363,7 +493,7 @@ private
    end record;
 
    Null_Flag_List             : constant Flag_List_Type := (
-      Options  => Null
+      Options  => new Base_Options_Array (1 .. 0)
    );
 
 end Ada_Lib.Options;

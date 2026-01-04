@@ -11,7 +11,9 @@ with Ada_Lib.Database.Subscribe.Tests;
 with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Directory.Test;
 with Ada_Lib.Event.Unit_Test;
-with Ada_Lib.GNOGA.Unit_Test.Base;
+--with Ada_Lib.GNOGA.Unit_Test.Base;   caused circular reference
+with Ada_Lib.GNOGA.Unit_Test.Events;
+with Ada_Lib.GNOGA.Unit_Test.Window_Events;
 with Ada_Lib.Help.Tests;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
@@ -20,16 +22,17 @@ with Ada_Lib.OS.Tests;
 with Ada_Lib.Parser.Tests;
 with Ada_Lib.Socket_IO.Client.Unit_Test;
 with Ada_Lib.Socket_IO.Stream_IO.Unit_Test;
+with Ada_Lib.Strings.Maps.Unit_Tests;
 with Ada_Lib.Template.Tests;
 with Ada_Lib.Test.Ask_Tests;
 with Ada_Lib.Text.Textbelt.Tests;
 with Ada_Lib.Timer.Tests;
 with Ada_Lib.Trace.Tests; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Reporter;
-with Ada_Lib.GNOGA.Unit_Test.Events;
-with Ada_Lib.GNOGA.Unit_Test.Window_Events;
+--with Ada_Lib.GNOGA.Unit_Test.Window_Events; could not find gnoga.ads
 
 pragma Elaborate_All (Ada_Lib.Lock);
+pragma Elaborate (Ada_Lib.Parser);
 
 ----------------------------------------------------------------------------
 procedure Ada_Lib.Test.Run_Suite (
@@ -39,6 +42,7 @@ procedure Ada_Lib.Test.Run_Suite (
 
    use type Ada_Lib.Options.Mode_Type;
 
+   Debug       : Boolean renames Ada_Lib.Options.Unit_Test.Ada_Lib_Aunit.Tester_Debug;
    List_Suites                   : constant Boolean :=
                                     Options.Mode = Ada_Lib.Options.List_Suites;
 begin
@@ -69,8 +73,8 @@ begin
          Ada_Lib.Directory.Test.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Timer.Tests.Suite);
---       Non_DBDaemon_Test_Suite.Add_Test (
---          Ada_Lib.JSON.Tests.Suite);
+--    Non_DBDaemon_Test_Suite.Add_Test (
+--       Ada_Lib.JSON.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Trace.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
@@ -88,6 +92,8 @@ begin
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Configuration.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
+         Ada_Lib.Strings.Maps.Unit_Tests.Suite);
+      Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Test.Ask_Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Parser.Tests.Suite);
@@ -95,8 +101,8 @@ begin
          Ada_Lib.Help.Tests.Suite);
 --       Non_DBDaemon_Test_Suite.Add_Test (
 --          Ada_Lib.GNATCOLLL.Tests.Suite);
-      Non_DBDaemon_Test_Suite.Add_Test (
-         Ada_Lib.GNOGA.Unit_Test.Base.Suite);
+--    Non_DBDaemon_Test_Suite.Add_Test (
+--       Ada_Lib.GNOGA.Unit_Test.Base.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Command_Line_Iterator.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (

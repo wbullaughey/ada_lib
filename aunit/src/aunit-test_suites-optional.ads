@@ -1,8 +1,8 @@
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options;
 
 package AUnit.Test_Suites.Optional is
 
--- use type Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access;
+-- use type Ada_Lib.Options.Program_Options_Constant_Class_Access;
 
    type Test_Suite_Type is abstract new AUnit.Test_Suites.Test_Suite with null record;
    type Access_Test_Suite is access all Test_Suite_Type'Class;
@@ -13,7 +13,7 @@ package AUnit.Test_Suites.Optional is
                   Options :        AUnit_Options;
                   R       : in out Result'Class;
                   Outcome :    out Status
-   ) with Pre => Ada_Lib.Options.Actual.Have_Ada_Lib_Program_Options;
+   ) with Pre => Ada_Lib.Options.Have_Ada_Lib_Program_Options;
 
    -- test is have the right DBDaemon (local or remote) open
    function Test (

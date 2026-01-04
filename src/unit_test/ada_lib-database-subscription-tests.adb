@@ -1,7 +1,9 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Database.Updater;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Strings.Unlimited;
-with Ada_Lib.Test; --.Tests;
+--with Ada_Lib.Test; --.Tests;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -16,10 +18,12 @@ package body Ada_Lib.Database.Subscription.Tests is
    type Local_Test_Type is new Test_Type with null record;
    type Remote_Test_Type is new Test_Type with null record;
 
-   Complex_Subscription          : aliased Subscription_Type;
-   Load_Subdirectory             : constant String := "tests/data/load_subscriptions/";
-   Store_Subdirectory            : constant String := "tests/data/store_subscriptions/";
-   Simple_Subscription           : aliased Subscription_Type;
+   Complex_Subscription : aliased Subscription_Type;
+   Debug                : Boolean renames Options.Unit_Test.
+                           Ada_Lib_Database_Unit_Test.Subscribe_Debug;
+   Load_Subdirectory    : constant String := "tests/data/load_subscriptions/";
+   Store_Subdirectory   : constant String := "tests/data/store_subscriptions/";
+   Simple_Subscription  : aliased Subscription_Type;
 
 -- ---------------------------------------------------------------
 -- function "="" (
@@ -51,11 +55,11 @@ not_implemented;
 --   ---------------------------------------------------------------
 --
 --   begin
---      Log_In (Ada_Lib.Test.Debug);
+--      Log_In (Debug);
 --      Ada_Lib.Database.Updater.Abstract_Updater_Type'class (Subscription).Load (File,
 ----       Dynamic           => False,
 --         Got_Subscription  => Got_Subscription);
---      Log_Out (Ada_Lib.Test.Debug);
+--      Log_Out (Debug);
 --   end Load;
 --
    ---------------------------------------------------------------
@@ -69,7 +73,7 @@ not_implemented;
       Got_Subscription           : Boolean := False;
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter" & Quote (" load file", "test_subscription"));
+      Log (Debug, Here, Who & " enter" & Quote (" load file", "test_subscription"));
       Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Load_Subdirectory & "test_subscription");
       Loaded_Subscription.Load (File, Got_Subscription);
       Ada.Text_IO.Close (File);
@@ -79,7 +83,7 @@ not_implemented;
          Simple_Subscription.Dump ("simple");
          Assert (False, "loaded subscription does not match");
       end if;
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Debug, Here, Who & " exit");
    end Load_Subscription;
 
    ---------------------------------------------------------------
@@ -116,7 +120,7 @@ not_implemented;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib.Test.Debug);
+      Log_In (Debug);
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
         Routine        => Load_Subscription'access,
@@ -130,7 +134,7 @@ not_implemented;
         Routine        => Store_Load_Subscription'access,
         Routine_Name   => AUnit.Format ("Store_Load_Subscription")));
 
-      Log_Out (Ada_Lib.Test.Debug);
+      Log_Out (Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -158,7 +162,7 @@ not_implemented;
                File              : Ada.Text_IO.File_Type;
 
             begin
-               Log_Here (Ada_Lib.Test.Debug, "counter" & Counter'img & Quote (" store file", File_Name));
+               Log_Here (Debug, "counter" & Counter'img & Quote (" store file", File_Name));
                Ada.Text_IO.Create (File, Ada.Text_IO.Out_File, File_Name);
                Subscription.Store (File);
                Ada.Text_IO.Close (File);
@@ -171,7 +175,7 @@ not_implemented;
                                  : Subscription_Type;
 
             begin
-               Log (Ada_Lib.Test.Debug, Here, Who & Quote (" load file", File_Name));
+               Log (Debug, Here, Who & Quote (" load file", File_Name));
                Ada.Text_IO.Open (File, Ada.Text_IO.In_File, File_Name);
                Loaded_Subscription.Load (File, Got_Subscription);
                Ada.Text_IO.Close (File);
@@ -183,7 +187,7 @@ not_implemented;
          end;
       end loop;
 
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Debug, Here, Who & " exit");
    end Store_Load_Subscription;
 
    ---------------------------------------------------------------
@@ -195,11 +199,11 @@ not_implemented;
       File                       : Ada.Text_IO.File_Type;
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter");
+      Log (Debug, Here, Who & " enter");
       Ada.Text_IO.Create (File, Ada.Text_IO.Out_File, Store_Subdirectory & "stored_subscription");
       Simple_Subscription.Store (File);
       Ada.Text_IO.Close (File);
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Debug, Here, Who & " exit");
    end Store_Subscription;
 
    ---------------------------------------------------------------
@@ -227,7 +231,7 @@ not_implemented;
                                     );
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " Which_Host " & Which_Host'img);
+      Log (Debug, Here, Who & " Which_Host " & Which_Host'img);
       Ada_Lib.Unit_Test.Suite (Suite_Name);
       Test_Suite.Add_Test (Tests);
       return Test_Suite;
@@ -260,7 +264,7 @@ not_implemented;
      Log (Debug_Subscribe, Here, Who & Subscription.Image &
         " update count" & Subscription.Update_Count'img & " update kind " & Update_Kind'img &
         " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag) &
-        " subscription address " & Image (Subscription'address) & " from " & From);
+        " subscription address " & Ada_Lib.Strings.Image (Subscription'address) & " from " & From);
   end Update;
 
 begin

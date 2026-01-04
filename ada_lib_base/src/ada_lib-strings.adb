@@ -1,9 +1,170 @@
+with Ada.Calendar;
 with Ada.Characters.Handling;
 with Ada.Strings.Maps;
+--with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Substiture_For_Non_Alpha;
-with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Time;
+--with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Hex_IO;
+with Interfaces.C;
+with System.Address_Image;
 
 package body Ada_Lib.Strings is
+
+   use type Ada.Calendar.Time;
+
+   -------------------------------------------------------------------
+   function Format (
+      Seconds              : in   Integer;
+      Show_Days            : in   Boolean := False
+   ) return String is
+   -------------------------------------------------------------------
+
+   begin
+      if Show_Days and then Seconds >= 86400 then
+         return
+            Pad_Time (Integer'image (Seconds / 86400)) & ":" &
+            Pad_Time (Integer'image ((Seconds / 3600) mod 24)) & ":" &
+            Pad_Time (Integer'image ((Seconds / 60) mod 60)) & ":" &
+            Pad_Time (Integer'image (Seconds mod 60));
+      else
+         return
+            Pad_Time (Integer'image (Seconds / 3600)) & ":" &
+            Pad_Time (Integer'image ((Seconds / 60) mod 60)) & ":" &
+            Pad_Time (Integer'image (Seconds mod 60));
+      end if;
+   end Format;
+
+   -------------------------------------------------------------------
+   function Image (
+      Time              : in   Ada.Calendar.Time;
+      Hundreds            : in   Boolean := False
+   ) return String is
+   -------------------------------------------------------------------
+
+      Year              : Ada.Calendar.Year_Number;
+      Month             : Ada.Calendar.Month_Number;
+      Day                  : Ada.Calendar.Day_Number;
+      Seconds              : Ada.Calendar.Day_Duration;
+
+   begin
+      if Time = Ada_Lib.Time.No_Time then
+         return "no time";
+      end if;
+
+      Ada.Calendar.Split (Time, Year, Month, Day, Seconds);
+
+      if Hundreds then
+         return
+            Ada_Lib.Strings.Trim (Year'img) & "/" &
+            Pad_Time (Month'img) & "/" &
+            Pad_Time (Day'img) & " " &
+            Format (Integer (Seconds)) & "." &
+            Pad_Time (Integer'Image (Integer (Seconds * 100) mod 100));
+      else
+         return
+            Ada_Lib.Strings.Trim (Year'img) & "/" &
+            Pad_Time (Month'img) & "/" &
+            Pad_Time (Day'img) & " " &
+            Format (Integer (Seconds));
+      end if;
+   exception
+      when Ada.Calendar.Time_Error =>
+         return "INVALID";
+   end Image;
+
+   -------------------------------------------------------------------
+   function Image (
+      Time                       : in   Duration;
+      Hundreds                  : in   Boolean := False;
+      Show_Days                  : in   Boolean := False
+   ) return String is
+   -------------------------------------------------------------------
+
+   begin
+      if Time = Ada_Lib.Time.No_Duration then
+         return "no duration";
+      end if;
+
+      if Hundreds then
+         return Format (Integer (Float'Floor (Float (Time))), Show_Days => Show_Days) & "." &
+            Pad_Time (Integer'image (Integer (Time * 100) mod 100));
+      else
+         if Time >= Duration (Integer'last) or else Time <= Duration (Integer'first) then
+            return "****";
+         else
+            return Format (Integer (Time), Show_Days => Show_Days);
+         end if;
+      end if;
+   exception
+      when Ada.Calendar.Time_Error =>
+         return "INVALID";
+   end Image;
+
+   -------------------------------------------------------------------
+   function Image (
+      Address              : in   System.Address
+   ) return String is
+   -------------------------------------------------------------------
+
+   begin
+      return System.Address_Image (Address);
+   end Image;
+
+   -------------------------------------------------------------------
+   function Image (
+      Fault                      : Ada.Exceptions.Exception_Occurrence
+   ) return String is
+   -------------------------------------------------------------------
+
+   begin
+      return "Exception Name: " & Ada.Exceptions.Exception_Name (Fault) &
+         " Message: " & Ada.Exceptions.Exception_Message (Fault);
+   end Image;
+
+   --------------------------------------------------------------------
+   function Image_Pointer (                     -- print content of pointer with checking for constraint error
+      Address              : in   System.Address;   -- address of pointer
+      Bits                 : in     Natural := 32       -- in bits
+   ) return String is
+   --------------------------------------------------------------------
+
+      function memcpy (
+         Destination             : in     System.Address;
+         Source                  : in     System.Address;
+         Number_Bytes            : in     Interfaces.C.size_t
+      ) return System.Address;
+
+      pragma Import (C, memcpy);
+
+   begin
+      case Bits is
+         when 32 =>
+            declare
+               Value             : Interfaces.Integer_32;
+               Result            : System.Address;
+               pragma Unreferenced (Result);
+
+            begin
+               Result := memcpy (Value'address, Address, Interfaces.C.size_t (Bits/8));
+               return Hex_IO.Hex (Value);
+            end;
+
+         when 64 =>
+            declare
+               Value             : Interfaces.Integer_64;
+               Result            : System.Address;
+               pragma Unreferenced (Result);
+
+            begin
+               Result := memcpy (Value'address, Address, Interfaces.C.size_t (Bits/8));
+               return Hex_IO.Hex (Value);
+            end;
+
+         when others =>
+            raise Trace_Failure with "unsupport number if bits" & Bits'img;
+      end case;
+   end Image_Pointer;
 
    -------------------------------------------------------------------
    function Is_Decimal (
@@ -91,6 +252,29 @@ package body Ada_Lib.Strings is
    end Pad;
 
    -------------------------------------------------------------------
+   function Pad_Time (
+      Source            : in   String
+   ) return String is
+   -------------------------------------------------------------------
+
+      Trimmed           : constant String :=Ada_Lib.Strings.Trim (Source);
+
+   begin
+      case Trimmed'length is
+
+         when 0 =>
+            return "00";
+
+         when 1 =>
+            return "0" & Trimmed;
+
+         when others =>
+            return Trimmed;
+
+      end case;
+   end Pad_Time;
+
+   -------------------------------------------------------------------
    function Parse_Field (
       Source               : in   String;
       Seperator            : in   Character;
@@ -102,9 +286,9 @@ package body Ada_Lib.Strings is
       Start                : Natural := Source'first;
 
    begin
-      Log_In (Debug, Quote ("source", Source) &
-         Quote (" seperator", Seperator) &
-         " index" & Index'img);
+--    Log_In (Debug, Quote ("source", Source) &
+--       Quote (" seperator", Seperator) &
+--       " index" & Index'img);
 
       for Count in 1 .. Index loop
          declare
@@ -112,32 +296,32 @@ package body Ada_Lib.Strings is
                                     Source (Start .. Source'last), Pattern);
 
          begin
-            Log_Here (Debug, "seperator_index " & Seperator_Index'img);
+--          Log_Here (Debug, "seperator_index " & Seperator_Index'img);
             if Seperator_index = 0 then
                Seperator_index := Source'last + 1;
             end if;
 
             if Count = Index then
                if Seperator_index = Start then
-                  Log_Here (Debug);
+--                Log_Here (Debug);
                   return "";
                end if;
 
-               Log_Out (Debug, Quote ("returned", Source (Start .. Seperator_index - 1)));
+--             Log_Out (Debug, Quote ("returned", Source (Start .. Seperator_index - 1)));
                return Source (Start .. Seperator_index - 1);
             end if;
 
             Start := Seperator_index + 1;
 
             if Start > Source'last then
-               Log_Here (Debug);
+--             Log_Here (Debug);
                exit;
             end if;
          end;
-         Log_Here (Debug, "Start" & Start'img);
+--       Log_Here (Debug, "Start" & Start'img);
       end loop;
 
-      Log_Out (Debug);
+--    Log_Out (Debug);
       return "";
    end Parse_Field;
 

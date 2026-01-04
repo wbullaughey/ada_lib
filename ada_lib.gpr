@@ -1,7 +1,10 @@
 with "ada_lib_aunit";
+with "ada_lib_base";
 with "ada_lib_options";
 with "alr_environment.gpr";
 with "aunit.gpr";
+with "gnoga";
+with "gnoga_ada_lib";
 with "gnoga_options";
 with "gnatcoll";
 
@@ -12,7 +15,7 @@ project Ada_Lib is
        Alr_Environment.Crate_Version;
    Ada_OS_Include:= external ("ADA_OS_INCLUDE");
 
-   for Source_Dirs use ("src/", "../src", "src/unit_test", "ada_lib_test_lib/src");
+   for Source_Dirs use ("src/", "../src", "src/unit_test");
    for Object_Dir use "obj/" & Alr_Environment.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib/" & ALR_Environment.Build_Mode;

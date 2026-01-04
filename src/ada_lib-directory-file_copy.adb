@@ -1,17 +1,18 @@
 with Ada.Exceptions;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada.Streams.Stream_IO; -- use Ada.Streams; use Ada.Streams.Stream_IO;
 
 procedure Ada_Lib.Directory.File_Copy (
-   Source                        : in     String;
-   Destination                   : in     String;
-   Overwrite                     : in     Boolean := False) is
+   Source      : in     String;
+   Destination : in     String;
+   Overwrite   : in     Boolean := False) is
 
-   Buffer                        : Ada.Streams.Stream_Element_Array (
-                                    1 .. 10000);
-   Count                         : Ada.Streams.Stream_Element_Offset;
-   Input                         : Ada.Streams.Stream_IO.File_Type;
-   Output                        : Ada.Streams.Stream_IO.File_Type;
+   Buffer      : Ada.Streams.Stream_Element_Array (1 .. 10000);
+   Count       : Ada.Streams.Stream_Element_Offset;
+   Debug       : Boolean renames Options.Ada_Lib_Directory.Debug;
+   Input       : Ada.Streams.Stream_IO.File_Type;
+   Output      : Ada.Streams.Stream_IO.File_Type;
 
 begin
    Log_In (Debug);

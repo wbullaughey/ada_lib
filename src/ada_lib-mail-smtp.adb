@@ -6,6 +6,8 @@ with Ada.Text_IO;
 -- with Ada_Lib.OS.Run;
 -- with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Stream_IO;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 -- with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 -- with GNAT.Sockets;

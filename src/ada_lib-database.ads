@@ -302,9 +302,9 @@ package Ada_Lib.Database is
         Line                     : in     String
    ) return Name_Value_Type;
 
-    procedure Set_Trace (
-        Value                    : in     Boolean;
-        Both                     : in     Boolean := False);
+--  procedure Set_Trace (
+--      Value                    : in     Boolean;
+--      Both                     : in     Boolean := False);
 
     function To_String (
        Name_Value                : in     Name_Value_Type
@@ -318,9 +318,8 @@ package Ada_Lib.Database is
                                     Ada.Characters.Latin_1.NUL;
 --  Null_Database_Type           : constant Database_Type;
     Null_Name_Value              : constant Name_Value_Type;
-    Trace                        : aliased Boolean := False;
-    Trace_All                    : aliased Boolean := False;
-    Trace_Get_Post               : aliased Boolean := False;
+--  Trace                        : aliased Boolean := False;
+--  Trace_All                    : aliased Boolean := False;
 
 private
    procedure Unlocked_Post (                   -- does not lock database

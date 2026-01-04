@@ -1,3 +1,4 @@
+--with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Server.State is
@@ -408,8 +409,10 @@ package body Ada_Lib.Database.Server.State is
    ) return Boolean is
    ---------------------------------------------------------------
 
+      Result : constant Boolean := Server.Server /= Null;
+
    begin
-      return Log_Here (Server.Server /= Null, Debug or Trace_Pre_Post_Conditions,
+      return Log_Here (Result, Debug or Trace_Pre_Post_Conditions or not Result,
          "server not allocated");
    end Is_Server_Allocated;
 
@@ -419,6 +422,8 @@ package body Ada_Lib.Database.Server.State is
    ) return Boolean is
    ---------------------------------------------------------------
 
+      Result   : constant Boolean := Server.Server /= Null and then
+                                       Server.Server.Is_Open;
    begin
       if Debug then
          if Server.Server = Null then
@@ -427,8 +432,8 @@ package body Ada_Lib.Database.Server.State is
             Log_Here ("server not opened");
          end if;
       end if;
-      return Log_Here (Server.Server /= Null and then Server.Server.Is_Open,
-         Debug or Trace_Pre_Post_Conditions,
+      return Log_Here (Result,
+         Debug or Trace_Pre_Post_Conditions or not Result,
          "Server " & (if Server.Server = Null then
             "null"
          else
@@ -456,9 +461,11 @@ package body Ada_Lib.Database.Server.State is
    ) return Boolean is
    ---------------------------------------------------------------
 
+      Result   : constant Boolean := Server.Server = Null or else
+                                       Server.Server.Is_Stopped;
    begin
-      return Log_Here (Server.Server = Null or else Server.Server.Is_Stopped,
-         Debug or Trace_Pre_Post_Conditions,
+      return Log_Here (Result,
+         Debug or Trace_Pre_Post_Conditions or not Result,
          "server " & (if Server.Server = Null then
             "null"
          else
@@ -491,10 +498,12 @@ package body Ada_Lib.Database.Server.State is
    ) return Boolean is
    ---------------------------------------------------------------
 
+      Result   : constant Boolean := Ada_Lib.Strings.Unlimited.length (
+                                       Server.Host_Name) > 0;
    begin
-      return Log_Here (Ada_Lib.Strings.Unlimited.length (Server.Host_Name) > 0,
-         Debug or Trace_Pre_Post_Conditions,
-         Quote ("Host Name", Server.Host_Name));
+      return Log_Here (Result,
+         Debug or Trace_Pre_Post_Conditions or not Result,
+         Ada_Lib.Strings.Unlimited.Quote ("Host Name", Server.Host_Name));
    end Is_Host_Known;
 
 --   ---------------------------------------------------------------

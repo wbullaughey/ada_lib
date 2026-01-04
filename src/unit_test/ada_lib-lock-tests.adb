@@ -85,11 +85,11 @@ package body Ada_Lib.Lock.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
       Ada.Numerics.Float_Random.Reset (Random_Generator);
       Task_Lock_Failed := False;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
    ---------------------------------------------------------------

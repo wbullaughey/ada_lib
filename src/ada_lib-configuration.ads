@@ -66,8 +66,6 @@ package Ada_Lib.Configuration is
       Configuration              :    out Configuration_Type;
       Path                       : in     String);
 
-   Trace                      : aliased Boolean := False;
-
 private
 
    package Table_Package is new Ada.Containers.Indefinite_Hashed_Maps (

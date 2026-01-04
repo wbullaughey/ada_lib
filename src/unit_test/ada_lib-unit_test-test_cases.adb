@@ -1,11 +1,15 @@
 with Ada.Environment_Variables;
 with Ada.Text_IO; use Ada.Text_IO;
 --with Ada_Lib.Options.AUnit_Lib;
+--with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace;
 
 package body Ada_Lib.Unit_Test.Test_Cases is
 
    use type Ada_Lib.Options.Mode_Type;
+
+   Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test_Test_Cases.Debug;
 
    ----------------------------------------------------------------------------
    overriding
@@ -18,7 +22,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Program_Options_Type'class (
-                           Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options.all);
+                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options.all);
    begin
       Log_In (Debug, Quote ("routine", Val.Routine_Name.all) &
          " mode " & Options.Mode'img);
@@ -41,9 +45,9 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                   Ada_Lib_Unit_Test_Program_Options_Type'class renames
                      Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Options_Class_Access (
-                           Ada_Lib.Options.Actual.Get_Ada_Lib_Modifiable_Program_Options).all;
+                           Ada_Lib.Options.Get_Ada_Lib_Modifiable_Program_Options).all;
    begin
-      Log_In (Debug or Trace_Set_Up, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      Log_In (Debug or Trace_Set_Up_Tear_Down, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
 
       for Index in 1 .. Options.Number_Random_Generators loop
          Log_Here (Debug, "reset random gemerator mode " &
@@ -58,7 +62,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
 --    Ada_Lib.Unit_Testing := True;
       Root_Test.Test_Type (Test).Set_Up;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
    ----------------------------------------------------------------------------
@@ -226,11 +230,11 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_In (Debug or Trace_Set_Up);
+         Log_In (Debug or Trace_Set_Up_Tear_Down);
 --       Ada_Lib.Unit_Testing := True;
          Test.Set_Up_Succeeded := True;
          Test.Torn_Down := False;
-         Log_Out (Debug or Trace_Set_Up);
+         Log_Out (Debug or Trace_Set_Up_Tear_Down);
       end Set_Up;
 
       ----------------------------------------------------------------------------
@@ -251,10 +255,10 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ----------------------------------------------------------------------------
 
       begin
-         Log_In (Debug or Trace_Set_Up);
+         Log_In (Debug or Trace_Set_Up_Tear_Down);
          Test.Set_Up_Succeeded := False;
          Test.Torn_Down := True;
-         Log_Out (Debug or Trace_Set_Up);
+         Log_Out (Debug or Trace_Set_Up_Tear_Down);
       end Tear_Down;
 
       ----------------------------------------------------------------------------
@@ -274,9 +278,12 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       )  return Boolean is
       ----------------------------------------------------------------------------
 
+      Result   : constant Boolean := Test.Set_Up_Succeeded and then
+                                       not Test.Set_Up_Failed;
+
       begin
-         return Log_Here (Test.Set_Up_Succeeded and then not Test.Set_Up_Failed,
-            Debug or Trace_Pre_Post_Conditions,
+         return Log_Here (Result,
+            Debug or Trace_Pre_Post_Conditions or not Result,
             "Set_Up_Succeeded " & Test.Set_Up_Succeeded'img &
             " Set_Up_Failed " & Test.Set_Up_Failed'img);
       end Verify_Set_Up;
@@ -287,9 +294,11 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       ) return Boolean is
       ----------------------------------------------------------------------------
 
+      Result   : constant Boolean := Test.Torn_Down and then
+                                       not Test.Tear_Down_Failed;
       begin
-         return Log_Here (Test.Torn_Down and then not Test.Tear_Down_Failed,
-            Debug or Trace_Pre_Post_Conditions,
+         return Log_Here (Result,
+            Debug or Trace_Pre_Post_Conditions or not Result,
             "Torn_Down " & Test.Torn_Down'img &
             " Tear_Down_Failed " & Test.Tear_Down_Failed'img);
 

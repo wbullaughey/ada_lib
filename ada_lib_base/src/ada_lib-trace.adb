@@ -2,17 +2,21 @@ with Ada.Characters.Latin_1;
 with Ada.Command_Line;
 with Ada.Task_Identification;
 with Ada.Text_IO; use  Ada.Text_IO;
+with Ada_Lib.Options;
 with Ada_Lib.OS;
-with Ada_Lib.Substiture_For_Non_Alpha;
+--with Ada_Lib.Substiture_For_Non_Alpha;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Time;
 with Ask;
 with Hex_IO;
-with Interfaces.C;
-with System.Address_Image;
+with Interfaces;
+--with System.Address_Image;
+
+--pragma Elaborate_All (Ada_Lib.Time);
 
 package body Ada_Lib.Trace is
 
-   use type Ada.Calendar.Time;
+-- use type Ada.Calendar.Time;
    use type Ada.Task_Identification.Task_Id;
    use type System.Address;
 
@@ -26,7 +30,7 @@ package body Ada_Lib.Trace is
    subtype Task_Index_Type       is Task_Count_Type range 1 .. Maximum_Tasks;
 
    type Task_Type is record
-      Buffer                     : Ada_Lib.Strings.Unlimited.String_Type;
+      Buffer                     : Ada.Strings.Unbounded.Unbounded_String;
       Level                      : Level_Type := Level_Type'first;
       Task_ID                    : Ada.Task_Identification.Task_ID;
    end record;
@@ -104,15 +108,17 @@ package body Ada_Lib.Trace is
 
    end Locked_Package;
 
-   Check_Address                 : System.Address := System.Null_Address;
-   Indent_Amount                 : constant := 2; -- spaces per level
-   LF                            : Character renames Ada.Characters.Latin_1.LF;
-   Next_Free_Task                : Task_Index_Type := Task_Index_Type'first;
-   Options_Completed             : Boolean := False;
-   Start_Time                    : constant Ada.Calendar.Time :=
-                                    Ada.Calendar.Clock;
-   Trace_Preoptions_Complete     : constant Boolean := False;
-   Trace_Tags                    : constant Boolean := True;
+   Check_Address        : System.Address := System.Null_Address;
+   Include_Task         : Boolean renames Ada_Lib.Options.Trace.Include_Task;
+   Include_Time         : Boolean renames
+                           Ada_Lib.Options.Trace.Include_Time;
+   Indent_Amount        : constant := 2; -- spaces per level
+   LF                   : Character renames Ada.Characters.Latin_1.LF;
+   Next_Free_Task       : Task_Index_Type := Task_Index_Type'first;
+   Options_Completed    : Boolean := False;
+   Trace_Preoptions_Complete
+                        : constant Boolean := False;
+   Trace_Tags           : constant Boolean := True;
 
    procedure Format_Output (    -- only call from within locked object
       Output_File             : in     File_Class_Access;
@@ -164,16 +170,6 @@ package body Ada_Lib.Trace is
          return True;
       end if;
    end Ask_Pause;
-
-   --------------------------------------------------------------------
-   -- return task identification for calling task
-   function Current_Task
-   return String is
-   --------------------------------------------------------------------
-
-   begin
-      return Ada.Task_Identification.Image (Ada.Task_Identification.Current_Task);
-   end Current_Task;
 
    --------------------------------------------------------------------
    procedure Dump (
@@ -253,7 +249,8 @@ package body Ada_Lib.Trace is
          " level" & Task_Data.Level'img & Quote (" text", Text));
 
       if Include_Program then
-         Task_Data.Buffer.Append (Ada.Command_Line.Command_Name & "=> ");
+         Ada.Strings.Unbounded.Append (Task_Data.Buffer,
+            Ada.Command_Line.Command_Name & "=> ");
       end if;
 
       if Include_Task then
@@ -262,29 +259,31 @@ package body Ada_Lib.Trace is
                                     Ada.Task_Identification.Current_Task;
 
          begin
-            Task_Data.Buffer.Append (
+            Ada.Strings.Unbounded.Append (Task_Data.Buffer,
                Ada.Task_Identification.Image (Current_Task_ID) & ": ");
          end;
       end if;
 
       if Include_Time then
-         Task_Data.Buffer.Append ("[" & From_Start (Ada_Lib.Time.Now,
-            Include_Hundreds) & "] ");
+         Ada.Strings.Unbounded.Append (Task_Data.Buffer,
+            "[" & Ada_Lib.Time.From_Start (Ada_Lib.Time.Now,
+               Include_Hundreds) & "] ");
       end if;
 
-      Task_Data.Buffer.Append (Where & " " & Who & " (" &
+      Ada.Strings.Unbounded.Append (Task_Data.Buffer,
+         Where & " " & Who & " (" &
          Ada_Lib.Strings.Trim (Task_Data.Level'img) & ") " & Text);
 
-      T(Debug_Trace, "length" & Task_Data.Buffer.Length'img);
-      if Task_Data.Buffer.Length > 0 then
+      T(Debug_Trace, "length" &
+         Ada.Strings.Unbounded.Length (Task_Data.Buffer)'img);
+      if Ada.Strings.Unbounded.Length (Task_Data.Buffer) > 0 then
          declare
-            Has_LF               : constant Boolean :=
-                                    Task_Data.Buffer.Element (
-                                       Task_Data.Buffer.Length) = LF;
+            Has_LF   : constant Boolean :=
+                        Ada.Strings.Unbounded.To_String (Task_Data.Buffer)(1) = LF;
          begin
             T (Debug_Trace, "has lf " & Has_LF'img);
             if not Has_LF then
-               Task_Data.Buffer.Append (LF);
+               Ada.Strings.Unbounded.Append (Task_Data.Buffer, LF);
             end if;
 
             if Indent and then Indent_Trace and then Task_Data.Level > 0 then
@@ -293,7 +292,9 @@ package body Ada_Lib.Trace is
                                        Task_Data.Level * Indent_Amount)) := (
                                           others => ' ');
                begin
-                  Task_Data.Buffer.Append (Padding);
+--ada.Text_io.put_line (here & Quote (" buffer", Task_Data.Buffer));
+                  Ada.Strings.Unbounded.Insert (Task_Data.Buffer, 1, Padding);
+--ada.Text_io.put_line (here & Quote (" buffer", Task_Data.Buffer) & Quote (" padding", padding));
 
                exception
                   when Fault: others =>
@@ -306,9 +307,10 @@ package body Ada_Lib.Trace is
             end if;
 
             T (Debug_Trace, Quote ("buffer", Task_Data.Buffer));
-            Output_File.Output (Task_Data.Buffer.Coerce);
+--ada.Text_io.put_line (here & " indent " & Indent'img & " Indent_Trace " & Indent_Trace'img & " level " & Task_Data.Level'img & Quote (" buffer", Task_Data.Buffer));
+            Output_File.Output (Ada.Strings.Unbounded.To_String (Task_Data.Buffer));
             Output_File.Flush;
-            Task_Data.Buffer := Ada_Lib.Strings.Unlimited.Null_String;
+            Ada.Strings.Unbounded.Set_Unbounded_String (Task_Data.Buffer, "");
 
          exception
             when Fault: others =>
@@ -326,7 +328,7 @@ package body Ada_Lib.Trace is
 
          begin
             Output_File.Output ("**** " & Hex_IO.Hex (Value) &
-               " Address " & Image (Check_Address) & " *****");
+               " Address " & Ada_Lib.Strings.Image (Check_Address) & " *****");
          exception
             when Fault: others =>
                Trace_Message_Exception (Fault, Quote ("text", Text),
@@ -340,206 +342,11 @@ package body Ada_Lib.Trace is
 
       when Fault: others =>
          Trace_Message_Exception (Fault, Quote ("text", Text) &
-            " buffer length" & Task_Data.Buffer.Length'img,
+            " buffer length" & Ada.Strings.Unbounded.Length (Task_Data.Buffer)'img,
             Where & " " & Who);
          Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    end Format_Output;
-
-   --------------------------------------------------------------------
-   function From_Start
-   return Duration is
-   --------------------------------------------------------------------
-
-   begin
-      return From_Start (Ada.Calendar.Clock);
-   end From_Start;
-
-   --------------------------------------------------------------------
-   function From_Start (
-      Time                 : in   Ada.Calendar.Time
-   ) return Duration is
-   --------------------------------------------------------------------
-
-   begin
-      return Time - Start_Time;
-   end From_Start;
-
-   --------------------------------------------------------------------
-   function From_Start (
-      Hundreds             : in   Boolean := False;
-      Show_Days            : in   Boolean := False
-   ) return String is
-   --------------------------------------------------------------------
-
-   begin
-      return From_Start (Ada.Calendar.Clock, Hundreds, Show_Days);
-   end From_Start;
-
-   --------------------------------------------------------------------
-   function From_Start (
-      Time                 : in   Ada.Calendar.Time;
-      Hundreds            : in   Boolean := False;
-      Show_Days            : in   Boolean := False;
-      From                 : in     String := GNAT.Source_Info.Source_Location
-   ) return String is
-   pragma Unreferenced (From);
-   --------------------------------------------------------------------
-
---offset : constant duration := Time - Start_Time;
-   begin
-      if Time = No_Time then
-         return "no time";
-      else
---put_line ("time " & time'img & " start time " & Start_Time'img & " from start " & offset'img);
-         return Image ((
-            if Start_Time = No_Time then
-               0.0
-            else
-               Time - Start_Time),
-            Hundreds, Show_Days);
-      end if;
-   end From_Start;
-
--- --------------------------------------------------------------------
--- function Get_Start_Time
--- return Ada.Calendar.Time is
--- --------------------------------------------------------------------
---
--- begin
---    return Start_Time;
--- end Get_Start_Time;
-
-   -------------------------------------------------------------------
-   function Image (
-      Time              : in   Ada.Calendar.Time;
-      Hundreds            : in   Boolean := False
-   ) return String is
-   -------------------------------------------------------------------
-
-      Year              : Ada.Calendar.Year_Number;
-      Month             : Ada.Calendar.Month_Number;
-      Day                  : Ada.Calendar.Day_Number;
-      Seconds              : Ada.Calendar.Day_Duration;
-
-   begin
-      if Time = No_Time then
-         return "no time";
-      end if;
-
-      Ada.Calendar.Split (Time, Year, Month, Day, Seconds);
-
-      if Hundreds then
-         return
-            Ada_Lib.Strings.Trim (Year'img) & "/" &
-            Pad (Month'img) & "/" &
-            Pad (Day'img) & " " &
-            Format (Integer (Seconds)) & "." &
-            Pad (Integer'Image (Integer (Seconds * 100) mod 100));
-      else
-         return
-            Ada_Lib.Strings.Trim (Year'img) & "/" &
-            Pad (Month'img) & "/" &
-            Pad (Day'img) & " " &
-            Format (Integer (Seconds));
-      end if;
-   exception
-      when Ada.Calendar.Time_Error =>
-         return "INVALID";
-   end Image;
-
-   -------------------------------------------------------------------
-   function Image (
-      Time                       : in   Duration;
-      Hundreds                  : in   Boolean := False;
-      Show_Days                  : in   Boolean := False
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      if Time = Ada_Lib.Time.No_Duration then
-         return "no duration";
-      end if;
-
-      if Hundreds then
-         return Format (Integer (Float'Floor (Float (Time))), Show_Days => Show_Days) & "." &
-            Pad (Integer'image (Integer (Time * 100) mod 100));
-      else
-         if Time >= Duration (Integer'last) or else Time <= Duration (Integer'first) then
-            return "****";
-         else
-            return Format (Integer (Time), Show_Days => Show_Days);
-         end if;
-      end if;
-   exception
-      when Ada.Calendar.Time_Error =>
-         return "INVALID";
-   end Image;
-
-   -------------------------------------------------------------------
-   function Image (
-      Address              : in   System.Address
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return System.Address_Image (Address);
-   end Image;
-
-   -------------------------------------------------------------------
-   function Image (
-      Fault                      : Ada.Exceptions.Exception_Occurrence
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return "Exception Name: " & Ada.Exceptions.Exception_Name (Fault) &
-         " Message: " & Ada.Exceptions.Exception_Message (Fault);
-   end Image;
-
-   --------------------------------------------------------------------
-   function Image_Pointer (                     -- print content of pointer with checking for constraint error
-      Address              : in   System.Address;   -- address of pointer
-      Bits                 : in     Natural := 32       -- in bits
-   ) return String is
-   --------------------------------------------------------------------
-
-      function memcpy (
-         Destination             : in     System.Address;
-         Source                  : in     System.Address;
-         Number_Bytes            : in     Interfaces.C.size_t
-      ) return System.Address;
-
-      pragma Import (C, memcpy);
-
-   begin
-      case Bits is
-         when 32 =>
-            declare
-               Value             : Interfaces.Integer_32;
-               Result            : System.Address;
-               pragma Unreferenced (Result);
-
-            begin
-               Result := memcpy (Value'address, Address, Interfaces.C.size_t (Bits/8));
-               return Hex_IO.Hex (Value);
-            end;
-
-         when 64 =>
-            declare
-               Value             : Interfaces.Integer_64;
-               Result            : System.Address;
-               pragma Unreferenced (Result);
-
-            begin
-               Result := memcpy (Value'address, Address, Interfaces.C.size_t (Bits/8));
-               return Hex_IO.Hex (Value);
-            end;
-
-         when others =>
-            raise Trace_Failure with "unsupport number if bits" & Bits'img;
-      end case;
-   end Image_Pointer;
 
    -------------------------------------------------------------------
    procedure Log (
@@ -609,7 +416,7 @@ package body Ada_Lib.Trace is
       Put (
          Enable      => Enable,
          Context     => Same,
-         Text        => Message & LF,
+         Text        => Message, -- & LF,
          Where       => Where,
          Who         => Who);
 --ada.Text_io.put_line (here);
@@ -654,7 +461,7 @@ package body Ada_Lib.Trace is
       Put (
          Enable      => Enable,
          Context     => Increment,
-         Text        => "in " & Message & LF,
+         Text        => "in " & Message, -- & LF,
          Where       => Where,
          Who         => Who);
    end Log_In;
@@ -693,7 +500,7 @@ package body Ada_Lib.Trace is
       Locked_Package.Put (
          Enable      => Enable,
          Context     => Decrement,
-         Message     => "out " & Message & LF,
+         Message     => "out " & Message, -- & LF,
          Where       => Where,
          Who         => Who);
    end Log_Out;
@@ -874,107 +681,6 @@ package body Ada_Lib.Trace is
 --ada.Text_io.put_line (here);
    end Put;
 
-   -------------------------------------------------------------------
-   function Quote (
-      Value                : in   Character
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return (if Value = Ada.Characters.Latin_1.Nul then
-            "NUL"
-         else
-            String'(1 => Ada_Lib.Substiture_For_Non_Alpha.Mapper (Value)));
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Value                : in   String
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return "'" & Ada_Lib.Substiture_For_Non_Alpha.Substitute (Value) & "'";
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Value                : in   Ada_Lib.Strings.Unlimited.String_Type
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Quote (Value.Coerce);
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Value                : in   Ada.Strings.Unbounded.Unbounded_String
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Quote (Ada.Strings.Unbounded.To_String (Value));
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Character
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Variable & ": " & Quote (Value);
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Variable             : in   String;
-      Value                : in   String
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Variable & ": " & Quote (Value);
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Variable             : in   String;
-      Value                : access constant String
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Quote (Variable, (if Value = Null then
-            "null pointer"
-         else
-            Value.all));
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Ada_Lib.Strings.Unlimited.String_Type
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Quote (Variable, Value.Coerce);
-   end Quote;
-
-   -------------------------------------------------------------------
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Ada.Strings.Unbounded.Unbounded_String
-   ) return String is
-   -------------------------------------------------------------------
-
-   begin
-      return Quote (Variable, Ada.Strings.Unbounded.To_String (Value));
-   end Quote;
-
    ---------------------------------------------------------------
    procedure Replace_Output_File (
       New_File                   : in     File_Class_Access;
@@ -999,7 +705,7 @@ package body Ada_Lib.Trace is
 
       begin
          Put_Line ("**** setting " &
-            " Address " & Image (Check_Address) &
+            " Address " & Ada_Lib.Strings.Image (Check_Address) &
             " initial value " & Hex_IO.Hex (Value) & " *****");
       end;
    end Set_Check_Address;
@@ -1425,6 +1131,7 @@ package body Ada_Lib.Trace is
 
                      when Increment =>
                         Task_Entry.Level := Task_Entry.Level + 1;
+--ada.Text_io.put_line (here & " level " & Task_Entry.Level'img);
 
                      when others =>
                         null;
@@ -1453,6 +1160,7 @@ package body Ada_Lib.Trace is
                         Where & ":" & Who & LF);
                   else
                      Task_Entry.Level := Task_Entry.Level - 1;
+--ada.Text_io.put_line (here & " level " & Task_Entry.Level'img);
                   end if;
                end if;
 --ada.Text_io.put_line (here);
@@ -1488,15 +1196,16 @@ package body Ada_Lib.Trace is
    begin
 --Debug_Trace := True;
 --Elaborate := True;
---Trace_Set_Up := True;
+--Trace_Options := True;
+--Trace_Set_Up_Tear_Down := True;
 --Trace_Tests := True;
    Include_Hundreds := True;
 -- Include_Program := True;
-   Include_Task := True;
-   Include_Time := True;
+-- Include_Task := True;
+-- Include_Time := True;
    Indent_Trace := True;
    Log_Here (Debug_Trace or Elaborate or Trace_Options or Trace_Tests,
-      "start time " & Start_Time'img &
+      "start time " & Time.Image (Time.Get_Start_Time) &
       " debug trace " & Debug_Trace'img &
       " elaborate " & Elaborate'img &
       " trace options " & Trace_Options'img &

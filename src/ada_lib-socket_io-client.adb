@@ -1,5 +1,6 @@
    with Ada.Exceptions;
 -- with Ada.Streams;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings;
 --with Ada_Lib.Time;
 with Ada_Lib.Trace;use Ada_Lib.Trace;
@@ -367,7 +368,7 @@ package body Ada_Lib.Socket_IO.Client is
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, "socket address " & Image (Socket'address));
+      Log_In (Trace, "socket address " & Ada_Lib.Strings.Image (Socket'address));
       Ada_Lib.Socket_IO.Stream_IO.Stream_Socket_Type (Socket).Initialize;
       Log_Out (Trace, " exit");
    end Initialize;
@@ -404,7 +405,7 @@ package body Ada_Lib.Socket_IO.Client is
 -- ---------------------------------------------------------------------------
 --
 -- begin
---    Log_In (Trace, "socket " & Image (Socket'address) & " " &
+--    Log_In (Trace, "socket " & Ada_Lib.Strings.Image (Socket'address) & " " &
 --       Socket.Is_Connected'img & " Timeout_Length " & Timeout_Length'img);
 --    pragma Warnings (Off, "*may be referenced before it has a value");
 --    Socket.Check_Read (Buffer);   -- only used for 'left attribute

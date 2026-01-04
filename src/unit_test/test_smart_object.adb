@@ -1,4 +1,4 @@
-with Smart_Object_Helper;
+with Ada_Lib.Smart_Object_Helper;
 
 procedure Test_Smart_Object is
 

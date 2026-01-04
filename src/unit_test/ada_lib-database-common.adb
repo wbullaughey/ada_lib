@@ -1,13 +1,15 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada_Lib.Test;
+--with Ada_Lib.Test;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Database.Wild;
+with Ada_Lib.Options;
 with Ada_Lib.Strings;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Common is
 
+   Debug    : Boolean renames Options.Ada_Lib_Database.Trace;
 
    ---------------------------------------------------------------
    procedure Wild_Get ( -- needs new dbdaemon
@@ -74,7 +76,7 @@ package body Ada_Lib.Database.Common is
          Response                : Ada_Lib.Database.Wild.Response_Type;
 
       begin
-         Log (Ada_Lib.Test.Debug, Here, Who & " pattern '" & Pattern & "' expected count" & Expected_Count'img);
+         Log (Debug, Here, Who & " pattern '" & Pattern & "' expected count" & Expected_Count'img);
          Response := Ada_Lib.Database.Wild.Wild_Get (Database, Pattern);
          if not Assert (Response.Count = Expected_Count, Assert_Message & " expected" & Expected_Count'img &
                " got" & Response.Count'img) then
@@ -96,7 +98,7 @@ package body Ada_Lib.Database.Common is
       ------------------------------------------------------------
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Database.Is_Open, "data base not open");
 
       for Unique_Counter in Test_Index_Type'range loop

@@ -1,9 +1,9 @@
 with AUnit.Test_Suites;
 --with Ada_Lib.Unit_Test.Tests;
-with GNOGA_Ada_Lib;
-with Gnoga.Gui.Element.Common;
-with Gnoga.Gui.Element.Form;
-with Gnoga.Gui.View;
+--with GNOGA_Ada_Lib;
+--with Gnoga.Gui.Element.Common;
+--with Gnoga.Gui.Element.Form;
+--with Gnoga.Gui.View;
 
 package Ada_Lib.Gnoga.Unit_Test.Base is
 
@@ -14,16 +14,6 @@ package Ada_Lib.Gnoga.Unit_Test.Base is
 --
 -- procedure Terminated (
 --    Base                       : in out Test_Base_Type);
-
-   type Connection_Type is new GNOGA_Ada_Lib.Connection_Data_Type with  record
---    Base                       : Test_Base_Type;
-      Button                     : Standard.Gnoga.Gui.Element.Common.Button_Type;
-      Display_Window             : Standard.Gnoga.Gui.View.View_Type;
-      Form                       : Standard.Gnoga.Gui.Element.Form.Form_Type;
-   end record;
-
-   type Connection_Access        is access all Connection_Type;
-   type Connection_Class_Access  is access all Connection_Type'class;
 
    type Test_Type is new GNOGA_Tests_Type (
       Initialize_GNOGA  => False,

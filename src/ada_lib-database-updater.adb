@@ -1,11 +1,16 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Options;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Updater is
 
-    use type Ada_Lib.Strings.Unlimited.String_Type;
+--  use type Ada_Lib.Strings.Unlimited.String_Type;
 
    Delimiter                     : constant Character := '|';
+   Trace                         : Boolean renames Options.Ada_Lib_Database.
+                                    Updater_Trace;
 
    -------------------------------------------------------------------
    function Calculate_Update_Mode (

@@ -1,8 +1,10 @@
+with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Wild is
 
-   Timeout                       : constant Duration := 0.5;
+   Timeout  : constant Duration := 0.5;
+   Trace    : Boolean renames Options.Ada_Lib_Database.Wild_Trace;
 
    -------------------------------------------------------------------
    function Wild_Get (

@@ -1,4 +1,5 @@
 with Ada.Directories;
+with Ada_Lib.Options;
 
 package Ada_Lib.Directory is
 
@@ -35,7 +36,5 @@ package Ada_Lib.Directory is
    function Is_Executable (
       File_Name                  : String
    ) return Boolean;
-
-   Debug                         : Boolean := False;
 
 end Ada_Lib.Directory;

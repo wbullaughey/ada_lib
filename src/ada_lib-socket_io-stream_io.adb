@@ -1,6 +1,7 @@
 -- package that provides stream IO for sockets with a timeout
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Time;
 with Ada_Lib.Timer;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -43,7 +44,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    begin
       Log_In (Trace, Socket.Image &
-         " stream " & Image (Socket.Stream'address) &
+         " stream " & Ada_Lib.Strings.Image (Socket.Stream'address) &
          " output buffer empty " &
             Socket.Stream.Output_Buffer.Empty (False)'img);
 
@@ -101,7 +102,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Log_In (Tracing, Stream.Image &
          " reader stopped " & Stream.Reader_Stopped'img &
          " writer stopped " & Stream.Writer_Stopped'img &
-         " address stream " & Image (Stream'address));
+         " address stream " & Ada_Lib.Strings.Image (Stream'address));
 
       Stream.Input_Buffer.Set_Event (Closed);
       Stream.Output_Buffer.Set_Event (Closed);
@@ -247,7 +248,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Log_In (Tracing, Socket.Image & -- Quote (" Description", Description) &
          " socket " & Socket.Image & " no description expected ");
 --       "addresses socket " & Image (Socket'address) &
---       " stream " & Image (Socket.Stream'address));
+--       " stream " & Ada_Lib.Strings.Image (Socket.Stream'address));
 
 --    if Socket.Description = Null then
 --       Socket.Set_Description (Description);
@@ -303,7 +304,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 
    begin
       Log_In (Trace, Socket.Image & " open " & Socket.Is_Open'img & " address " &
-         Image (Socket'address));
+         Ada_Lib.Strings.Image (Socket'address));
       if Socket.Is_Open then
          Log_Here (Trace);
          Socket.Close;
@@ -1037,7 +1038,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             when Timed_Out =>
                Log_Here (Tracing, Kind'img & " timed out");
                State := Ok;      -- more data now availabl
-   --          Timeout_Time := Ada_Lib.Time.No_Time;
+   --          Timeout_Time := Ada_Lib.Time.Ada_Lib.Time.No_Time;
    --          return;
 
             when Closed =>
@@ -1158,7 +1159,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
 --       declare
 --          Now                     : constant Ada_Lib.Time.Time_Type := Ada_Lib.Time.Now;
 --          Result                  : constant Boolean :=
---                                     (if Timeout_Time = Ada_Lib.Time.No_Time then
+--                                     (if Timeout_Time = Ada_Lib.Time.Ada_Lib.Time.No_Time then
 --                                           False
 --                                        else
 --                                           Now > Timeout_Time);
@@ -1551,8 +1552,8 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
 
                         exception
                            when Fault: GNAT.Sockets.Socket_Error =>
-                              Trace_Message_Exception (Trace, Fault,
-                                 "stream " & Image (Stream_Pointer.all));
+                              Trace_Message_Exception (Trace, Fault, "stream " &
+                                 Ada_Lib.Strings.Image (Stream_Pointer.all'address));
 
                               if GNAT.Sockets.Resolve_Exception (Fault) /=
                                     GNAT.Sockets.Resource_Temporarily_Unavailable then
@@ -1576,7 +1577,8 @@ pragma Assert (Stream_Pointer.socket.GNAT_Socket /= GNAT.Sockets.No_Socket,
             end case;
          end;
       end loop;
-      Log_Here (Trace, "socket " & Image (Stream_Pointer.Socket'address));
+      Log_Here (Trace, "socket " & Ada_Lib.Strings.Image (
+         Stream_Pointer.Socket'address));
 
       if    Stream_Pointer.Socket /= Null and then
             Stream_Pointer.Socket.Is_Open then

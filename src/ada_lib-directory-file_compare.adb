@@ -1,4 +1,5 @@
 with Ada.Exceptions;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada.Streams.Stream_IO; -- use Ada.Streams; use Ada.Streams.Stream_IO;
 
@@ -23,6 +24,8 @@ procedure Ada_Lib.Directory.File_Compare (
          Count                   :    out Ada.Streams.Stream_Element_Offset);
 
    end IO;
+
+   Debug : Boolean renames Options.Ada_Lib_Directory.Debug;
 
    package body IO is
 

@@ -1,9 +1,4 @@
---with  Ada.Characters.Latin_1;
---with Ada.Finalization;
---with Ada.Tags;
---with Ada_Lib.Options.Actual;
 with Ada_Lib.Trace; -- use Ada_Lib.Trace;
---with GNAT.Source_Info;
 
 package Ada_Lib.Options.Create is
 

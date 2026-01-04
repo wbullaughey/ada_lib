@@ -1,6 +1,10 @@
 with Ada_Lib.OS.Run;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+
+-- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.Database.Connection is
 
@@ -92,7 +96,7 @@ package body Ada_Lib.Database.Connection is
                if    Local.Open (Local_Host_Name, Local.Port) and then
                      Connection.Open (Local_Host_Name, Local.Port) then  -- don't try Database until know it will work
                  Local.Running := True;
-                 Log_Out (Debug, "local database " & Image (Local'address) & " opened");
+                 Log_Out (Debug, "local database " & Ada_Lib.Strings.Image (Local'address) & " opened");
                  return;
                else
                   Log_Exception (Debug);
@@ -167,7 +171,7 @@ package body Ada_Lib.Database.Connection is
 --               if    Database.Open (Local_Host_Name, Remote.Port) and
 --                     Remote.Open (Local_Host_Name, Remote.Port) then  -- don't try Remote until know it will work
 --                  Remote.Running := True;
---                  Log (Debug, Here, Who & " local database " & Image (Remote'address) & " opened");
+--                  Log (Debug, Here, Who & " local database " & Ada_Lib.Strings.Image (Remote'address) & " opened");
 --                  return;
 --               else
 --                  raise Failed with "could not open '" & Local_Host_Name & "' for port" & Remote.Port'img;

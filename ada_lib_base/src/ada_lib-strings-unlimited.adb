@@ -241,6 +241,17 @@ package body Ada_Lib.Strings.Unlimited is
 
    ---------------------------------------------------------------
    function Quote (
+      Variable             : in   String;
+      Value                : in   String_Type
+   ) return String is
+   ---------------------------------------------------------------
+
+   begin
+      return Variable & "'" & Coerce (Value) & "'";
+   end Quote;
+
+   ---------------------------------------------------------------
+   function Quote (
       Source                     : in     String_Type;
       Substiture_For_Non_Alpha   : in     Boolean := False;
       Quote                      : in     Character := '"'

@@ -1,5 +1,5 @@
 with Ada.Containers.Doubly_Linked_Lists;
---with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 --with Ada_Lib.Options.Create;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
@@ -15,7 +15,7 @@ package Ada_Lib.Options.Runstring is
    type Registration_Constant_Access
                               is access constant Registration_Type;
 
-   type Element_Type          is record
+   type Element_Type          is tagged record
       From                    : Ada_Lib.Strings.Unlimited.String_Type;
       Kind                    : Kind_Type;
       Option                  : Base_Flag_Option_Class_Access;
@@ -30,15 +30,23 @@ package Ada_Lib.Options.Runstring is
       Left, Right             : in     Element_Type
    ) return Boolean;
 
+   function Image (
+      Element                 : in     Element_Type
+   ) return String;
+
    package Registrations_Package is new
                               Ada.Containers.Doubly_Linked_Lists (
       Element_Type   => Element_Type,
       "="            => "=");
 
-   subtype Registrations_Type
-                           is Registrations_Package.List;
+   type Registrations_Type is new  Registrations_Package.List with null record;
+
    subtype Constant_Reference_Type
                            is Registrations_Package.Constant_Reference_Type;
+
+   function Image (
+      Registrations        : in     Registrations_Type
+   ) return String;
 
    protected type Registration_Type is
 
@@ -78,7 +86,6 @@ package Ada_Lib.Options.Runstring is
 --    Kind                       : in     Kind_Type
 -- ) return Registration_Constant_Access;
 
-   Debug                         : Boolean := False;
    Options                       : aliased Registration_Type;
 
 end Ada_Lib.Options.Runstring;

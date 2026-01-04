@@ -58,9 +58,9 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
 

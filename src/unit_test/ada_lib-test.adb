@@ -1,51 +1,10 @@
---with Ada.Exceptions;
---with Ada.Text_IO; use Ada.Text_IO;
---with Aunit.Assertions; use Aunit.Assertions;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Test is
 
--- use type Ada.Exceptions.Exception_Id;
+   Debug       : Boolean renames Options.Unit_Test.Ada_Lib_Aunit.Debug;
 
---   ----------------------------------------------------------------------------
---   procedure Exception_Handler (
---      Fault                      : in   Ada.Exceptions.Exception_Occurrence;
---      Where                      : in   String := Ada_Lib.Trace.Here;
---      Who                        : in   String := Ada_Lib.Trace.Who;
---      Message                    : in   String := "") is
---   ----------------------------------------------------------------------------
---
---   begin
---      Trace_Exception (Fault, Where, Who);
---
---      if Ada.Exceptions.Exception_Identity (Fault) =
---            Aunit.Assertions.Assertion_Error'identity then
---         Put ("assertion caught at " & Where & ". ");
---         if Message'length > 0 then
---            Put (Quote ("Message", Message));
---         end if;
---         New_Line;
-----       Ada.Exceptions.Raise_Exception (Ada.Exceptions.Exception_Identity (Fault), Message);
---      else
---         Assert (False, "Exception " & Ada.Exceptions.Exception_Name (Fault) &
---            " message " & Ada.Exceptions.Exception_Message (Fault) &
---            " caught at " & Where & " in " & Who & " " &
---            (if Message'length = 0 then "" else " message " & Message));
---      end if;
---end Exception_Handler;
-
--- ----------------------------------------------------------------------------
--- procedure Help (
---    Option                     : in     Character) is
--- ----------------------------------------------------------------------------
---
--- begin
---    Put_Line ("Ada_Lib AUnit test options (-" & Option & ")");
---    Put_Line ("      a               all");
---    Put_Line ("      l               Ada_Lib.Test");
---    Put_Line ("      u               Ada_Lib.Unit_Test");
--- end Help;
---
    ----------------------------------------------------------------------------
    function Near (
       Actual                     : in     Value_Type;

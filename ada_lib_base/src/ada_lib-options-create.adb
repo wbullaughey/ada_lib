@@ -1,38 +1,10 @@
---with Ada.Assertions;
---with Ada.Characters.Handling;
---with Ada.Exceptions;
---with Ada.Strings.Maps;
---with Ada.Tags;
---with Ada.Text_IO;use Ada.Text_IO;
---with Ada_Lib.Command_Line_Iterator;
---with Ada_Lib.Configuration;
---with Ada_Lib.Database.Connection;
---with Ada_Lib.Directory;
---with Ada_Lib.EMail;
---with Ada_Lib.Event;
---with Ada_Lib.Help;
---with Ada_Lib.Interrupt;
---with Ada_Lib.Lock;
---with Ada_Lib.Mail;
-with Ada_Lib.Options.Actual;
---with Ada_Lib.Options.Runstring;
---with Ada_Lib.OS;
---with Ada_Lib.Parser;
---with Ada_Lib.OS.Run;
---with Ada_Lib.Socket_IO;
---with Ada_Lib.Strings.Unlimited;
---with Ada_Lib.Template;
---with Ada_Lib.Text;
---with Ada_Lib.Timer;
+with Ada_Lib.Options.Flags;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Trace_Tasks;
-
---pragma Elaborate_All (Ada_Lib.Lock);
 
 package body Ada_Lib.Options.Create is
 
--- use type Ada_Lib.Strings.Unlimited.String_Type;
--- use type Actual.Flag_Option_Type;
+   Debug                : Boolean renames Ada_Lib_Options.Debug;
 
    ----------------------------------------------------------------------------
    function Create_One (-- create a single option
@@ -42,8 +14,8 @@ package body Ada_Lib.Options.Create is
    ) return Flag_List_Type is
    ----------------------------------------------------------------------------
 
-      Flag                       : constant Actual.Flag_Option_Access :=
-                                    Actual.Allocate_Option (Option, Modifier, From);
+      Flag                       : constant Flags.Flag_Option_Access :=
+                                    Flags.Allocate_Option (Option, Modifier, From);
       Options                    : Base_Options_Array (1 .. 1);
       Result                     : Flag_List_Type;
 
@@ -88,8 +60,8 @@ package body Ada_Lib.Options.Create is
          " from " & From);
       for Option of Source loop
          declare
-            Flag                 : constant Actual.Flag_Option_Access :=
-                                    Actual.Allocate_Option (Option, Modifier, From);
+            Flag                 : constant Flags.Flag_Option_Access :=
+                                    Flags.Allocate_Option (Option, Modifier, From);
          begin
             Count := Count + 1;
             Options (Count) := Base_Flag_Option_Class_Access (Flag);

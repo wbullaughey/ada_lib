@@ -3,9 +3,10 @@ with Ada.Characters.Latin_1;
 with Ada.IO_Exceptions;
 with Ada.Strings.Maps.Constants;
 with Ada.Strings.Fixed;
-with Ada_Lib.Strings.Unlimited;
 with Ada.Tags;
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 -- with Ada_Lib.Template.Parameters;
 with Ada_Lib.Template.Token;
 -- with Ada_Lib.Template.Trace;
@@ -40,7 +41,7 @@ package body Ada_Lib.Template.Compile is
    use type Ada.Tags.Tag;
    use type Token.Token_Class;
 -- use type Terminal_Type;
-   use type Unlimited_String_Type;
+-- use type Unlimited_String_Type;
 
    Terminal_Table          : constant array (Positive range <>) of
                            Terminal_Definition_Type := (

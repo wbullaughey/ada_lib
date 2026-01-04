@@ -1,64 +1,88 @@
---$Header$
-
------------------------------------------------------------------------------
---  Copyright (c) 2003 - 2004  All rights reserved
---
---  This file is a product of Communication Automation & Control, Inc. (CAC)
---  and is provided for unrestricted use WITH CAC PRODUCTS ONLY provided
---  this legend is included on all media and as a part of the software
---  program in whole or part.
---
---  Users may copy or modify this file without charge, but are not authorized
---  to license or distribute it to anyone else except as part of a product or
---  program developed by the user incorporating CAC products.
---
---  THIS FILE IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
---  WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
---  PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
---
---  In no event will CAC be liable for any lost revenue or profits, or other
---  special, indirect and consequential damages, which may arise from the use
---  of this software.
---
---  Communication Automation & Control, Inc.
---  1180 McDermott Drive, West Chester, PA (USA) 19380
---  (877) 284-4804 (Toll Free)
---  (610) 692-9526 (Outside the US)
------------------------------------------------------------------------------
-
 with Ada.Exceptions;
 with Ada_Lib.Parser;
 with Ada_Lib.Strings;
+
+--pragma Elaborate (Ada_Lib.Parser);
 
 package body Ada_Lib.Time is
 
    use type Ada.Calendar.Time;
 
-   function Pad (
-      Source            : in   String
-   ) return String;
+   Start_Time           : constant Ada.Calendar.Time :=
+                           Ada.Calendar.Clock;
 
-   -------------------------------------------------------------------
-   function Format (
-      Seconds              : in   Integer;
-      Show_Days            : in   Boolean := False
-   ) return String is
-   -------------------------------------------------------------------
+   --------------------------------------------------------------------
+   function Get_Start_Time
+   return Ada.Calendar.Time is
+   --------------------------------------------------------------------
 
    begin
-      if Show_Days and then Seconds >= 86400 then
-         return
-            Pad (Integer'image (Seconds / 86400)) & ":" &
-            Pad (Integer'image ((Seconds / 3600) mod 24)) & ":" &
-            Pad (Integer'image ((Seconds / 60) mod 60)) & ":" &
-            Pad (Integer'image (Seconds mod 60));
+      return Start_Time;
+   end Get_Start_Time;
+
+   --------------------------------------------------------------------
+   function From_Start
+   return Duration is
+   --------------------------------------------------------------------
+
+   begin
+      return From_Start (Ada.Calendar.Clock);
+   end From_Start;
+
+   --------------------------------------------------------------------
+   function From_Start (
+      Time                 : in   Ada.Calendar.Time
+   ) return Duration is
+   --------------------------------------------------------------------
+
+   begin
+      return Time - Start_Time;
+   end From_Start;
+
+   --------------------------------------------------------------------
+   function From_Start (
+      Hundreds             : in   Boolean := False;
+      Show_Days            : in   Boolean := False
+   ) return String is
+   --------------------------------------------------------------------
+
+   begin
+      return From_Start (Ada.Calendar.Clock, Hundreds, Show_Days);
+   end From_Start;
+
+   --------------------------------------------------------------------
+   function From_Start (
+      Time                 : in   Ada.Calendar.Time;
+      Hundreds            : in   Boolean := False;
+      Show_Days            : in   Boolean := False;
+      From                 : in     String := GNAT.Source_Info.Source_Location
+   ) return String is
+   pragma Unreferenced (From);
+   --------------------------------------------------------------------
+
+--offset : constant duration := Time - Start_Time;
+   begin
+      if Time = Ada_Lib.Time.No_Time then
+         return "no time";
       else
-         return
-            Pad (Integer'image (Seconds / 3600)) & ":" &
-            Pad (Integer'image ((Seconds / 60) mod 60)) & ":" &
-            Pad (Integer'image (Seconds mod 60));
+--put_line ("time " & time'img & " start time " & Start_Time'img & " from start " & offset'img);
+         return Image ((
+            if Start_Time = Ada_Lib.Time.No_Time then
+               0.0
+            else
+               Time - Start_Time),
+            Hundreds, Show_Days);
       end if;
-   end Format;
+   end From_Start;
+
+-- --------------------------------------------------------------------
+-- function Get_Start_Time
+-- return Ada.Calendar.Time is
+-- --------------------------------------------------------------------
+--
+-- begin
+--    return Start_Time;
+-- end Get_Start_Time;
 
    -------------------------------------------------------------------
    function Image (
@@ -74,10 +98,10 @@ package body Ada_Lib.Time is
       end if;
 
       if Hundreths then
-         return Format (Integer (Float'Floor (Float (Time))), Show_Days => Show_Days) & "." &
-            Pad (Integer'image (Integer (Time * 100) mod 100));
+         return Ada_Lib.Strings.Format (Integer (Float'Floor (Float (Time))), Show_Days => Show_Days) & "." &
+            Strings.Pad_Time (Integer'image (Integer (Time * 100) mod 100));
       else
-         return Format (Integer (Time), Show_Days => Show_Days);
+         return Ada_Lib.Strings.Format (Integer (Time), Show_Days => Show_Days);
       end if;
    exception
       when Ada.Calendar.Time_Error =>
@@ -97,7 +121,7 @@ package body Ada_Lib.Time is
       Seconds              : Ada.Calendar.Day_Duration;
 
    begin
-      if Time = No_Time then
+      if Time = Ada_Lib.Time.No_Time then
          return "no time";
       end if;
 
@@ -106,44 +130,21 @@ package body Ada_Lib.Time is
       if Hundreths then
          return
            Ada_Lib.Strings.Trim (Year'img) & "/" &
-            Pad (Month'img) & "/" &
-            Pad (Day'img) & " " &
-            Format (Integer (Seconds)) & "." &
-            Pad (Integer'Image (Integer (Seconds * 100) mod 100));
+            Strings.Pad_Time (Month'img) & "/" &
+            Strings.Pad_Time (Day'img) & " " &
+            Ada_Lib.Strings.Format (Integer (Seconds)) & "." &
+            Strings.Pad_Time (Integer'Image (Integer (Seconds * 100) mod 100));
       else
          return
            Ada_Lib.Strings.Trim (Year'img) & "/" &
-            Pad (Month'img) & "/" &
-            Pad (Day'img) & " " &
-            Format (Integer (Seconds));
+            Strings.Pad_Time (Month'img) & "/" &
+            Strings.Pad_Time (Day'img) & " " &
+            Ada_Lib.Strings.Format (Integer (Seconds));
       end if;
    exception
       when Ada.Calendar.Time_Error =>
          return "INVALID";
    end Image;
-
-   -------------------------------------------------------------------
-   function Pad (
-      Source            : in   String
-   ) return String is
-   -------------------------------------------------------------------
-
-      Trimmed           : constant String :=Ada_Lib.Strings.Trim (Source);
-
-   begin
-      case Trimmed'length is
-
-         when 0 =>
-            return "00";
-
-         when 1 =>
-            return "0" & Trimmed;
-
-         when others =>
-            return Trimmed;
-
-      end case;
-   end Pad;
 
    -------------------------------------------------------------------
    function Parse_Date_Time (

@@ -2,10 +2,12 @@
 with AUnit.Assertions; use AUnit.Assertions;
 -- with Ada_Lib.Database.Server.State;
 with Ada_Lib.Database.Subscription.Tests;
-with Ada_Lib.Database.Unit_Test;
+--with Ada_Lib.Database.Unit_Test;
+with ADa_Lib.Options.Unit_Test;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
-with Ada_Lib.Test; -- .Tests;
+--with Ada_Lib.Test; -- .Tests;
 
 package body Ada_Lib.Database.Subscribe.Tests is
 
@@ -28,8 +30,8 @@ package body Ada_Lib.Database.Subscribe.Tests is
 
 -- type Ada_Lib.Database.Subscription.Abstract_Subscription_Type is new Ada_Lib.Database.Subscription.Abstract_Subscription_Type with null record;
 
-   Debug                         : Boolean renames
-                                    Ada_Lib.Database.Unit_Test.Debug;
+   Debug                         : Boolean renames Options.Unit_Test.
+                                    Ada_Lib_Database_Unit_Test.Subscribe_Debug;
    Index_1                       : constant := 5;
    Index_2                       : constant := -1;
    Load_Subdirectory             : constant String := "tests/data/load_subscriptions/";
@@ -76,7 +78,7 @@ Not_Implemented;
          Got_Subscription        : Boolean := False;
 
       begin
-         Log_In (Ada_Lib.Test.Debug, Quote ("Path", Path));
+         Log_In (Debug, Quote ("Path", Path));
          Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Path);
          Subscription.Load (File,
 --          Dynamic           => True,
@@ -95,15 +97,15 @@ Not_Implemented;
 
          Assert (Subscription.Name_Value.Value.Coerce = "", "wrong value loaded. got '" &
             Subscription.Name_Value.Value.Coerce & "' expected ''");
-         Log_Out (Ada_Lib.Test.Debug);
+         Log_Out (Debug);
       end Load;
       ------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib.Test.Debug);
+      Log_In (Debug);
       Load (Load_Subdirectory & "test_subscription_1", Load_Name_1, Index_1, Tag_1, Ada_Lib.Database.Updater.Always);
       Load (Load_Subdirectory & "test_subscription_2", Load_Name_2, Index_2, Tag_2, Ada_Lib.Database.Updater.Unique);
-      Log_Out (Ada_Lib.Test.Debug);
+      Log_Out (Debug);
 
    exception
       when Fault: others =>
@@ -127,7 +129,7 @@ Not_Implemented;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib.Test.Debug);
+      Log_In (Debug);
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
         Routine        => Load_Subscription'access,
@@ -141,7 +143,7 @@ Not_Implemented;
 --      Routine        => Store_Load_Subscription'access,
 --      Routine_Name   => AUnit.Format ("Store_Load_Subscription")));
 
-      Log_Out (Ada_Lib.Test.Debug);
+      Log_Out (Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -156,7 +158,7 @@ Not_Implemented;
                                     new Ada_Lib.Database.Subscription.Tests.Subscription_Type;
 
    begin
-      Log_In (Ada_Lib.Test.Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Subscription_1.Initialize (
          Ada_Tag           => Subscription_1.all'tag,
          DBDaemon_Tag      => Tag_1,
@@ -181,7 +183,7 @@ Not_Implemented;
       Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_2));
       Test.Subscribed := True;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Log_Out (Ada_Lib.Test.Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
 -- ---------------------------------------------------------------
@@ -207,7 +209,7 @@ Not_Implemented;
 --             File              : Ada.Text_IO.File_Type;
 --
 --          begin
---             Log (Ada_Lib.Test.Debug, Here, Who & Quote (" store file", File_Name));
+--             Log (Debug, Here, Who & Quote (" store file", File_Name));
 --             Ada.Text_IO.Create (File, Ada.Text_IO.Out_File, File_Name);
 --             Subscription.Store (File);
 --             Ada.Text_IO.Close (File);
@@ -219,7 +221,7 @@ Not_Implemented;
 --                               : Ada_Lib.Database.Subscription.Abstract_Subscription_Type;
 --
 --          begin
---             Log (Ada_Lib.Test.Debug, Here, Who & Quote (" load file", File_Name));
+--             Log (Debug, Here, Who & Quote (" load file", File_Name));
 --             Ada.Text_IO.Open (File, Ada.Text_IO.In_File, File_Name);
 --             Loaded_Subscription.Load (File);
 --             Ada.Text_IO.Close (File);
@@ -228,7 +230,7 @@ Not_Implemented;
 --       end;
 --    end loop;
 --
---    Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+--    Log (Debug, Here, Who & " exit");
 -- end Store_Load_Subscription;
 
    ---------------------------------------------------------------
@@ -240,10 +242,10 @@ Not_Implemented;
       Path                       : constant String := Store_Subdirectory & "test_subscribe";
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " store " & Quote (" quote", Path));
+      Log (Debug, Here, Who & " store " & Quote (" quote", Path));
       Assert (Local_Test.Subscribed, " Set_Up failed");
       Local_Test.Table.Store (Path);
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Debug, Here, Who & " exit");
    end Store_Subscription;
 
    ---------------------------------------------------------------
@@ -271,7 +273,7 @@ Not_Implemented;
                                     );
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " Which_Host " & Which_Host'img);
+      Log (Debug, Here, Who & " Which_Host " & Which_Host'img);
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
       Test_Suite.Add_Test (Tests);
       return Test_Suite;
@@ -284,10 +286,10 @@ Not_Implemented;
    ---------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib.Test.Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Test.Table.Delete_All;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Ada_Lib.Test.Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
 begin

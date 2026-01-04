@@ -1,3 +1,4 @@
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Ada_Lib;
 with AUnit.Simple_Test_Cases;

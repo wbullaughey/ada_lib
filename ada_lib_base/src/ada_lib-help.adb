@@ -3,18 +3,21 @@ with Ada.Containers.Indefinite_Ordered_Sets;
 -- with Ada.Exceptions;
 --with Ada.Strings.Maps.Constants;
 with Ada.Text_IO;use Ada.Text_IO;
---with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.OS;
 --with Ada_Lib.Options.Runstring;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 -- with Debug_Options;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package body Ada_Lib.Help is
 
 -- use type Ada_Lib.Options.Base_Flag_Option_Type;
-   use type Ada_Lib.Options.Actual.Flag_Option_Type;
+   use type Ada_Lib.Options.Flags.Flag_Option_Type;
 
    subtype Line_Type             is String;
 
@@ -23,7 +26,7 @@ package body Ada_Lib.Help is
       Description_Length         : Positive;
       Component_Length           : Natural;
       Source_Line_Length         : Positive) is record
-      Option                     : Ada_Lib.Options.Actual.Flag_Option_Type;
+      Option                     : Ada_Lib.Options.Flags.Flag_Option_Type;
       Parameter                  : Line_Type (1 .. Parameter_Length);
       Description                : Line_Type (1 .. Description_Length);
       Component                  : Line_Type (1 .. Component_Length);
@@ -48,14 +51,14 @@ package body Ada_Lib.Help is
       "="   => Equal);
 
    Debug                         : Boolean renames
-                                    Ada_Lib.Options.Help.Debug;
+                                    Ada_Lib.Options.Ada_Lib_Help.Debug;
    Lines                         : Line_Package.Set;
    Maximum_Description_Length    : Natural := 0;
    Maximum_Parameter_Length      : Natural := 0;
 
    ----------------------------------------------------------------------------
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type;
+      Option                     : in     Ada_Lib.Options.Flags.Flag_Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
@@ -142,22 +145,21 @@ package body Ada_Lib.Help is
    end Add_Option;
 
    ----------------------------------------------------------------------------
-   procedure Add_Option (
+   procedure Create_Option (
       Option                     : in     Character;
       Parameter                  : in     String;
       Description                : in     String;
-      Component                  : in     String := "";
-      Modifier                   : in     Character :=
-                                             Ada_Lib.Options.Unmodified_Flag;
+      Component                  : in     String;
+      Modifier                   : in     Character;
       Source_Line                : in     String := Ada_Lib.Trace.Here) is
    ----------------------------------------------------------------------------
 
-      Flag                       : Ada_Lib.Options.Actual.Flag_Option_Type;
+      Flag                       : Ada_Lib.Options.Flags.Flag_Option_Type;
 
    begin
-      Ada_Lib.Options.Actual.Create_Option (Flag, Option, Modifier);
+      Ada_Lib.Options.Flags.Create_Option (Flag, Option, Modifier);
       Add_Option (Flag, Parameter, Description, Component, Source_Line);
-   end Add_Option;
+   end Create_Option;
 
    ----------------------------------------------------------------------------
    procedure Display (
@@ -212,7 +214,7 @@ package body Ada_Lib.Help is
             Line.Append ("(" & String (Element.Component) & ")");
          end if;
 
-         Log_Here (Debug, Quote ("line", Line));
+         Log_Here (Debug, Ada_Lib.Strings.Unlimited.Quote ("line", Line));
          Output_Line (Line.Coerce);
          Log_Out (Debug);
       end Output;
@@ -265,7 +267,7 @@ package body Ada_Lib.Help is
 
    ----------------------------------------------------------------------------
 begin
-     Debug := Debug or Ada_Lib.Options.Debug_All;
+     Debug := Debug or Ada_Lib.Options.Ada_Lib_Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
    Log_Here (Debug or Trace_Options or Elaborate);

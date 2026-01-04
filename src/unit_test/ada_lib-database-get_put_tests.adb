@@ -1,12 +1,13 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 -- with GNOGA_Options.Database.AUnit;
-with Ada_Lib.Test; --.Tests;
+--with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Database.Common;
 --with Ada_Lib.Database.Unit_Test;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
@@ -27,12 +28,13 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Append                     : in     Ada_Lib.Strings.Unlimited.String_Type
    ) return String renames Ada_Lib.Strings.Unlimited.Construct;
 
-   Debug                         : Boolean renames
-                                    Ada_Lib.Database.Unit_Test.Debug;
-   Value                         : constant String := "xyz";
-   Value_Name                          : constant String := "abc";
-   Name_Value                    : constant String := Value_Name & "=" & Value;
-   Test_Timeout                  : constant Duration := 0.1;
+   Debug       : Boolean renames
+                  Options.Unit_Test.Ada_Lib_Database_Unit_Test.
+                  Ada_Lib_Database_Unit_Test;
+   Value       : constant String := "xyz";
+   Value_Name        : constant String := "abc";
+   Name_Value  : constant String := Value_Name & "=" & Value;
+   Test_Timeout: constant Duration := 0.1;
 
    ---------------------------------------------------------------
    function Database_Suite (
@@ -57,7 +59,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
                                     );
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " Which_Host " & Which_Host'img);
+      Log (Debug, Here, Who & " Which_Host " & Which_Host'img);
       Ada_Lib.Unit_Test.Suite (Suite_Name);  -- used for listing suites
       Test_Suite.Add_Test (Tests);
       return Test_Suite;
@@ -71,7 +73,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter");
+      Log (Debug, Here, Who & " enter");
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
       Coerced_Test.Get_Database.Post (Name_Value, Test_Timeout);
       Coerced_Test.Get_Database.Post (Value_Name, Test_Timeout);
@@ -82,10 +84,10 @@ package body Ada_Lib.Database.Get_Put_Tests is
          Residual                : constant String := Coerced_Test.Get_Database.all.Get (Test_Timeout);
 
       begin
-         Log_Here (Ada_Lib.Test.Debug, Quote ("Residual", Residual));
+         Log_Here (Debug, Quote ("Residual", Residual));
          Assert (Residual'length = 0, "input flushed");
       end;
-      Log (Ada_Lib.Test.Debug, Here, Who & " exit");
+      Log (Debug, Here, Who & " exit");
 
    exception
       when Fault: others =>
@@ -105,7 +107,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       pragma Warnings (On, "variable ""Database"" is read but never assigned");
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       if not Assert (not Database.Is_Open, "data base not open") then
          Log_Here ("was open");
       end if;
@@ -119,7 +121,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       if not Assert (Coerced_Test.Get_Database /= Null, "data base was not opened") then
          Log_Here ("was not open");
       elsif not Assert (Coerced_Test.Get_Database.Is_Open, "data base was not open") then
@@ -155,7 +157,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
       Coerced_Test.Get_Database.Post (Name_Value, Test_Timeout);
       Coerced_Test.Get_Database.Post (Value_Name, Test_Timeout);
@@ -164,7 +166,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
          Response                : constant Ada_Lib.Database.Name_Value_Class_Type := Coerced_Test.Get_Database.all.Get (Test_Timeout);
 
       begin
-         Log_Here (Ada_Lib.Test.Debug, Quote ("response", Response.To_String));
+         Log_Here (Debug, Quote ("response", Response.To_String));
          Assert (Response.Name = Value_Name, "got expected name");
          Assert (Response.Value = Value, "got expected value");
       end;
@@ -178,7 +180,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
       Coerced_Test.Get_Database.Post (Name_Value, Test_Timeout);
 
@@ -187,7 +189,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
                                     Coerced_Test.Get_Database.all.Get (
                                        Value_Name, Ada_Lib.Database.No_Vector_Index, "", Test_Timeout, True);
       begin
-         Log_Here (Ada_Lib.Test.Debug, Quote ("response", Response.To_String));
+         Log_Here (Debug, Quote ("response", Response.To_String));
          Assert (Response.Name = Value_Name, "got expected name");
          Assert (Response.Value = Value, "got expected value");
       end;
@@ -339,14 +341,14 @@ package body Ada_Lib.Database.Get_Put_Tests is
                                     )
                                  );
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
 
       for Test of Tests loop
          declare
             Line                 : constant String := Test.Line.all;
 
          begin
-            Log (Ada_Lib.Test.Debug, Here, Who & Quote (" line", Line) & " ok " & Test.Ok'img);
+            Log (Debug, Here, Who & Quote (" line", Line) & " ok " & Test.Ok'img);
 
             if not Test.Ok then
                Put_Line ("expect exception for " & Quote ("line", Line));
@@ -385,7 +387,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
 
          exception
             when Fault: Ada_Lib.Database.Invalid =>
-               Trace_Message_Exception (Ada_Lib.Test.Debug or else Test.Ok, Fault,
+               Trace_Message_Exception (Debug or else Test.Ok, Fault,
                   Quote (" line", Test.Line.all) &
                   (if Test.Ok then " exception not expected" else " exception expected"));
 
@@ -409,7 +411,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
 
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
       Coerced_Test.Get_Database.Post (Data, Test_Timeout);
 
@@ -418,7 +420,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
                                     Value_Name, Ada_Lib.Database.No_Vector_Index, "", Test_Timeout);
 
       begin
-         Log_Here (Ada_Lib.Test.Debug, Quote ("data" & Data) &
+         Log_Here (Debug, Quote ("data" & Data) &
             Quote ("response", Response));
          Assert (Response = Data, "got wrong data expected '" & Data & "' got '" & Response & "'");
       end;
@@ -433,7 +435,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
       Coerced_Test.Get_Database.Post (Data, Test_Timeout);
 
@@ -443,7 +445,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
                                     Ada_Lib.Database.No_Vector_Index, "", Test_Timeout, Use_Token => True);
 
       begin
-         Log (Ada_Lib.Test.Debug, Here, Who);
+         Log (Debug, Here, Who);
          Assert (Response.Name = Value_Name, Construct ("got wrong name '",
             Response.Name & "' expected '" & Value_Name & "'"));
          Assert (Response.Value = Value, Construct ("got wrong value '", Response.Value & "' expected '" & Value & "'"));
@@ -461,13 +463,13 @@ package body Ada_Lib.Database.Get_Put_Tests is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=
                                     (if Listing_Suites then "*" else "");
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
+      Log (Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
 
       if Listing_Suites or else
             Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
@@ -512,7 +514,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Ada_Lib.Test.Debug);
+      Log_In (Debug);
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
          Routine        => Is_Open_False'access,
          Routine_Name   => AUnit.Format ("Is_Open_False")));
@@ -521,7 +523,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
          Routine        => Parse_Line'access,
          Routine_Name   => AUnit.Format ("Parse_Line")));
 
-      Log_Out (Ada_Lib.Test.Debug);
+      Log_Out (Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -531,15 +533,15 @@ package body Ada_Lib.Database.Get_Put_Tests is
    ---------------------------------------------------------------
 
    begin
-      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " enter which host " & Test.Which_Host'img);
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter which host " & Test.Which_Host'img);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
-      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
 
    exception
       when Fault: others =>
          Trace_Message_Exception (Fault, Who, Here);
          Test.Set_Up_Message_Exception (Fault, Here, Who, "could not open database");
-         Log (Ada_Lib.Test.Debug, Here, Who & " kill");
+         Log (Debug, Here, Who & " kill");
    end Set_Up;
 
    ---------------------------------------------------------------
@@ -551,11 +553,11 @@ package body Ada_Lib.Database.Get_Put_Tests is
 --    Options                    : constant Standard.GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
    begin
-      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " enter");
-      Pause (Pause_Flag, "Pause before Tear Down cleanup", Here, Ada_Lib.Test.Debug);
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter");
+      Pause (Pause_Flag, "Pause before Tear Down cleanup", Here, Debug);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
 --       Test.Get_Database.Delete (Value_Name);
-      Log (Ada_Lib.Test.Debug or Trace_Set_Up, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
    end Tear_Down;
 
    ---------------------------------------------------------------
@@ -566,7 +568,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Coerced_Test                  : Database_Test_Type renames Database_Test_Type (Test);
 
    begin
-      Log (Ada_Lib.Test.Debug, Here, Who);
+      Log (Debug, Here, Who);
       Assert (Coerced_Test.Get_Database.Is_Open, "data base not open");
 
       declare

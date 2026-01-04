@@ -2,13 +2,14 @@
 -- with Ada.Streams;
 -- with Ada.Unchecked_Deallocation;
 -- with Socket_Stream_IO;
-with Ada_Lib.Strings;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings; use Ada_Lib.Strings;
 with Ada_Lib.Trace;use Ada_Lib.Trace;
 -- with Hex_IO;
 
 package body Ada_Lib.Socket_IO is
 
-   use type Ada_Lib.Strings.String_Constant_Access;
+-- use type Ada_Lib.Strings.String_Constant_Access;
 -- use type Ada_Lib.Strings.String_Access_All;
    use type GNAT.Sockets.Socket_Type;
 
@@ -206,7 +207,7 @@ package body Ada_Lib.Socket_IO is
    ) return String is
    ---------------------------------------------------------------------------
 
-      use Ada_Lib.Strings;
+--    use Ada_Lib.Strings;
 
    begin
       return Trim (IP_Address (1)'img) & "." &

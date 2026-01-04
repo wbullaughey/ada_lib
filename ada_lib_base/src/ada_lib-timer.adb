@@ -2,6 +2,7 @@ with Ada.Exceptions;
 with Ada_Lib.Strings.Unlimited;
 --with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Time;
 --with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks; use Ada_Lib.Trace_Tasks;
@@ -127,7 +128,7 @@ package body Ada_Lib.Timer is
       Log_In (Trace, Quote ("description", Event.Description) &
          " state " & Event.State'img &
          " dynamic " & Event.Dynamic'img &
-         " address " & Image (Event'address));
+         " address " & Ada_Lib.Strings.Image (Event'address));
 
       case Event.State is
          when Canceled | Completed | Finalized | Uninitialized =>
@@ -152,13 +153,15 @@ package body Ada_Lib.Timer is
          end;
 
       end if;
-      Log_Out (Trace, Quote ("description", Save_Description));
+      Log_Out (Trace, Ada_Lib.Strings.Unlimited.Quote ("description",
+         Save_Description));
 
 exception
    when FAult: others =>
       declare
-         Message  : constant String := "address " & Image (Event'address) &
-            Quote (" description", Save_Description) &
+         Message  : constant String := "address " & Ada_Lib.Strings.Image (Event'address) &
+            Ada_Lib.Strings.Unlimited.Quote (" description",
+               Save_Description) &
             " dynamic " & Event.Dynamic'img;
 
       begin
@@ -206,7 +209,7 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      Log_Here (Trace, "address " & Image (Event'address) &
+      Log_Here (Trace, "address " & Ada_Lib.Strings.Image (Event'address) &
          " dynamic " & Event.Dynamic'img);
    end Initialize;
 
@@ -254,7 +257,7 @@ exception
    ---------------------------------------------------------------------------
 
    begin
-      Log_In (Trace, "address " & Image (Event'address) &
+      Log_In (Trace, "address " & Ada_Lib.Strings.Image (Event'address) &
          Quote (" description", Description) &
          " dynamic " & Event.Dynamic'img);
       if    Event.Description /= Null and then
@@ -361,9 +364,9 @@ exception
             while Event.State = Waiting loop -- if null then canceled before set
                Log_Here (Trace, Quote ("description", Event.Description) &
                   " dynamic " & Event.Dynamic'img &
-                  " start time " & From_Start (True) &
+                  " start time " & Ada_Lib.Time.From_Start (True) &
                   " start loop delay time " & Event.Wait'img &
-                  " address " & Image (Event.all'address));
+                  " address " & Ada_Lib.Strings.Image (Event.all'address));
                select
                   accept Cancel do
                      Log_Here (Trace, Quote ("description", Event.Description));

@@ -36,6 +36,4 @@ package Ada_Lib.Command_Line_Iterator.Tests is
       Test : in out Test_Type
    ) with post => Test.Verify_Tear_Down;
 
-   Debug                         : Boolean := False;
-
 end Ada_Lib.Command_Line_Iterator.Tests;

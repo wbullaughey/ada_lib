@@ -1,30 +1,30 @@
 --  Package that provides basic tracing facilities.
 
 with Ada.Tags;
-with Ada.Calendar;
+--with Ada.Calendar;
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
 with Ada_Lib.Specifications;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings;
+--with Ada_Lib.Strings.Unlimited;
 with GNAT.Source_Info;
 with System;
 
 package Ada_Lib.Trace is
 
    Recursive_Failure             : exception;
-   Trace_Failure                 : exception;
 
    type Dump_Width_Type          is (Width_8, Width_16, Width_32, Width_64);
 
    type Priority_Type            is range 0 .. 5;
    subtype Level_Type            is Natural;
    type Task_Data_Type           is record
-      Buffer                     : Ada_Lib.Strings.Unlimited.String_Type;
+      Buffer                     : Ada.Strings.Unbounded.Unbounded_String;
       Last_level                 : Level_Type := 0;
       Priority                      : Level_Type := 0;
       Locked                     : Boolean := False;
-      Task_Name                  : Ada_Lib.Strings.Unlimited.String_Type;
+      Task_Name                  : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    Off                           : constant Priority_Type := Priority_Type'first;
@@ -52,57 +52,15 @@ package Ada_Lib.Trace is
       Where                      : in     String := GNAT.Source_Info.Source_Location
    ) return String;
 
-   function From_Start
-   return Duration;
-
-   function From_Start (
-      Time                 : in   Ada.Calendar.Time
-   ) return Duration;
-
-   function From_Start (
-      Time                 : in   Ada.Calendar.Time;
-      Hundreds            : in   Boolean := False;
-      Show_Days            : in   Boolean := False;
-      From                 : in     String := GNAT.Source_Info.Source_Location
-   ) return String;
-
-   function From_Start (
-      Hundreds            : in   Boolean := False;
+   function Format (
+      Seconds              : in   Integer;
       Show_Days            : in   Boolean := False
    ) return String;
-
    function Here
    return String renames GNAT.Source_Info.Source_Location;
 
    function Who
    return String renames GNAT.Source_Info.Enclosing_Entity;
-
-   function Current_Task
-   return String;
-
-   function Image (
-      Time              : in   Ada.Calendar.Time;
-      Hundreds          : in   Boolean := False
-   ) return String;
-
-   function Image (
-      Time              : in   Duration;
-      Hundreds          : in   Boolean := False;
-      Show_Days         : in   Boolean := False
-   ) return String;
-
-   function Image (
-      Address                    : in   System.Address
-   ) return String;
-
-   function Image (
-      Fault                      : Ada.Exceptions.Exception_Occurrence
-   ) return String;
-
-   function Image_Pointer (                     -- print content of pointer with checking for constraint error
-      Address              : in     System.Address;   -- address of pointer
-      Bits                 : in     Natural := 32          -- in bits
-   ) return String;
 
    function Line return Positive renames GNAT.Source_Info.Line;
 
@@ -219,47 +177,6 @@ package Ada_Lib.Trace is
       From                       : in     String := Here;
       Trace                      : in     Boolean := False);
 
-   function Quote (
-      Value                : in   Character
-   ) return String;
-
-   function Quote (
-      Value                : in   String
-   ) return String;
-
-   function Quote (
-      Value                : in   Ada_Lib.Strings.Unlimited.String_Type
-   ) return String;
-
-   function Quote (
-      Value                : in   Ada.Strings.Unbounded.Unbounded_String
-   ) return String;
-
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Character
-   ) return String;
-
-   function Quote (
-      Variable             : in   String;
-      Value                : in   String
-   ) return String;
-
-   function Quote (
-      Variable             : in   String;
-      Value                : access constant String
-   ) return String;
-
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Ada.Strings.Unbounded.Unbounded_String
-   ) return String;
-
-   function Quote (
-      Variable             : in   String;
-      Value                : in   Ada_Lib.Strings.Unlimited.String_Type
-   ) return String;
-
    procedure Set_Check_Address (
       Address              : in     System.Address);
 
@@ -329,22 +246,14 @@ package Ada_Lib.Trace is
    Absolute                      : constant Boolean := False;
    Ada_Lib_Lib_Verbose           : Boolean := False;
    Ada_Lib_Trace_Trace           : aliased Boolean := False;
--- Debug                         : Boolean := False;
+   Debug_All                     : Boolean := False;
    Debug_Trace                   : Boolean := False;
    Detail                        : Boolean := False;
    Elaborate                     : Boolean := False;
    Include_Hundreds              : Boolean := False;
    Include_Program               : Boolean := False;
-   Include_Task                  : Boolean := False;
-   Include_Time                  : Boolean := True;
    Indent_Trace                  : Boolean := False;
    Inhibit_Trace                 : Boolean := False;
-   No_Time                       : constant Ada.Calendar.Time :=
-                                       Ada.Calendar.Time_Of (
-                                          Year => Ada.Calendar.Year_Number'last,
-                                          Month => Ada.Calendar.Month_Number'last,
-                                          Day => Ada.Calendar.Day_Number'last,
-                                          Seconds => Ada.Calendar.Day_Duration'last);
    Pause_Flag                    : Boolean := False;
    Test_Condition                : Boolean := False;
    Trace_Exceptions              : Boolean := False;
@@ -352,7 +261,7 @@ package Ada_Lib.Trace is
    Trace_Options                 : Boolean := False;
    Trace_Pre_Post_Conditions     : Boolean := False;
    Trace_Pre_Post_False          : Boolean := False;
-   Trace_Set_Up                  : Boolean := False;
+   Trace_Set_Up_Tear_Down        : Boolean := False;
    Trace_Tests                   : Boolean := False;
 
    type Traces_Type        is (

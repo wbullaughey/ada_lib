@@ -8,6 +8,8 @@ with Ada_Lib.OS;
 with Ada_Lib.Trace;
 with GNAT.Sockets;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package Ada_Lib.Socket_IO.Stream_IO is
 
    Aborted                       : exception;
@@ -76,7 +78,7 @@ package Ada_Lib.Socket_IO.Stream_IO is
       Primed_Output              : Index_Type := 0;
       State                      : Event_Type := Ok;
       Tail                       : Buffer_Index_Type := Buffer_Index_Type'first;
---    Timeout_Time               : Ada_Lib.Time.Time_Type := Ada_Lib.Time.No_Time;
+--    Timeout_Time               : Ada_Lib.Time.Time_Type := Ada_Lib.Time.Ada_Lib.Time.No_Time;
 
    end Protected_Buffer_Type;
 

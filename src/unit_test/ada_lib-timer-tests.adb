@@ -1,3 +1,4 @@
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
@@ -46,7 +47,7 @@ package body Ada_Lib.Timer.Tests is
       Event.Occurred := True;
       Event.Occured_At := Ada_Lib.Time.Now;
       Log_Here (Debug, Quote ("description", Event.Description) &
-         " occured at " & From_Start (Event.Occured_At, True));
+         " occured at " & Ada_Lib.Time.From_Start (Event.Occured_At, True));
    end Callback;
 
    ---------------------------------------------------------------
@@ -157,7 +158,7 @@ package body Ada_Lib.Timer.Tests is
                      Log_Here (Debug, "index" & Index'img &
                         " state " & Event.State'img &
                         " wait " & Event.Wait'img &
-                        " start " & From_Start (Event.Start_Time) &
+                        " start " & Ada_Lib.Time.From_Start (Event.Start_Time) &
                         Quote (" description", Event.Description));
 
                   end;
@@ -272,10 +273,10 @@ package body Ada_Lib.Timer.Tests is
                                              0.0);
                         begin
                            Log_Here (Debug, "index" & Index'img &
-                           " start time " & From_Start (Event.Start_Time, True) &
-                              " expected " & From_Start (Expected, True) &
+                           " start time " & Ada_Lib.Time.From_Start (Event.Start_Time, True) &
+                              " expected " & Ada_Lib.Time.From_Start (Expected, True) &
                               (if Event.Occurred then
-                                    " occured at " & From_Start (Event.Occured_At, True) &
+                                    " occured at " & Ada_Lib.Time.From_Start (Event.Occured_At, True) &
                                     " offset " & Offset'img
                                  else
                                     " not occured") &
@@ -425,9 +426,9 @@ package body Ada_Lib.Timer.Tests is
                                     abs (Expected - Event.Occured_At);
                begin
                   Log_Here (Debug, "test"& Index'img &
-                     " expected " & From_Start (Expected, True) &
-                     " occured at " & From_Start (Event.Occured_At, True) &
-                     " start time " & From_Start (Event.Start_Time, True) &
+                     " expected " & Ada_Lib.Time.From_Start (Expected, True) &
+                     " occured at " & Ada_Lib.Time.From_Start (Event.Occured_At, True) &
+                     " start time " & Ada_Lib.Time.From_Start (Event.Start_Time, True) &
                      " event time " & Event_Times (Index)'img &
                      " offset " & Offset'img);
 

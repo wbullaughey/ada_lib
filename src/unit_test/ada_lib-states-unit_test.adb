@@ -1,7 +1,7 @@
 with Ada_Lib.Unit_Test;
 with AUnit.Test_Cases;
 
-separate (Ada_Lib.States)
+separate (Ada_Lib.Test_States)
 package body Unit_Test is
 
 

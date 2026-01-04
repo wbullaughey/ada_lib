@@ -41,6 +41,11 @@ package Ada_Lib.Strings is
                            Ada.Strings.Maps.Constants.Lower_Case_Map
    ) return String renames Ada.Strings.Fixed.Translate;
 
+   function Format (
+      Seconds              : in   Integer;
+      Show_Days            : in   Boolean := False
+   ) return String;
+
    procedure Free          is new Ada.Unchecked_Deallocation (
       Object   => String,
       Name  => String_Access);
@@ -48,6 +53,30 @@ package Ada_Lib.Strings is
    procedure Free_All          is new Ada.Unchecked_Deallocation (
       Object   => String,
       Name  => String_Access_All);
+
+   function Image (
+      Time              : in   Ada.Calendar.Time;
+      Hundreds          : in   Boolean := False
+   ) return String;
+
+   function Image (
+      Time              : in   Duration;
+      Hundreds          : in   Boolean := False;
+      Show_Days         : in   Boolean := False
+   ) return String;
+
+   function Image (
+      Address                    : in   System.Address
+   ) return String;
+
+   function Image (
+      Fault                      : Ada.Exceptions.Exception_Occurrence
+   ) return String;
+
+   function Image_Pointer (                     -- print content of pointer with checking for constraint error
+      Address              : in     System.Address;   -- address of pointer
+      Bits                 : in     Natural := 32          -- in bits
+   ) return String;
 
    function Index (
       Source               : in   String;
@@ -74,6 +103,10 @@ package Ada_Lib.Strings is
       Source               : in   String;
       Length               : in   Positive;
       Side                 : in   Ada.Strings.Trim_End := Right
+   ) return String;
+
+   function Pad_Time (
+      Source            : in   String
    ) return String;
 
    function Parse_Field (

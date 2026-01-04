@@ -4,6 +4,7 @@ with Ada_Lib.Directory.File_Compare;
 with Ada_Lib.Directory.File_Copy;
 --with Ada_Lib.OS.Environment;
 with Ada.Text_IO;use Ada.Text_IO;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;

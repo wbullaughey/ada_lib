@@ -1,8 +1,11 @@
+with Ada_Lib.Options;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Event is
 
    use type Content_Package.Content_Class_Access;
+
+   Trace    : Boolean renames Options.Ada_Lib_Database.Event_Trace;
 
    ---------------------------------------------------------------------------------
    function Is_Valid (
@@ -35,7 +38,7 @@ package body Ada_Lib.Database.Event is
       ---------------------------------------------------------------------------------
 
       begin
-         Log (Trace, Here, Who & " enter " & Image (Content'address));
+         Log (Trace, Here, Who & " enter " & Ada_Lib.Strings.Image (Content'address));
          Content.Name_Value := Name_Value;
          Content.Index := Index;
          Content.Update_Mode := Update_Mode;
@@ -57,7 +60,7 @@ package body Ada_Lib.Database.Event is
       ---------------------------------------------------------------------------------
 
       begin
-         Log (Trace, Here, Who & " enter " & Image (Content'address));
+         Log (Trace, Here, Who & " enter " & Ada_Lib.Strings.Image (Content'address));
          Content.Was_Signaled := True;
          Content_Type'class (Content).Signaled;
          Log (Trace, Here, Who & " exit");
@@ -80,7 +83,7 @@ package body Ada_Lib.Database.Event is
       ---------------------------------------------------------------------------------
 
       begin
-         Log (Trace, Here, Who & " enter was signaled " & Content.Was_Signaled'img & " address " & Image (Content'address));
+         Log (Trace, Here, Who & " enter was signaled " & Content.Was_Signaled'img & " address " & Ada_Lib.Strings.Image (Content'address));
          return Content.Was_Signaled;
       end Was_Signaled;
 

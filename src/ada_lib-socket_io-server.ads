@@ -1,6 +1,8 @@
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Stream_IO;
 
+-- pragma Elaborate (Ada_Lib.OS);
+
 package Ada_Lib.Socket_IO.Server is
 
    type Accepted_Socket_Type (

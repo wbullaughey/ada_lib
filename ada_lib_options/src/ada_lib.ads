@@ -1,17 +1,23 @@
---with Ada_Lib_Environment;
---pragma Elaborate (Ada_Lib_Environment);
+with Ada.Calendar;
+with Ada.Exceptions;
+with GNAT.Source_Info;
+with System;
 
 package Ada_Lib is
 
-   Bits_Per_Byte     : constant := 8;
-   Exception_Occured : Boolean := False;
--- Help_Test         : constant Boolean := Ada_Lib_Environment.
---                      Parse_Environment_Variable (
--- use for verifying help menu items
---                         Ada_Lib_Environment.Help_Test_Kind);
--- Unit_Testing      : constant Boolean := Ada_Lib_Environment.
---                      Parse_Environment_Variable (
---                         Ada_Lib_Environment.Unit_Test_Kind);
+   Trace_Failure                 : exception;
+
+   function Current_Task
+   return String;
+
+   Bits_Per_Byte        : constant := 8;
+   Exception_Occured    : Boolean := False;
+   No_Time              : constant Ada.Calendar.Time :=
+                           Ada.Calendar.Time_Of (
+                              Year => Ada.Calendar.Year_Number'last,
+                              Month => Ada.Calendar.Month_Number'last,
+                              Day => Ada.Calendar.Day_Number'last,
+                              Seconds => Ada.Calendar.Day_Duration'last);
 -- program built to do unit testing
 -- --------------------------------------------------------------
 --                    |        Build_Mode

@@ -1,11 +1,13 @@
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+--with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Subscription is
 
    use type Ada_Lib.Database.Updater.Update_Mode_Type;
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    procedure Free_It is new Ada.Unchecked_Deallocation (
       Name     => Subscription_Access,
@@ -131,7 +133,7 @@ package body Ada_Lib.Database.Subscription is
       Subscription.Name_Value := Create (Name, Index, Tag, Value);
       Subscription.Update_Mode := Update_Mode;
       Log_Here (Debug_Subscribe, " name value " & Subscription.Name_Value.Image &
-         " Update_Mode " & Update_Mode'img & " address " & Image (Subscription'address) &
+         " Update_Mode " & Update_Mode'img & " address " & Ada_Lib.Strings.Image (Subscription'address) &
          " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag));
    end Initialize;
 
@@ -325,7 +327,7 @@ package body Ada_Lib.Database.Subscription is
       Log_Out (Debug_Subscribe, " name value " & Subscription.Name_Value.Image &
          " update count" & Subscription.Update_Count'img & " update kind " & Update_Kind'img &
          " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag) &
-         " subscription address " & Image (Subscription'address) & " from " & From);
+         " subscription address " & Ada_Lib.Strings.Image (Subscription'address) & " from " & From);
    end Update_Value;
 
 begin

@@ -2,8 +2,11 @@ with Ada.Directories;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Directory;
 --with Ada_Lib.OS;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.OS.Run.Paths;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+
+-- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.OS.Run is
 

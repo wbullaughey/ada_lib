@@ -1,12 +1,12 @@
 --with Ada.Unchecked_Deallocation;
 with Ada.Text_IO;use Ada.Text_IO;
 --with GNOGA_Ada_Lib.Base;
-with Ada_Lib.GNOGA.Unit_Test.Events;
+--with Ada_Lib.GNOGA.Unit_Test.Events;
 with Ada_Lib.Help;
---with Ada_Lib.Options;
-with GNOGA_Options;
---with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
+with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Gnoga.Application.Multi_Connect;
 
@@ -16,8 +16,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
 
    Trace_Option            : constant Character := 'g';
    Options_With_Parameters : aliased constant
-                              Ada_Lib.Options.Actual.Flag_Option_Type :=
-                                 Ada_Lib.Options.Create_Options (Trace_Option,
+                              Ada_Lib.Options.Flag_List_Type :=
+                                 Ada_Lib.Options.Create.Create_One (Trace_Option,
                                     Ada_Lib.Options.Unmodified_flag);
 
    -------------------------------------------------------------------
@@ -33,7 +33,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
 --    GNOGA_Options := Options'unchecked_access;
       Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.
          With_Parameters, Options_With_Parameters);
-      return Log_Out (Ada_Lib.Options.Actual.Nested_Options_Type (
+      return Log_Out (Ada_Lib.Options.Nested.Nested_Options_Type (
          Options).Initialize, Debug_Options or Trace_Options);
    end Initialize;
 
@@ -51,7 +51,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    begin
       Log_In (Trace_Options or Debug_Options, Option.Image);
       if Ada_Lib.Options.Has_Option (Option,
-            Options_With_Parameters, Null_Options) then
+            Options_With_Parameters, Ada_Lib.Options.Null_Flag_List) then
          if Option.Modified then
             return False;
          else     -- not Modified
@@ -66,7 +66,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
             end case;
          end if;
       else
-         return Log_Out (Ada_Lib.Options.Actual.Nested_Options_Type (
+         return Log_Out (Ada_Lib.Options.Nested.Nested_Options_Type (
             Options).Process_Option (Iterator, Option),
             Trace_Options or Debug_Options);
       end if;
@@ -86,21 +86,23 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
       Log_In (Debug_Options, "mode " & Help_Mode'img);
       case Help_Mode is
 
-      when Ada_Lib.Options.Program =>
-         Standard.Ada_Lib.Help.Add_Option ('g', "trace options",
-            "GNOGA Unit Test traces", Component);
+      when Ada_Lib.Options.Program_Mode =>
+         Standard.Ada_Lib.Help.Create_Option ('g', "trace options",
+            "GNOGA Unit Test traces", Component, Ada_Lib.Help.Unmodified_Flag);
 
-      when Ada_Lib.Options.Traces =>
-         Put_Line ("GNOGA_Options unit test trace options (-" &
+      when Ada_Lib.Options.Trace_Mode =>
+         Put_Line ("Ada_Lib GNOGA unit tests trace options (-" &
             Trace_Option & ")");
          Put_Line ("      a               all");
-         Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event.Debug");
-         Put_Line ("      g               GNOGA_Options.Debug (main window)");
-         Put_Line ("      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options");
+         Put_Line ("      b               Ada_Lib.GNOGA.Unit_Test.Base_Debug");
+         Put_Line ("      d               Ada_Lib.GNOGA.Unit_Test.Debug");
+         Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event_Debug");
+         Put_Line ("      u               GNOGA nit Test (main window)");
+--       Put_Line ("      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options");
          New_Line;
 
       end case;
-      Ada_Lib.Options.Actual.Nested_Options_Type (Options).Program_Help (
+      Ada_Lib.Options.Nested.Nested_Options_Type (Options).Program_Help (
          Help_Mode);
       Log_Out (Debug_Options);
    end Program_Help;
@@ -126,19 +128,22 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
             case Trace is
 
                when 'a' =>
-                  Ada_Lib.GNOGA.Unit_Test.Events.Debug := True;
-                  Debug_Options := True;
-                  GNOGA_Options.Debug := True;
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     Base_Debug := True;
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     Event_Debug := True;
+
+               when 'b' =>
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     Base_Debug := True;
+
+               when 'd' =>
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     Debug := True;
 
                when 'e' =>
-                  Ada_Lib.GNOGA.Unit_Test.Events.Debug := True;
-
-               when 'g' =>
-                  GNOGA_Options.Debug := True;
-
-
-               when 'o' =>
-                  Debug_Options := True;
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     Event_Debug := True;
 
                when others =>
                   Options.Bad_Option (Trace);

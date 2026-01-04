@@ -5,10 +5,11 @@ with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.DAtabase.Subscribe;
 with Ada_Lib.Database.Subscription.Tests;
 with Ada_Lib.Database.Event;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 
@@ -18,7 +19,7 @@ package body Ada_Lib.Database.Server.Tests is
 
    use type Ada_Lib.Options.Mode_Type;
    use type Ada_Lib.Strings.String_Constant_Access;
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
    use type Ada_Lib.Database.Updater.Update_Mode_Type;
 
 -- type Generic_Event_Type is new Ada_Lib.Database.Event.Event_Intervace with null record;
@@ -72,6 +73,8 @@ package body Ada_Lib.Database.Server.Tests is
    Read_Timeout                  : constant Duration := 1.0;
    Subscribe_Timeout             : constant Duration := 0.25;
    Test_Timeout                  : constant Duration := 0.5;
+   Trace                         : Boolean renames
+                                    Options.Unit_Test.Ada_Lib_Database_Unit_Test.Server_Tests_Trace;
    Update_Time                   : constant Duration := 0.25;
    Write_Timeout                 : constant Duration := 0.25;
 
@@ -615,7 +618,7 @@ package body Ada_Lib.Database.Server.Tests is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
       Star_Names                 : constant String :=
@@ -888,18 +891,18 @@ package body Ada_Lib.Database.Server.Tests is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
                                     Table_Class_Access := new Ada_Lib.Database.
                                        Subscription.Tests.Subscription_Table_Type;
    begin
-      Log (Debug or Trace_Set_Up, Here, Who & " enter which host " & Test.Which_Host'img);
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter which host " & Test.Which_Host'img);
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
       Test.Started := Server_State.Create_Server (
          Subscription_Table,
          Options.Database_Options.Get_Host,
          Options.Database_Options.Port);
-      Log (Debug or Trace_Set_Up, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
 
    exception
       when Fault: others =>
@@ -1102,10 +1105,10 @@ package body Ada_Lib.Database.Server.Tests is
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
    begin
-      Log (Debug or Trace_Set_Up, Here, Who & " enter");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter");
 
       Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Tear_Down;
-      Log (Debug or Trace_Set_Up, Here, Who & " delete value");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " delete value");
       Test.Get_Database.Delete (Name_1, Ada_Lib.Database.No_Vector_Index);
 
       if Server /= Null then
@@ -1116,7 +1119,7 @@ package body Ada_Lib.Database.Server.Tests is
       end if;
 
       Pause (Pause_Flag and Debug, "Pause before Tear Down cleanup", Here, Debug);
-      Log (Debug or Trace_Set_Up, Here, Who & " exit");
+      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
    end Tear_Down;
 
 -- ---------------------------------------------------------------
@@ -1203,10 +1206,10 @@ package body Ada_Lib.Database.Server.Tests is
             " Expected_Count" & Expected_Count'img &
             " Number_Unique_Updates" & Number_Unique_Updates'img &
             " subscription count" & Subscription.Update_Count'img &
-            " address " & Image (Subscription'address));
+            " address " & Ada_Lib.Strings.Image (Subscription'address));
          Assert (Subscription.Update_Count = Expected_Count, "wrong update count. got" &
             Subscription.Update_Count'img & " expected" & Expected_Count'img &
-            " subscription address " & Image (Subscription'address));
+            " subscription address " & Ada_Lib.Strings.Image (Subscription'address));
       end;
    end Test_Subscription;
 

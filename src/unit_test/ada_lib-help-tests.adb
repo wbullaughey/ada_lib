@@ -1,9 +1,10 @@
 with Ada.Text_IO; use Ada.Text_IO;
---with Ada_Lib.Help;
-with Ada_Lib.Options.Actual;
 with Ada_Lib.Options.Create;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Unit_Test.Tests;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 
@@ -27,6 +28,28 @@ package body Ada_Lib.Help.Tests is
    procedure Test_Prefix_Help (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
+   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with null record;
+
+   type Test_Access is access Test_Type;
+
+   overriding
+   function Name (Test : Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (Test : in out Test_Type);
+
+-- overriding
+-- procedure Set_Up (Test : in out Test_Type)
+
+   overriding
+   procedure Tear_Down (
+      Test : in out Test_Type
+   )  with post => Test.Verify_Tear_Down;
+
+   Debug       : Boolean renames Ada_Lib.Options.Unit_Test
+                                    .Ada_Lib_Help_Unit_Test.Debug;
+   Suite_Name  : constant String := "Help";
+
    ---------------------------------------------------------------
    overriding
    function Name (Test : Test_Type) return AUnit.Message_String is
@@ -43,7 +66,7 @@ package body Ada_Lib.Help.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Trace_Set_Up or Debug);
+      Log_In (Trace_Set_Up_Tear_Down or Debug);
 
       Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
          Routine        => Test_Help'access,
@@ -53,7 +76,7 @@ package body Ada_Lib.Help.Tests is
          Routine        => Test_Prefix_Help'access,
          Routine_Name   => AUnit.Format ("Test_Prefix_Help")));
 
-      Log_Out (Trace_Set_Up or Debug);
+      Log_Out (Trace_Set_Up_Tear_Down or Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -76,9 +99,10 @@ package body Ada_Lib.Help.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Trace_Set_Up or Debug);
+      Log_In (Trace_Set_Up_Tear_Down or Debug);
+      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
       Ada_Lib.Help.Reset;
-      Log_Out (Trace_Set_Up or Debug);
+      Log_Out (Trace_Set_Up_Tear_Down or Debug);
    end Tear_Down;
 
    ---------------------------------------------------------------
@@ -121,7 +145,7 @@ package body Ada_Lib.Help.Tests is
 
       begin
          Put_Line (Line);
-         Log_Here (Trace_Set_Up or Debug, "counter" & Counter'img &
+         Log_Here (Trace_Set_Up_Tear_Down or Debug, "counter" & Counter'img &
             " expected last " & Natural'(Expected'last)'img);
          if Counter > Expected'last then
             Assert (False, "too many lines (" & Counter'img &
@@ -137,9 +161,9 @@ package body Ada_Lib.Help.Tests is
    begin
       Log_In (Debug);
       for Line of Test_Case loop
-         Ada_Lib.Help.Add_Option (Line.Option, (
+         Ada_Lib.Help.Create_Option (Line.Option.Option (1), (
             if Line.Parameter = Null then "" else Line.Parameter.all),
-         Line.Description.all);
+         Line.Description.all, "", Unmodified_Flag);
       end loop;
 
       Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
@@ -178,6 +202,7 @@ package body Ada_Lib.Help.Tests is
          )
       );
 
+      -- list is sorted 1st with options with out modifier and then alphabetically
       Expected                   : constant array (Positive range <>)
                                     of String_Pointer := (
             new String'("-b <b parameter>   : b option"),
@@ -195,24 +220,27 @@ package body Ada_Lib.Help.Tests is
 
       begin
          Put_Line (Quote ("line", Line) & " counter" & Counter'img);
-         Log_Here (Trace_Set_Up or Debug, "counter" & Counter'img &
+         Log_Here (Trace_Set_Up_Tear_Down or Debug, "counter" & Counter'img &
             " expected last " & Natural'(Expected'last)'img);
          if Counter > Expected'last then
             Assert (False, "too many lines (" & Counter'img & " ) generated");
             return;
          end if;
          Assert (Line = Expected (Counter).all, "'" & Line & "' did not match '" &
-            Expected (Counter).all & "' at" & Counter'img);
+            "expected " & Expected (Counter).all & "' at" & Counter'img);
          Counter := Counter + 1;
       end Check_Test_Suite_And_Routine;
       ------------------------------------------------------------
 
    begin
+      Log_In (Debug);
       for Line of Test_Case loop
-         Ada_Lib.Help.Add_Option (
+--log_here (Line.Option.Options.Image);
+         Ada_Lib.Help.Create_Option (
             Component      => "",
             Description    => Line.Description.all,
-            Option         => Line.Option,
+            Modifier       => Line.Option.Modifier (1),
+            Option         => Line.Option.Option (1),
             Parameter      => (if Line.Parameter = Null then
                               ""
                            else
@@ -220,6 +248,7 @@ package body Ada_Lib.Help.Tests is
       end loop;
 
       Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
+      Log_out (Debug);
    end Test_Prefix_Help;
 
 begin

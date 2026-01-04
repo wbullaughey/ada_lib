@@ -1,12 +1,14 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Options;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Database.Subscribe is
 
    use type Ada_Lib.Database.Updater.Updater_Interface_Class_Access;
    use type Ada_Lib.Database.Updater.Update_Mode_Type;
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
 -- function Subscription_Name (
 --    Name                       : in     String;
@@ -29,8 +31,11 @@ package body Ada_Lib.Database.Subscribe is
 --    Updater                    : in     Ada_Lib.Database.Updater.Updater_Interface_Class_Access
 -- ) return Key_Type;
 
-   Null_Address                  : Ada_Lib.Database.Updater.Null_Address_Type renames
-                                    Ada_Lib.Database.Updater.Null_Address;
+   Debug_Subscribe   : Boolean renames Options.Ada_Lib_Database.
+                        Debug_Subscribe;
+
+   Null_Address      : Ada_Lib.Database.Updater.Null_Address_Type renames
+                        Ada_Lib.Database.Updater.Null_Address;
 
    ---------------------------------------------------------------------------------
    procedure Add_Subscription (
@@ -41,7 +46,7 @@ package body Ada_Lib.Database.Subscribe is
 
    begin
       Log_In (Debug_Subscribe, Tag_Name (Updater.all'tag) & "  " & Updater.Image &
-         " Updater Address " & Image (Updater.all'address));
+         " Updater Address " & Ada_Lib.Strings.Image (Updater.all'address));
 
       declare
          Inserted             : Boolean;
@@ -94,7 +99,7 @@ package body Ada_Lib.Database.Subscribe is
          begin
             if Hash_Table_Package.Element (Cursor) = Updater then
                Hash_Table_Package.Delete (Table.Map, Cursor);
-               Log_Out (Debug_Subscribe, "found address " & Image (Updater.all'address));
+               Log_Out (Debug_Subscribe, "found address " & Ada_Lib.Strings.Image (Updater.all'address));
                return True;
             end if;
 

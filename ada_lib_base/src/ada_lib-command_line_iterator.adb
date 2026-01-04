@@ -4,9 +4,13 @@ with Ada.Command_Line;
 with Ada.Strings.Fixed;
 --with Ada_Lib.Strings.Unlimited;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.OS;
+--with Ada_Lib.OS;
 with Ada_Lib.Options.Runstring;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with GNAT.OS_Lib;
+
+--pragma Elaborate_All (Ada_Lib.OS);
 
 package body Ada_Lib.Command_Line_Iterator is
 
@@ -235,7 +239,7 @@ package body Ada_Lib.Command_Line_Iterator is
 
       begin
          Log_In (Debug);
-         Iterator.Option := Ada_Lib.Options.Actual.Null_Flag_Option;
+         Iterator.Option := Ada_Lib.Options.Flags.Null_Flag_Option;
          Abstract_Iterator_Type'class (Iterator).Dump_Iterator ("Advance in");
          Iterate;
          Iterator.Dump_Iterator ("Advance out");
@@ -270,7 +274,7 @@ package body Ada_Lib.Command_Line_Iterator is
       begin
          if Debug and then not Inhibit_Trace then
             Debug := False;
-            Ada_Lib.Options.Runstring.Debug := False;
+            Ada_Lib.Options.Ada_Lib_Options_Runstring.Debug := False;
             Put_Line ("Iterator for " & What & " from " & Where);
             Put_Line ("  State                   " & Iterator.State'img);
             Put_Line (Quote ("  Argument                ",
@@ -292,7 +296,7 @@ package body Ada_Lib.Command_Line_Iterator is
             Put_Line ("  Options_Prefix      " & Iterator.Option_Prefix);
             Put_Line ("  Parameter_Index     " & Iterator.Parameter_Index'img);
             Debug := True;
-            Ada_Lib.Options.Runstring.Debug := True;
+            Ada_Lib.Options.Ada_Lib_Options_Runstring.Debug := True;
          end if;
       end Dump_Iterator;
 
@@ -493,8 +497,8 @@ package body Ada_Lib.Command_Line_Iterator is
          Log_In (Debug, "Number_Arguments" & Number_Arguments'img &
             " Include_Options " & Include_Options'img &
             " Include_Non_Options " & Include_Non_Options'img &
-            Ada_Lib.Trace.Quote (" Option_Prefix", Option_Prefix) &
-            Ada_Lib.Trace.Quote (" Modifiers", Modifiers) &
+            Ada_Lib.String_Quote.Quote (" Option_Prefix", Option_Prefix) &
+            Ada_Lib.String_Quote.Quote (" Modifiers", Modifiers) &
             "' Skip '" & Skip'img);
 
          if not (Include_Options or
@@ -510,7 +514,7 @@ package body Ada_Lib.Command_Line_Iterator is
          Iterator.Include_Options         := Include_Options;
          Iterator.Include_Non_Options     := Include_Non_Options;
          Iterator.Modifiers               := Ada.Strings.Maps.To_Set (Modifiers);
-         Iterator.Option                  := Ada_Lib.Options.Actual.Null_Flag_Option;
+         Iterator.Option                  := Ada_Lib.Options.Flags.Null_Flag_Option;
          Iterator.Option_Prefix           := Option_Prefix;
          Iterator.Parameter_Index         := 1;
          Iterator.State                   := Initial;
@@ -522,7 +526,8 @@ package body Ada_Lib.Command_Line_Iterator is
          when Fault: others =>
             Trace_Exception (Fault);
             Put_Line ("aborting");
-            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
+            GNAT.OS_Lib.OS_Exit (-1);
+--          Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
       end Initialize;
 
@@ -731,7 +736,7 @@ package body Ada_Lib.Command_Line_Iterator is
             " include non_options " & Include_Non_options'img &
             " argument seperator '" & Argument_Seperator & "'" &
             " Option_Prefix '" & Option_Prefix & "'" &
-            Ada_Lib.Trace.Quote (" Quote", Quote) &
+            Ada_Lib.String_Quote.Quote (" Quote", Quote) &
             " skip" & Skip'img);
 
          Iterator.Argument_Seperator := Argument_Seperator;
@@ -759,7 +764,7 @@ package body Ada_Lib.Command_Line_Iterator is
                                     Source (Start_Token);
                   begin
                      Log_Here (Debug, "Start_Token" & Start_Token'img & " end" &
-                        End_Token'img & Ada_Lib.Trace.Quote (" Letter", Letter));
+                        End_Token'img & Ada_Lib.String_Quote.Quote (" Letter", Letter));
 
                      if End_Token > 0 then
                         if Number_Arguments > Max_Arguments then
@@ -776,7 +781,7 @@ package body Ada_Lib.Command_Line_Iterator is
                            begin
                               if End_Quote = 0 then
                                  raise Invalid_Quote with
-                                    Ada_Lib.Trace.Quote ("In source", Source) &
+                                    Ada_Lib.String_Quote.Quote ("In source", Source) &
                                     " quote start at" & Start_Token'img;
                               end if;
 
@@ -830,7 +835,7 @@ package body Ada_Lib.Command_Line_Iterator is
    end Make;
 
 begin
-   Debug := Debug or Ada_Lib.Options.Debug_All;
+   Debug := Debug or Ada_Lib.Options.Ada_Lib_Options.Debug_All;
 --Debug := True;
 --Trace_Options := True;
 --Elaborate := True;

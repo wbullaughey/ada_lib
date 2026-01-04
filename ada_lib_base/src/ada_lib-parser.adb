@@ -1,9 +1,10 @@
 with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings;
 
-pragma Elaborate (Ada_Lib.Trace);
+--pragma Elaborate (Ada_Lib.Trace);
 
 package body Ada_Lib.Parser is
 
@@ -158,7 +159,8 @@ package body Ada_Lib.Parser is
             return "";
          end if;
          Log_Exception (Debug);
-         raise Underflow with Quote ("iterator buffer", Iterator.Buffer);
+         raise Underflow with Ada_Lib.Strings.Unlimited.Quote (
+            "iterator buffer", Iterator.Buffer);
       end if;
 
       declare

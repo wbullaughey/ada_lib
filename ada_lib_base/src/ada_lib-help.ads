@@ -1,4 +1,4 @@
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Flags;
 with Ada_Lib.Trace;
 
 package Ada_Lib.Help is
@@ -6,20 +6,19 @@ package Ada_Lib.Help is
    Failed                        : exception;
 
    procedure Add_Option (
-      Option                     : in     Ada_Lib.Options.Actual.Flag_Option_Type;
+      Option                     : in     Ada_Lib.Options.Flags.Flag_Option_Type;
       Parameter                  : in     String;
       Description                : in     String;
       Component                  : in     String := "";
       Source_Line                : in     String := Ada_Lib.Trace.Here
    ) with Pre => Description'length > 0;
 
-   procedure Add_Option (
+   procedure Create_Option (
       Option                     : in     Character;
       Parameter                  : in     String;
       Description                : in     String;
-      Component                  : in     String := "";
-      Modifier                   : in     Character :=
-                                             Ada_Lib.Options.Unmodified_Flag;
+      Component                  : in     String;
+      Modifier                   : in     Character;
       Source_Line                : in     String := Ada_Lib.Trace.Here
    ) with Pre => Description'length > 0;
 
@@ -29,8 +28,11 @@ package Ada_Lib.Help is
 
    procedure Reset;
 
-   Modifier                      : constant Character := '@';
-   Modifiers                     : constant String := "@";
+   Modifier          : constant Character := '@';
+   Modifiers         : constant String    := "@";
+   Trace_Modifier    : constant Character := '#';
+   Trace_Modifiers   : constant String    := "#";
+   Unmodified_Flag   : Character renames Ada_Lib.Options.Unmodified_Flag;
 
 end  Ada_Lib.Help;
 

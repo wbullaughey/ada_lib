@@ -1,3 +1,4 @@
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Mail.GMail is

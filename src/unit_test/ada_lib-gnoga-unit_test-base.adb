@@ -1,8 +1,11 @@
 -- with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.GNOGA.Unit_Test;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.States;
+with Ada_Lib.Strings;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Test_States;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.Application.Multi_Connect;
@@ -21,19 +24,20 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       Connection                 : access Standard.Gnoga.Application.Multi_Connect.Connection_Holder_Type);
 
    procedure Main_Window_With_Exit_Button_Handler (
-      Main_Window                : in out Standard.Gnoga.Gui.Window.Window_Type'Class;
-      Connection                 : access Standard.Gnoga.Application.Multi_Connect.Connection_Holder_Type);
+      Main_Window          : in out Standard.Gnoga.Gui.Window.Window_Type'Class;
+      Connection           : access Standard.Gnoga.Application.Multi_Connect.Connection_Holder_Type);
 
    procedure Start_Test (
-      Handler                    : in     Standard.Gnoga.Application.Multi_Connect.Application_Connect_Event;
-      Window_Name                : in     String);
+      Handler              : in     Standard.Gnoga.Application.Multi_Connect.Application_Connect_Event;
+      Window_Name          : in     String);
 
-   Connect_Browser_Name          : constant String := "Connect_Browser";
-   Create_Main_Window_Name       : constant String := "Create_Main_Window";
-   Dummy_Window                  : constant String := "CAC GNOGA Base Test";
+   Connect_Browser_Name    : constant String := "Connect_Browser";
+   Create_Main_Window_Name : constant String := "Create_Main_Window";
+   Debug                   : Boolean renames Options.Unit_Test.
+                              Ada_Lib_GNOGA_Unit_Test.Base_Debug;
+   Dummy_Window            : constant String := "CAC GNOGA Base Test";
    Main_Window_With_Exit_Button_Name
-                                 : constant String := "Main_Window_With_Exit_Button";
--- Test_Completed                : Boolean := False;
+                           : constant String := "Main_Window_With_Exit_Button";
 
    ---------------------------------------------------------------
    procedure Button_On_Exit (
@@ -74,6 +78,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    begin
       Log_In (Debug, Quote ("URL", URL));
+      Window_Lock.Set_Window (Main_Window'unchecked_access);
       Pause_On_Flag ("exit handler");
       GNOGA_Ada_Lib.Base.Set_Main_Created (True);
       GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
@@ -104,12 +109,13 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       declare
          Connection_Data            : constant Connection_Class_Access :=
                                        Connection_Class_Access (
-                                          Ada_Lib.States.Get_Window_Connection_Data);
+                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
+                                             Main_Window'unchecked_access));
          URL                        : constant String := Main_Window.Document.URL;
 
       begin
          Log_Here (Debug, Quote ("URL", URL));
---       Ada_Lib.States.Set_Window_Connection;
+--       Ada_Lib.Test_States.Set_Window_Connection;
          Main_Window.Document.Title (Create_Main_Window_Name);
          Connection_Data.Display_Window.Create (Main_Window, "main_window_id");
          Connection_Data.Display_Window.Put_Line ("test window content");
@@ -146,7 +152,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
       declare
          Connection_Data            : constant Connection_Class_Access :=
                                        Connection_Class_Access (
-                                          Ada_Lib.States.Get_Window_Connection_Data);
+                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
+                                             Main_Window'unchecked_access));
          URL                        : constant String := Main_Window.Document.URL;
 
       begin
@@ -209,12 +216,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 ------------------------------------------------------------------------------
 --
 --   begin
---      Log_In (Debug or Trace_Set_Up);
+--      Log_In (Debug or Trace_Set_Up_Tear_Down);
 ----    Test_Completed := False;
 --      GNOGA_Ada_Lib.Set_Connection_Data (new Connection_Type);
 --         -- needs to be set by more specific unit test set_up
 --      Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Set_Up;
---      Log_Out (Debug or Trace_Set_Up);
+--      Log_Out (Debug or Trace_Set_Up_Tear_Down);
 --   end Set_Up;
 
 ------------------------------------------------------------------------------
@@ -237,9 +244,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
-      Log_In (Debug, "handler " & Image (Handler.all'address));
+      Log_In (Debug, "handler " & Ada_Lib.Strings.Image (Handler.all'address));
       Standard.GNOGA.Application.Open_URL;
       GNOGA_Ada_Lib.Base.Initialize_GNOGA (Handler,
          Application_Title    => Window_Name,
@@ -276,11 +283,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 ----------------------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
 --    GNOGA_Ada_Lib.Clear_Connection_Data;
       GNOGA_Ada_Lib.Base.Set_Main_Created (False);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
 ------------------------------------------------------------------------------

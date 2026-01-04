@@ -8,21 +8,29 @@ with Ada.Streams;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Auto_Lock;
 with Ada_Lib.Database.Connection;
+with Ada_Lib.Options;
 with Ada_Lib.Parser;
 with Ada_Lib.OS.Run;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Strings;
 
+   pragma Elaborate (Ada_Lib.Parser);
+
 package body Ada_Lib.Database is
 
-    use type Ada_Lib.Strings.Unlimited.String_Type;
+--  use type Ada_Lib.Strings.Unlimited.String_Type;
     use type GNAT.Sockets.Stream_Access;
 
    function Log_Label (
       Database                      : in     Database_Type'class
    ) return String;
 
-    Null_Socket_Set             : GNAT.Sockets.Socket_Set_Type;
+   Trace             : Boolean renames Options.Ada_Lib_Database.Trace;
+   Trace_All         : Boolean renames Options.Ada_Lib_Database.Trace_All;
+   Trace_Get_Post    : Boolean renames Options.Ada_Lib_Database.Trace_Get_Post;
+   Null_Socket_Set   : GNAT.Sockets.Socket_Set_Type;
 
     -------------------------------------------------------------------
     overriding
@@ -76,9 +84,9 @@ package body Ada_Lib.Database is
          " socket created " & Database.Socket_Created'img &
          " socket opened " & Database.Socket_Opened'img &
          " selector created " & Database.Selector_Created'img &
-         " database address " & Image (Database'address) & Log_Label (Database));
+         " database address " & Ada_Lib.Strings.Image (Database'address) & Log_Label (Database));
       if Database.Socket_Created then
-         Log (Trace_All, Here, Who & " socket address " & Image (Database.Socket'address));
+         Log (Trace_All, Here, Who & " socket address " & Ada_Lib.Strings.Image (Database.Socket'address));
       end if;
 
       if Database.Socket_Opened then
@@ -106,14 +114,14 @@ package body Ada_Lib.Database is
       when Fault: GNAT.SOCKETS.SOCKET_ERROR =>
          if Trace then
             Trace_Message_Exception (Fault, Who &
-               " database address " & Image (Database'address) &
-               " socket address " & Image (Database.Socket'address) & Log_Label (Database));
+               " database address " & Ada_Lib.Strings.Image (Database'address) &
+               " socket address " & Ada_Lib.Strings.Image (Database.Socket'address) & Log_Label (Database));
          end if;
 
       when Fault: others =>
          Trace_Message_Exception (Fault, Who &
-            " database address " & Image (Database'address) &
-            " socket address " & Image (Database.Socket'address) & Log_Label (Database));
+            " database address " & Ada_Lib.Strings.Image (Database'address) &
+            " socket address " & Ada_Lib.Strings.Image (Database.Socket'address) & Log_Label (Database));
          raise;
 
    end Close;
@@ -302,7 +310,6 @@ package body Ada_Lib.Database is
     ) return String is
     -------------------------------------------------------------------
 
-        use Ada_Lib.Strings.Unlimited;
         Buffer                  : String_Type;
 
 
@@ -370,7 +377,7 @@ package body Ada_Lib.Database is
    -------------------------------------------------------------------
 
    begin
-      Log (Trace, Here, Who & " " & Image (Database'address) &
+      Log (Trace, Here, Who & " " & Ada_Lib.Strings.Image (Database'address) &
          " socket opened " & Database.Socket_Opened'img &
          " selector created " & Database.Selector_Created'img &
          " initialized " & Database.Initialized'img & Log_Label (Database));
@@ -473,7 +480,7 @@ package body Ada_Lib.Database is
 
    begin
       if Trace_All then
-       Log_Here ("timeout" & Timeout'img & " stream " & Image (Database.Stream.all'address) & Log_Label (Database));
+       Log_Here ("timeout" & Timeout'img & " stream " & Ada_Lib.Strings.Image (Database.Stream.all'address) & Log_Label (Database));
       end if;
 
       if Database.Use_Locks then
@@ -551,7 +558,7 @@ package body Ada_Lib.Database is
       when Fault: others =>
 --       Database.Write_Lock.Unlock;
          Trace_Message_Exception (Fault, "getting '" & Name & "' socket address " &
-            Image (Database.Socket'address) & " database " & Image (Database'address) & Log_Label (Database));
+            Ada_Lib.Strings.Image (Database.Socket'address) & " database " & Ada_Lib.Strings.Image (Database'address) & Log_Label (Database));
          raise;
 
     end Get;
@@ -787,7 +794,7 @@ package body Ada_Lib.Database is
     begin
       return Log_Here (Database.Socket_Opened and then Database.Selector_Created,
          Trace_All or Trace_Pre_Post_Conditions,
-          Image (Database'address) &
+          Ada_Lib.Strings.Image (Database'address) &
          " socket opened " & Database.Socket_Opened'img &
          " selector created " & Database.Selector_Created'img &
          " initialized " & Database.Initialized'img & Log_Label (Database));
@@ -839,8 +846,8 @@ package body Ada_Lib.Database is
         Log_In (Trace);
         Database.Label.Set (Label);
         Log (Trace, Here, Who & " Host '" & Host & "' port" & Port'img & " reopen " & Reopen'img &
-         " database address " & Image (Database'address) &
-         " socket address " & Image (Database.Socket'address) &
+         " database address " & Ada_Lib.Strings.Image (Database'address) &
+         " socket address " & Ada_Lib.Strings.Image (Database.Socket'address) &
          " timeout " & Connection_Timeout'img &
          " use locks " & Use_Locks'img &
          Log_Label (Database));
@@ -955,7 +962,7 @@ package body Ada_Lib.Database is
                     " port" & Port'img);
         end;
 
-        Log (Trace_All, Here, "Socket_Opened database address:" & Image (Database'address));
+        Log (Trace_All, Here, "Socket_Opened database address:" & Ada_Lib.Strings.Image (Database'address));
         declare      -- get a unique number to use as a tag
             ID                : constant Name_Value_Class_Type :=
                                  Database.Get ("uniqueid", No_Vector_Index, "", 0.5);
@@ -1169,7 +1176,7 @@ package body Ada_Lib.Database is
 
     begin
         Log_In (Trace_All, Name & " = '" & Value & "'" & " index" & Index'img & Log_Label (Database) &
-            (if Database.Stream = Null then " not open" else " stream " & Image (Database.Stream.all'address)));
+            (if Database.Stream = Null then " not open" else " stream " & Ada_Lib.Strings.Image (Database.Stream.all'address)));
 
         if Database.Stream = Null then
             Ada.Exceptions.Raise_Exception (Failed'identity,
@@ -1238,21 +1245,21 @@ package body Ada_Lib.Database is
         Post (Database, "notifymode", No_Vector_Index, "", Table (Notify_Mode));
     end Set_Notify_Mode;
 
-    ---------------------------------------------------------------------------
-    procedure Set_Trace (
-        Value                   : in     Boolean;
-        Both                    : in     Boolean := False) is
-    ---------------------------------------------------------------------------
-
-    begin
-        Trace := Value;
-
-        if Both then
-           Trace_All := Value;
-           Ada_Lib.Database.Connection.Debug := True;
-        end if;
-        Log (Trace, Here, Who & " " & Trace'img & " both " & Both'img);
-    end Set_Trace;
+--  ---------------------------------------------------------------------------
+--  procedure Set_Trace (
+--      Value                   : in     Boolean;
+--      Both                    : in     Boolean := False) is
+--  ---------------------------------------------------------------------------
+--
+--  begin
+--      Trace := Value;
+--
+--      if Both then
+--         Trace_All := Value;
+--         Ada_Lib.Database.Connection.Debug := True;
+--      end if;
+--      Log (Trace, Here, Who & " " & Trace'img & " both " & Both'img);
+--  end Set_Trace;
 
     -------------------------------------------------------------------
     procedure Store (
@@ -1312,8 +1319,8 @@ package body Ada_Lib.Database is
 
      begin
         if Trace_Get_Post then
-            Log_Here (  --" stream " & Image (Database.Stream.all'address) &
-               -- " socket " & Image (Database.Socket'address) & Database.Get_Tag &
+            Log_Here (  --" stream " & Ada_Lib.Strings.Image (Database.Stream.all'address) &
+               -- " socket " & Ada_Lib.Strings.Image (Database.Socket'address) & Database.Get_Tag &
                " line '" & Line & "' " & Log_Label (Database));
                -- " timeout " & Timeout'img);
         end if;
@@ -1350,7 +1357,7 @@ package body Ada_Lib.Database is
                 end if;
 
                 Ada.Exceptions.Raise_Exception (Failed'identity,
-                    "Write to database socket " & Image (Database.Socket'address) &
+                    "Write to database socket " & Ada_Lib.Strings.Image (Database.Socket'address) &
                     " failed with: '" & Message & "'");
             end;
     end Unlocked_Post;

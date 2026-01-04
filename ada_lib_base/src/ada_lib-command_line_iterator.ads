@@ -3,7 +3,7 @@
 with Ada.Characters.Latin_1;
 --with Ada.Finalization;
 with Ada.Strings.Maps;
-with Ada_Lib.Options.Actual;
+with Ada_Lib.Options.Flags;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with Interfaces;
@@ -172,7 +172,7 @@ package Ada_Lib.Command_Line_Iterator is
          Include_Non_Options     : Boolean;
          Include_Options         : Boolean;
          Modifiers               : Character_Set;
-         Option                  : Ada_Lib.Options.Actual.Flag_Option_Type;
+         Option                  : Ada_Lib.Options.Flags.Flag_Option_Type;
          Option_Prefix           : Character;
          Parameter_Index         : Positive;
          State                   : Iterator_State_Type;

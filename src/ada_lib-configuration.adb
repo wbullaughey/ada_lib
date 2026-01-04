@@ -4,6 +4,9 @@ with Ada.IO_Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada_Lib.Directory;
+with Ada_Lib.Options;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Strings;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
@@ -12,7 +15,8 @@ package body Ada_Lib.Configuration is
    use type Ada.Directories.File_Kind;
 
 
-   Full_Path                  : Ada_Lib.Strings.Unlimited.String_Type;
+   Full_Path   : Ada_Lib.Strings.Unlimited.String_Type;
+   Trace       : Boolean renames Options.Ada_Lib_Configuration.Trace;
 
    ---------------------------------------------------------------
    procedure Close (
@@ -20,7 +24,7 @@ package body Ada_Lib.Configuration is
    ---------------------------------------------------------------
 
    begin
-      Log_Here (Trace, "configuration " & Image (Configuration'address));
+      Log_Here (Trace, "configuration " & Ada_Lib.Strings.Image (Configuration'address));
       Table_Package.Clear (Configuration.Table);
       Configuration.Opened := False;
    end Close;
@@ -110,7 +114,7 @@ package body Ada_Lib.Configuration is
    begin
       return Log_Here (Configuration.Opened, Trace or Trace_Pre_Post_Conditions,
          "opened " & Configuration.Opened'img &
-         " configuration " & Image (Configuration'address));
+         " configuration " & Ada_Lib.Strings.Image (Configuration'address));
    end Is_Open;
 
    ---------------------------------------------------------------
@@ -129,7 +133,7 @@ package body Ada_Lib.Configuration is
 
       Log_In (Trace, Quote (" path ", Path) & Quote (" full path", Full_Path) &
          " create " & Create'img & " configuration " &
-         Image (Configuration'address));
+         Ada_Lib.Strings.Image (Configuration'address));
 
       if Ada.Directories.Exists (Full_Path.Coerce)  then
          Log_Here (Trace);

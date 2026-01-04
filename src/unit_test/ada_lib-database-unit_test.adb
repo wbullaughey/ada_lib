@@ -3,6 +3,7 @@ with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Database.Connection;
 with Ada_Lib.Options.AUnit_Lib;
+--with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Test_Cases;
 
@@ -64,7 +65,8 @@ package body Ada_Lib.Database.Unit_Test is
       Result                    : constant Name_Value_Class_Type := Test.Database.all.Get (Name, Index, Tag);
 
    begin
-      Log_Here (Debug, Quote ("name", Result.Name) & Quote ("value", Result.Value));
+      Log_Here (Debug, Ada_Lib.Strings.Unlimited.Quote ("name", Result.Name) &
+         Ada_Lib.Strings.Unlimited.Quote ("value", Result.Value));
       return Result;
    end Get;
 
@@ -82,11 +84,11 @@ package body Ada_Lib.Database.Unit_Test is
 -- ----------------------------------------------------------------
 -- function Get_Options (
 --    Test                       : in     Test_Case_Type
--- ) return Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access is
+-- ) return Ada_Lib.Options.Program_Options_Constant_Class_Access is
 -- ----------------------------------------------------------------
 --
 -- begin
---    return Ada_Lib.Options.Actual.Program_Options_Constant_Class_Access (Test.Options);
+--    return Ada_Lib.Options.Program_Options_Constant_Class_Access (Test.Options);
 -- end Get_Options;
 
    ----------------------------------------------------------------
@@ -95,8 +97,10 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Boolean is
    ----------------------------------------------------------------
 
+      Result   : constant Boolean := Test.Database /= Null;
+
    begin
-      return Log_Here (Test.Database /= Null, Debug or Trace_Pre_Post_Conditions,
+      return Log_Here (Result, Debug or Trace_Pre_Post_Conditions or not Result,
          "no database set");
    end Has_Database;
 
@@ -109,7 +113,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return (case Test.Which_Host is
          when Local => Local_Host_Name,
@@ -127,7 +131,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Port;
    end Host_Port;
@@ -175,7 +179,7 @@ package body Ada_Lib.Database.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up, "which host " & Test.Which_Host'img);
+      Log_In (Debug or Trace_Set_Up_Tear_Down, "which host " & Test.Which_Host'img);
 
       Test.Set_Up_Failure (Test.Database /= Null, Here, Who,
          "Test.Database is null");
@@ -209,14 +213,14 @@ package body Ada_Lib.Database.Unit_Test is
       end if;
 
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
       when Fault: others =>
          Trace_Message_Exception (Fault, Who, Here);
          Test.Set_Up_Message_Exception (Fault, Here, Who, "exception " &
             Ada.Exceptions.Exception_Message (Fault));
-         Log_Out (Debug or Trace_Set_Up);
+         Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    end Set_Up;
 
@@ -227,13 +231,13 @@ package body Ada_Lib.Database.Unit_Test is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up, "close database");
+      Log_In (Debug or Trace_Set_Up_Tear_Down, "close database");
       if Test.Which_Host /= No_Host and then Test.Has_Database then
          Test.Database.Delete_All;
       end if;
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
 
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
    ----------------------------------------------------------------------------
@@ -246,7 +250,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Debug, "Has_Local_DBDaemon " & Options.Database_Options.Has_Local_DBDaemon'img &
          (if Options.Database_Options.Remote_Host.Length = 0 then " no Remote_Host" else " Remote_Host dbdaemon.all "));
@@ -280,7 +284,7 @@ package body Ada_Lib.Database.Unit_Test is
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
                               Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Which_Host;
    end Which_Host;

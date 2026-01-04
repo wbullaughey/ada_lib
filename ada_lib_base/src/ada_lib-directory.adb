@@ -8,14 +8,19 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Exceptions;
 with Ada_Lib.OS.Environment;
 with Ada_Lib.OS.Run;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+
+-- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.Directory is
 
    use type Ada_Lib.OS.OS_Exit_Code_Type ;
 
    Stat_Program                  : constant String := "/usr/bin/stat";
+   Debug : Boolean renames Options.Ada_Lib_Directory.Debug;
+
 
    ---------------------------------------------------------------
    procedure Delete (

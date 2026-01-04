@@ -1,6 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with GNAT.OS_Lib;
 
@@ -155,11 +156,11 @@ package body Ada_Lib.Configuration.Tests is
       ------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       Delete_File (New_Configuration_Path);
       Delete_File (Missing_Configuration_Path);
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
    ---------------------------------------------------------------
@@ -183,13 +184,13 @@ package body Ada_Lib.Configuration.Tests is
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up);
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
       if Test.Configuration.Is_Open then
          Log_Here (Debug);
          Test.Configuration.Close;
       end if;
       Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
-      Log_Out (Debug or Trace_Set_Up);
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
    ---------------------------------------------------------------

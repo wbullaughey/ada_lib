@@ -1,27 +1,22 @@
---
---  Copyright (C) 2008, AdaCore
---
-with Ada.Command_Line;
 with Ada.Text_IO;use Ada.Text_IO;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
 --with Ada_Lib.Timer;
-with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
 with Gnoga.Application.Multi_Connect;
 
 procedure Test_Ada_Lib is
 
    Result   : Ada_Lib.OS.OS_Exit_Code_Type := Ada_Lib.OS.No_Error;
-   Program_Name   : constant String := Ada.Command_Line.Command_Name;
 
 begin
-   Put_Line (Program_Name);
-
+   Put_Line ("test_ada_lib");
    declare
       Aunit_Options  : aliased Ada_Lib.Options.AUnit_Lib.
                         Aunit_Program_Options_Type (
@@ -31,19 +26,18 @@ begin
       Debug          : Boolean renames AUnit_Options.Tester_Debug;
 
    begin
-      Debug := True;
-      Ada_Lib.Options.Actual.Set_Ada_Lib_Program_Options (
-         Aunit_Options'unchecked_access);
+--Debug := True;
+      Ada_Lib.Options.Set_Ada_Lib_Program_Options (Aunit_Options'unchecked_access);
       if Aunit_Options.Initialize then
-
+         Log_Here (Debug);
          if Aunit_Options.Process (
-            Include_Options      => True,
-            Include_Non_Options  => False,
-            Modifiers            => Ada_Lib.Help.Modifiers) then
-            Log_Here (Debug, "help test " & Ada_Lib.Help_Test'img);
-
+               Include_Options      => True,
+               Include_Non_Options  => False,
+               Modifiers            => Ada_Lib.Help.Modifiers) then
+            Log_Here (Debug);
             Aunit_Options.Post_Process;
-            if Ada_Lib.Help_Test then
+            Log_Here (Debug);
+            if Ada_Lib.Options.Ada_Lib_Environment.Help_Test then
                Put_Line ("help test " & (if Ada_Lib.Exception_Occured then
                      "failed"
                   else
@@ -52,7 +46,9 @@ begin
                   Result := Ada_Lib.OS.Assertion_Exit;
                end if;
             else
+               Log_Here (Debug);
                Ada_Lib.Trace_Tasks.Start ("main");
+               Log_Here (Debug);
                Ada_Lib.Test.Run_Suite (Aunit_Options);
                Gnoga.Application.Multi_Connect.End_Application;
                Log_Here (Debug);
@@ -63,8 +59,8 @@ begin
                Ada_Lib.Trace_Tasks.Stop;
                Ada_Lib.Trace_Tasks.Report;
             end if;
-         else  -- Options.Process false
-            Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Application_Error);
+         else
+            Put_Line ("Options.Process failed");
          end if;
       else
          Put_Line ("initialiation failed");

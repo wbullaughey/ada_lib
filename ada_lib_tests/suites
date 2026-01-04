@@ -1,6 +1,5 @@
 suites
-bin/test_ada_lib
-main_task_00007F95C0808200: [00:00:00.00] test_ada_lib.adb:43 Test_Ada_Lib (0) help test FALSE
+test_ada_lib
 Ask Basic_Operations
 Client_Socket_IO Test_Connect
 Command_Line_Iterator Options
@@ -63,9 +62,8 @@ Lock Test_Async_Lock
 Lock Test_Lock
 Lock Test_Lock_Timeout
 Lock Test_Relock
-Main Connect_Browser
-Main Create_Main_Window
-Main Main_Window_With_Exit_Button
+Maps Map_Failure
+Maps Map_Success
 OS Encode_Decode
 OS Kill_All
 OS Run_Local
@@ -102,4 +100,3 @@ Trace Parsed_Time
 Trace Simple
 
 Routines with a * are disabled by default
-main_task_00007F95C0808200: [00:00:00.01] test_ada_lib.adb:58 Test_Ada_Lib (0)

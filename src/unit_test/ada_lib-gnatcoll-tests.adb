@@ -1,7 +1,7 @@
 -- with Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.Actual;
+--with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -60,7 +60,7 @@ package body Ada_Lib.GNATCOLL.Tests is
                         Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                               Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Actual.Get_Ada_Lib_Read_Only_Program_Options).all;
+                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
          Expansion               : constant String := Standard.GNATCOLL.Templates.Substitute (
                                     Str         => Source,
                                     Substrings  => Parameters);

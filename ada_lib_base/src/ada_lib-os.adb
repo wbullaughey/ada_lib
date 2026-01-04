@@ -1,9 +1,11 @@
 with Ada.Characters.Latin_1;
+with Ada.Dynamic_Priorities;
 with Ada.Text_IO; use  Ada.Text_IO;
 --with Ada_Lib.Options;
 with Ada_Lib.OS_Strings;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings;
-with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_lib.Trace; use Ada_Lib.Trace;
 with Command_Name;
 with GNAT.Sockets;
 with Interfaces.C;
@@ -57,7 +59,7 @@ package body Ada_Lib.OS is
 --    & " From " & From & ". Exception: " &
 --    Ada.Exceptions.Exception_Name (Fault) &
 --    " message: " & Ada.Exceptions.Exception_Message (Fault));
-      Ada_Lib.Trace.Trace_Message_Exception (Fault, Message, From);
+--    Ada_Lib.Trace.Trace_Message_Exception (Fault, Message, From);
       Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    end Exception_Halt;
@@ -171,6 +173,11 @@ package body Ada_Lib.OS is
    procedure Set_Priority (
       Priority          : in   Priority_Type) is separate;
    -------------------------------------------------------------------
+
+-- begin
+--    Ada.Dynamic_Priorities.Set_Priority (Priority);
+--       -- Sets current task's priority
+-- end Set_Priority;
 
 begin
 --Trace := True;

@@ -35,5 +35,4 @@ package Ada_Lib.Test is
 --
 -- procedure Set_All_Traces;
 
-   Debug                         : aliased Boolean := False;  -- common flag for current test
 end Ada_Lib.Test;

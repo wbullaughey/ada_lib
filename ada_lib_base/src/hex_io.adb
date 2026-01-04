@@ -1,36 +1,8 @@
---$Header$
-
------------------------------------------------------------------------------
---  Copyright (c) 2003 - 2004  All rights reserved
---
---  This file is a product of Communication Automation & Control, Inc. (CAC)
---  and is provided for unrestricted use WITH CAC PRODUCTS ONLY provided
---  this legend is included on all media and as a part of the software
---  program in whole or part.
---
---  Users may copy or modify this file without charge, but are not authorized
---  to license or distribute it to anyone else except as part of a product or
---  program developed by the user incorporating CAC products.
---
---  THIS FILE IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
---  WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
---  PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
---
---  In no event will CAC be liable for any lost revenue or profits, or other
---  special, indirect and consequential damages, which may arise from the use
---  of this software.
---
---  Communication Automation & Control, Inc.
---  1180 McDermott Drive, West Chester, PA (USA) 19380
---  (877) 284-4804 (Toll Free)
---  (610) 692-9526 (Outside the US)
------------------------------------------------------------------------------
-
 with Ada.Text_IO; use Ada.Text_IO;
---with Ada.Text_IO.Integer_IO;
+with Ada_Lib.Options;
 with Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Time;
-with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Trace;
 with Ada.Unchecked_Conversion;
 
 package body Hex_IO is
@@ -94,6 +66,10 @@ package body Hex_IO is
       Line_Limit                 : in     Positive;
       Message                    : in     String := "");
 
+   Include_Hundreds  : Boolean renames Ada_Lib.Options.Trace.Include_Hundreds;
+   Include_Task      : Boolean renames Ada_Lib.Options.Trace.Include_Task;
+   Include_Time      : Boolean renames Ada_Lib.Options.Trace.Include_Time;
+
    -------------------------------------------------------------------
    procedure Dump (
       Source                     : in     System.Address;
@@ -120,15 +96,15 @@ package body Hex_IO is
    begin
       if Message'length > 0 then
          if Include_Task then
-            Put (Ada_Lib.Trace.Current_Task & ": ");
+            Put (Standard.Ada_Lib.Current_Task & ": ");
          end if;
 
          if Include_Time then
-            Put ("[" & From_Start (Ada_Lib.Time.Now,
+            Put ("[" & Ada_Lib.Time.From_Start (Ada_Lib.Time.Now,
                Include_Hundreds) & "] ");
          end if;
 
-        Put_Line (Message & " source " & Ada_Lib.Trace.Image (Source'address));
+        Put_Line (Message & " source " & Ada_Lib.Strings.Image (Source'address));
       end if;
 
       for Index in Buffer'range loop
@@ -139,7 +115,7 @@ package body Hex_IO is
             if Line_Index = 1 then   -- new line
                if First_Skip or else not Do_Skipping then
                   if Include_Task then
-                     Put (Ada_Lib.Trace.Current_Task & ": ");
+                     Put (Ada_Lib.Current_Task & ": ");
                   end if;
                   Put (Hex ((Index - 1) * (Width / 2), 4) & ": ");   -- address
                end if;
@@ -182,7 +158,7 @@ package body Hex_IO is
 
          exception
             when Fault: others =>
-               Trace_Message_Exception (Fault, "index" & Index'img &
+               Ada_Lib.Trace.Trace_Message_Exception (Fault, "index" & Index'img &
                   " line index" & Line_Index'img &
                   " Line_Limit" & Line_Limit'img);
                raise;
@@ -403,7 +379,7 @@ package body Hex_IO is
    -------------------------------------------------------------------
 
    begin
-      return Hex (Interfaces.Unsigned_32 (
+      return Hex (Interfaces.Unsigned_64 (
          System.Storage_Elements.To_Integer (Address)), 8);
    end Hex;
 
@@ -598,7 +574,7 @@ package body Hex_IO is
    -------------------------------------------------------------------
    function Modular_Hex_Address (
       Address           : in   System.Address;
-      Width             : in   Positive
+      Width             : in   Positive   -- in bytes
    ) return String is
    -------------------------------------------------------------------
 

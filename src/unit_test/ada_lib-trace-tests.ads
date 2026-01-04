@@ -29,10 +29,6 @@ Suite_Name                    : constant String := "Trace";
    procedure Tear_Down (Test : in out Test_Type)
    with post => Verify_Tear_Down (Test);
 
-   Debug                         : Boolean := False;
-   Debug_Test                    : Boolean := False;
-   Debug_Tests                   : Boolean := False;
-
 private
 
    use type Ada_Lib.Strings.Unlimited.String_Type;
