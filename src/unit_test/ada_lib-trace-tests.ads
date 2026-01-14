@@ -1,5 +1,5 @@
 with Ada.Containers.Doubly_Linked_Lists;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Unit_Test.Tests;
 --with AUnit.Test_Cases;
 with AUnit.Test_Suites;
@@ -31,7 +31,7 @@ Suite_Name                    : constant String := "Trace";
 
 private
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    package Output_Package is new Ada.Containers.Doubly_Linked_Lists (
       Element_Type   => Ada_Lib.Strings.Unlimited.String_Type);

@@ -1,4 +1,5 @@
 with Ada.Exceptions;
+with Ada_Lib.Options;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada.Streams.Stream_IO; -- use Ada.Streams; use Ada.Streams.Stream_IO;

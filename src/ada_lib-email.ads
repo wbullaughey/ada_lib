@@ -1,6 +1,6 @@
 with Ada.Finalization;
 with Ada_Lib.Socket_IO.Client;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with GNATCOLL.Email;
 
 package Ada_Lib.EMail is

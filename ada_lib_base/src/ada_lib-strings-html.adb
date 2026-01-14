@@ -1,5 +1,5 @@
 with Ada.Characters.Handling;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Strings.HTML is
@@ -110,7 +110,7 @@ package body Ada_Lib.Strings.HTML is
    ) return String is
    ---------------------------------------------------------------
 
-      use Ada_Lib.Strings.Unlimited;
+--    use Ada_Lib.Strings.Unlimited;
 
       Result                     : Ada_Lib.Strings.Unlimited.String_Type;
 

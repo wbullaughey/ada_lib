@@ -1,6 +1,6 @@
 with Ada_Lib.Lock;
 with Ada_Lib.Socket_IO.Stream_IO;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;-- use Ada_Lib.Strings.Unlimited;
 
 pragma Elaborate_All (Ada_Lib.Lock);
 

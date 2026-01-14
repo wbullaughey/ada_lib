@@ -1,5 +1,4 @@
 with Ada.Directories;
-with Ada_Lib.Options;
 
 package Ada_Lib.Directory is
 

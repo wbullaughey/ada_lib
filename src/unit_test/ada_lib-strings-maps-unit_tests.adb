@@ -1,7 +1,7 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Tests;
 with AUnit.Assertions; use AUnit.Assertions;
@@ -9,7 +9,7 @@ with AUnit.Test_Cases;
 
 package body Ada_Lib.Strings.Maps.Unit_Tests is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    type Test_Type    is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with
                         null record;

@@ -8,14 +8,14 @@ with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Database.Get_Put_Tests is
 
    use type Ada_Lib.Options.Mode_Type;
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
 -- type Test_Suite_Type is new Ada_Lib.Test.Tests.Test_Suite_Type with null record;
 

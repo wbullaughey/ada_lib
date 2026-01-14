@@ -1,5 +1,5 @@
 -- with Ada.Containers.Vectors;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 -- with Ada_Lib.Trace; use Ada_Lib.Trace;
 -- with Ada_Lib.Template;
 

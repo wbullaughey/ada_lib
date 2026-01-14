@@ -1,5 +1,5 @@
 with Ada.Exceptions;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 
 package body Ada_Lib.GenList is
 

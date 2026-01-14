@@ -1,4 +1,3 @@
---with Ada.Command_Line;
 with Ada.Directories; use Ada.Directories;
 with Ada.IO_Exceptions;
 --with Ada.Streams.Stream_IO;
@@ -6,6 +5,7 @@ with Ada.IO_Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Ada.Exceptions;
+with Ada_Lib.Options;
 with Ada_Lib.OS.Environment;
 with Ada_Lib.OS.Run;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;

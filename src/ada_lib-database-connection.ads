@@ -1,9 +1,9 @@
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;-- use Ada_Lib.Strings.Unlimited;
 with GNAT.OS_Lib;
 
 package Ada_Lib.Database.Connection is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    type Abstract_Database_Type is abstract new Database_Type with private;
 

@@ -1,6 +1,6 @@
 with Ada.Finalization;
 with Ada.Streams;
-with ADA_LIB.Strings.Unlimited;
+with ADA_LIB.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with GNAT.Sockets;
 with Hex_IO;

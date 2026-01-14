@@ -1,13 +1,13 @@
 with Ada.Characters.Latin_1;
 with Ada_Lib.Options.Flags;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
---with Ada_Lib.Strings.Unlimited;
+--with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Hex_IO;
 
 package body Ada_Lib.Options.Runstring is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    function Find_Registration (
       Registrations           : in     Registrations_Type;

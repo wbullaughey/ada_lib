@@ -1,5 +1,5 @@
 with Ada.Exceptions;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Fixtures;
 
 package Ada_Lib.Unit_Test.Fixtures is

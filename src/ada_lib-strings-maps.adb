@@ -1,11 +1,11 @@
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
+--with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 
 package body Ada_Lib.Strings.Maps is
 
    package body Mapper is
 
-      use type Ada_Lib.Strings.Unlimited.String_Type;
+--    use type Ada_Lib.Strings.Unlimited.String_Type;
 
       ----------------------------------------------------------------
       function Map_Name (

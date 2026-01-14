@@ -4,7 +4,7 @@ with Ada.Tags;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Parser;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 -- with GNAT.Directory_Operations;
 
@@ -12,7 +12,7 @@ pragma Elaborate (Ada_Lib.Parser);
 
 package body Ada_Lib.Template.Parameters is
 
-   use type Unlimited_String_Type;
+-- use type Unlimited_String_Type;
 
    function Find (
       Parameters           : in   Parameter_Array;

@@ -141,7 +141,7 @@ package body Ada_Lib.Options.Verification is
       Iterator             : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
-      Extended                   : Boolean := False;
+--    Extended                   : Boolean := False;
       Parameter                  : constant String := Iterator.Get_Parameter;
 
    begin
@@ -273,8 +273,10 @@ not_implemented;
       Tag_History (Debug or Trace_Options,
          Verification_Options_Type'class (Options)'tag);
       return Log_Here (Options.Initialized,
-         Debug or Trace_Options or Trace_Pre_Post_Conditions or
-            not Options.Initialized);
+         Debug or else
+         Trace_Options or else
+         Trace_Pre_Post_Conditions or else
+         not Options.Initialized);
    end Was_Initialized;
 
 begin

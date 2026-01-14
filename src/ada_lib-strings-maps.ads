@@ -1,4 +1,4 @@
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 
 package Ada_Lib.Strings.Maps is
 

@@ -1,7 +1,7 @@
 with Ada.Containers.Doubly_Linked_Lists;
 --with Ada_Lib.Options.Flags;
 --with Ada_Lib.Options.Create;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 
 package Ada_Lib.Options.Runstring is

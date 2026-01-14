@@ -1,6 +1,6 @@
 with Ada.Finalization;
 -- with Ada_Lib.Socket_IO.Stream_IO;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 
 package Ada_Lib.Mail is
 

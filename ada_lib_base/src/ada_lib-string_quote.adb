@@ -26,16 +26,6 @@ package body Ada_Lib.String_Quote is
       return "'" & Ada_Lib.Substiture_For_Non_Alpha.Substitute (Value) & "'";
    end Quote;
 
--- -------------------------------------------------------------------
--- function Quote (
---    Value                : in   Ada_Lib.Strings.Unlimited.String_Type
--- ) return String is
--- -------------------------------------------------------------------
---
--- begin
---    return Quote (Value.Coerce);
--- end Quote;
-
    -------------------------------------------------------------------
    function Quote (
       Value                : in   Ada.Strings.Unbounded.Unbounded_String
@@ -81,17 +71,6 @@ package body Ada_Lib.String_Quote is
          else
             Value.all));
    end Quote;
-
--- -------------------------------------------------------------------
--- function Quote (
---    Variable             : in   String;
---    Value                : in   Ada_Lib.Strings.Unlimited.String_Type
--- ) return String is
--- -------------------------------------------------------------------
---
--- begin
---    return Quote (Variable, Value.Coerce);
--- end Quote;
 
    -------------------------------------------------------------------
    function Quote (

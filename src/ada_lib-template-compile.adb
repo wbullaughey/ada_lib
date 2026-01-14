@@ -6,7 +6,7 @@ with Ada.Strings.Fixed;
 with Ada.Tags;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Strings.Unlimited; use Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 -- with Ada_Lib.Template.Parameters;
 with Ada_Lib.Template.Token;
 -- with Ada_Lib.Template.Trace;
@@ -16,6 +16,7 @@ with GNAT.Directory_Operations;
 package body Ada_Lib.Template.Compile is
 
    use type Ada_Lib.Template.Parameters.List_Access;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    type Nested_Type        is (
       In_Else,

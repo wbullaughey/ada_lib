@@ -1,13 +1,13 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Options;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Time;
 with Ada_Lib.Trace;
 with Ada.Unchecked_Conversion;
 
 package body Hex_IO is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    package Unsigned_8_IO is new Ada.Text_IO.Modular_IO (
       Interfaces.Unsigned_8);

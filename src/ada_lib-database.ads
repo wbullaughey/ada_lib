@@ -2,7 +2,7 @@
 with Ada.Characters.Latin_1;
 with Ada.Finalization;
 with Ada.Text_IO;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with GNAT.Sockets;
 with Ada_Lib.Lock;

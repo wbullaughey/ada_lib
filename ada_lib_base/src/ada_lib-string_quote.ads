@@ -10,10 +10,6 @@ package Ada_Lib.String_Quote is
       Value                : in   String
    ) return String;
 
--- function Quote (
---    Value                : in   Ada_Lib.Strings.Unlimited.String_Type
--- ) return String;
-
    function Quote (
       Value                : in   Ada.Strings.Unbounded.Unbounded_String
    ) return String;
@@ -37,10 +33,5 @@ package Ada_Lib.String_Quote is
       Variable             : in   String;
       Value                : in   Ada.Strings.Unbounded.Unbounded_String
    ) return String;
-
--- function Quote (
---    Variable             : in   String;
---    Value                : in   Ada_Lib.Strings.Unlimited.String_Type
--- ) return String;
 
 end Ada_Lib.String_Quote;

@@ -8,7 +8,7 @@ with Ada_Lib.Strings;
 
 package body Ada_Lib.Parser is
 
-   use type Buffer_Type;
+-- use type Buffer_Type;
 
    procedure Dump (
       Iterator                   : in     Iterator_Type;

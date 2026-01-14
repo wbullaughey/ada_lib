@@ -2,7 +2,7 @@ with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
 --with Gnoga_Ada_Lib;
 

@@ -1,11 +1,11 @@
 with Ada.Characters.Handling;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Strings.Reg_Edit is
 
    use GNAT.Regpat;
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    ---------------------------------------------------------------
    function Compile (

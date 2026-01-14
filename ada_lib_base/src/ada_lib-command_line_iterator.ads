@@ -4,7 +4,7 @@ with Ada.Characters.Latin_1;
 --with Ada.Finalization;
 with Ada.Strings.Maps;
 with Ada_Lib.Options.Flags;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with Interfaces;
 

@@ -1,6 +1,6 @@
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Program;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with AUnit.Test_Filters.Ada_Lib;
 with GNOGA_Options;

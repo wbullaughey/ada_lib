@@ -1,6 +1,6 @@
 with Ada.Containers.Hashed_Maps;
 with Ada.Finalization;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada.Text_IO;
 -- with Ada_Lib.Strings;
 

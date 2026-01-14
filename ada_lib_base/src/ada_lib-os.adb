@@ -1,5 +1,5 @@
 with Ada.Characters.Latin_1;
-with Ada.Dynamic_Priorities;
+--with Ada.Dynamic_Priorities;
 with Ada.Text_IO; use  Ada.Text_IO;
 --with Ada_Lib.Options;
 with Ada_Lib.OS_Strings;
@@ -52,14 +52,14 @@ package body Ada_Lib.OS is
    -------------------------------------------------------------------
 
    begin
---    Put_Line ("Aborting " & (if Message'length > 0 then
---       Message & " "
---    else
---       "")
---    & " From " & From & ". Exception: " &
---    Ada.Exceptions.Exception_Name (Fault) &
---    " message: " & Ada.Exceptions.Exception_Message (Fault));
---    Ada_Lib.Trace.Trace_Message_Exception (Fault, Message, From);
+      Put_Line ("Aborting " & (if Message'length > 0 then
+         Message & " "
+      else
+         "")
+      & " From " & From & ". Exception: " &
+      Ada.Exceptions.Exception_Name (Fault) &
+      " message: " & Ada.Exceptions.Exception_Message (Fault));
+      Ada_Lib.Trace.Trace_Message_Exception (Fault, Message, From);
       Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    end Exception_Halt;

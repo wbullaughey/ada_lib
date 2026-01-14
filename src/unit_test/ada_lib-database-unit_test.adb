@@ -9,7 +9,7 @@ with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Database.Unit_Test is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
 
    ---------------------------------------------------------------
    procedure Check_Database_Value (

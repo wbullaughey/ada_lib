@@ -1,13 +1,13 @@
 -- utility to apply a regular expression to a string resulting in a transformation
 with Ada.Characters.Handling;
 with Ada.Unchecked_Deallocation;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Reg_Edit is
 
-   use type Ada_Lib.Strings.Unlimited.String_Type;
+-- use type Ada_Lib.Strings.Unlimited.String_Type;
    use GNAT.Regpat;
 
    procedure Deallocate is new Ada.Unchecked_Deallocation (

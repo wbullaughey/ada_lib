@@ -1,6 +1,6 @@
 with Ada.Characters.Latin_1;
 with Ada.Strings.Maps;
-with Ada_Lib.Strings.Unlimited;
+with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 
 package Ada_Lib.Parser is
 
