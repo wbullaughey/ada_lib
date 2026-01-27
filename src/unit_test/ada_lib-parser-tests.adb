@@ -4,14 +4,14 @@ with Ada.Text_IO;use Ada.Text_IO;
 -- with Ask;
 with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options.Flags;
---with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
 package body Ada_Lib.Parser.Tests is
 
-   Debug                         : Boolean renames Ada_Lib.Unit_Test.Debug;
+   Debug : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test.Parser_Debug;
 
 -- ---------------------------------------------------------------
 -- function Debug
@@ -20,7 +20,7 @@ package body Ada_Lib.Parser.Tests is
 --
 --    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
 --                         renames Ada_Lib.Options.AUnit_Lib.
---                            Aunit_Options_Constant_Class_Access (
+--                            Aunit_Program_Options_Constant_Class_Access (
 --                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
 -- begin
 --    return Options.Debug;
@@ -300,7 +300,7 @@ package body Ada_Lib.Parser.Tests is
 --
 --    Options  : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
 --                renames Ada_Lib.Options.AUnit_Lib.
---                   Aunit_Options_Class_Access (Ada_Lib.Options.Flags.
+--                   Aunit_Program_Options_Class_Access (Ada_Lib.Options.Flags.
 --                      Get_Ada_Lib_Modifiable_Program_Options).all;
 -- begin
 --    Options.Debug := True;

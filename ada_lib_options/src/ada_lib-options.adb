@@ -1,5 +1,6 @@
 with Ada.Assertions;
 with Ada.Strings.Unbounded;
+with Ada.Tags;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 package body Ada_Lib.Options is
@@ -88,7 +89,9 @@ package body Ada_Lib.Options is
    ----------------------------------------------------------------------------
 
    begin
-      Option_Log (Debug, Who & " called from " & From);
+      Option_Log (Debug, "Modifiable_Program_Options tag " &
+         Ada.Tags.Expanded_Name (Modifiable_Program_Options.all'tag) &
+         " " & Who & " called from " & From);
       Ada.Assertions.Assert (Modifiable_Program_Options /= Null,
          "Modifiable_Program_Options not set");
       return Abstract_Runtime_Options_Constant_Class_Access (

@@ -47,7 +47,7 @@ package Ada_Lib.Database.Unit_Test is
 
 -- function Get_Options (
 --    Test                       : in     Test_Case_Type
--- ) return GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access
+-- ) return GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access
 
 -- function Has_Database (
 --    Options                    : in     Options_Type
@@ -135,7 +135,7 @@ private
    -- this test setup spawns a dbdaemon application and terminates it in the tear down
    type Test_Case_Type is abstract new Ada_Lib.Unit_Test.Tests.Test_Case_Type with record
       Database                : Database_Class_Access := Null;
---    Options                 : GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access := Null;
+--    Options                 : GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access := Null;
    end record;
 
 end Ada_Lib.Database.Unit_Test;

@@ -147,7 +147,32 @@ package body Ada_Lib.Options.Verification is
    begin
       Log_In (Debug or Ada_Lib_Trace_Trace or Trace_Options,
          Quote ("parameter", Parameter));
-not_implemented;
+      for Index in Parameter'range  loop
+         declare
+            Trace    : constant Character := Parameter (Index);
+
+         begin
+            Log_Here (Trace_Options or Debug, Quote ("trace", Trace));
+            case Trace is
+
+--               when 'a' =>
+----                Ada_Lib_GNOGA.Base_Debug := True;
+--                  Ada_Lib_GNOGA.Debug := True;
+--
+----             when 'b' =>
+----                Ada_Lib_GNOGA.Base_Debug := True;
+--
+--               when 'd' =>
+--                  Ada_Lib_GNOGA.Debug := True;
+
+               when others =>
+                  Options.Bad_Option (Trace, "trace options");
+
+            end case;
+
+         end;
+      end loop;
+      Log_Out (Debug or Ada_Lib_Trace_Trace or Trace_Options);
    end Trace_Parse;
 
    ----------------------------------------------------------------------------

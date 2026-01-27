@@ -125,6 +125,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
          GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       end;
       Log_Out (Debug);
+
+exception
+   when Fault: others =>
+      Log_Exception (True, Fault);
+      raise;
+
    end Create_Main_Window_Handler;
 
    ---------------------------------------------------------------
@@ -176,6 +182,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
          Pause_On_Flag ("exit handler");
       end;
       Log_Out (Debug);
+
+exception
+   when Fault: others =>
+      Log_Exception (True, Fault);
+      raise;
+
    end Main_Window_With_Exit_Button_Handler;
 
    ---------------------------------------------------------------

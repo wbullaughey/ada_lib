@@ -33,7 +33,7 @@ package body Ada_Lib.Template.Tests is
                               ".parameters";
       Options              : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                               renames Ada_Lib.Options.AUnit_Lib.
-                                 Aunit_Options_Constant_Class_Access (
+                                 Aunit_Program_Options_Constant_Class_Access (
                                     Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Template             : Ada_Lib.Template.Compile.Template_Type;
       Raw                  : constant String := Ada_Lib.Template.Compile.Load (

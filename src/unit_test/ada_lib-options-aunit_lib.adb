@@ -5,7 +5,7 @@ with Ada_Lib.Configuration.Tests;
 with Ada_Lib.Database.Server.Tests;
 with Ada_Lib.Directory.Test;
 with Ada_Lib.Help;
-with Ada_Lib.Lock.Tests;
+--with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Create;
@@ -26,12 +26,12 @@ with Ada_Lib.Unit_Test; --.GNOGA;
 --with AUnit.Ada_Lib.Options;
 --with Command_Name;
 --with Debug_Options;
-with GNOGA_Ada_Lib;
-
---pragma Elaborate_All (Ada_Lib.Command_Line_Iterator);
+--with GNOGA_Ada_Lib;
 
 -- tests for the Ada_Lib unit tests
 package body Ada_Lib.Options.AUnit_Lib is
+
+-- use type Ada_Lib.Options.Flag_List_Type;
 
    Debug          : Boolean renames AUnit.Debug;
    Trace_Option                  : constant Character := 't';
@@ -41,8 +41,10 @@ package body Ada_Lib.Options.AUnit_Lib is
                                           Trace_Option, Unmodified_flag);
    Options_Without_Parameters    : aliased constant
                                     Flag_List_Type :=
+                                       Create.Create_One (
+                                          't', Ada_Lib.Help.Modifier) &
                                        Create.Create_Multiple (
-                                          "dtT", Ada_Lib.Help.Trace_Modifier);
+                                          "dT", Ada_Lib.Help.Unmodified_Flag);
    Trace_Modifier             : character renames Ada_Lib.Help.Trace_Modifier;
 
    -------------------------------------------------------------------------
@@ -51,7 +53,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 
       Options  : AUnit_Lib.Aunit_Program_Options_Type'class
                   renames AUnit_Lib.
-                     Aunit_Options_Constant_Class_Access (
+                     Aunit_Program_Options_Constant_Class_Access (
                         Get_Ada_Lib_Read_Only_Program_Options).all;
       Options_Selection
                : AUnit_Lib.Options_Selection_Type renames
@@ -110,6 +112,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 
          ) and then
          Options.GNOGA_Unit_Test_Options.Initialize and then
+         Options.GNOGA_Ada_Lib_Option.Initialize and then
          Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
             Options).Initialize,
          Debug or Trace_Options,
@@ -193,7 +196,10 @@ package body Ada_Lib.Options.AUnit_Lib is
                   Options.Database_Only.Process_Option (Iterator, Option)
 
             ) or else
-            Options.GNOGA_Unit_Test_Options.Process_Option (Iterator, Option) or else
+            Options.GNOGA_Ada_Lib_Option.Process_Option (
+               Iterator, Option) or else
+            Options.GNOGA_Unit_Test_Options.Process_Option (
+               Iterator, Option) or else
             Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
                Options).Process_Option (Iterator, Option),
             Trace_Options or Debug, Option.Image & " processed");
@@ -231,7 +237,7 @@ package body Ada_Lib.Options.AUnit_Lib is
          Put_Line ("      m               Mail Test");
          Put_Line ("      o               Ada_Lib.Options.AUnit_Lib options");
 --       Put_Line ("      r               suites");
-         Put_Line ("      R               Test program trace");
+         Put_Line ("      R               Tester_Debug");
          Put_Line ("      s               Socket Stream Test");
          Put_Line ("      S               Database server Test");
          Put_Line ("      t               Template Test");
@@ -264,10 +270,11 @@ package body Ada_Lib.Options.AUnit_Lib is
             Options.Database_Only.Program_Help (Help_Mode);
 
       end case;
+      Options.GNOGA_Ada_Lib_Option.Program_Help (Help_Mode);
       Options.GNOGA_Unit_Test_Options.Program_Help (Help_Mode);
-      GNOGA_Ada_Lib.Program_Help (Help_Mode);
       Unit_Test.Ada_Lib_Unit_Test_Program_Options_Type (
          Options).Program_Help (Help_Mode);
+
       Log_Out (Debug or Trace_Options);
    end Program_Help;
 
@@ -332,7 +339,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Configuration.Tests.Debug := True;
                         Ada_Lib.Database.Server.Tests.Debug := True;
                         Unit_Test.Ada_Lib_Help_Unit_Test.Debug := True;
-                        Ada_Lib.Lock.Tests.Debug := True;
+                        Unit_Test.Ada_Lib_Lock_Unit_Test.Debug := True;
                         Ada_Lib.Mail.Tests.Debug := True;
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;
                         Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Debug := True;
@@ -345,7 +352,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Trace_Tests_Debug_Test := True;
                         Trace_Tests_Debug_Tests := True;
                         Debug := True;
-                        Options.Tester_Debug := True;
+                        Unit_Test.Ada_Lib_AUnit.Tester_Debug := True;
 
                      when 'A' =>
                         AUnit.Debug := True;
@@ -366,7 +373,7 @@ package body Ada_Lib.Options.AUnit_Lib is
                         Ada_Lib.Socket_IO.Client.Unit_Test.Debug := True;
 
                      when 'l' =>
-                        Ada_Lib.Lock.Tests.Debug := True;
+                        Unit_Test.Ada_Lib_Lock_Unit_Test.Debug := True;
 
                      when 'm' =>
                         Ada_Lib.Mail.Tests.Debug := True;
@@ -378,7 +385,7 @@ package body Ada_Lib.Options.AUnit_Lib is
 --                      Debug := True;
 
                      when 'R' =>
-                        Options.Tester_Debug := True;
+                        Unit_Test.Ada_Lib_AUnit.Tester_Debug := True;
 
                      when 's' =>
                         Ada_Lib.Socket_IO.Stream_IO.Unit_Test.Debug := True;

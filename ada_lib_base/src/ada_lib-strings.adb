@@ -1,7 +1,7 @@
 with Ada.Calendar;
 with Ada.Characters.Handling;
 with Ada.Strings.Maps;
---with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+with Ada_Lib.Options;
 with Ada_Lib.Substiture_For_Non_Alpha;
 with Ada_Lib.Time;
 --with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -12,6 +12,8 @@ with System.Address_Image;
 package body Ada_Lib.Strings is
 
    use type Ada.Calendar.Time;
+
+   Debug : Boolean renames Ada_Lib.Options.Ada_Lib_Options.Strings_Debug;
 
    -------------------------------------------------------------------
    function Format (

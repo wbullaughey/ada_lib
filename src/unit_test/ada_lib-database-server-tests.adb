@@ -85,7 +85,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
       Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
@@ -142,7 +142,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test               : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
@@ -209,7 +209,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
       Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
@@ -264,7 +264,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
@@ -320,7 +320,7 @@ package body Ada_Lib.Database.Server.Tests is
                                        Ada_Lib.Database.No_Vector_Index, "", Local_Value);
       Update_Mode                : constant Ada_Lib.Database.Updater.Update_Mode_Type := Ada_Lib.Database.Updater.Unique;
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
       Subscription               : aliased Ada_Lib.Database.Subscription.Tests.Subscription_Type;
@@ -403,7 +403,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
@@ -547,7 +547,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                     : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
@@ -617,7 +617,7 @@ package body Ada_Lib.Database.Server.Tests is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
@@ -715,7 +715,7 @@ package body Ada_Lib.Database.Server.Tests is
    ---------------------------------------------------------------
 
 --    This_Test                  : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
       Updated_Name_Value         : constant Ada_Lib.Database.Name_Value_Type := Name_Value_1;
@@ -788,7 +788,7 @@ package body Ada_Lib.Database.Server.Tests is
                                  Any_Kept                   => Ada_Lib.Database.Updater.Always,
                                  Any_Unsubscribed           => Ada_Lib.Database.Updater.Unique);
       This_Test               : Server_Test_Type renames Server_Test_Type (Test);
---    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
       Server                     : constant Ada_Lib.Database.Server.Server_Access := Server_State.Get_Server;
 
@@ -890,7 +890,7 @@ package body Ada_Lib.Database.Server.Tests is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
                                     Table_Class_Access := new Ada_Lib.Database.

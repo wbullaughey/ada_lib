@@ -7,7 +7,7 @@ with Ada.Unchecked_Conversion;
 
 package body Hex_IO is
 
--- use type Ada_Lib.Strings.Unlimited.String_Type;
+   Debug : Boolean renames Ada_Lib.Options.Ada_Lib_Options.Hex_Debug;
 
    package Unsigned_8_IO is new Ada.Text_IO.Modular_IO (
       Interfaces.Unsigned_8);

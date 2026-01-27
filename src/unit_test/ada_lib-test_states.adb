@@ -1,12 +1,15 @@
 with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Strings;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with AUnit.Test_Suites;
 with Hex_IO;
+with System;
 
 package body Ada_Lib.Test_States is
 
--- use type Window_Class_Access;
+   use type System.Address;
 
    function Image (
       Window           : in      Window_Constant_Class_Access
@@ -17,29 +20,31 @@ package body Ada_Lib.Test_States is
    ) return String;
 
    function Get_State (
-      Window               : in     Window_Constant_Class_Access
+      Window               : in     Window_Constant_Class_Access;
+      From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access;
 
    function Get_State (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class
+      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access;
 
    function Hash_Equivalent (
-      Left, Right          : in     Window_Constant_Class_Access
+      Left, Right          : in     System.Address
    ) return Boolean;
 
    function Window_Hash (
-      Key                  : in     Window_Constant_Class_Access
+      Key                  : in     System.Address
    ) return Ada.Containers.Hash_Type
-   with Pre => Key /= Null;
+   with Pre => Key /= System.Null_Address;
 
    package State_Package  is new Ada.Containers.Indefinite_Hashed_Maps (
-      Key_Type       => Window_Constant_Class_Access,
+      Key_Type       => System.Address,
       Element_Type   => State_Access,
       Hash           => Window_Hash,
       Equivalent_Keys=> Hash_Equivalent);
 
--- Current_State_ID  : State_ID_Type;
+   procedure Dump;
 
    Debug             : Boolean renames Options.Unit_Test.Ada_Lib_Test_States.Debug;
    States            : State_Package.Map;
@@ -47,17 +52,21 @@ package body Ada_Lib.Test_States is
    ----------------------------------------------------------------
    procedure Allocate_State (
       Window               : in     Window_Class_Access;
-      Window_Connection    : in     Window_Connection_Class_Access := Null) is
+      Window_Connection    : in     Window_Connection_Class_Access) is
    ----------------------------------------------------------------
 
       State                         : constant State_Access := new State_Type;
 
    begin
-      Log_In (Debug, "window " & Image (Window_Constant_Class_Access (Window)) &
+      Log_In (Debug, "window " & Image (Window_Constant_Class_Access (Window))  &
+         " address " & Ada_Lib.Strings.Image (Window.all'address) &
          " connection " & Image (Window_Connection));
       State.Window := Window_Constant_Class_Access (Window);
       State.Window_Connection := Window_Connection;
-      State_Package.Insert (States, Window_Constant_Class_Access (Window), State);
+      State_Package.Insert (States, Window.all'address, State);
+      if Debug then
+         Dump;
+      end if;
       Log_Out (Debug);
    end Allocate_State;
 
@@ -79,24 +88,70 @@ package body Ada_Lib.Test_States is
    begin
       Log_Here (Debug, "called from " & From);
       if Window /= Null then
-         State_Package.Delete (States, Window_Constant_Class_Access (Window));
+         State_Package.Delete (States, Window.all'address);
       end if;
    end Clear_Window_Connection_Data;
 
    ----------------------------------------------------------------
+   procedure Dump  is
+   ----------------------------------------------------------------
+
+      -------------------------------------------------------------
+      procedure Process (
+         Position    : in State_Package.Cursor) is
+      -------------------------------------------------------------
+
+         Element     : constant State_Access :=
+                        State_Package.Constant_Reference (States, Position);
+
+      begin
+         Put_Line ("key: " &
+            Ada_Lib.Strings.Image (State_Package.Key (Position)) &
+            " hash" & Window_Hash (Element.all'address)'img &
+            " element: " & Ada_Lib.Strings.Image (Element.all'address));
+      end Process;
+      -------------------------------------------------------------
+
+   begin
+      State_Package.Iterate (States, Process'access);
+   end Dump;
+
+   ----------------------------------------------------------------
    function Get_State (
-      Window               : in     Window_Constant_Class_Access
+      Window               : in     Window_Constant_Class_Access;
+      From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access is
    ----------------------------------------------------------------
 
    begin
-      Log_Here (Debug, "window: " & Image (Window));
-      return State_Access (State_Package.Element (States, Window));
+      Log_Here (Debug, "window: " & Image (Window) & " address " &
+         Ada_Lib.Strings.Image (Window.all'address) &
+         " from " & From);
+      if Debug then
+         Dump;
+      end if;
+
+      if State_Package.Contains (States, Window.all'address) then
+log_here;
+         return State_Access (State_Package.Element (
+            States, Window.all'address));
+      else
+         raise Failed with "window " &
+            Ada_Lib.Strings.Image (Window.all'address) &
+            " not in states";
+      end if;
+
+   exception
+      when Fault: others =>
+         Log_Exception (True, Fault);
+         raise;
+
    end Get_State;
 
    ----------------------------------------------------------------
    function Get_State (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class
+      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access is
    ----------------------------------------------------------------
 
@@ -117,10 +172,13 @@ package body Ada_Lib.Test_States is
       -------------------------------------------------------------
 
    begin
+      Log_In (Debug, "called from " & From);
       State_Package.Iterate (States, Process'access);
       if Result = Null then
+         Log_Exception (Debug, "connection not found");
          raise Failed with Image (Window_Connection) & " not found";
       end if;
+      Log_Out (Debug);
       return Result;
    end Get_State;
 
@@ -182,7 +240,7 @@ package body Ada_Lib.Test_States is
 
    ----------------------------------------------------------------
    function Hash_Equivalent (
-      Left, Right          : in     Window_Constant_Class_Access
+      Left, Right          : in     System.Address
    ) return Boolean is
    ----------------------------------------------------------------
 
@@ -192,7 +250,7 @@ package body Ada_Lib.Test_States is
 
    ----------------------------------------------------------------
    function Window_Hash (
-      Key                  : in     Window_Constant_Class_Access
+      Key                  : in     System.Address
    ) return Ada.Containers.Hash_Type is
    ----------------------------------------------------------------
 
@@ -201,6 +259,7 @@ package body Ada_Lib.Test_States is
       pragma Import (Ada, Result);       -- Optional: suppresses initialization of Y
 
    begin
+log_here ("hash " & Result'img);
       return Result;
    end Window_Hash;
 
@@ -247,6 +306,16 @@ package body Ada_Lib.Test_States is
             " not allocated called from ", From);
       end;
    end Has_Window_Connection_Data;
+
+-- ----------------------------------------------------------------
+-- function Image (
+--    Window           : in      State_Constant_Class_Access
+-- ) return String is
+-- ----------------------------------------------------------------
+--
+-- begin
+--    return Hex_IO.Modular_Hex_Address (Window.all'address, 8);
+-- end Image;
 
    ----------------------------------------------------------------
    function Image (

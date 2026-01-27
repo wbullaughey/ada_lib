@@ -274,7 +274,9 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       ----------------------------------------------------------------------------
       function Verify_Set_Up (
-         Test                       : in     Test_Type
+         Test                       : in     Test_Type;
+         Expect_True                : in     Boolean := True;
+         Here                       : in     String := Ada_Lib.Trace.Here
       )  return Boolean is
       ----------------------------------------------------------------------------
 
@@ -283,14 +285,18 @@ package body Ada_Lib.Unit_Test.Test_Cases is
 
       begin
          return Log_Here (Result,
-            Debug or Trace_Pre_Post_Conditions or not Result,
+            Debug or else Trace_Pre_Post_Conditions or else
+               not (Expect_True = Result),
             "Set_Up_Succeeded " & Test.Set_Up_Succeeded'img &
-            " Set_Up_Failed " & Test.Set_Up_Failed'img);
+            " Set_Up_Failed " & Test.Set_Up_Failed'img &
+            " called from " & Here);
       end Verify_Set_Up;
 
       ----------------------------------------------------------------------------
       function Verify_Tear_Down (
-         Test                       : in     Test_Type
+         Test                       : in     Test_Type;
+         Expect_True                : in     Boolean := True;
+         Here                       : in     String := Ada_Lib.Trace.Here
       ) return Boolean is
       ----------------------------------------------------------------------------
 
@@ -298,9 +304,11 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                                        not Test.Tear_Down_Failed;
       begin
          return Log_Here (Result,
-            Debug or Trace_Pre_Post_Conditions or not Result,
+            Debug or else Trace_Pre_Post_Conditions or else
+               not (Expect_True = Result),
             "Torn_Down " & Test.Torn_Down'img &
-            " Tear_Down_Failed " & Test.Tear_Down_Failed'img);
+            " Tear_Down_Failed " & Test.Tear_Down_Failed'img &
+            " called from " & Here);
 
       end Verify_Tear_Down;
 

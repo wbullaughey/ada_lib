@@ -64,6 +64,4 @@ package Ada_Lib.Specifications is
 
    end Specification_Package;
 
-   Debug                         : Boolean := False;
-
 end Ada_Lib.Specifications;

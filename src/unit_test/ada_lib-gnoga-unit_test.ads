@@ -24,10 +24,11 @@ package Ada_Lib.GNOGA.Unit_Test is
    type Connection_Class_Access  is access all Connection_Type'class;
 
    type GNOGA_Tests_Type (
-      Initialize_GNOGA  : Boolean;
-      Test_Driver       : Boolean) is abstract limited new
-                  Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
-      Main_Window       : Standard.Gnoga.Gui.Window.Pointer_To_Window_Class := Null;
+      Initialize_GNOGA
+                  : Boolean;
+      Test_Driver : Boolean) is abstract limited new
+                     Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
+      Main_Window : aliased Standard.Gnoga.Gui.Window.Pointer_To_Window_Class := Null;
    end record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
@@ -36,7 +37,9 @@ package Ada_Lib.GNOGA.Unit_Test is
    procedure Set_Up_With_Handler (
       Test           : in out GNOGA_Tests_Type'class;
       Test_Handler   : in     Standard.Gnoga.Application.Multi_Connect.
-                                 Application_Connect_Event
+                                 Application_Connect_Event;
+      Wait_For_Initialization
+                     : in     Boolean
    ) with Post => Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type'class (
                      Test).Verify_Set_Up;
 

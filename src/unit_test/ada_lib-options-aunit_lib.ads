@@ -5,8 +5,8 @@ with Ada_Lib.Options.Template;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Trace;
 with Ada_Lib.Unit_Test.Tests;
---with AUnit.Ada_Lib.Options;
 with AUnit.Test_Suites;
+with Gnoga_Ada_Lib;
 
 -- options for unit tests of Ada_Lib
 package Ada_Lib.Options.AUnit_Lib is
@@ -44,9 +44,10 @@ package Ada_Lib.Options.AUnit_Lib is
                                  Multi_Test) with record
       Database                : Ada_Lib.Database.Connection.
                                  Abstract_Database_Class_Access := Null;
+      GNOGA_Ada_Lib_Option    : Gnoga_Ada_Lib.GNOGA_Ada_Lib_Option_Type;
       GNOGA_Unit_Test_Options : Ada_Lib.GNOGA.Unit_Test.Options.
                                  GNOGA_Unit_Test_Options_Type;
-      Tester_Debug            : Boolean := False;
+--    Tester_Debug            : Boolean := False;
       case Options_Selection is
 
          when Ada_Lib_Unit_Test_Only =>
@@ -65,16 +66,16 @@ package Ada_Lib.Options.AUnit_Lib is
       end case;
    end record;
 
-   type Aunit_Options_Class_Access
+   type Aunit_Program_Options_Class_Access
                                  is access all Aunit_Program_Options_Type'class;
-   type Aunit_Options_Constant_Class_Access
+   type Aunit_Program_Options_Constant_Class_Access
                                  is access constant Aunit_Program_Options_Type'class;
 
    Failure                       : exception;
 
 -- function Get_Modifiable_AUnit_Options (
 --    From                       : in  String := Ada_Lib.Trace.Here
--- ) return Aunit_Options_Class_Access
+-- ) return Aunit_Program_Options_Class_Access
 -- with pre => Ada_Lib.Options.Have_Options;
 
    overriding
@@ -86,7 +87,7 @@ package Ada_Lib.Options.AUnit_Lib is
 
 -- procedure Set_Options;
 
--- AUnit_Lib_Options             : Aunit_Options_Constant_Class_Access := Null;
+-- AUnit_Lib_Options             : Aunit_Program_Options_Constant_Class_Access := Null;
 
 private
 

@@ -49,7 +49,7 @@ package Ada_Lib.Test_States is
 
    procedure Allocate_State (
       Window               : in     Window_Class_Access;
-      Window_Connection    : in     Window_Connection_Class_Access := Null
+      Window_Connection    : in     Window_Connection_Class_Access
    ) with Pre  => Window /= Null and then
                   Window_Connection /= Null;
 

@@ -1,6 +1,5 @@
 with Ada_Lib.Options.Unit_Test;
 --with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
---with Ada_Lib.Test_States;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with GNOGA_Ada_Lib.Base;
 --with Gnoga.Gui.Window;
@@ -21,24 +20,26 @@ package body Ada_Lib.GNOGA.Unit_Test is
    procedure Set_Up_With_Handler (
       Test           : in out GNOGA_Tests_Type'class;
       Test_Handler   : in     Standard.Gnoga.Application.Multi_Connect.
-                                 Application_Connect_Event) is
+                                 Application_Connect_Event;
+      Wait_For_Initialization
+                     : in     Boolean) is
    ---------------------------------------------------------------
 
       Options                 : GNOGA_Options.GNOGA_Options_Type'class
                                  renames GNOGA_Options.GNOGA_Options.all;
    begin
-log_here ("debug " & debug'img & " Trace_Set_Up_Tear_Down " & Trace_Set_Up_Tear_Down'img);
       Log_In (Debug or Trace_Set_Up_Tear_Down,
          "Initialize_GNOGA " & Test.Initialize_GNOGA'img &
-         " test driver " & Test.Test_Driver'img);
+         " test driver " & Test.Test_Driver'img &
+         " Wait_For_Initialization " & Wait_For_Initialization'img);
       Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
---    Test.Connection_Data := Ada_Lib.Test_States.Get_Window_Connection_Data;
       if not Test.Test_Driver then
          Log_Here (Debug, -- "URL_Opened " & URL_Opened'img &
             " Initialize_GNOGA " & Test.Initialize_GNOGA'img);
          if Test.Initialize_GNOGA then
             Log_Here (Debug);
             Standard.GNOGA.Application.Open_URL;
+Log_Here (Debug);
             GNOGA_Ada_Lib.Base.Initialize_GNOGA (Test_Handler,
                Application_Title    => "Unit_Test",
    --          Start_Message_Loop   => True,

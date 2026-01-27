@@ -4,12 +4,14 @@ with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
 --with Ada_Lib.Timer;
 with Ada_lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
 with Gnoga.Application.Multi_Connect;
+--with Gnoga_Ada_Lib;
 
 procedure Test_Ada_Lib is
 
@@ -23,17 +25,18 @@ begin
          Multi_Test        => True,
          Options_Selection => Ada_Lib.Options.AUnit_Lib.
                                  Ada_Lib_Unit_Test_With_Database);
-      Debug          : Boolean renames AUnit_Options.Tester_Debug;
+      Debug          : Boolean renames
+                        Ada_Lib.Options.Unit_Test.Ada_Lib_AUnit.Tester_Debug;
 
    begin
 --Debug := True;
       Ada_Lib.Options.Set_Ada_Lib_Program_Options (Aunit_Options'unchecked_access);
-      if Aunit_Options.Initialize then
+      if    Aunit_Options.Initialize then
          Log_Here (Debug);
          if Aunit_Options.Process (
-               Include_Options      => True,
-               Include_Non_Options  => False,
-               Modifiers            => Ada_Lib.Help.Modifiers) then
+                  Include_Options      => True,
+                  Include_Non_Options  => False,
+                  Modifiers            => Ada_Lib.Help.Modifiers) then
             Log_Here (Debug);
             Aunit_Options.Post_Process;
             Log_Here (Debug);

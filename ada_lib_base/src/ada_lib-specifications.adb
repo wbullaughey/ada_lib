@@ -1,10 +1,9 @@
---with Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
---with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Options;
 
 package body Ada_Lib.Specifications is
 
--- use type Ada_Lib.Strings.String_Constant_Access;
+   Debug : Boolean renames Ada_Lib.Options.Ada_Lib_Options.Specifications_Debug;
 
    -------------------------------------------------------------------
    function Get_Option (

@@ -9,7 +9,6 @@ with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
 --with AUnit.Ada_Lib; -- debug moved to Ada_Lib.Options.Aunit
@@ -21,17 +20,11 @@ with Ada_Lib.Trace; use Ada_Lib.Trace;
 package body Ada_Lib.Options.Unit_Test is
 
 
-   Debug       : Boolean renames Unit_Test.Ada_Lib_Options_Unit_Test.Debug;
+   Debug       : Boolean renames Ada_Lib_Options_Unit_Test.Debug;
    Debug_All   : Boolean renames Ada_Lib_Options.Debug_All;
-   Driver_List_Option         : constant Character := 'D';
+   Driver_List_Option         : constant Character := 'd';
    Trace_Option               : constant Character := 'U';
    Trace_Modifier             : character renames Ada_Lib.Help.Trace_Modifier;
--- Options_With_Parameters
---                            : aliased constant Ada_Lib.Options.Options_Type :=
---                               Ada_Lib.Options.Create_Options (
---                                  "es" & Trace_Option, Unmodified_flag) &
---                               Ada_Lib.Options.Create_Options (
---                                  "AnR", Ada_Lib.Help.Trace_Modifier);
    Options_With_Parameters    : aliased constant
                                  Ada_Lib.Options.Flag_List_Type :=
                                     Ada_Lib.Options.Create.Create_Multiple (
@@ -179,20 +172,20 @@ package body Ada_Lib.Options.Unit_Test is
          "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
       case Options.Random_Seed_Mode is
 
-         when Ada_Lib.Options.Unit_Test.Default_Seed =>
+         when Default_Seed =>
             Options.Random_Seeds := (others =>
-               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+               Default_Random_Seed);
 
-         when Ada_Lib.Options.Unit_Test.Seed_Not_Set =>
+         when Seed_Not_Set =>
             Options.Random_Seeds := (others =>
-               Ada_Lib.Options.Unit_Test.Default_Random_Seed);
+               Default_Random_Seed);
             Options.Random_Seed_Mode :=
-               Ada_Lib.Options.Unit_Test.Default_Seed;
+               Default_Seed;
 
-         when Ada_Lib.Options.Unit_Test.Specified_Seed =>
+         when Specified_Seed =>
             List_Seeds; -- should already be set
 
-         when Ada_Lib.Options.Unit_Test.Random_Seed =>
+         when Random_Seed =>
             declare
                Now         : constant Ada.Real_Time.Time :=
                               Ada.Real_Time.Clock;
@@ -479,19 +472,29 @@ package body Ada_Lib.Options.Unit_Test is
             Trace_Option & ")");
          Put_Line ("      a               all");
          Put_Line ("      A               all unit tests");
+         Put_Line ("      d               Unit_Test Database");
          Put_Line ("      e               Ada_Lib.Trace.Trace_Exceptions");
          Put_Line ("      E               Ada_Lib.Evemt.Unit_Test.Debug");
+         Put_Line ("      f               Fixtures Debug");
+         Put_Line ("      g               Database Get,Put Debug");
          Put_Line ("      p               test programs");
+         Put_Line ("      P               Parser Debug");
          Put_Line ("      r               Runtime_Options");
+         Put_Line ("      R               Reporter Debug");
          Put_Line ("      s               Trace Set_Up Tear_Down");
+         Put_Line ("      S               Database Server Tests");
          Put_Line ("      t               Ada_Lib.Test.Debug");
          Put_Line ("      T               Ada_Lib.Trace.Debug_Trace");
          Put_Line ("      u               Ada_Lib.Unit_Test.Debug Library");
          Put_Line ("      U               Ada_Lib.Unit_Test.Test_Cases.Debug Library");
          Put_Line ("      " & Trace_Modifier &
-                              "a              AUnit.Ada_Lib.Debug");
+                         "a              AUnit.Ada_Lib.Debug");
          Put_Line ("      " & Trace_Modifier &
-                              "s              Ada_Lib.Unit_Test.Test_States.Debug");
+                         "s              Ada_Lib.Unit_Test.Test_States.Debug");
+         Put_Line ("      " & Trace_Modifier &
+                         "S              Database Server Debug");
+         Put_Line ("      " & Trace_Modifier &
+                         "u              Unit_Test Debug");
 
          New_Line;
          Put_Line ("Enable suites disabled by default (-S)");
@@ -594,19 +597,29 @@ package body Ada_Lib.Options.Unit_Test is
 
                   when 'a' =>
                      Debug := True;
-                     Ada_Lib_Event_Unit_Test.Debug := True;
---                   GNOGA.GNOGA_Unit_Test_Debug := True;
-                     Ada_Lib_Options_Unit_Test.Debug := True;
                      Ada_Lib.Trace.Trace_Exceptions := True;
                      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
                      Ada_Lib.Trace.Trace_Set_Up_Tear_Down := True;
                      Ada_Lib.Trace.Trace_Tests := True;
-                     Unit_Test.Ada_Lib_Unit_Test_Test_Cases.Debug := True;
+                     Ada_Lib_Database_Unit_Test.Debug := True;
+                     Ada_Lib_Database_Unit_Test.Get_Put_Debug := True;
+                     Ada_Lib_Database_Unit_Test.Server_Tests_Trace := True;
+                     Ada_Lib_Database_Unit_Test.Subscribe_Debug := True;
+                     Ada_Lib_Event_Unit_Test.Debug := True;
+                     Ada_Lib_Options_Unit_Test.Debug := True;
+                     Ada_Lib_Unit_Test.Fixtures_Debug := True;
+                     Ada_Lib_Unit_Test.Parser_Debug := True;
+                     Ada_Lib_Unit_Test.Reporter_Debug := True;
+                     Ada_Lib_Unit_Test.Tests_Debug := True;
                      Options.Debug := True;
-                     Unit_Test.Ada_Lib_Test_States.Debug := True;
+                     Ada_Lib_Unit_Test_Test_Cases.Debug := True;
+                     Ada_Lib_Test_States.Debug := True;
 
                   when 'A' =>
                      Ada_Lib.Trace.Trace_Tests := True;
+
+                  when 'd' =>
+                     Ada_Lib_Database_Unit_Test.Debug := True;
 
                   when 'e' =>
                      Ada_Lib.Trace.Trace_Exceptions := True;
@@ -614,14 +627,29 @@ package body Ada_Lib.Options.Unit_Test is
                   when 'E' =>
                      Ada_Lib_Event_Unit_Test.Debug := True;
 
-                  when 'r' =>
-                     Debug := True;
+                  when 'f' =>
+                     Ada_Lib_Unit_Test.Fixtures_Debug := True;
+
+                  when 'g' =>
+                     Ada_Lib_Database_Unit_Test.Get_Put_Debug := True;
 
                   when 'p' =>
                      Options.Debug := True;
 
+                  when 'P' =>
+                     Ada_Lib_Unit_Test.Parser_Debug := True;
+
+                  when 'r' =>
+                     Debug := True;
+
+                  when 'R' =>
+                     Ada_Lib_Unit_Test.Reporter_Debug := True;
+
                   when 's' =>
                      Ada_Lib.Trace.Trace_Set_Up_Tear_Down := True;
+
+                  when 'S' =>
+                     Ada_Lib_Database_Unit_Test.Server_Tests_Trace := True;
 
                   when 't' =>
                      Ada_Lib_Options_Unit_Test.Debug := True;
@@ -630,10 +658,10 @@ package body Ada_Lib.Options.Unit_Test is
                      Ada_Lib.Trace.Debug_Trace := True;
 
                   when 'u' =>
-                     Ada_Lib.Unit_Test.Debug := True;
+                     Ada_Lib_Unit_Test.Debug := True;
 
                   when 'U' =>
-                     Unit_Test.Ada_Lib_Unit_Test_Test_Cases.Debug := True;
+                     Ada_Lib_Unit_Test_Test_Cases.Debug := True;
 
                   when Trace_Modifier =>
                      Suboption := Ada_Lib.Options.Modified;
@@ -658,7 +686,16 @@ package body Ada_Lib.Options.Unit_Test is
                      Ada_Lib_Aunit.Debug := True;
 
                   when 's' =>
-                     Unit_Test.Ada_Lib_Test_States.Debug := True;
+                     Ada_Lib_Test_States.Debug := True;
+
+                  when 'S' =>
+                     Ada_Lib_Database_Unit_Test.Subscribe_Debug := True;
+
+                  when 't' =>
+                     Ada_Lib_Unit_Test.Tests_Debug := True;
+
+                  when 'u' =>
+                     Ada_Lib_Unit_Test.Debug := True;
 
                   when others =>
                      Options.Bad_Option (Quote (

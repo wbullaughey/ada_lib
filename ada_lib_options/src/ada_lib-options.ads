@@ -210,37 +210,6 @@ package Ada_Lib.Options is
       Message                    : in     String := "";
       Where                      : in     String := Options_Here) is abstract;
 
--- procedure Bad_Option (
---    Options                    : in     Abstract_Runtime_Options_Type;
---    What                       : in     Character;
---    Message                    : in     String := "";
---    Where                      : in     String := Options_Here) is abstract;
---
--- procedure Bad_Option (
---    Options                    : in     Abstract_Runtime_Options_Type;
---    What                       : in     String;
---    Message                    : in     String := "";
---    Where                      : in     String := Options_Here) is abstract;
---
--- procedure Bad_Option (
---    Options                    : in     Abstract_Runtime_Options_Type;
---    Option                     : in     Abstract_Runtime_Options_Type'class;
---    Message                    : in     String := "";
---    Where                      : in     String := Options_Here) is abstract;
-
--- function Has_Option (   -- added 2/22/24 to resolve issue with multple option lists
---    Options                    : in     Abstract_Runtime_Options_Type;
---    Option                     : in     Abstract_Runtime_Options_Type
--- ) return Boolean is abstract;
-
--- procedure Bad_Trace_Option (
---    Options                    : in     Abstract_Runtime_Options_Type;
---    Trace_Option               : in     Character;
---    What                       : in     Character;
---    Modifier          : in     Character := Ada.Characters.Latin_1.Nul;
---    Message                    : in     String := "";
---    Where                      : in     String := Options_Here) is abstract;
---
    procedure Display_Help (            -- common for all programs that use GNOGA_Options
                               -- prints full help, aborts program
      Options                     : in     Abstract_Runtime_Options_Type;  -- only used for dispatch
@@ -370,7 +339,7 @@ package Ada_Lib.Options is
 
    package Ada_Lib_GNOGA is  -- options for the Ada_Lib GNOGA library
       Debug                      : aliased Boolean := False;
-      Base_Debug                 : aliased Boolean := False;
+--    Base_Debug                 : aliased Boolean := False;
    end Ada_Lib_GNOGA;
 
    package Ada_Lib_Help is
@@ -389,10 +358,13 @@ package Ada_Lib.Options is
       Debug                      : Boolean := False;
    end Ada_Lib_Mail;
 
-   package Ada_Lib_Options is
+   package Ada_Lib_Options is -- switch to using this for all 1/18/26
       Debug                         : Boolean := False;
       Debug_All                     : constant Boolean := False;
       Debug_Options                 : constant Boolean := False;
+      Hex_Debug                     : Boolean := False;
+      Specifications_Debug          : Boolean := False;
+      Strings_Debug                 : Boolean := False;
       Use_Options_Prefix            : constant Boolean := True;
    end Ada_Lib_Options;
 
@@ -404,10 +376,6 @@ package Ada_Lib.Options is
       Debug                         : Boolean := False;
    end Ada_Lib_Options_Program;
 
--- package Ada_Lib_Options_Unit_Test is
---    Debug                         : Boolean := False;
--- end Ada_Lib_Options_Unit_Test;
-
    package Ada_Lib_Options_Runstring is
       Debug                         : Boolean := False;
    end Ada_Lib_Options_Runstring;
@@ -415,12 +383,6 @@ package Ada_Lib.Options is
    package Ada_Lib_Options_Template is
       Debug                         : Boolean := False;
    end Ada_Lib_Options_Template;
-
--- package Ada_Lib_Options_Trace_Tests is
---    Debug                         : Boolean := False;
---    Debug_Test                    : Boolean := False;
---    Debug_Tests                   : Boolean := False;
--- end Ada_Lib_Options_Trace_Tests;
 
    package Ada_Lib_Options_Verification is
       Debug                         : Boolean := False;
@@ -469,8 +431,8 @@ package Ada_Lib.Options is
    end Aunit;
 
    package GNOGA is  -- options for the GNOGA Library
---    Ada_Lib_Debug     : aliased Boolean := False; -- GNOGA library
-      Debug             : aliased Boolean := False; -- GNOGA library
+      Base_Debug        : aliased Boolean := False; -- GNOGA_Ada_Lib.Base
+      Library_Debug     : aliased Boolean := False; -- GNOGA library
       Server_Debug      : aliased Boolean := False; -- GNOGA server
       Options_Debug     : aliased Boolean := False; -- GNOGA Options
 --    GNOGA_Trace             : aliased Boolean := False;

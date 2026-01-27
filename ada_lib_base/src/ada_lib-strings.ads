@@ -145,6 +145,4 @@ package Ada_Lib.Strings is
 
    procedure Make;               -- dummy used to force recomplation
 
-   Debug                   : Boolean := False;
-
 end Ada_Lib.Strings;

@@ -6,7 +6,7 @@ with Ada_Lib.Unit_Test.Tests;
 
 package Ada_Lib.Command_Line_Iterator.Tests is
 
--- use type Ada_Lib.Options.Unit_Test.Aunit_Options_Constant_Class_Access;
+-- use type Ada_Lib.Options.Unit_Test.Aunit_Program_Options_Constant_Class_Access;
 
    Suite_Name                    : constant String := "Command_Line_Iterator";
 

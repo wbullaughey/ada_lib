@@ -42,9 +42,10 @@ procedure Ada_Lib.Test.Run_Suite (
 
    use type Ada_Lib.Options.Mode_Type;
 
-   Debug       : Boolean renames Ada_Lib.Options.Unit_Test.Ada_Lib_Aunit.Tester_Debug;
-   List_Suites                   : constant Boolean :=
-                                    Options.Mode = Ada_Lib.Options.List_Suites;
+   Debug       : Boolean renames
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_Aunit.Tester_Debug;
+   List_Suites : constant Boolean :=
+                  Options.Mode = Ada_Lib.Options.List_Suites;
 begin
 --Debug := True;
    Log_In (Debug, "list suites " & List_Suites'img);
@@ -178,6 +179,7 @@ begin
                Options.Mode);
 
          when Ada_Lib.Options.Run_Tests =>
+            Log_Here (Debug);
             Put_Line ("report Ada_Lib test results");
             Reporter.Report (Results, AUnit_Options);
 

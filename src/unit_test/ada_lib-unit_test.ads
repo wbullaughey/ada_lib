@@ -74,8 +74,6 @@ package Ada_Lib.Unit_Test is
         Routine_Name               : in     String
      ) return String;
 
-   Debug                         : Boolean := False;
-
 --private
 --
 --   -- derive all aunit tests from this type

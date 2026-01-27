@@ -129,7 +129,7 @@ package Ada_Lib.Options.Unit_Test is
 
    package Ada_Lib_Database_Unit_Test is
       Debug                         : Boolean := False;
-      Ada_Lib_Database_Unit_Test             : Boolean := False;
+      Get_Put_Debug                 : Boolean := False;
       Server_Tests_Trace            : Boolean := False;
       Subscribe_Debug               : Boolean := False;
    end Ada_Lib_Database_Unit_Test;
@@ -147,6 +147,10 @@ package Ada_Lib.Options.Unit_Test is
    package Ada_Lib_Help_Unit_Test is
       Debug                         : Boolean := False;
    end Ada_Lib_Help_Unit_Test;
+
+   package Ada_Lib_Lock_Unit_Test is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Lock_Unit_Test;
 
    package Ada_Lib_Options_Unit_Test is
       Debug                         : Boolean := False;
@@ -166,9 +170,22 @@ package Ada_Lib.Options.Unit_Test is
       Debug                         : Boolean := False;
    end Ada_Lib_Test_States;
 
+   package Ada_Lib_Unit_Test is
+      Debug                         : Boolean := False;
+      Fixtures_Debug                : Boolean := False;
+      Parser_Debug                  : Boolean := False;
+      Reporter_Debug                : Boolean := False;
+      Tests_Debug                   : Boolean := False;
+   end Ada_Lib_Unit_Test;
+
    package Ada_Lib_Unit_Test_Test_Cases is
       Debug                         : Boolean := False;
    end Ada_Lib_Unit_Test_Test_Cases;
+
+   package AUnit_Ada_Lib is
+      AUnit_Debug                   : Boolean := False;
+   end AUnit_Ada_Lib;
+
 
 private
 

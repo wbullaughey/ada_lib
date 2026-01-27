@@ -1,8 +1,11 @@
 with Ada_Containers;
+with Ada_Lib.Options.Unit_Test;
 
 package body Ada_Lib.Unit_Test.Reporter is
 
    use type Ada_Containers.Count_Type;
+
+   Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test.Reporter_Debug;
 
    ---------------------------------------------------------------
    overriding
@@ -22,6 +25,12 @@ package body Ada_Lib.Unit_Test.Reporter is
          end if;
       end if;
       Log_Out (Debug);
+
+exception
+   when Fault: others =>
+      Log_Exception (True, Fault);
+      raise;
+
    end Report;
 
 end Ada_Lib.Unit_Test.Reporter;

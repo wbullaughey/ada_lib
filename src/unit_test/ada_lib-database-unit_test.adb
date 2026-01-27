@@ -112,7 +112,7 @@ package body Ada_Lib.Database.Unit_Test is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return (case Test.Which_Host is
@@ -130,7 +130,7 @@ package body Ada_Lib.Database.Unit_Test is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Port;
@@ -249,7 +249,7 @@ package body Ada_Lib.Database.Unit_Test is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Debug, "Has_Local_DBDaemon " & Options.Database_Options.Has_Local_DBDaemon'img &
@@ -283,7 +283,7 @@ package body Ada_Lib.Database.Unit_Test is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Which_Host;

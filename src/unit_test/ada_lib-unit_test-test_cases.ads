@@ -45,11 +45,15 @@ package Ada_Lib.Unit_Test.Test_Cases is
          Here                       : in     String := Ada_Lib.Trace.Here);
 
       function Verify_Set_Up (
-         Test                       : in     Test_Type
+         Test                       : in     Test_Type;
+         Expect_True                : in     Boolean := True;
+         Here                       : in     String := Ada_Lib.Trace.Here
       ) return Boolean;
 
       function Verify_Tear_Down (
-         Test                       : in     Test_Type
+         Test                       : in     Test_Type;
+         Expect_True                : in     Boolean := True;
+         Here                       : in     String := Ada_Lib.Trace.Here
       ) return Boolean;
 
    private

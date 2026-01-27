@@ -1,5 +1,6 @@
 with AUnit.Assertions;
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.OS;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
@@ -9,7 +10,9 @@ package body Ada_Lib.Unit_Test.Fixtures is
 
 -- use Ada_Lib.Strings.Unlimited;
 
-   Current_Fixture               : access Base_Test_Fixtures_Type'class := Null;
+   Current_Fixture   : access Base_Test_Fixtures_Type'class := Null;
+   Debug             : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test.
+                        Fixtures_Debug;
 
    ----------------------------------------------------------------------------
    procedure Exception_Assert (

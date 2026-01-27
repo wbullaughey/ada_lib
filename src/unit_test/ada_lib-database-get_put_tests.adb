@@ -30,7 +30,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
 
    Debug       : Boolean renames
                   Options.Unit_Test.Ada_Lib_Database_Unit_Test.
-                  Ada_Lib_Database_Unit_Test;
+                  Get_Put_Debug;
    Value       : constant String := "xyz";
    Value_Name        : constant String := "abc";
    Name_Value  : constant String := Value_Name & "=" & Value;
@@ -550,7 +550,7 @@ package body Ada_Lib.Database.Get_Put_Tests is
       Test                          : in out Database_Test_Type) is
    ---------------------------------------------------------------
 
---    Options                    : constant Standard.GNOGA_Options.Database.AUnit.Aunit_Options_Constant_Class_Access :=
+--    Options                    : constant Standard.GNOGA_Options.Database.AUnit.Aunit_Program_Options_Constant_Class_Access :=
 --                                     Runtime_Options.Get_Options;
    begin
       Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter");

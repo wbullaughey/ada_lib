@@ -31,7 +31,7 @@ package body Ada_Lib.Options.Program is
                                        Create.Create_Multiple (
                                           "hPv", Unmodified_flag) &
                                        Create.Create_Multiple (
-                                          "iptx" & Test_Condition_Flag,
+                                          "ipTx" & Test_Condition_Flag,
                                           Ada_Lib.Help.Modifier);
 
    ----------------------------------------------------------------------------
@@ -357,7 +357,7 @@ return "";
          Ada_Lib.Help.Create_Option ('a', "trace options",
             "Ada_Lib library trace options", Component, Ada_Lib.Help.Unmodified_Flag);
          Ada_Lib.Help.Create_Option ('h', "", "this message", Component, Ada_Lib.Help.Unmodified_Flag);
-         Ada_Lib.Help.Create_Option ('P', "", "pause", Component, Ada_Lib.Help.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('P', "", "set pause flag", Component, Ada_Lib.Help.Unmodified_Flag);
          Ada_Lib.Help.Create_Option ('v', "", "verbose", Component, Ada_Lib.Help.Unmodified_Flag);
          Ada_Lib.Help.Create_Option (Test_Condition_Flag, "", "trace test condition",
             Component, Ada_Lib.Help.Modifier);
@@ -365,7 +365,7 @@ return "";
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Create_Option ('p', "", "include program in trace", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('t', "", "include task in trace", Component,
+         Ada_Lib.Help.Create_Option ('T', "", "include task in trace", Component,
             Ada_Lib.Help.Modifier);
          Ada_Lib.Help.Create_Option ('x', "", "exclude time in trace", Component,
             Ada_Lib.Help.Modifier);
@@ -398,29 +398,29 @@ return "";
          Put_Line ("      T               Ada_Lib.Trace_Tasks");
 --       Put_Line ("      x               Ada_Lib.Trace.Detail");
 --       Put_Line ("      @               Ada_Lib.Strings");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "c              Template Compile");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "d              Template Detail");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "D              Ada_Lib.Directory trace");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "e              Template Evaluate");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "E              Template Expand");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "l              Template Load");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "o              Trace_Options");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "p              Trace Pre and Post Condtion functions");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "P              Trace Pre and Post Condtion false");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "s              Strings");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "S              Socket_IO IO");
-         Put_Line ("      " & Ada_Lib.Help.Modifier &
+         Put_Line ("      " & Ada_Lib.Help.Trace_Modifier &
                            "t              Ada_Lib.Text");
 
       end case;
@@ -550,7 +550,7 @@ return "";
                   when 'T' =>
                      Ada_Lib_Trace_Tasks.Debug := True;
 
-                  when Ada_Lib.Help.Modifier =>
+                  when Ada_Lib.Help.Trace_Modifier =>
                      Extended := True;
 
                   when others =>

@@ -148,6 +148,4 @@ package Hex_IO is
       Width             : in   Positive   -- in bytes
    ) return String;
 
-   Debug                : Boolean := False;
-
 end Hex_IO;

@@ -1,5 +1,6 @@
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Text_IO;use Ada.Text_IO;
+with Ada_Lib.Options.Unit_Test;
 --with Ada_Lib.OS.Run;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 --with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
@@ -32,7 +33,8 @@ package body Ada_Lib.Unit_Test is
    subtype Suites_Type           is Suites_Package.Vector;
 -- type Suites_Access            is access Suites_Type;
 
-   Suites                        :Suites_Type;
+   Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test.Debug;
+   Suites   : Suites_Type;
 
    ----------------------------------------------------------------------------
    function Did_Fail return Boolean is

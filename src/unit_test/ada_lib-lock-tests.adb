@@ -1,8 +1,9 @@
 with Ada.Numerics.Float_Random;
 --with Ada.Text_IO; use  Ada.Text_IO;
---with Ada_Lib.Unit_Test;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
+with Ada_Lib.Unit_Test.Tests;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
@@ -10,6 +11,29 @@ with AUnit.Test_Cases;
 package body Ada_Lib.Lock.Tests is
 
    use type Ada_Lib.Time.Time_Type;
+
+   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+                                    Test_Case_Type with null record;
+
+   overriding
+   function Name (
+      Test                       : in     Test_Type) return AUnit.Message_String;
+
+   overriding
+   procedure Register_Tests (
+      Test                       : in out Test_Type);
+
+   overriding
+   procedure Set_Up (
+      Test                       : in out Test_Type)
+   with Pre => not Test.Verify_Set_Up (False),
+        Post => Test.Verify_Set_Up;
+
+   overriding
+   procedure Tear_Down (
+      Test                       : in out Test_Type)
+   with Pre => not Test.Verify_Tear_Down (False),
+        Post => Test.Verify_Tear_Down;
 
    procedure Test_Async_Lock (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
@@ -29,10 +53,12 @@ package body Ada_Lib.Lock.Tests is
 
    end Test_Task_Type;
 
-   Async_Test_Length             : constant Duration := 1.0;
-   Async_Timeout                 : constant Duration := 2.0;
-   Random_Generator              : Ada.Numerics.Float_Random.Generator;
-   Task_Lock_Failed              : Boolean := False;
+   Async_Test_Length : constant Duration := 1.0;
+   Async_Timeout     : constant Duration := 2.0;
+   Debug             : Boolean renames
+                        Options.Unit_Test.Ada_Lib_Lock_Unit_Test.Debug;
+   Random_Generator  : Ada.Numerics.Float_Random.Generator;
+   Task_Lock_Failed  : Boolean := False;
 
  ---------------------------------------------------------------
    overriding
@@ -106,7 +132,19 @@ package body Ada_Lib.Lock.Tests is
       return Test_Suite;
    end Suite;
 
-   -------------------------------------------------------------- Test_Task;;
+   --------------------------------------------------------------
+   overriding
+   procedure Tear_Down (
+      Test                       : in out Test_Type) is
+   --------------------------------------------------------------
+
+   begin
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
+      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Log_Out (Debug or Trace_Set_Up_Tear_Down);
+   end Tear_Down;
+
+   --------------------------------------------------------------
    procedure Test_Async_Lock (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
    pragma Unreferenced (Test);
@@ -302,9 +340,11 @@ package body Ada_Lib.Lock.Tests is
    end Test_Task_Type;
 
 begin
-if Trace_Tests then
+   if Trace_Tests then
       Debug := Trace_Tests;
    end if;
 --Debug := True;
+--Trace_Pre_Post_Conditions := True;
+--Trace_Set_Up_Tear_Down := True;
    Log_Here (Elaborate or Trace_Options);
 end Ada_Lib.Lock.Tests;

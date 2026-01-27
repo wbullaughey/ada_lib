@@ -36,7 +36,7 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
       Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
                            renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
+                              Aunit_Program_Options_Constant_Class_Access (
                                  Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Listing_Suites             : constant Boolean :=
                                     Options.Mode /= Ada_Lib.Options.Run_Tests;
@@ -67,7 +67,7 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Constant_Class_Access (
+                                          Aunit_Program_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Send ("9999999999", "hello", Options.Verbose);
@@ -91,7 +91,7 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Constant_Class_Access (
+                                          Aunit_Program_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Send (Phone_Number, "hello", Options.Verbose);

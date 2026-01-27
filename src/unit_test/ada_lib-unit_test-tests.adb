@@ -1,11 +1,12 @@
---with Ada_Lib.Options.Program;
---with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Unit_Test;
 
 package body Ada_Lib.Unit_Test.Tests is
 
    use type Ada_Lib.Options.Program.Program_Options_Constant_Class_Access;
 -- use type Ada_Lib.Options.Unit_Test.Unit_Test_Options_Constant_Class_Access;
 -- use type Ada_Lib.Options.Interface_Options_Constant_Class_Access;
+
+   Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test.Tests_Debug;
 
    ----------------------------------------------------------------------------
    overriding

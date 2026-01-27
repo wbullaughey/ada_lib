@@ -8,7 +8,7 @@ with Ada_Lib.Test_States;
 with Ada_Lib.Unit_Test;
 with GNOGA_Ada_Lib.Interfaces;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with GNOGA_Ada_Lib;
+with GNOGA_Ada_Lib.Base;
 with Gnoga.Gui.Base;
 with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Element.Form;
@@ -141,62 +141,66 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Local_Test        : Window_Event_Test_Type renames
-                           Window_Event_Test_Type (Test);
-      Connection_Data   : Window_Connection_Data_Type renames
-                           Window_Connection_Data_Access (
-                              Test_States.Get_Window_Connection_Data (
-                                 Local_Test.Main_Window)).all;
-      Press_Event       : constant Standard.Gnoga.Gui.Base.
-                           Keyboard_Event_Record := (
-                              Message     => Standard.Gnoga.
-                                             Gui.Base.Key_Down,
-                              Key_Code    => GNOGA_Ada_Lib.Interfaces.
-                                                Right_Arrow,
-                              Key_Char    => '>',
-                              Alt         => False,
-                              Control     => False,
-                              Shift       => False,
-                              Meta        => False
-                           );
    begin
       Log_In (Debug);
-      Pause_On_Flag ("start of test");
-
-      Connection_Data.Form.Create (Parent => Connection_Data.Top_View);
-      Connection_Data.Form.Text_Alignment (Value => Standard.Gnoga.Gui.Element.Center);
-      Connection_Data.Form.Put_Line (Message => "type 'x' in the text field to stop test");
-      Connection_Data.Text.Create (
-         Form  => Connection_Data.Form,
-         ID    => "Text_ID");
-      Connection_Data.Text.On_Key_Down_Handler (
-         Handler => Keyboard_Down_Handler'Unrestricted_Access);
-      Connection_Data.Left_Position := Connection_Data.Top_View.Position_Left;
-      Connection_Data.Top_Position := Connection_Data.Top_View.Position_Top;
-
-      if Options.Manual then
-         Put_Line ("enter key directions for 20 seconds");
-         Log_Here (Debug, "stop " & Connection_Data.Stop'img);
-         while not Connection_Data.Stop loop
-            delay 0.2;
-         end loop;
+      declare
+         Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                              renames Ada_Lib.Options.AUnit_Lib.
+                                 Aunit_Program_Options_Constant_Class_Access (
+                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+         Local_Test        : Window_Event_Test_Type renames
+                              Window_Event_Test_Type (Test);
+         Connection_Data   : Window_Connection_Data_Type renames
+                              Window_Connection_Data_Access (
+                                 Test_States.Get_Window_Connection_Data (
+                                    Local_Test.Main_Window)).all;
+         Press_Event       : constant Standard.Gnoga.Gui.Base.
+                              Keyboard_Event_Record := (
+                                 Message     => Standard.Gnoga.
+                                                Gui.Base.Key_Down,
+                                 Key_Code    => GNOGA_Ada_Lib.Interfaces.
+                                                   Right_Arrow,
+                                 Key_Char    => '>',
+                                 Alt         => False,
+                                 Control     => False,
+                                 Shift       => False,
+                                 Meta        => False
+                              );
+      begin
          Log_Here (Debug);
-      else
-         Log_Here (Debug);
+         Pause_On_Flag ("start of test");
 
-         for Count in 1 .. 10 loop
-            delay 0.25;
-            Connection_Data.Text.Fire_On_Key_Down (Press_Event);
-         end loop;
+         Connection_Data.Form.Create (Parent => Connection_Data.Top_View);
+         Connection_Data.Form.Text_Alignment (Value => Standard.Gnoga.Gui.Element.Center);
+         Connection_Data.Form.Put_Line (Message => "type 'x' in the text field to stop test");
+         Connection_Data.Text.Create (
+            Form  => Connection_Data.Form,
+            ID    => "Text_ID");
+         Connection_Data.Text.On_Key_Down_Handler (
+            Handler => Keyboard_Down_Handler'Unrestricted_Access);
+         Connection_Data.Left_Position := Connection_Data.Top_View.Position_Left;
+         Connection_Data.Top_Position := Connection_Data.Top_View.Position_Top;
 
-         Pause_On_Flag ("press fired");
+         if Options.Manual then
+            Put_Line ("enter key directions for 20 seconds");
+            Log_Here (Debug, "stop " & Connection_Data.Stop'img);
+            while not Connection_Data.Stop loop
+               delay 0.2;
+            end loop;
+            Log_Here (Debug);
+         else
+            Log_Here (Debug);
 
-      end if;
-      Assert (Connection_Data.Key_Pressed, "Key Down Handler not moved");
+            for Count in 1 .. 10 loop
+               delay 0.25;
+               Connection_Data.Text.Fire_On_Key_Down (Press_Event);
+            end loop;
+
+            Pause_On_Flag ("press fired");
+
+         end if;
+         Assert (Connection_Data.Key_Pressed, "Key Down Handler not moved");
+      end;
       Log_Out (Debug);
 
    exception
@@ -215,7 +219,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Constant_Class_Access (
+                                          Aunit_Program_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Connection_Data            : constant Window_Connection_Data_Access :=
                                     Window_Connection_Data_Access (
@@ -278,74 +282,86 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
-      Connection_Data   : Window_Connection_Data_Type renames
-                           Window_Connection_Data_Access (
-                              Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                 Local_Test.Main_Window)).all;
    begin
       Log_In (Debug);
-      Pause_On_Flag ("start of test");
-
-      Connection_Data.Drag_Source_View.Create (Connection_Data.Top_View, ID => "Source_ID");
-         Connection_Data.Drag_Source_View.Border (
-            Width       => "2px",
-            Style       => Standard.Gnoga.Gui.Element.Double,
-            Color       => Standard.Gnoga.Types.Colors.Blue);
-      Connection_Data.Drag_Source_View.Position (Standard.Gnoga.Gui.Element.Fixed);
-      Connection_Data.Drag_Source_View.Top (20);
-      Connection_Data.Drag_Source_View.Left (20);
-      Connection_Data.Drag_Source_View.Height (50);
-      Connection_Data.Drag_Source_View.Width (50);
-      Connection_Data.Drag_Source_View.Draggable;
-      Connection_Data.Drag_Target_View.Create (Connection_Data.Top_View, ID => "Target_ID");
-      Connection_Data.Drag_Target_View.Border (
-         Width       => "10px",
-         Style       => Standard.Gnoga.Gui.Element.Dashed,
-         Color       => Standard.Gnoga.Types.Colors.Red);
-      Connection_Data.Drag_Target_View.Position (Standard.Gnoga.Gui.Element.Fixed);
-      Connection_Data.Drag_Target_View.Top (50);
-      Connection_Data.Drag_Target_View.Height (Left_View_Height);
-      Connection_Data.Drag_Target_View.Width (Left_View_Width);
-      Connection_Data.Drag_Target_View.Left (100);
-      Connection_Data.Left_Position := Connection_Data.Drag_Target_View.Position_Left;
-      Connection_Data.Top_Position := Connection_Data.Drag_Target_View.Position_Top;
-      Log_Here (Debug, "Initial left: " & Connection_Data.Left_Position'img &
-         " top: " & Connection_Data.Top_Position'img);
-      Connection_Data.Drag_Target_View.On_Drag_End_Handler (Mouse_Drag_End_Handler'access);
-      Connection_Data.Drag_Source_View.On_Drag_End_Handler (Mouse_Drag_End_Handler'access);
-      Connection_Data.Drag_Target_View.On_Drag_Enter_Handler (Mouse_Drag_Enter_Handler'access);
-      Connection_Data.Drag_Target_View.On_Drag_Handler (Mouse_Drag_Handler'access);
-      Connection_Data.Drag_Target_View.On_Drop_Handler (Mouse_Drop_Handler'access);
-      Connection_Data.Drag_Target_View.On_Drag_Leave_Handler (Mouse_Drag_Leave_Handler'access);
-      Connection_Data.Drag_Source_View.On_Drag_Start_Handler (Mouse_Drag_Start_Handler'access, "test drag");
-
-      if Options.Manual then
-         Pause ("drag the object");
-      else
+      declare
+         Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                        renames Ada_Lib.Options.AUnit_Lib.
+                           Aunit_Program_Options_Constant_Class_Access (
+                              Ada_Lib.Options.
+                                 Get_Ada_Lib_Read_Only_Program_Options).all;
+         Local_Test  : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
+         Connection_Data
+                     : Window_Connection_Data_Type renames
+                        Window_Connection_Data_Access (
+                           Test_States.Get_Window_Connection_Data (
+                              Local_Test.Main_Window)).all;
+      begin
          Log_Here (Debug);
-         Connection_Data.Drag_Source_View.Fire_On_Drag_Start;
+         Pause_On_Flag ("start of test");
 
-         for Count in 1 .. 10 loop
-            Connection_Data.Drag_Source_View.Fire_On_Drag;
-            delay 0.2;
-         end loop;
+         Connection_Data.Drag_Source_View.Create (Connection_Data.Top_View, ID => "Source_ID");
+            Connection_Data.Drag_Source_View.Border (
+               Width       => "2px",
+               Style       => Standard.Gnoga.Gui.Element.Double,
+               Color       => Standard.Gnoga.Types.Colors.Blue);
+         Connection_Data.Drag_Source_View.Position (Standard.Gnoga.Gui.Element.Fixed);
+         Connection_Data.Drag_Source_View.Top (20);
+         Connection_Data.Drag_Source_View.Left (20);
+         Connection_Data.Drag_Source_View.Height (50);
+         Connection_Data.Drag_Source_View.Width (50);
+         Connection_Data.Drag_Source_View.Draggable;
+         Connection_Data.Drag_Target_View.Create (Connection_Data.Top_View, ID => "Target_ID");
+         Connection_Data.Drag_Target_View.Border (
+            Width       => "10px",
+            Style       => Standard.Gnoga.Gui.Element.Dashed,
+            Color       => Standard.Gnoga.Types.Colors.Red);
+         Connection_Data.Drag_Target_View.Position (Standard.Gnoga.Gui.Element.Fixed);
+         Connection_Data.Drag_Target_View.Top (50);
+         Connection_Data.Drag_Target_View.Height (Left_View_Height);
+         Connection_Data.Drag_Target_View.Width (Left_View_Width);
+         Connection_Data.Drag_Target_View.Left (100);
+         Connection_Data.Left_Position := Connection_Data.Drag_Target_View.Position_Left;
+         Connection_Data.Top_Position := Connection_Data.Drag_Target_View.Position_Top;
+         Log_Here (Debug, "Initial left: " & Connection_Data.Left_Position'img &
+            " top: " & Connection_Data.Top_Position'img);
+         Connection_Data.Drag_Target_View.On_Drag_End_Handler (Mouse_Drag_End_Handler'access);
+         Connection_Data.Drag_Source_View.On_Drag_End_Handler (Mouse_Drag_End_Handler'access);
+         Connection_Data.Drag_Target_View.On_Drag_Enter_Handler (Mouse_Drag_Enter_Handler'access);
+         Connection_Data.Drag_Target_View.On_Drag_Handler (Mouse_Drag_Handler'access);
+         Connection_Data.Drag_Target_View.On_Drop_Handler (Mouse_Drop_Handler'access);
+         Connection_Data.Drag_Target_View.On_Drag_Leave_Handler (Mouse_Drag_Leave_Handler'access);
+         Connection_Data.Drag_Source_View.On_Drag_Start_Handler (Mouse_Drag_Start_Handler'access, "test drag");
 
-         Connection_Data.Drag_Target_View.Fire_On_Drop (50, 75, "dropped");
-         Connection_Data.Drag_Source_View.Fire_On_Drag_End;
-         Connection_Data.Drag_Target_View.Fire_On_Drag_Enter;
-         Connection_Data.Drag_Target_View.Fire_On_Drag_Leave;
-         Pause_On_Flag ("Drag fired");
+         if Options.Manual then
+            Pause ("drag the object");
+         else
+            Log_Here (Debug);
+            Connection_Data.Drag_Source_View.Fire_On_Drag_Start;
 
-      end if;
---    Assert (Connection_Data.Drag_Started, "Drag Handler not started");
---    Assert (Connection_Data.Dragd, "Drag Handler not Dragd");
---    Assert (Connection_Data.Drag_Stopped, "Drag Handler not stopped");
+            for Count in 1 .. 10 loop
+               Connection_Data.Drag_Source_View.Fire_On_Drag;
+               delay 0.2;
+            end loop;
+
+            Connection_Data.Drag_Target_View.Fire_On_Drop (50, 75, "dropped");
+            Connection_Data.Drag_Source_View.Fire_On_Drag_End;
+            Connection_Data.Drag_Target_View.Fire_On_Drag_Enter;
+            Connection_Data.Drag_Target_View.Fire_On_Drag_Leave;
+            Pause_On_Flag ("Drag fired");
+
+         end if;
+   --    Assert (Connection_Data.Drag_Started, "Drag Handler not started");
+   --    Assert (Connection_Data.Dragd, "Drag Handler not Dragd");
+   --    Assert (Connection_Data.Drag_Stopped, "Drag Handler not stopped");
+      end;
       Log_Out (Debug);
+
+exception
+   when Fault: others =>
+      Log_Exception (True, Fault);
+      raise;
+
    end Mouse_Drag;
 
    ---------------------------------------------------------------
@@ -459,88 +475,124 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Move (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
-
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
-      Connection_Data   : Window_Connection_Data_Type renames
-                           Window_Connection_Data_Access (
-                              Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                 Local_Test.Main_Window)).all;
-      Move_Event        : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
-                           Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
-                           X             => 0,
-                           Y             => 0,
-                           Screen_X      => 30,
-                           Screen_Y      => 40,
-                           Left_Button   => True,
-                           Middle_Button => False,
-                           Right_Button  => False,
-                           Alt           => True,
-                           Control       => False,
-                           Shift         => True,
-                           Meta          => False
-                        );
-      Steps             : constant := 100;
-      Move_Steps        : constant := Steps - 1;
 
    begin
       Log_In (Debug);
-      Pause_On_Flag ("start of test");
-      Connection_Data.Button.Create (Connection_Data.Top_View, "Move",
-         ID => "Button_ID");
-      Connection_Data.Button.On_Click_Handler (
-         Button_Click_Handler'Unrestricted_Access);
+      declare
+         Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                              renames Ada_Lib.Options.AUnit_Lib.
+                                 Aunit_Program_Options_Constant_Class_Access (
+                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+   --    Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
+         Connection_Data   : Window_Connection_Data_Type renames
+                              Window_Connection_Data_Access (
+                                 Ada_Lib.Test_States.Get_Window_Connection_Data (
+                                    Ada_Lib.GNOGA.Unit_Test.Window_Lock.
+                                       Get_Window)).all;
+         Move_Event        : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
+                              Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
+                              X             => 0,
+                              Y             => 0,
+                              Screen_X      => 30,
+                              Screen_Y      => 40,
+                              Left_Button   => True,
+                              Middle_Button => False,
+                              Right_Button  => False,
+                              Alt           => True,
+                              Control       => False,
+                              Shift         => True,
+                              Meta          => False
+                           );
+         Steps             : constant := 100;
+         Move_Steps        : constant := Steps - 1;
 
-      Connection_Data.Form.Create (Connection_Data.Top_View,
-         Action => "form",
-         ID => "Form_ID",
-         Target => "target");
-      Connection_Data.Form.Position (Standard.Gnoga.Gui.Element.Relative);
-      Connection_Data.Form.Top (0);
-      Connection_Data.Form.Left (0);
-      Connection_Data.Form.Border (Color => Standard.GNOGA.Types.Colors.Blue);
-      Connection_Data.Text.Create (
-         Form     => Connection_Data.Form,
-         ID       => "Text_ID");
-      Connection_Data.Top_View.On_Mouse_Down_Handler (Mouse_Move_Handler'access);
-      Connection_Data.Top_View.On_Mouse_Move_Handler (Mouse_Move_Handler'access);
-
-      if Options.Manual then
-         Connection_Data.Moving := true;
-         Pause ("move the mouse");
-      else
+      begin
          Log_Here (Debug);
-         Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Down;
-         Connection_Data.Top_View.Fire_On_Mouse_Down (Move_Event);
-         Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Move;
+         Pause_On_Flag ("start of test");
+         Connection_Data.Form.Create (
+            Action         => "form",
+            ID             => "Display_Window_id",
+            Parent         => Connection_Data.Top_View,
+            Target         => "target");
+log_here;
+         Connection_Data.Button.Create (
+            Parent         => Connection_Data.Form,
+            Content        => "Move",
+            ID             => "Button_ID");
+log_here;
+         Connection_Data.Button.On_Click_Handler (
+            Button_Click_Handler'Unrestricted_Access);
+log_here;
 
-         for Count in 1 .. Steps loop
-            Move_Event.X := Move_Event.X + 1;
-            Move_Event.y := Move_Event.y + 1;
-            Connection_Data.Top_View.Fire_On_Mouse_Move (Move_Event);
-            delay 0.2;
-         end loop;
+   --      Connection_Data.Form.Create (Connection_Data.Top_View,
+   --         Action => "form",
+   --         ID => "Form_ID",
+   --         Target => "target");
+   --log_here;
+         Connection_Data.Form.Position (Standard.Gnoga.Gui.Element.Relative);
+log_here;
+         Connection_Data.Form.Top (0);
+log_here;
+         Connection_Data.Form.Left (0);
+log_here;
+         Connection_Data.Form.Border (Color => Standard.GNOGA.Types.Colors.Blue);
+log_here;
+         Connection_Data.Text.Create (
+            Form     => Connection_Data.Form,
+            ID       => "Text_ID");
+log_here;
+         Connection_Data.Top_View.On_Mouse_Down_Handler (Mouse_Move_Handler'access);
+log_here;
+         Connection_Data.Top_View.On_Mouse_Move_Handler (Mouse_Move_Handler'access);
+log_here;
 
-         Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Down;
-         Connection_Data.Top_View.Fire_On_Mouse_Down (Move_Event);
+         if Options.Manual then
+log_here;
+            Connection_Data.Moving := true;
+            Pause ("move the mouse");
+         else
+log_here (Debug);
+            Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Down;
+            Connection_Data.Top_View.Fire_On_Mouse_Down (Move_Event);
+            Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Move;
 
-         Assert (Connection_Data.Delta_X = Move_Steps and then
-            Connection_Data.Delta_Y = Move_Steps,
-            "wrong deleta x or y expected " & Move_Steps'img & "," &
-            Move_Steps'img &
-            " got " & Connection_Data.Delta_X'img & "," &
-               Connection_Data.Delta_Y'img);
-         Pause_On_Flag ("move fired");
+log_here;
+            for Count in 1 .. Steps loop
+               Move_Event.X := Move_Event.X + 1;
+               Move_Event.y := Move_Event.y + 1;
+               Connection_Data.Top_View.Fire_On_Mouse_Move (Move_Event);
+               delay 0.2;
+            end loop;
+log_here;
 
-      end if;
-      Assert (Connection_Data.Move_Started, "Move Handler not started");
-      Assert (Connection_Data.Moved, "Move Handler not moved");
-      Assert (Connection_Data.Move_Stopped, "Move Handler not stopped");
+            Move_Event.Message  := Standard.Gnoga.Gui.Base.Mouse_Down;
+            Connection_Data.Top_View.Fire_On_Mouse_Down (Move_Event);
+
+            Assert (Connection_Data.Delta_X = Move_Steps and then
+               Connection_Data.Delta_Y = Move_Steps,
+               "wrong deleta x or y expected " & Move_Steps'img & "," &
+               Move_Steps'img &
+               " got " & Connection_Data.Delta_X'img & "," &
+                  Connection_Data.Delta_Y'img);
+            Pause_On_Flag ("move fired");
+
+         end if;
+log_here;
+         Pause_On_Flag ("end of test");
+         Assert (Connection_Data.Move_Started, "Move Handler not started");
+         Assert (Connection_Data.Moved, "Move Handler not moved");
+         Assert (Connection_Data.Move_Stopped, "Move Handler not stopped");
+      end;
       Log_Out (Debug);
+
+   exception
+
+      when Fault: others =>
+         Log_Exception (True, Fault);
+         raise;
+
    end Mouse_Move;
 
    ---------------------------------------------------------------
@@ -551,7 +603,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
 
       Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
                                        Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Options_Constant_Class_Access (
+                                          Aunit_Program_Options_Constant_Class_Access (
                                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
       Connection_Data         : constant Window_Connection_Data_Access :=
                                  Window_Connection_Data_Access (
@@ -661,13 +713,13 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                                     new Window_Connection_Data_Type;
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
---    GNOGA_Ada_Lib.Set_Connection_Data (
---       GNOGA_Ada_Lib.Connection_Data_Class_Access (Connection_Data));
-      Ada_Lib.GNOGA.Unit_Test.Set_Up_With_Handler (GNOGA_Tests_Type'class (Test),
-         Test_Handler'access);
+      Ada_Lib.GNOGA.Unit_Test.Set_Up_With_Handler (
+         Test                    => GNOGA_Tests_Type'class (Test),
+         Test_Handler            => Test_Handler'access,
+         Wait_For_Initialization => True);
 
       Connection_Data.Top_View.Create (
-         Connection_Data.Main_Window.all, "Top_View_ID");
+         Ada_Lib.GNOGA.Unit_Test.Window_Lock.Get_Window.all, "Top_View_ID");
       Connection_Data.Top_View.Border (
          Width       => "3px",
          Style       => Standard.Gnoga.Gui.Element.Solid,
@@ -677,6 +729,10 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Connection_Data.Top_View.Height (Top_View_Height);
       Connection_Data.Top_View.Left (20);
       Connection_Data.Top_View.Width (Top_View_Width);
+log_here;
+--log_here;
+--      Test.Main_Window := Window_Lock.Get_Window;
+--      Window_Lock.Clear_Window;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
@@ -710,6 +766,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    begin
       Log (Debug or Trace_Set_Up_Tear_Down, Here, Who);
 --    GNOGA_Ada_Lib.Clear_Connection_Data;
+      Window_Lock.Clear_Window;
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
    end Tear_Down;
 
@@ -726,15 +783,22 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
       Window_Lock.Set_Window (Main_Window'unchecked_access);
       declare
          Connection_Data
-               : constant Test_States.Window_Connection_Class_Access :=
+               : constant Window_Connection_Data_Access :=
                      new Window_Connection_Data_Type;
 
       begin
+log_here;
          Ada_Lib.Test_States.Allocate_State (Main_Window'unchecked_access,
-            Connection_Data);
-not_implemented; -- look at how its done in Ada_Lib.GNOGA-Unit_Test.Events
---       Ada_Lib.GNOGA.Unit_Test.Test_Handler (Main_Window, Connection);
+            Test_States.Window_Connection_Class_Access (Connection_Data));
+         Main_Window.Document.Title (Main_Window_Name);
+log_here;
+         Connection_Data.Main_Window := Main_Window'unchecked_access;
+         Main_Window.Connection_Data (Connection_Data);
+log_here;
+         Pause_On_Flag ("exit handler");
+         GNOGA_Ada_Lib.Base.Set_Main_Created (True);
       end;
+      Log_Out (Debug);
    end Test_Handler;
 
 

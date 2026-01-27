@@ -1,5 +1,6 @@
 with Ada.Finalization;
 with Ada.Streams;
+with Ada_Lib.Options;
 with ADA_LIB.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with GNAT.Sockets;
@@ -48,13 +49,13 @@ package Ada_Lib.Socket_IO is
       Address                    : in     Address_Type
    ) return String;
 
-   type Buffer_Access            is access all Ada.Streams.Stream_Element_Array;
+   type Buffer_Access   is access all Ada.Streams.Stream_Element_Array;
 
-   No_Timeout                    : constant Duration := Duration'last;
-   Reuse_Address                 : Option_Type renames GNAT.Sockets.Reuse_Address;
-   Trace                         : aliased Boolean := False;
-   Trace_IO                      : aliased Boolean := False;
-   Tracing                       : aliased Boolean := False;
+   No_Timeout     : constant Duration := Duration'last;
+   Reuse_Address  : Option_Type renames GNAT.Sockets.Reuse_Address;
+   Trace          : Boolean renames Options.Ada_Lib_Socket_IO.Trace;
+   Trace_IO       : Boolean renames Options.Ada_Lib_Socket_IO.Trace_IO;
+   Tracing        : Boolean renames Options.Ada_Lib_Socket_IO.Tracing;
 
    type Socket_Interface  is limited Interface;
 
