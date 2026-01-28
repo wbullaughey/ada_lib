@@ -20,7 +20,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    use type Standard.Gnoga.Gui.Base.Keyboard_Event_Record;
    use type Standard.Gnoga.Gui.Base.Mouse_Event_Record;
-   use type Standard.Gnoga.Gui.Base.Pointer_To_Base_Class;
+-- use type Standard.Gnoga.Gui.Base.Pointer_To_Base_Class;
    use type Standard.Gnoga.GUI.Window.Pointer_To_Window_Class;
    use type Standard.Gnoga.Types.Pointer_to_Connection_Data_Class;
 
@@ -48,9 +48,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    type Test_Access is access Event_Test_Type;
 
-   function Has_Main_Window (
-      Test                       : in     Event_Test_Type'class
-   ) return Boolean;
+-- function Has_Main_Window (
+--    Test                       : in     Event_Test_Type'class
+-- ) return Boolean;
 
    procedure Mouse_Click (
       Test                       : in out Standard.AUnit.Test_Cases.Test_Case'class);
@@ -69,7 +69,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
 
    procedure Keyboard_Test (
       Test                       : in out AUnit.Test_Cases.Test_Case'class
-   ) with Pre => Has_Main_Window (Event_Test_Type (Test));
+   ) with Pre => Has_Window;
 
    procedure Mouse_Move_Handler (
       Object                     : in out Standard.Gnoga.Gui.Base.Base_Type'Class;
@@ -226,15 +226,15 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
       GNOGA_Ada_Lib.Interfaces.Dump_Mouse_Event (Mouse_Event);
    end Click_Event_Handler;
 
-   ---------------------------------------------------------------
-    function Has_Main_Window (
-      Test                       : in     Event_Test_Type'class
-   ) return Boolean is
-   ---------------------------------------------------------------
-
-    begin
-       return Test.Main_Window.Get_View /= Null;
-    end Has_Main_Window;
+-- ---------------------------------------------------------------
+--  function Has_Main_Window (
+--    Test                       : in     Event_Test_Type'class
+-- ) return Boolean is
+-- ---------------------------------------------------------------
+--
+--  begin
+--     return Test.Main_Window.Get_View /= Null;
+--  end Has_Main_Window;
 
    ---------------------------------------------------------------
    procedure Keyboard_Event_Handler (
@@ -273,6 +273,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
    procedure Keyboard_Test (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
    begin
@@ -283,12 +284,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
                         Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
                               Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-         Local_Test        : Event_Test_Type renames Event_Test_Type (Test);
+                                 Ada_Lib.Options.
+                                    Get_Ada_Lib_Read_Only_Program_Options).all;
+--       Local_Test        : Event_Test_Type renames Event_Test_Type (Test);
          Connection_Data   : constant Event_Connection_Data_Access :=
                               Event_Connection_Data_Access (
-                                 Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                    Local_Test.Main_Window));
+                                 Ada_Lib.Test_States.Get_Window_Connection_Data);
          Key               : constant Character := 'A';
          Down_Key_Event    : constant Standard.Gnoga.Gui.Base.Keyboard_Event_Record := (
                               Message     => Standard.Gnoga.Gui.Base.Key_Down,
@@ -366,16 +367,16 @@ package body Ada_Lib.GNOGA.Unit_Test.Events is
    ---------------------------------------------------------------
    procedure Mouse_Click(
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
    begin
       Log_In (Debug);
       declare
-         Local_Test  : Event_Test_Type renames Event_Test_Type (Test);
+--       Local_Test  : Event_Test_Type renames Event_Test_Type (Test);
          Connection_Data   : Event_Connection_Data_Type renames
                               Event_Connection_Data_Access (
-                                 Test_States.Get_Window_Connection_Data (
-                                    Local_Test.Main_Window)).all;
+                                 Test_States.Get_Window_Connection_Data).all;
          Options     : Ada_Lib.Options.Unit_Test.
                         Ada_Lib_Unit_Test_Program_Options_Type'class renames
                            Ada_Lib.Options.Unit_Test.
@@ -450,12 +451,13 @@ exception
    ---------------------------------------------------------------
    procedure Test_Mouse_Move (
       Test                       : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
    begin
       Log_In (Debug);
       declare
-         Local_Test  : Event_Test_Type renames Event_Test_Type (Test);
+--       Local_Test  : Event_Test_Type renames Event_Test_Type (Test);
          Options  : Ada_Lib.Options.Unit_Test.
                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
                         Ada_Lib.Options.Unit_Test.
@@ -464,8 +466,7 @@ exception
                                  Get_Ada_Lib_Read_Only_Program_Options).all;
          Connection_Data   : Event_Connection_Data_Type renames
                               Event_Connection_Data_Access (
-                                 Test_States.Get_Window_Connection_Data (
-                                    Local_Test.Main_Window)).all;
+                                 Test_States.Get_Window_Connection_Data).all;
       begin
          Log_Here (Debug, "manual " & Options.Manual'img);
          Connection_Data.Main_Window.On_Click_Handler (
@@ -582,12 +583,12 @@ exception
    ---------------------------------------------------------------
 
    begin
-      Log_In (Debug or Trace_Set_Up_Tear_Down,
-         "test main window " & Ada_Lib.Strings.Image (Test.Main_Window'address));
+      Log_In (Debug or Trace_Set_Up_Tear_Down);
+--       "test main window " & Ada_Lib.Strings.Image (Test.Main_Window'address));
 
       Ada_Lib.GNOGA.Unit_Test.Set_Up_With_Handler (Test, Test_Handler'access,
       Wait_For_Initialization => False);
-      Window_Lock.Clear_Window;
+      Clear_Window;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
@@ -636,8 +637,7 @@ exception
 
       begin
          Log_Here (Debug, Quote ("URL", URL));
-         Ada_Lib.GNOGA.Unit_Test.Window_Lock.Set_Window (
-            Main_Window'unchecked_access);
+         Set_Window (Main_Window'unchecked_access);
          Test_States.Allocate_State (Main_Window'unchecked_access,
             Test_States.Window_Connection_Class_Access (Connection_Data));
          Main_Window.Document.Title (Ada_Lib.GNOGA.Unit_Test.Main_Window_Name);

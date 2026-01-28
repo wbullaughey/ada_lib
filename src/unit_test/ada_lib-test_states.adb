@@ -16,7 +16,8 @@ package body Ada_Lib.Test_States is
    ) return String;
 
    function Image (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class
+      Window_Connection    : not null access Standard.GNOGA.Types.
+                              Connection_Data_Type'class
    ) return String;
 
    function Get_State (
@@ -25,7 +26,8 @@ package body Ada_Lib.Test_States is
    ) return State_Access;
 
    function Get_State (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      Window_Connection    : not null access Standard.GNOGA.Types.
+                              Connection_Data_Type'class;
       From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access;
 
@@ -69,15 +71,6 @@ package body Ada_Lib.Test_States is
       end if;
       Log_Out (Debug);
    end Allocate_State;
-
-   ----------------------------------------------------------------
-   procedure Clear_Window (
-      Lock        : in out Window_Lock_Type) is
-   ----------------------------------------------------------------
-
-   begin
-      Lock.Window := Null;
-   end Clear_Window;
 
    ----------------------------------------------------------------
    procedure Clear_Window_Connection_Data (
@@ -150,7 +143,7 @@ log_here;
 
    ----------------------------------------------------------------
    function Get_State (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      Window_Connection    : not null access Standard.GNOGA.Types.Connection_Data_Type'class;
       From                 : in     String :=  Standard.Ada_Lib.Trace.Here
    ) return State_Access is
    ----------------------------------------------------------------
@@ -183,18 +176,7 @@ log_here;
    end Get_State;
 
    ----------------------------------------------------------------
-   function Get_Window (
-      Lock        : in     Window_Lock_Type
-   ) return Gnoga.Gui.Window.Pointer_To_Window_Class is
-   ----------------------------------------------------------------
-
-   begin
-      return Lock.Window;
-   end Get_Window;
-
-   ----------------------------------------------------------------
    function Get_Window_Connection_Data (
-      Window               : in     Window_Class_Access;
       From                 : in     String := Ada_Lib.Trace.Here
    ) return Window_Connection_Class_Access is
    ----------------------------------------------------------------
@@ -203,8 +185,10 @@ log_here;
       Log_Here (Debug, "from " & From);
 
       declare
-         State             : constant State_Access :=
-                              Get_State (Window_Constant_Class_Access (Window));
+         Window   : constant Standard.GNOGA.Gui.Window.
+                     Pointer_To_Window_Class := GNOGA.Get_Window;
+         State    : constant State_Access :=
+                     Get_State (Window_Constant_Class_Access (Window));
       begin
          return State.Window_Connection;
       end;
@@ -212,7 +196,7 @@ log_here;
 
    ----------------------------------------------------------------
    function Get_Window_Connection_Data (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      Window_Connection    : not null access Standard.GNOGA.Types.Connection_Data_Type'class;
       From                 : in     String := Ada_Lib.Trace.Here
    ) return Window_Connection_Class_Access is
    ----------------------------------------------------------------
@@ -227,16 +211,6 @@ log_here;
          return State.Window_Connection;
       end;
    end Get_Window_Connection_Data;
-
-   ----------------------------------------------------------------
-   function Has_Window (
-      Lock        : in     Window_Lock_Type
-   ) return Boolean is
-   ----------------------------------------------------------------
-
-   begin
-      return Lock.Window /= Null;
-   end Has_Window;
 
    ----------------------------------------------------------------
    function Hash_Equivalent (
@@ -286,7 +260,7 @@ log_here ("hash " & Result'img);
 
    ----------------------------------------------------------------
    function Has_Window_Connection_Data (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class;
+      Window_Connection    : not null access Standard.GNOGA.Types.Connection_Data_Type'class;
       From                 : in     String := Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------
@@ -329,7 +303,7 @@ log_here ("hash " & Result'img);
 
    ----------------------------------------------------------------
    function Image (
-      Window_Connection    : not null access Gnoga.Types.Connection_Data_Type'class
+      Window_Connection    : not null access Standard.GNOGA.Types.Connection_Data_Type'class
    ) return String is
    ----------------------------------------------------------------
 
@@ -337,27 +311,6 @@ log_here ("hash " & Result'img);
       return Hex_IO.Modular_Hex_Address (Window_Connection.all'address, 64);
    end Image;
 
-   ----------------------------------------------------------------
-   procedure Set_Window (
-      Lock        : in out Window_Lock_Type;
-      Window      : in     Gnoga.Gui.Window.Pointer_To_Window_Class) is
-   ----------------------------------------------------------------
-
-   begin
-      Lock.Window := Window;
-   end Set_Window;
-
--- ----------------------------------------------------------------
--- procedure Set_Window (
---    State_ID             : in out State_ID_Type;
---    Window               : in     Window_Class_Access;
---    From                 : in     String := Ada_Lib.Trace.Here) is
--- ----------------------------------------------------------------
---
--- begin
---    Log_Here (Debug, "called from " & From);
--- end Set_Window;
---
    ----------------------------------------------------------------
    procedure Set_Window_Connection (
       Window               : in     Window_Constant_Class_Access;

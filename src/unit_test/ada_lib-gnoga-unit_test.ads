@@ -1,6 +1,6 @@
-with Ada_Lib.Test_States;
+--with Ada_Lib.Test_States;
 with Ada_Lib.Unit_Test.Test_Cases;
-with Gnoga.Gui.Window;
+--with Gnoga.Gui.Window;
 with GNOGA_Ada_Lib;
 with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Element.Common;
@@ -27,9 +27,8 @@ package Ada_Lib.GNOGA.Unit_Test is
       Initialize_GNOGA
                   : Boolean;
       Test_Driver : Boolean) is abstract limited new
-                     Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
-      Main_Window : aliased Standard.Gnoga.Gui.Window.Pointer_To_Window_Class := Null;
-   end record;
+                     Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with
+                        null record;
 
    type GNOGA_Tests_Access       is access GNOGA_Tests_Type;
    type GNOGA_Tests_Class_Access is access GNOGA_Tests_Type'class;
@@ -54,10 +53,5 @@ package Ada_Lib.GNOGA.Unit_Test is
 --                      Connection_Holder_Type);
 
    Main_Window_Name  : constant String := "main window";
-   Window_Lock_Description
-                     : aliased constant String := "test states window lock";
-   Window_Lock       : Ada_Lib.Test_States.Window_Lock_Type (
-                        Window_Lock_Description'access);
-                        -- used to save pointer to main window
 
 end Ada_Lib.GNOGA.Unit_Test;

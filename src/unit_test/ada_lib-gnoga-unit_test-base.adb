@@ -78,7 +78,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    begin
       Log_In (Debug, Quote ("URL", URL));
-      Window_Lock.Set_Window (Main_Window'unchecked_access);
+      Set_Window (Main_Window'unchecked_access);
       Pause_On_Flag ("exit handler");
       GNOGA_Ada_Lib.Base.Set_Main_Created (True);
       GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
@@ -106,12 +106,12 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    begin
       Log_In (Debug);
+      Set_Window (Main_Window'unchecked_access);
       declare
-         Connection_Data            : constant Connection_Class_Access :=
-                                       Connection_Class_Access (
-                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                             Main_Window'unchecked_access));
-         URL                        : constant String := Main_Window.Document.URL;
+         Connection_Data   : constant Connection_Class_Access :=
+                              Connection_Class_Access (
+                                 Ada_Lib.Test_States.Get_Window_Connection_Data);
+         URL               : constant String := Main_Window.Document.URL;
 
       begin
          Log_Here (Debug, Quote ("URL", URL));
@@ -155,12 +155,12 @@ exception
 
    begin
       Log_In (Debug);
+      Set_Window (Main_Window'unchecked_access);
       declare
-         Connection_Data            : constant Connection_Class_Access :=
-                                       Connection_Class_Access (
-                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                             Main_Window'unchecked_access));
-         URL                        : constant String := Main_Window.Document.URL;
+         Connection_Data   : constant Connection_Class_Access :=
+                              Connection_Class_Access (
+                                 Ada_Lib.Test_States.Get_Window_Connection_Data);
+         URL               : constant String := Main_Window.Document.URL;
 
       begin
          Log_Here (Debug, Quote ("URL", URL));

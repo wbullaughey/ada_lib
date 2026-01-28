@@ -139,6 +139,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Keyboard_Press (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
    begin
@@ -148,12 +149,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                               renames Ada_Lib.Options.AUnit_Lib.
                                  Aunit_Program_Options_Constant_Class_Access (
                                     Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-         Local_Test        : Window_Event_Test_Type renames
-                              Window_Event_Test_Type (Test);
+--       Local_Test        : Window_Event_Test_Type renames
+--                            Window_Event_Test_Type (Test);
          Connection_Data   : Window_Connection_Data_Type renames
                               Window_Connection_Data_Access (
-                                 Test_States.Get_Window_Connection_Data (
-                                    Local_Test.Main_Window)).all;
+                                 Test_States.Get_Window_Connection_Data).all;
          Press_Event       : constant Standard.Gnoga.Gui.Base.
                               Keyboard_Event_Record := (
                                  Message     => Standard.Gnoga.
@@ -280,6 +280,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
    ---------------------------------------------------------------
    procedure Mouse_Drag (
       Test                    : in out AUnit.Test_Cases.Test_Case'class) is
+   pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
    begin
@@ -290,12 +291,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Window_Events is
                            Aunit_Program_Options_Constant_Class_Access (
                               Ada_Lib.Options.
                                  Get_Ada_Lib_Read_Only_Program_Options).all;
-         Local_Test  : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
+--       Local_Test  : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
          Connection_Data
                      : Window_Connection_Data_Type renames
                         Window_Connection_Data_Access (
-                           Test_States.Get_Window_Connection_Data (
-                              Local_Test.Main_Window)).all;
+                           Test_States.Get_Window_Connection_Data).all;
       begin
          Log_Here (Debug);
          Pause_On_Flag ("start of test");
@@ -488,9 +488,7 @@ exception
    --    Local_Test        : Window_Event_Test_Type renames Window_Event_Test_Type (Test);
          Connection_Data   : Window_Connection_Data_Type renames
                               Window_Connection_Data_Access (
-                                 Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                    Ada_Lib.GNOGA.Unit_Test.Window_Lock.
-                                       Get_Window)).all;
+                                 Ada_Lib.Test_States.Get_Window_Connection_Data).all;
          Move_Event        : Standard.Gnoga.Gui.Base.Mouse_Event_Record := (
                               Message       => Standard.Gnoga.Gui.Base.Mouse_Move,
                               X             => 0,
@@ -719,7 +717,7 @@ log_here;
          Wait_For_Initialization => True);
 
       Connection_Data.Top_View.Create (
-         Ada_Lib.GNOGA.Unit_Test.Window_Lock.Get_Window.all, "Top_View_ID");
+         Get_Window.all, "Top_View_ID");
       Connection_Data.Top_View.Border (
          Width       => "3px",
          Style       => Standard.Gnoga.Gui.Element.Solid,
@@ -766,7 +764,7 @@ log_here;
    begin
       Log (Debug or Trace_Set_Up_Tear_Down, Here, Who);
 --    GNOGA_Ada_Lib.Clear_Connection_Data;
-      Window_Lock.Clear_Window;
+      Clear_Window;
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
    end Tear_Down;
 
@@ -780,7 +778,7 @@ log_here;
 
    begin
       Log_In (Debug);
-      Window_Lock.Set_Window (Main_Window'unchecked_access);
+      Set_Window (Main_Window'unchecked_access);
       declare
          Connection_Data
                : constant Window_Connection_Data_Access :=
