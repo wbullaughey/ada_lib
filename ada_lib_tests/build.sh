@@ -1,5 +1,8 @@
 source ~/.zshrc
 export WHICH=$1
+export PROGRAM=$2
+export NO_WARNINGS=$3
+export TRACE=1
 
 # WHICH values
 #   all     - build everything (help_tests, driver unit tests, applications)
@@ -8,4 +11,4 @@ export WHICH=$1
 
 echo build WHICH $WHICH
 
-../../global_build.sh $WHICH program
+../../global_build.sh $WHICH program $PROGRAM $NO_WARNINGS $TRACE
