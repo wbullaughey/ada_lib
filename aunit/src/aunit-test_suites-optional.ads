@@ -1,4 +1,4 @@
-with Ada_Lib.Options;
+with Ada_Lib.Options.Verification;
 
 package AUnit.Test_Suites.Optional is
 
@@ -13,7 +13,7 @@ package AUnit.Test_Suites.Optional is
                   Options :        AUnit_Options;
                   R       : in out Result'Class;
                   Outcome :    out Status
-   ) with Pre => Ada_Lib.Options.Have_Ada_Lib_Program_Options;
+   ) with Pre => Ada_Lib.Options.Verification.Have_Ada_Lib_Verification_Options;
 
    -- test is have the right DBDaemon (local or remote) open
    function Test (

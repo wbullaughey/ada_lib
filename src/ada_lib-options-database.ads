@@ -37,7 +37,8 @@ package Ada_Lib.Options.Database is
      Options                     : in out Database_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
-   with pre => Options.Verify_Preinitialize;
+   with pre    => not Options.Verify_Step (Initialized),
+        Post   => Options.Verify_Step (Initialized);
 
 -- overriding
 -- procedure Process (     -- process command line options
@@ -56,9 +57,9 @@ package Ada_Lib.Options.Database is
    function Process_Option (
       Options                    : in out Database_Options_Type;
       Iterator                   : in out Command_Line_Iterator_Interface'class;
-      Option                     : in     Base_Flag_Option_Type'class
+      Option                     : in     Flag_Option_Type'class
    ) return Boolean
-   with pre => Options.Verify_Initialized;
+   with pre => Options.Verify_Step (Initialized);
 
    overriding
    procedure Trace_Parse (

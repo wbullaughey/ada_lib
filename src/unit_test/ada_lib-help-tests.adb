@@ -1,10 +1,10 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
 
@@ -28,7 +28,7 @@ package body Ada_Lib.Help.Tests is
    procedure Test_Prefix_Help (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with null record;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
 
    type Test_Access is access Test_Type;
 
@@ -100,7 +100,7 @@ package body Ada_Lib.Help.Tests is
 
    begin
       Log_In (Trace_Set_Up_Tear_Down or Debug);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Ada_Lib.Help.Reset;
       Log_Out (Trace_Set_Up_Tear_Down or Debug);
    end Tear_Down;
@@ -113,17 +113,17 @@ package body Ada_Lib.Help.Tests is
 
       Test_Case                  : constant Test_Cases_Type := (
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('b', Ada_Lib.Options.Unmodified_Flag),
+            Option      => Initialize ('b', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('c', Ada_Lib.Options.Unmodified_Flag),
+            Option      => Initialize ('c', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("c parameter"),
             Description => new String'("c option")
          ),
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('a', Ada_Lib.Options.Unmodified_Flag),
+            Option      => Initialize ('a', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("a parameter"),
             Description => new String'("a option")
          )
@@ -161,12 +161,12 @@ package body Ada_Lib.Help.Tests is
    begin
       Log_In (Debug);
       for Line of Test_Case loop
-         Ada_Lib.Help.Create_Option (Line.Option.Option (1), (
+         Ada_Lib.Help.Create_Option (Line.Option.Option (1), False, (
             if Line.Parameter = Null then "" else Line.Parameter.all),
          Line.Description.all, "", Unmodified_Flag);
       end loop;
 
-      Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
+      Ada_Lib.Help.Display (Null_Parameters, Check_Test_Suite_And_Routine'access);
       Log_Out (Debug);
    end Test_Help;
 
@@ -181,22 +181,22 @@ package body Ada_Lib.Help.Tests is
 
       Test_Case                  : constant Test_Cases_Type := (
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('B', Modifier),
+            Option      => Initialize ('B', Modifier),
             Parameter   => new String'(Modifier & "B parameter"),
             Description => new String'(Modifier & "B option")
          ),
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('a', Modifier),
+            Option      => Initialize ('a', Modifier),
             Parameter   => new String'(Modifier & "a parameter"),
             Description => new String'(Modifier & "a option")
          ),
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('b', Ada_Lib.Options.Unmodified_Flag),
+            Option      => Initialize ('b', Ada_Lib.Options.Unmodified_Flag),
             Parameter   => new String'("b parameter"),
             Description => new String'("b option")
          ),
          Test_Case_Type'(
-            Option      => Options.Create.Create_One ('b', Modifier),
+            Option      => Initialize ('b', Modifier),
             Parameter   => new String'(Modifier & "b parameter"),
             Description => new String'(Modifier & "b option")
          )
@@ -244,10 +244,11 @@ package body Ada_Lib.Help.Tests is
             Parameter      => (if Line.Parameter = Null then
                               ""
                            else
-                              Line.Parameter.all));
+                              Line.Parameter.all),
+            Trace_Option   => False);
       end loop;
 
-      Ada_Lib.Help.Display (Check_Test_Suite_And_Routine'access);
+      Ada_Lib.Help.Display (Null_Parameters, Check_Test_Suite_And_Routine'access);
       Log_out (Debug);
    end Test_Prefix_Help;
 

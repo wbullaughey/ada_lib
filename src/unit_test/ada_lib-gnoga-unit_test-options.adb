@@ -3,7 +3,7 @@ with Ada.Text_IO;use Ada.Text_IO;
 --with GNOGA_Ada_Lib.Base;
 --with Ada_Lib.GNOGA.Unit_Test.Events;
 with Ada_Lib.Help;
-with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
@@ -17,7 +17,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    Trace_Option            : constant Character := 'g';
    Options_With_Parameters : aliased constant
                               Ada_Lib.Options.Flag_List_Type :=
-                                 Ada_Lib.Options.Create.Create_One (Trace_Option,
+                                 Ada_Lib.Options.Initialize (Trace_Option,
                                     Ada_Lib.Options.Unmodified_flag);
 
    -------------------------------------------------------------------
@@ -29,7 +29,8 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    -------------------------------------------------------------------
 
    begin
-      Log_In (Debug_Options or Trace_Options);
+      Log_In (Debug_Options or Trace_Options, Tag_Name ("options",
+         GNOGA_Unit_Test_Options_Type'class (Options)'tag) & " from " & From);
 --    GNOGA_Options := Options'unchecked_access;
       Ada_Lib.Options.Runstring.Options.Register (Ada_Lib.Options.Runstring.
          With_Parameters, Options_With_Parameters);
@@ -42,7 +43,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
    function Process_Option (
       Options                    : in out GNOGA_Unit_Test_Options_Type;
       Iterator                   : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Base_Flag_Option_Type'class
+      Option                     : in     Ada_Lib.Options.Flag_Option_Type'class
    ) return Boolean is
    ---------------------------------------------------------------
 
@@ -83,28 +84,30 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
       Component                  : constant String := "Ada_Lib.GNOGA";
 
    begin
-      Log_In (Debug_Options, "mode " & Help_Mode'img);
+      Log_In (Debug_Options or Trace_Options, "mode " & Help_Mode'img);
       case Help_Mode is
 
       when Ada_Lib.Options.Program_Mode =>
-         Standard.Ada_Lib.Help.Create_Option ('g', "trace options",
-            "GNOGA Unit Test traces", Component, Ada_Lib.Help.Unmodified_Flag);
+         Standard.Ada_Lib.Help.Create_Option ('g', True, "trace options",
+            "GNOGA Unit Test traces", Component, Ada_Lib.Options.Unmodified_Flag);
 
       when Ada_Lib.Options.Trace_Mode =>
+         Ada_Lib.Help.Set_Has_Trace ('g', Ada_Lib.Options.Unmodified_Flag);
          Put_Line ("Ada_Lib GNOGA unit tests trace options (-" &
             Trace_Option & ")");
          Put_Line ("      a               all");
          Put_Line ("      b               Ada_Lib.GNOGA.Unit_Test.Base_Debug");
-         Put_Line ("      d               Ada_Lib.GNOGA.Unit_Test.Debug");
+         Put_Line ("      d               Ada_Lib.GNOGA.Unit_Test.Test_Debug");
          Put_Line ("      e               Ada_Lib.GNOGA.Unit_Test.Event_Debug");
-         Put_Line ("      u               GNOGA nit Test (main window)");
+         Put_Line ("      g               Ada_Lib.GNOGA.GNOGA_Debug");
+         Put_Line ("      u               GNOGA unit Test (main window)");
 --       Put_Line ("      o               Ada_Lib.GNOGA.Unit_Test.Options.Debug_Options");
          New_Line;
 
       end case;
       Ada_Lib.Options.Nested.Nested_Options_Type (Options).Program_Help (
          Help_Mode);
-      Log_Out (Debug_Options);
+      Log_Out (Debug_Options  or Trace_Options);
    end Program_Help;
 
    ----------------------------------------------------------------------------
@@ -139,11 +142,15 @@ package body Ada_Lib.GNOGA.Unit_Test.Options is
 
                when 'd' =>
                   Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
-                     Debug := True;
+                     Test_Debug := True;
 
                when 'e' =>
                   Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
                      Event_Debug := True;
+
+               when 'g' =>
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_GNOGA_Unit_Test.
+                     GNOGA_Debug := True;
 
                when others =>
                   Options.Bad_Option (Trace);

@@ -1,21 +1,14 @@
 with Ada.Directories;
--- with Ada.Exceptions;
--- with Ada.Strings.Fixed;
-with Ada.Text_IO; use Ada.Text_IO;
-with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Unit_Test;
--- with Ada_Lib.Mail.GMail;
---with Ada_Lib.Options.Flags;
-with Ada_Lib.Options.AUnit_Lib;
--- with Ada_Lib.OS.Base64;
--- with Ada_Lib.OS.Run.Path;
--- with Ada_Lib.OS.Run.Tests.PATH;
+with Ada.Text_IO;use Ada.Text_IO;
+--with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.Program;
+--with Ada_Lib.Options.Verification;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
--- with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
+--with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Template.Compile;
 with Ada_Lib.Template.Parameters;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
--- with Ada_Lib.Unit_Test.Test_Cases;
+with AUnit.Assertions; use AUnit.Assertions;
 
 package body Ada_Lib.Template.Tests is
 
@@ -31,24 +24,33 @@ package body Ada_Lib.Template.Tests is
       Full_Source_Path     : constant String := Global_Path & Path;
       Full_Parameter_Path  : constant String := Global_Path & Path &
                               ".parameters";
-      Options              : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                              renames Ada_Lib.Options.AUnit_Lib.
-                                 Aunit_Program_Options_Constant_Class_Access (
-                                    Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Template             : Ada_Lib.Template.Compile.Template_Type;
-      Raw                  : constant String := Ada_Lib.Template.Compile.Load (
-                              Full_Source_Path);
-      Parameters           : constant Ada_Lib.Template.Parameters.
-                              Parameter_Array := Ada_Lib.Template.Parameters.
-                                 Load (Full_Parameter_Path);
-      Processed            : constant String := Template.Compile (Raw,
-                              Parameters);
-
+--    AUnit_Options     : Ada_Lib.Options.AUnit_Lib.
+--                      Aunit_Program_Options_Type'class renames
+--                   Ada_Lib.Options.
+--                      AUnit_Lib.Aunit_Program_Options_Constant_Class_Access (
+--                         Ada_Lib.Options.Verification.
+--                            Get_Ada_Lib_Read_Only_Program_Options).all;
+      Template    : Ada_Lib.Template.Compile.Template_Type;
+      Raw         : constant String := Ada_Lib.Template.Compile.Load (
+                     Full_Source_Path);
+      Parameters  : constant Ada_Lib.Template.Parameters.
+                     Parameter_Array := Ada_Lib.Template.Parameters.
+                        Load (Full_Parameter_Path);
+      Processed   : constant String := Template.Compile (Raw,
+                     Parameters);
+--    Program_Options
+--          : constant Options.Program.Program_Options_Constant_Class_Access :=
+--             Options.Program.Program_Options_Constant_Class_Access (
+--                Options.Verification.Get_Ada_Lib_Read_Only_Program_Options);
+      Nested_Program_Options
+            : constant Options.Program.
+                  Nested_Program_Options_Constant_Class_Access :=
+               Options.Program.Get_Read_Only_Nested_Program_Options;
    begin
       Log_In (Trace_Test, Quote ("source", Full_Source_Path) &
          Quote ("parameters", Full_Parameter_Path) &
          Quote ("parameters", Raw));
-      if Options.Verbose then
+      if Nested_Program_Options.Verbose then
          Put_Line ("---------------------------------------");
          Put_Line (Processed);
          Put_Line ("---------------------------------------");

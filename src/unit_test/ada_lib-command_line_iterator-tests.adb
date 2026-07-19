@@ -2,7 +2,7 @@ with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Help;
-with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Create;
 with Ada_Lib.Options.Runstring;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -30,16 +30,16 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
       use Ada_Lib.Options;
 
       B        : constant Character := 'b';
-      B_Option : constant Ada_Lib.Options.Flags.Flag_Option_Type :=
-                  Ada_Lib.Options.Flags.Allocate_Option (B, Ada_Lib.Help.Trace_Modifier);
+      B_Option : constant Ada_Lib.Options.Flag_Option_Type :=
+                  Ada_Lib.Options.Initialize (B, Ada_Lib.Help.Trace_Modifier);
       Options_With_Modifiers
                : constant String := "b";
       Options_Without_Modifiers
                : constant String := "ac";
       Options  : constant Ada_Lib.Options.Flag_List_Type :=
-                  Ada_Lib.Options.Create.Create_Multiple (
+                  Ada_Lib.Options.Initialize (
                      Options_With_Modifiers, Ada_Lib.Help.Trace_Modifier) &
-                  Ada_Lib.Options.Create.Create_Multiple (
+                  Ada_Lib.Options.Initialize (
                      Options_Without_Modifiers,
                      Ada_Lib.Options.Unmodified_Flag);
       Expected_All_Options
@@ -59,12 +59,20 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
          Test_Result             : constant Boolean :=
                                     Expected_All_Options = Got_Without_Parameters;
       begin
-         Log_Here (Debug, Quote ("all registered parameters",
-            Got_Without_Parameters));
+         Log_Here (Debug, "Test_Result " & Test_Result'img &
+            Quote (" Expected_All_Options", Expected_All_Options) &
+            Quote (" Got_Without_Parameters", Got_Without_Parameters));
          Assert (Test_Result, "wrong options with parameters '" &
             Got_Without_Parameters & "' expected '" & Expected_All_Options & "'");
       end;
       Log_Out (Debug);
+
+   exception
+
+      when Fault: others =>
+         Trace_Exception (Fault);
+         raise;
+
    end Options;
 
    ---------------------------------------------------------------
@@ -85,12 +93,12 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
-            Ada_Lib.Options.Create.Create_Multiple (With_Parameters,
+            Ada_Lib.Options.Initialize (With_Parameters,
             Ada_Lib.Options.Unmodified_Flag));
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters,
-            Ada_Lib.Options.Create.Create_Multiple (
+            Ada_Lib.Options.Initialize (
             Without_Parameters, Ada_Lib.Options.Unmodified_Flag));
       Log_Here (Debug);
 
@@ -124,7 +132,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option   : constant Ada_Lib.Options.Base_Flag_Option_Type'class :=
+                  Option   : constant Ada_Lib.Options.Flag_Option_Type'class :=
                               Iterator.Get_Option;
 
                begin
@@ -327,11 +335,11 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
-         Ada_Lib.Options.Create.Create_Multiple (
+         Ada_Lib.Options.Initialize (
          With_Parameters, Ada_Lib.Options.Unmodified_Flag));
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters,
-         Ada_Lib.Options.Create.Create_Multiple (
+         Ada_Lib.Options.Initialize (
             Without_Parameters, Ada_Lib.Options.Unmodified_Flag));
 
       Log_Here (Debug);
@@ -361,8 +369,8 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option            : constant Ada_Lib.Options.Base_Flag_Option_Type'class :=
-                                       Iterator.Get_Option;
+                  Option   : constant Ada_Lib.Options.Flag_Option_Type'class :=
+                              Iterator.Get_Option;
 
                begin
                   Log_Here (Debug, "option " & Option.Image);
@@ -463,7 +471,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
       Ada_Lib.Options.Runstring.Options.Reset;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
@@ -488,7 +496,7 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
@@ -510,12 +518,12 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
-         Ada_Lib.Options.Create.Create_Multiple (
+         Ada_Lib.Options.Initialize (
             With_Parameters, Ada_Lib.Options.Unmodified_Flag));
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.Without_Parameters,
-         Ada_Lib.Options.Create.Create_Multiple (
+         Ada_Lib.Options.Initialize (
             Without_Parameters, Ada_Lib.Options.Unmodified_Flag));
       Log_Here (Debug);
 
@@ -550,8 +558,8 @@ package body Ada_Lib.Command_Line_Iterator.Tests is
             if Iterator.Is_Option then
                Log_Here (Debug, "got option");
                declare
-                  Option            : constant Ada_Lib.Options.Base_Flag_Option_Type'class :=
-                                       Iterator.Get_Option;
+                  Option   : constant Ada_Lib.Options.Flag_Option_Type'class :=
+                              Iterator.Get_Option;
 
                begin
                   Log_Here (Debug, "option " & Option.Image);

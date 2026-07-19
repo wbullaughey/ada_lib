@@ -1,11 +1,12 @@
 -- with Ada.Exceptions;
-with Ada.Text_IO; use Ada.Text_IO;
+--with Ada.Text_IO; use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options.Flags;
-with Ada_Lib.Options.Unit_Test;
+--with Ada_Lib.Options.Unit_Test;
+--with Ada_Lib.Options.Verification;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with GNATCOLL.Templates;
+--with GNATCOLL.Templates;
 
 package body Ada_Lib.GNATCOLL.Tests is
 
@@ -39,37 +40,37 @@ package body Ada_Lib.GNATCOLL.Tests is
    pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Source                     : constant String :=
-                                    "before variable %{abc}after variable %{xyz}";
-      Parameters                 : constant Standard.GNATCOLL.Templates.Substitution_Array := (
-                                    (
-                                       Name  => new String'("abc"),
-                                       Value => new String'("abc_value")
-                                    ), (
-                                       Name  => new String'("xyz"),
-                                       Value => new String'("xyz_value")
-                                    )
-                                 );
-      Expected                   : constant String :=
-                                    "before variable abc_valueafter variable xyz_value";
-
+--    Source                     : constant String :=
+--                                  "before variable %{abc}after variable %{xyz}";
+--    Parameters                 : constant Standard.GNATCOLL.Templates.Substitution_Array := (
+--                                  (
+--                                     Name  => new String'("abc"),
+--                                     Value => new String'("abc_value")
+--                                  ), (
+--                                     Name  => new String'("xyz"),
+--                                     Value => new String'("xyz_value")
+--                                  )
+--                               );
+--    Expected                   : constant String :=
+--                                  "before variable abc_valueafter variable xyz_value";
    begin
       Log_In (Debug);
-      declare
-         Options     : Ada_Lib.Options.Unit_Test.
-                        Ada_Lib_Unit_Test_Program_Options_Type'class renames
-                           Ada_Lib.Options.Unit_Test.
-                              Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-         Expansion               : constant String := Standard.GNATCOLL.Templates.Substitute (
-                                    Str         => Source,
-                                    Substrings  => Parameters);
-      begin
-         if Options.Verbose then
-            Put_Line (Source & " => " & Expansion);
-         end if;
-         Assert (Expansion = Expected, "template replacement failed");
-      end;
+not_implemented;
+--    declare
+--       Options     : Ada_Lib.Options.Unit_Test.
+--                      Ada_Lib_Unit_Test_Program_Options_Type'class renames
+--                         Ada_Lib.Options.Unit_Test.
+--                            Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
+--       Expansion               : constant String := Standard.GNATCOLL.Templates.Substitute (
+--                                  Str         => Source,
+--                                  Substrings  => Parameters);
+--    begin
+--       if Options.Nested_Program_Options.Verbose then
+--          Put_Line (Source & " => " & Expansion);
+--       end if;
+--       Assert (Expansion = Expected, "template replacement failed");
+--    end;
       Log_Out (Debug);
 
    exception
@@ -86,7 +87,7 @@ package body Ada_Lib.GNATCOLL.Tests is
 --
 -- begin
 --    Log_In (Debug);
---    Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+--    Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
 --    Test.Credential.Initialize (Account, Password);
 --    Log_Out (Debug);
 --

@@ -21,7 +21,7 @@ package body Ada_Lib.Parser.Tests is
 --    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
 --                         renames Ada_Lib.Options.AUnit_Lib.
 --                            Aunit_Program_Options_Constant_Class_Access (
---                               Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
 -- begin
 --    return Options.Debug;
 -- end Debug;
@@ -301,7 +301,7 @@ package body Ada_Lib.Parser.Tests is
 --    Options  : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
 --                renames Ada_Lib.Options.AUnit_Lib.
 --                   Aunit_Program_Options_Class_Access (Ada_Lib.Options.Flags.
---                      Get_Ada_Lib_Modifiable_Program_Options).all;
+--                      Get_Ada_Lib_Modifiable_Nested_Options).all;
 -- begin
 --    Options.Debug := True;
 -- end Set_Debug;

@@ -177,7 +177,7 @@ null;
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
@@ -196,7 +196,7 @@ null;
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Credential.Initialize (Account, Password);
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
 

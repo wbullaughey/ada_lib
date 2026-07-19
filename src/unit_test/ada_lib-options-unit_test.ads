@@ -1,9 +1,10 @@
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Program;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace;
 with AUnit.Test_Filters.Ada_Lib;
-with GNOGA_Options;
+--with GNOGA_Options;
 
 -- provides options for all unit testing
 package Ada_Lib.Options.Unit_Test is
@@ -30,17 +31,18 @@ package Ada_Lib.Options.Unit_Test is
    Default_Random_Seed           : constant := 0;
 
    -- base type for all unit test programs which -- include ada_lib
-   type Ada_Lib_Unit_Test_Program_Options_Type (
+   type Ada_Lib_Unit_Test_Nested_Options_Type (
       Multi_Test        : Boolean -- perform multiple tests in one
                                       -- execution of test program
-                           ) is new Ada_Lib.Options.Program.
-                              Program_Options_Type with record
+                           ) is new Program.
+                              Nested_Program_Options_Type with record
       Debug             : Boolean := False;  -- debug unit test application
       Debug_Options     : Boolean := False;  -- debug unit test options
       Exit_On_Done      : Boolean := False;  -- exit test application after
                                              -- all unit tests complete
-      Filter            : aliased Standard.AUnit.Test_Filters.Ada_lib.Ada_Lib_Filter;
-      GNOGA_Options     : Standard.GNOGA_Options.GNOGA_Options_Type;
+      Filter            : aliased Standard.AUnit.Test_Filters.Ada_lib.
+                           Ada_Lib_Filter;
+      Have_Camera       : Boolean := True;
       Mode              : Mode_Type := Run_Tests;  -- run unit tests
       Manual            : Boolean := False;  -- GUI interactions must be
                                              -- performed manually
@@ -51,67 +53,73 @@ package Ada_Lib.Options.Unit_Test is
       Random_Seed_Mode  : Random_Seed_Mode_Type := Seed_Not_Set;
       Report_Random     : Boolean := False;
       Routine           : Ada_Lib.Strings.Unlimited.String_Type;
+      Short_Test        : Boolean := False;
       Suite_Name        : Ada_Lib.Strings.Unlimited.String_Type;
       Suite_Set         : Suite_Set_Type := (others => False);
    end record;
 
-   type Ada_Lib_Unit_Test_Options_Class_Access
-                                 is access all Ada_Lib_Unit_Test_Program_Options_Type'class;
-   type Ada_Lib_Unit_Test_Options_Constant_Class_Access
-                                 is access constant Ada_Lib_Unit_Test_Program_Options_Type'class;
+   type Ada_Lib_Unit_Test_Nested_Options_Access
+            is access all Ada_Lib_Unit_Test_Nested_Options_Type;
+   type Ada_Lib_Unit_Test_Nested_Options_Class_Access
+            is access all Ada_Lib_Unit_Test_Nested_Options_Type'class;
+   type Ada_Lib_Unit_Test_Nested_Options_Constant_Class_Access
+            is access constant Ada_Lib_Unit_Test_Nested_Options_Type'class;
 
    -- call this for unit tests that cannot run multiple tests at one time
    procedure Check_Test_Suite_And_Routine (
-      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type);
+      Options                    : in     Ada_Lib_Unit_Test_Nested_Options_Type);
 
-   function Get_Modifiable_Ada_Lib_Unit_Test_Options
-   return Ada_Lib_Unit_Test_Options_Class_Access
-   with pre => Have_Unit_Test_Options;
+   function Get_Modifiable_Ada_Lib_Unit_Test_Nested_Options (
+      From                       : in  String := Options_Here
+   ) return Ada_Lib_Unit_Test_Nested_Options_Class_Access
+   with pre => Verification.Have_Ada_Lib_Verification_Options;
 
-   function Get_Readonly_Ada_Lib_Unit_Test_Options
-   return Ada_Lib_Unit_Test_Options_Constant_Class_Access
-   with pre => Have_Unit_Test_Options;
+   function Get_Readonly_Ada_Lib_Unit_Test_Nested_Options (
+      From                       : in  String := Options_Here
+   ) return Ada_Lib_Unit_Test_Nested_Options_Constant_Class_Access
+   with pre => Verification.Have_Ada_Lib_Verification_Options;
 
-   function Have_Unit_Test_Options
-   return Boolean;
+   overriding
+   function Image (
+     Options                     : in     Ada_Lib_Unit_Test_Nested_Options_Type
+   ) return String;
 
    overriding
    function Initialize (
-     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Nested_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
-   ) return Boolean
-   with pre => Options.Verify_Preinitialize;
+   ) return Boolean;
+-- with pre    => not Options.Verify_Step (Initialized),
+--      Post   => Options.Verify_Step (Initialized);
 
    overriding
    procedure Post_Process (      -- final initialization
-     Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type);
+     Options                    : in out Ada_Lib_Unit_Test_Nested_Options_Type);
 
    overriding
    function Process_Option (  -- process one option
-     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Nested_Options_Type;
      Iterator                    : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option                     : in     Ada_Lib.Options.Base_Flag_Option_Type'class
+      Option                     : in     Ada_Lib.Options.Flag_Option_Type'class
    ) return Boolean
-   with pre => Options.Verify_Initialized;
-
--- function Options (
---    From                       : in     String :=
---                                           Standard.GNAT.Source_Info.Source_Location
--- ) return Unit_Test_Options_Constant_Class_Access;
+   with pre => Options.Verify_Step (Initialized);
 
    overriding
    procedure Update_Filter (
-      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type);
+      Options                    : in out Ada_Lib_Unit_Test_Nested_Options_Type);
+
+-- function Have_Unit_Test_Options
+-- return Boolean;
 
    procedure Routine_Action (
       Suite                      : in     String;
       Routine                    : in     String;
       Mode                       : in     Mode_Type);
 
-   procedure Set_Ada_Lib_Unit_Test_Options (
-      Options                    : in     Ada_Lib_Unit_Test_Options_Class_Access
-   ) with Pre => Options /= Null and then
-                 not Have_Unit_Test_Options;
+-- procedure Set_Ada_Lib_Unit_Test_Options (
+--    Options     : in     Ada_Lib_Unit_Test_Nested_Options_Class_Access
+-- ) with Pre => Options /= Null and then
+--               not Verification.Have_Ada_Lib_Verification_Options;
 
    procedure Suite_Action (
       Suite                      : in     String;
@@ -140,26 +148,32 @@ package Ada_Lib.Options.Unit_Test is
 
    package Ada_Lib_GNOGA_Unit_Test is
       Base_Debug                    : Boolean := False;
-      Debug                         : Boolean := False;
       Event_Debug                   : Boolean := False;
+      GNOGA_Debug                   : Boolean := False;
+      Test_Debug                    : Boolean := False;
    end Ada_Lib_GNOGA_Unit_Test;
 
    package Ada_Lib_Help_Unit_Test is
       Debug                         : Boolean := False;
    end Ada_Lib_Help_Unit_Test;
 
+   package Ada_Lib_ICON_Unit_Test is
+      Debug                         : Boolean := False;
+   end Ada_Lib_ICON_Unit_Test;
+
    package Ada_Lib_Lock_Unit_Test is
       Debug                         : Boolean := False;
    end Ada_Lib_Lock_Unit_Test;
 
    package Ada_Lib_Options_Unit_Test is
+      Client_Debug                  : Boolean := False;
       Debug                         : Boolean := False;
    end Ada_Lib_Options_Unit_Test;
 
    package Ada_Lib_Options_Trace_Tests is
-      Debug                         : Boolean := False;
+      Debug_Detail                  : Boolean := False;
       Debug_Test                    : Boolean := False;
-      Debug_Tests                   : Boolean := False;
+      Debug_All_Tests               : Boolean := False;
    end Ada_Lib_Options_Trace_Tests;
 
    package Ada_Lib_Strings is
@@ -169,6 +183,10 @@ package Ada_Lib.Options.Unit_Test is
    package Ada_Lib_Test_States is
       Debug                         : Boolean := False;
    end Ada_Lib_Test_States;
+
+   package Ada_Lib_Textbelt_Unit_Test is
+      Debug                         : Boolean := False;
+   end Ada_Lib_Textbelt_Unit_Test;
 
    package Ada_Lib_Unit_Test is
       Debug                         : Boolean := False;
@@ -191,12 +209,12 @@ private
 
    overriding
    procedure Program_Help (
-      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type;  -- only used for dispatch
+      Options                    : in     Ada_Lib_Unit_Test_Nested_Options_Type;  -- only used for dispatch
       Help_Mode                  : in     Ada_Lib.Options.Help_Mode_Type);
 
    overriding
    procedure Trace_Parse (
-      Options              : in out Ada_Lib_Unit_Test_Program_Options_Type;
+      Options              : in out Ada_Lib_Unit_Test_Nested_Options_Type;
       Iterator             : in out Ada_Lib.Options.
                                        Command_Line_Iterator_Interface'class);
 

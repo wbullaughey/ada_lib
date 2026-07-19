@@ -134,7 +134,7 @@ package body Ada_Lib.Database.Subscription is
       Subscription.Update_Mode := Update_Mode;
       Log_Here (Debug_Subscribe, " name value " & Subscription.Name_Value.Image &
          " Update_Mode " & Update_Mode'img & " address " & Ada_Lib.Strings.Image (Subscription'address) &
-         " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag));
+         Tag_Name (" subscription", Subscription_Type'class (Subscription)'tag));
    end Initialize;
 
    ---------------------------------------------------------------------------------
@@ -311,8 +311,9 @@ package body Ada_Lib.Database.Subscription is
    ---------------------------------------------------------------------------------
 
    begin
-      Log_In (Debug_Subscribe, Subscription.Name_Value.Image & " subscription tag " &
-         Tag_Name (Subscription_Type'class (Subscription)'tag));
+      Log_In (Debug_Subscribe, Subscription.Name_Value.Image &
+         Tag_Name (" subscription ",
+            Subscription_Type'class (Subscription)'tag));
       Subscription.Name_Value.Value := Ada_Lib.Strings.Unlimited.Coerce (Value);
 
       case Update_Kind is
@@ -324,9 +325,11 @@ package body Ada_Lib.Database.Subscription is
             Subscription.Update_Count := Subscription.Update_Count + 1;
 
       end case;
-      Log_Out (Debug_Subscribe, " name value " & Subscription.Name_Value.Image &
-         " update count" & Subscription.Update_Count'img & " update kind " & Update_Kind'img &
-         " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag) &
+      Log_Out (Debug_Subscribe, " name value " &
+         Subscription.Name_Value.Image &
+         " update count" & Subscription.Update_Count'img & " update kind " &
+         Update_Kind'img & Tag_Name (" subscription",
+            Subscription_Type'class (Subscription)'tag) &
          " subscription address " & Ada_Lib.Strings.Image (Subscription'address) & " from " & From);
    end Update_Value;
 

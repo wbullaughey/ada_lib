@@ -1,16 +1,13 @@
 with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
--- with GNOGA_Options.Database.AUnit;
---with Ada_Lib.Test; --.Tests;
 with Ada_Lib.Database.Common;
---with Ada_Lib.Database.Unit_Test;
 with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Options.Flags;
+with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Database.Get_Put_Tests is
 
@@ -459,20 +456,24 @@ package body Ada_Lib.Database.Get_Put_Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options     : Ada_Lib.Options.Unit_Test.
-                     Ada_Lib_Unit_Test_Program_Options_Type'class renames
-                        Ada_Lib.Options.Unit_Test.
-                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Listing_Suites             : constant Boolean :=
-                                    Options.Mode /= Ada_Lib.Options.Run_Tests;
-      Star_Names                 : constant String :=
-                                    (if Listing_Suites then "*" else "");
+      Options  : Ada_Lib.Options.AUnit_Lib.
+                     Aunit_Program_Options_Type'class renames
+                  Ada_Lib.Options.
+                     AUnit_Lib.Aunit_Program_Options_Constant_Class_Access (
+                        Ada_Lib.Options.Verification.
+                           Get_Ada_Lib_Read_Only_Program_Options).all;
+      Listing_Suites
+               : constant Boolean := Options.Nested_Unit_Test_Options.Mode /=
+                                       Ada_Lib.Options.Run_Tests;
+      Star_Names
+               : constant String := (if Listing_Suites then "*" else "");
    begin
+--not_implemented;
       Log (Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
 
       if Listing_Suites or else
-            Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
+            Options.Nested_Unit_Test_Options.Suite_Set (
+               Ada_Lib.Options.Unit_Test.Database_Server) then
          Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
             Routine        => Is_Open_True'access,
             Routine_Name   => AUnit.Format ("Is_Open_True" & Star_Names)));

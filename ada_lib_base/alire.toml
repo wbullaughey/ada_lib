@@ -23,3 +23,10 @@ ada_lib_options = "~0.1.0-dev"
 [[pins]]
 ada_lib_options = { path="../ada_lib_options" }
 
+[[depends-on]]
+gnatcoll_minimal = "*"
+
+
+
+
+

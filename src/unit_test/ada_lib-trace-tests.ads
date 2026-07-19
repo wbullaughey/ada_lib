@@ -1,6 +1,6 @@
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 --with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 
@@ -8,7 +8,7 @@ package Ada_Lib.Trace.Tests is
 
 Suite_Name                    : constant String := "Trace";
 
-   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with private;
 
    overriding
@@ -52,7 +52,7 @@ private
       File                       : in out Test_File_Type;
       Data                       : in     String);
 
-   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with record
       Output                     : aliased Test_File_Type;
       Saved_Output_File          : File_Class_Access := Null;

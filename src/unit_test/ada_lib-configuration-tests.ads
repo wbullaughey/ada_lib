@@ -1,9 +1,9 @@
 with AUnit.Test_Suites;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Configuration.Tests is
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with record
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
       Configuration              : Configuration_Type;
    end record;
 
@@ -14,6 +14,8 @@ package Ada_Lib.Configuration.Tests is
 
    overriding
    procedure Register_Tests (Test : in out Test_Type);
+
+   procedure Set_Debug;
 
    overriding
    procedure Set_Up (
@@ -28,7 +30,6 @@ package Ada_Lib.Configuration.Tests is
       Test : in out Test_Type
    ) with post => Test.Verify_Tear_Down;
 
-   Debug                         : Boolean := False;
 private
 
    Suite_Name                    : constant String := "Configuration";

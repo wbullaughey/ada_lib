@@ -9,7 +9,7 @@ export TRACE=1
 #   execute    - build application or library for subdirectory level
 #   help_test  - builds help_test at level
 
-echo build WHICH $WHICH PROGRAM $PROGRAM
+echo build WHICH $WHICH
 
 ../global_build.sh $WHICH library $PROGRAM $NO_WARNINGS $TRACE
 

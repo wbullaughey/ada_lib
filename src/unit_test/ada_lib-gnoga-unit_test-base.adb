@@ -1,11 +1,9 @@
 -- with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases;
---with Ada_Lib.GNOGA.Unit_Test;
---with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Strings;
+--with Ada_Lib.Options.Verification;
+--with Ada_Lib.Strings;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
-with Ada_Lib.Test_States;
 with Ada_Lib.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Gnoga.Application.Multi_Connect;
@@ -41,11 +39,11 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    ---------------------------------------------------------------
    procedure Button_On_Exit (
-      Object                     : in out Standard.Gnoga.Gui.Base.Base_Type'Class) is
+      Object            : in out Standard.Gnoga.Gui.Base.Base_Type'Class) is
    ---------------------------------------------------------------
 
-      Connection_Data            : constant Connection_Class_Access :=
-                                    Connection_Class_Access (Object.Connection_Data);
+      Connection_Data   : constant Form_Connection_Class_Access :=
+                           Form_Connection_Class_Access (Object.Connection_Data);
 
    begin
       Connection_Data.Display_Window.New_Line;
@@ -78,9 +76,9 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
 
    begin
       Log_In (Debug, Quote ("URL", URL));
-      Window_Lock.Set_Window (Main_Window'unchecked_access);
+--    Window_Lock.Set_Window (Main_Window'unchecked_access);
       Pause_On_Flag ("exit handler");
-      GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+      Ada_Lib.GNOGA.Get_Window_Connection_Data.Set_Main_Created;
       GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       Log_Out (Debug);
    end Connect_Browser_Handler;
@@ -107,11 +105,10 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
    begin
       Log_In (Debug);
       declare
-         Connection_Data            : constant Connection_Class_Access :=
-                                       Connection_Class_Access (
-                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                             Main_Window'unchecked_access));
-         URL                        : constant String := Main_Window.Document.URL;
+         Connection_Data   : constant Form_Connection_Class_Access :=
+                              Form_Connection_Class_Access (
+                                 Ada_Lib.GNOGA.Get_Window_Connection_Data);
+         URL               : constant String := Main_Window.Document.URL;
 
       begin
          Log_Here (Debug, Quote ("URL", URL));
@@ -121,7 +118,7 @@ package body Ada_Lib.GNOGA.Unit_Test.Base is
          Connection_Data.Display_Window.Put_Line ("test window content");
          Main_Window.Connection_Data (Connection_Data);
          Pause_On_Flag ("exit handler");
-         GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+         Ada_Lib.GNOGA.Get_Window_Connection_Data.Set_Main_Created;
          GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
       end;
       Log_Out (Debug);
@@ -156,11 +153,10 @@ exception
    begin
       Log_In (Debug);
       declare
-         Connection_Data            : constant Connection_Class_Access :=
-                                       Connection_Class_Access (
-                                          Ada_Lib.Test_States.Get_Window_Connection_Data (
-                                             Main_Window'unchecked_access));
-         URL                        : constant String := Main_Window.Document.URL;
+         Connection_Data   : constant Form_Connection_Class_Access :=
+                              Form_Connection_Class_Access (
+                                 Ada_Lib.GNOGA.Get_Window_Connection_Data);
+         URL               : constant String := Main_Window.Document.URL;
 
       begin
          Log_Here (Debug, Quote ("URL", URL));
@@ -177,7 +173,7 @@ exception
          Connection_Data.Button.On_Click_Handler (Button_On_Exit'Unrestricted_Access);
          Pause_On_Flag ("handler set");
          Button_On_Exit (Connection_Data.Button);
-         GNOGA_Ada_Lib.Base.Set_Main_Created (True);
+         Ada_Lib.GNOGA.Get_Window_Connection_Data.Set_Main_Created;
          GNOGA_Ada_Lib.Base.Message_Loop_Signal.Completed;
          Pause_On_Flag ("exit handler");
       end;
@@ -250,27 +246,29 @@ exception
    procedure Start_Test (
       Handler                    : in     Standard.Gnoga.Application.Multi_Connect.Application_Connect_Event;
       Window_Name                : in     String) is
+   pragma Unreferenced (Handler, Window_Name);
    ---------------------------------------------------------------
 
-      Options     : Ada_Lib.Options.Unit_Test.
-                     Ada_Lib_Unit_Test_Program_Options_Type'class renames
-                        Ada_Lib.Options.Unit_Test.
-                           Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options     : Ada_Lib.Options.Unit_Test.
+--                   Ada_Lib_Unit_Test_Program_Options_Type'class renames
+--                      Ada_Lib.Options.Unit_Test.
+--                         Ada_Lib_Unit_Test_Options_Constant_Class_Access (
+--                            Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      Log_In (Debug, "handler " & Ada_Lib.Strings.Image (Handler.all'address));
-      Standard.GNOGA.Application.Open_URL;
-      GNOGA_Ada_Lib.Base.Initialize_GNOGA (Handler,
-         Application_Title    => Window_Name,
-         Port                 => Options.GNOGA_Options.HTTP_Port,
-         Verbose              => True, -- GNOGA_Options.Verbose
-         Wait_For_Completion  => True);
-      Log_Here (Debug);
---    while not Test_Completed loop
---       delay 0.1;
---    end loop;
---    Get_Base.Terminated;
-      Log_Out (Debug);
+not_implemented;
+--      Log_In (Debug, "handler " & Ada_Lib.Strings.Image (Handler.all'address));
+--      Standard.GNOGA.Application.Open_URL;
+--      GNOGA_Ada_Lib.Base.Initialize_GNOGA (Handler,
+--         Application_Title    => Window_Name,
+--         Port                 => Options.Library_Options.GNOGA_Options.HTTP_Port,
+--         Verbose              => True, -- GNOGA_Options.Verbose
+--         Wait_For_Message_Loop_Exit  => True);
+--      Log_Here (Debug);
+----    while not Test_Completed loop
+----       delay 0.1;
+----    end loop;
+----    Get_Base.Terminated;
+--      Log_Out (Debug);
    end Start_Test;
 
 ----------------------------------------------------------------------------
@@ -297,7 +295,7 @@ exception
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
 --    GNOGA_Ada_Lib.Clear_Connection_Data;
-      GNOGA_Ada_Lib.Base.Set_Main_Created (False);
+--    GNOGA_Ada_Lib.Base.Set_Main_Created (False);
       Ada_Lib.GNOGA.Unit_Test.GNOGA_Tests_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;

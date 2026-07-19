@@ -65,7 +65,7 @@ package body Ada_Lib.Socket_IO is
    begin
       Log_In (Trace, "socket " & Socket.Image &
          " Open " & Socket.Is_Open'img &
-         " tag " & Tag_Name (Socket_Type'class (Socket)'tag) &
+         Tag_Name ("socket", Socket_Type'class (Socket)'tag) &
          " addresses socket " & Image (Socket'address));
 
       if not Socket.Is_Open then
@@ -261,8 +261,7 @@ package body Ada_Lib.Socket_IO is
    ---------------------------------------------------------------------------
 
    begin
-     return Log_Here (Socket.Open,
-         Tracing or Trace_Pre_Post_Conditions,
+     return Log_Here (Socket.Open, Tracing,
          "open " & Socket.Open'img &
         " address " & Image (Socket'address));
    end Is_Open;

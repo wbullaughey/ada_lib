@@ -1,4 +1,4 @@
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 
@@ -6,7 +6,7 @@ package Ada_Lib.Curl.Tests is
 
    Suite_Name                    : constant String := "Curl";
 
-   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with null record;
 
    overriding

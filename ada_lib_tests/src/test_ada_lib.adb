@@ -4,7 +4,9 @@ with Ada_Lib.Command_Line_Iterator;
 with Ada_Lib.Help;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
+with Ada_Lib.Options.Program;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.OS;
 with Ada_Lib.Test.Run_Suite;
 --with Ada_Lib.Timer;
@@ -24,18 +26,28 @@ begin
                         Aunit_Program_Options_Type (
          Multi_Test        => True,
          Options_Selection => Ada_Lib.Options.AUnit_Lib.
-                                 Ada_Lib_Unit_Test_With_Database);
-      Debug          : Boolean renames
-                        Ada_Lib.Options.Unit_Test.Ada_Lib_AUnit.Tester_Debug;
+                                 Unit_Test_With_Database_And_Template);
+      Command_Parameters
+            : aliased constant Ada_Lib.Options.Argument_Array := (1 .. 0 => <>);
+      Debug : Boolean renames
+               Ada_Lib.Options.Unit_Test.Ada_Lib_AUnit.Tester_Debug;
 
    begin
 --Debug := True;
-      Ada_Lib.Options.Set_Ada_Lib_Program_Options (Aunit_Options'unchecked_access);
+      Log_Here (Debug);
+      Ada_Lib.Options.Program.Set_Command_Parameters (
+         Command_Parameters'unchecked_access);
+      Ada_Lib.Options.Verification.Set_Ada_Lib_Program_Options (
+         Ada_Lib.Options.Verification.Verification_Program_Options_Type'class (
+            Aunit_Options)'unchecked_access,
+         Ada_Lib.Options.Program.Nested_Program_Options_Type'class (
+            Aunit_Options.Nested_Unit_Test_Options)'unchecked_access);
+
       if    Aunit_Options.Initialize then
          Log_Here (Debug);
          if Aunit_Options.Process (
                   Include_Options      => True,
-                  Include_Non_Options  => False,
+                  Include_Non_Options  => True,
                   Modifiers            => Ada_Lib.Help.Modifiers) then
             Log_Here (Debug);
             Aunit_Options.Post_Process;
@@ -50,17 +62,23 @@ begin
                end if;
             else
                Log_Here (Debug);
-               Ada_Lib.Trace_Tasks.Start ("main");
-               Log_Here (Debug);
-               Ada_Lib.Test.Run_Suite (Aunit_Options);
-               Gnoga.Application.Multi_Connect.End_Application;
-               Log_Here (Debug);
-               if Aunit_Options.Exit_On_Done then
-                  Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
-               end if;
+--             if Camera.Lib.Unit_Test.Has_Camera_Specification then
+                  Ada_Lib.Trace_Tasks.Start ("main");
+                  Log_Here (Debug);
+                  Ada_Lib.Test.Run_Suite (Aunit_Options);
+                  Gnoga.Application.Multi_Connect.End_Application;
+                  Log_Here (Debug, "exit on done " &
+                     Aunit_Options.Nested_Unit_Test_Options.Exit_On_Done'img);
+                  if Aunit_Options.Nested_Unit_Test_Options.Exit_On_Done then
+                     Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.No_Error);
+                  end if;
 
-               Ada_Lib.Trace_Tasks.Stop;
-               Ada_Lib.Trace_Tasks.Report;
+                  Ada_Lib.Trace_Tasks.Stop;
+                  Ada_Lib.Trace_Tasks.Report;
+--             else
+--                Put_Line ("Missing camera specification");
+--             end if;
+
             end if;
          else
             Put_Line ("Options.Process failed");
@@ -76,6 +94,10 @@ exception
          Trace_Exception (True, Fault, Here);
          Put_Line ("could not process command line options");
          Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
+
+   when Deadlock =>
+      Put_Line ("Deadlock in trace at " &Here);
+      Ada_Lib.OS.Immediate_Halt (Ada_Lib.OS.Exception_Exit);
 
    when Fault: others =>
       Trace_Exception (True, Fault, Here);

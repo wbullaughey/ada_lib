@@ -51,6 +51,7 @@ package Ada_Lib.Socket_IO is
 
    type Buffer_Access   is access all Ada.Streams.Stream_Element_Array;
 
+   No_Address     : constant Address_Type;
    No_Timeout     : constant Duration := Duration'last;
    Reuse_Address  : Option_Type renames GNAT.Sockets.Reuse_Address;
    Trace          : Boolean renames Options.Ada_Lib_Socket_IO.Trace;
@@ -226,5 +227,8 @@ private
    overriding
    procedure Initialize (
      Socket                   : in out Socket_Type);
+
+   No_Address     : constant Address_Type := (
+                              Address_Kind   => Not_Set);
 
 end Ada_Lib.Socket_IO;

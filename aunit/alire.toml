@@ -22,6 +22,6 @@ aunit = { path='../../aunit' }
 alr_environment = { path='../..' }
 
 [[depends-on]]
-gnatcoll = "*"
+gnatcoll_minimal = "*"
 
 

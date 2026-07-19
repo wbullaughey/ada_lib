@@ -4,7 +4,7 @@ with AUnit.Test_Suites;
 -- with Ada_Lib.Database.Server;
 with Ada_Lib.Database.Subscribe;
 with Ada_Lib.Database.Updater;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Database.Subscription.Tests is
 
@@ -44,7 +44,7 @@ package Ada_Lib.Database.Subscription.Tests is
      Update_Kind                : in     Ada_Lib.Database.Updater.Update_Kind_Type;
      From                       : in     String := Ada_Lib.Trace.Here);
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type  with null record;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type  with null record;
 
    function Subscription_Suite (
       Which_Host              : in    Ada_Lib.Database.Which_Host_Type

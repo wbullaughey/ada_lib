@@ -1,9 +1,9 @@
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Test_Suites;
 
 package Ada_Lib.Socket_IO.Client.Unit_Test is
 
-   type Socket_Client_Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type
+   type Socket_Client_Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type
                                     with null record;
    type Socket_Client_Test_Access is access Socket_Client_Test_Type;
 
@@ -27,7 +27,6 @@ package Ada_Lib.Socket_IO.Client.Unit_Test is
 -- overriding
 -- procedure Tear_Down (Test : in out Socket_Client_Test_Type);
 
-   Debug                         : Boolean := False;
    Suite_Name                    : constant String := "Client_Socket_IO";
 
 

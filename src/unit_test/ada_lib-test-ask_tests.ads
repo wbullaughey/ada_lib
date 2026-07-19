@@ -3,13 +3,13 @@
 --
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 -- with Ada_Lib.Unit_Test.Test_Cases;
 
 
 package Ada_Lib.Test.Ask_Tests is
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with null record;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with null record;
 
    type Test_Access is access Test_Type;
 

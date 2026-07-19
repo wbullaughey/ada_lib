@@ -16,6 +16,7 @@ package body Ada_Lib.Configuration.Tests is
    procedure Update_Same_Configuration (
       Test                       : in out AUnit.Test_Cases.Test_Case'class);
 
+   Debug                         : Boolean := False;
    Root_Path                     : constant String := "tests/data/";
    Default_Configuration_Path    : constant String := Root_Path &
                                                       "configuration.cfg";
@@ -125,6 +126,14 @@ package body Ada_Lib.Configuration.Tests is
    end Register_Tests;
 
    ---------------------------------------------------------------
+   procedure Set_Debug is
+   ---------------------------------------------------------------
+
+   begin
+      Debug := True;
+   end Set_Debug;
+
+   ---------------------------------------------------------------
    overriding
    procedure Set_Up (
       Test                       : in out Test_Type) is
@@ -159,7 +168,7 @@ package body Ada_Lib.Configuration.Tests is
       Log_In (Debug or Trace_Set_Up_Tear_Down);
       Delete_File (New_Configuration_Path);
       Delete_File (Missing_Configuration_Path);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
@@ -189,7 +198,7 @@ package body Ada_Lib.Configuration.Tests is
          Log_Here (Debug);
          Test.Configuration.Close;
       end if;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 

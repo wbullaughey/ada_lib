@@ -1,11 +1,10 @@
 with "ada_lib.gpr";
 --with "ada_lib_test_lib.gpr";
 with "gnoga_ada_lib.gpr";
-with "gnoga_options.gpr";
 with "alr_environment.gpr";
 with "aunit.gpr";
 with "config/ada_lib_tests_config.gpr";
---with "gnatcoll.gpr";
+--with "gnatcoll_minimal.gpr";
 with "gnoga.gpr";
 --with "xmlada";
 

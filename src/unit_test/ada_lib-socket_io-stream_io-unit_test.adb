@@ -3,9 +3,10 @@ with Ada.Exceptions;
 with Ada.Text_IO;use Ada.Text_IO;
 --with Ada_Lib.Options.Flags;
 with AUnit.Assertions; use AUnit.Assertions;
-with Ada_Lib.Options.AUnit_Lib;
+--with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Program;
 with Ada_Lib.Options.Unit_Test;
+--with Ada_Lib.Options.Verification;
 with Ada_Lib.OS;
 with Ada_Lib.Socket_IO.Client;
 with Ada_Lib.Socket_IO.Server;
@@ -14,7 +15,7 @@ with Ada_Lib.Strings;
 --with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Trace_Tasks;
-with Ada_Lib.Unit_Test.Test_Cases;
+--with Ada_Lib.Unit_Test.Test_Cases;
 with GNAT.Source_Info;
 with Hex_IO;
 --with Runtime_Options;
@@ -161,20 +162,23 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       Test                       : in out Socket_Test_Type) is
    ---------------------------------------------------------------
 
-      Options     : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
-                     Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class (
-                        Ada_Lib.Options.Get_Ada_Lib_Modifiable_Program_Options.all);
+      Nested_Options
+         : Options.Unit_Test.Ada_Lib_Unit_Test_Nested_Options_Type
+            renames Options.Unit_Test.Ada_Lib_Unit_Test_Nested_Options_Type (
+               Options.Unit_Test.
+                  Get_Modifiable_Ada_Lib_Unit_Test_Nested_Options.all);
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      if Options.Number_Random_Generators = 0 then
-         Options.Number_Random_Generators := Required_Random_Number_Generators;
-      elsif Options.Number_Random_Generators /=
+      if Nested_Options.Number_Random_Generators = 0 then
+         Nested_Options.Number_Random_Generators :=
+            Required_Random_Number_Generators;
+      elsif Nested_Options.Number_Random_Generators /=
             Required_Random_Number_Generators then
          raise Fault with "wrong number random number generators" &
-            Options.Number_Random_Generators'img &
+            Nested_Options.Number_Random_Generators'img &
             " required" & Required_Random_Number_Generators'img;
       end if;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Test.Answer := Success;
       Test.Client_Completed := False;
       Test.Client_Delayed             := False;
@@ -219,7 +223,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
 --    Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
 --                      Ada_Lib.Options.AUnit_Lib.
 --                         Aunit_Program_Options_Constant_Class_Access (
---                            Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--                            Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
       Send_Started   : Boolean := True;
       Server         : Server_Task_Access := Null;
       Server_Description
@@ -475,7 +479,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                            Assert (False, "unexpected failed exception");
 
                         when Wrong_Port =>
-                           while not (Local_Test.Server_Completed) loop
+                           while not Local_Test.Server_Completed loop
                               delay 0.2;
                            end loop;
 
@@ -495,7 +499,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                Log_Here (Debug, "write buffer" &
                   Natural'(Send_Buffer'size/8)'img);
                Client_Socket.Write (Send_Buffer);
-               while not (Local_Test.Server_Completed) loop
+               while not Local_Test.Server_Completed loop
                   delay 0.2;
                end loop;
 
@@ -701,7 +705,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                   Test.Sockets (Index).Image, Here);
          end;
       end loop;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 
@@ -784,38 +788,43 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
       ------------------------------------------------------------
 
    begin
-      Log_In (Debug, "client " & Description.all);
-      Ada_Lib.Trace_Tasks.Start ("client " & Description.all);
+    Log_In (Debug, "client " & Description.all);
+    Ada_Lib.Trace_Tasks.Start ("client " & Description.all);
 
-      accept Start (
-         Test                    : in     Socket_Test_Access) do
+    accept Start (
+       Test                    : in     Socket_Test_Access) do
 
-         Log_Here (Debug, "started Answer " &
-            Test.Answer'img & Test.Client_Read_Timeout_Time'img);
-         Local_Test := Test;
-      end Start;
-      Local_Test.Client_Started := True;
-      Local_Test.Client_Failed := False;
+       Log_Here (Debug, "started Answer " &
+          Test.Answer'img & Test.Client_Read_Timeout_Time'img);
+       Local_Test := Test;
+    end Start;
+    Local_Test.Client_Started := True;
+    Local_Test.Client_Failed := False;
 
       declare
-         Data_Left      : Index_Type := (case Local_Test.Read_Write_Mode is
+         Data_Left   : Index_Type := (case Local_Test.Read_Write_Mode is
 
-                           when No_Data | Read_Timeout => 0,
+                        when No_Data | Read_Timeout => 0,
 
-                           when Polling_Read => Buffer_Length,
+                        when Polling_Read => Buffer_Length,
 
-                           when others => Data_Buffer_Type'length);
-         Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
-                           Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-         Description   : aliased constant String := "client";
-         Client_Socket  : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
-                           new Ada_Lib.Socket_IO.Client.Client_Socket_Type (
-                              Description'unchecked_access);
-         Start_Offset   : Index_Type :=
-                           Local_Test.Send_Data'first;
-         Written        : Index_Type := 0;
+                        when others => Data_Buffer_Type'length);
+         Nested_Program_Options
+               : constant Options.Program.
+                     Nested_Program_Options_Constant_Class_Access :=
+                  Options.Program.Get_Read_Only_Nested_Program_Options;
+         Nested_Unit_Test_Options
+               : constant Options.Unit_Test.
+                     Ada_Lib_Unit_Test_Nested_Options_Constant_Class_Access :=
+                  Options.Unit_Test.Get_Readonly_Ada_Lib_Unit_Test_Nested_Options;
+         Description : aliased constant String := "client";
+         Client_Socket
+                     : Ada_Lib.Socket_IO.Client.Client_Socket_Access :=
+                        new Ada_Lib.Socket_IO.Client.Client_Socket_Type (
+                           Description'unchecked_access);
+         Start_Offset: Index_Type :=
+                        Local_Test.Send_Data'first;
+         Written     : Index_Type := 0;
 
       begin
          Log_Here (Debug,
@@ -825,9 +834,9 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
             " delay time " & Delay_Time'img &
             " socket " & Ada_Lib.Strings.Image (Client_Socket'address) &
             " entered offset seed " &
-               Options.Random_Seeds (Offset_Generator_Index)'img &
+               Nested_Unit_Test_Options.Random_Seeds (Offset_Generator_Index)'img &
             " entered data seed " &
-               Options.Random_Seeds (Data_Generator_Index)'img &
+               Nested_Unit_Test_Options.Random_Seeds (Data_Generator_Index)'img &
             " Test " & Ada_Lib.Strings.Image (Local_Test.all'address));
 
          Client_Socket.Connect (
@@ -903,7 +912,6 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                         " to client socket " & Client_Socket.Image);
 
                   when others =>
-   log_here;
                      raise Fault with "unexpected Local_Test.Read_Write_Mode " &
                            Local_Test.Read_Write_Mode'img & " at " & Here;
 
@@ -920,10 +928,8 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                         exit;
                      end if;
 
-                     if Ada_Lib.Options.Program.
-                           Get_Read_Only_Program_Options.Verbose
-                                 and then
-                              Count mod Notify_Frequency = 0 then
+                     if Nested_Program_Options.Verbose and then
+                           Count mod Notify_Frequency = 0 then
                         Put_Line (Count'img & " records received");
                      end if;
                   end if;
@@ -932,7 +938,7 @@ package body Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
                   Data_Left := Data_Left - Write_Length;
 
                   Count := Count + 1;
-                  if Count mod 10 = 0 and then Options.Verbose then
+                  if Count mod 10 = 0 and then Nested_Program_Options.Verbose then
                      Put_LIne (Count'img & " records written");
                   end if;
 

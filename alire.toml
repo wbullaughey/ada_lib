@@ -31,16 +31,10 @@ ada_lib_options = "~0.1.0-dev"
 ada_lib_options = { path='ada_lib_options' }
 
 [[depends-on]]
-gnoga_options = "~0.1.0-dev"
-
-[[pins]]
-gnoga_options = { path='../gnoga_lib/gnoga_options' }
-
-[[depends-on]]
 gnoga_ada_lib  = "~0.1.0-dev"
 
 [[pins]]
-gnoga_ada_lib = { path='../gnoga_lib/gnoga_ada_lib' }
+gnoga_ada_lib = { path='../gnoga_lib' }
 
 [[depends-on]]
 aunit = "~0.1.0-dev"
@@ -61,4 +55,4 @@ gnoga = "~0.1.0-dev"
 gnoga = { path='../vendor/github.com/gnoga' }
 
 [[depends-on]]
-gnatcoll = "*"
+gnatcoll_minimal = "*"

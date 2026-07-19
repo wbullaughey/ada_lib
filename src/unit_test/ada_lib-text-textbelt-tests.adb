@@ -2,8 +2,10 @@ with Ada.Characters.Latin_1;
 with Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options.Flags;
+--with Ada_Lib.GNOGA.Unit_Test.Options;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.OS;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -15,7 +17,9 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
    use type Ada_Lib.Options.Mode_Type;
 
-   Phone_Number                  : constant String := "4846787757";
+   Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Textbelt_Unit_Test.Debug;
+
+-- Phone_Number                  : constant String := "4846787757";
 
    ---------------------------------------------------------------
    overriding
@@ -34,29 +38,50 @@ package body Ada_Lib.Text.Textbelt.Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Listing_Suites             : constant Boolean :=
-                                    Options.Mode /= Ada_Lib.Options.Run_Tests;
-      Star_Names                 : constant String :=
-                                    (if Listing_Suites then "*" else "");
+      Program_Options
+            : constant Ada_Lib.Options.Verification.
+                  Verification_Program_Options_Constant_Class_Access :=
+               Ada_Lib.Options.Verification.
+                  Get_Ada_Lib_Read_Only_Program_Options;
+      Aunit_Program_Options
+            : constant Ada_Lib.Options.AUnit_Lib.
+                  Aunit_Program_Options_Constant_Class_Access :=
+               Ada_Lib.Options.AUnit_Lib.
+                     Aunit_Program_Options_Constant_Class_Access (
+                  Program_Options);
+      Ada_Lib_Unit_Test_Nested_Options
+            : Options.Unit_Test.
+               Ada_Lib_Unit_Test_Nested_Options_Type renames
+                  Aunit_Program_Options.Nested_Unit_Test_Options;
+--    GNOGA_Unit_Test_Options
+--          : GNOGA.Unit_Test.Options.GNOGA_Unit_Test_Options_Type renames
+--                Aunit_Program_Options.GNOGA_Unit_Test_Options;
    begin
-      if Listing_Suites or else
-            Options.Suite_Set (Ada_Lib.Options.Unit_Test.Textbelt) then
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Send_Text_Valid_Number'access,
-            Routine_Name   => AUnit.Format ("Send_Text_Valid_Number" & Star_Names)));
+      Log_In (Debug, Tag_Name ("Program_Options", Program_Options.all'tag));
+      declare
+         Listing_Suites : constant Boolean :=
+                           Ada_Lib_Unit_Test_Nested_Options.Mode /=
+                              Ada_Lib.Options.Run_Tests;
+         Star_Names     : constant String :=
+                                       (if Listing_Suites then "*" else "");
+      begin
+         if Listing_Suites or else
+               Ada_Lib_Unit_Test_Nested_Options.Suite_Set (
+                  Ada_Lib.Options.Unit_Test.Textbelt) then
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Send_Text_Valid_Number'access,
+               Routine_Name   => AUnit.Format ("Send_Text_Valid_Number" & Star_Names)));
 
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Send_Text_Invalid_Number'access,
-            Routine_Name   => AUnit.Format ("Send_Text_Invalid_Number" & Star_Names)));
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Send_Text_Invalid_Number'access,
+               Routine_Name   => AUnit.Format ("Send_Text_Invalid_Number" & Star_Names)));
 
-         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
-            Routine        => Test_Parse'access,
-            Routine_Name   => AUnit.Format ("Test_Parse" & Star_Names)));
-      end if;
+            Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+               Routine        => Test_Parse'access,
+               Routine_Name   => AUnit.Format ("Test_Parse" & Star_Names)));
+         end if;
+         Log_Out (Debug);
+      end;
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -65,22 +90,23 @@ package body Ada_Lib.Text.Textbelt.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Program_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
+--                                     Ada_Lib.Options.AUnit_Lib.
+--                                        Aunit_Program_Options_Constant_Class_Access (
+--                                           Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      Send ("9999999999", "hello", Options.Verbose);
-      Assert (False, "send did not fail but should have");
-
-   exception
-      when Fault: Failed =>
-         Trace_Message_Exception (Fault, "send failed as expected");
-
-      when Fault: others =>
-         Trace_Message_Exception (Fault, "error in library");
-         Assert (False, "library failed");
-
+not_implemented;
+--    Send ("9999999999", "hello", Options.Verbose);
+--    Assert (False, "send did not fail but should have");
+--
+-- exception
+--    when Fault: Failed =>
+--       Trace_Message_Exception (Fault, "send failed as expected");
+--
+--    when Fault: others =>
+--       Trace_Message_Exception (Fault, "error in library");
+--       Assert (False, "library failed");
+--
    end Send_Text_Invalid_Number;
 
    ---------------------------------------------------------------
@@ -89,18 +115,19 @@ package body Ada_Lib.Text.Textbelt.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
-                                       Ada_Lib.Options.AUnit_Lib.
-                                          Aunit_Program_Options_Constant_Class_Access (
-                                             Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options                    : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class renames
+--                                     Ada_Lib.Options.AUnit_Lib.
+--                                        Aunit_Program_Options_Constant_Class_Access (
+--                                           Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      Send (Phone_Number, "hello", Options.Verbose);
-
-   exception
-      when Fault: others =>
-         Trace_Message_Exception (Fault, "error in library");
-         Assert (False, "library failed");
-
+not_implemented;
+--    Send (Phone_Number, "hello", Options.Verbose);
+--
+-- exception
+--    when Fault: others =>
+--       Trace_Message_Exception (Fault, "error in library");
+--       Assert (False, "library failed");
+--
    end Send_Text_Valid_Number;
 
 -- ---------------------------------------------------------------

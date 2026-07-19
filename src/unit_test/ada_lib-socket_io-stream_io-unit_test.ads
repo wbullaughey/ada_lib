@@ -1,7 +1,7 @@
 --with Ada.Numerics.Discrete_Random;
 --with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 
@@ -12,7 +12,7 @@ package Ada_Lib.Socket_IO.Stream_IO.Unit_Test is
    type Answer_Type              is (Bad_Ack, Bad_DAta, Success, Timeout_Answer,
                                     Unexpected, Wrong_Length);
 
-   type Socket_Test_Type         is new Ada_Lib.Unit_Test.Tests.Test_Case_Type
+   type Socket_Test_Type         is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type
                                     with private;
    type Socket_Test_Access is access all Socket_Test_Type;
 
@@ -70,7 +70,7 @@ private
 
    type Sockets_Type             is array (1 .. 10) of Socket_Class_Access;
 
-   type Socket_Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with record
+   type Socket_Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with record
       Answer                     : Answer_Type := Success;
       Client_Completed           : Boolean := False;
       Client_Delay_Write_Time    : Duration := 0.0;

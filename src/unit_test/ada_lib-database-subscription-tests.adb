@@ -5,7 +5,7 @@ with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 --with Ada_Lib.Test; --.Tests;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Test_Cases;
+--with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 --with AUnit.Test_Suites;
 
@@ -263,7 +263,7 @@ not_implemented;
 --      end case;
      Log (Debug_Subscribe, Here, Who & Subscription.Image &
         " update count" & Subscription.Update_Count'img & " update kind " & Update_Kind'img &
-        " subscription tag " & Tag_Name (Subscription_Type'class (Subscription)'tag) &
+        Tag_Name (" subscription", Subscription_Type'class (Subscription)'tag) &
         " subscription address " & Ada_Lib.Strings.Image (Subscription'address) & " from " & From);
   end Update;
 

@@ -1,7 +1,7 @@
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 --with Ada_Lib.Options.Unit_Test;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 -- with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Command_Line_Iterator.Tests is
@@ -10,7 +10,8 @@ package Ada_Lib.Command_Line_Iterator.Tests is
 
    Suite_Name                    : constant String := "Command_Line_Iterator";
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type with null record;
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type with
+                     null record;
 
    type Test_Access is access Test_Type;
 

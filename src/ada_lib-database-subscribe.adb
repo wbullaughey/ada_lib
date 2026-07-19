@@ -45,7 +45,8 @@ package body Ada_Lib.Database.Subscribe is
    ---------------------------------------------------------------------------------
 
    begin
-      Log_In (Debug_Subscribe, Tag_Name (Updater.all'tag) & "  " & Updater.Image &
+      Log_In (Debug_Subscribe, Tag_Name ("Updater", Updater.all'tag) & "  " &
+         Updater.Image &
          " Updater Address " & Ada_Lib.Strings.Image (Updater.all'address));
 
       declare
@@ -333,7 +334,7 @@ package body Ada_Lib.Database.Subscribe is
 -- ---------------------------------------------------------------------------------
 --
 -- begin
---    return Quote ("Key name", Key.Composit_Name.Coerce) & " tag " & Tag_Name (Key.Tag);
+--    return Quote (Tag_Name (" Key name", Key.Composit_Name.Coerce) & "", Key.Tag);
 -- end Image;
 --
 -- ---------------------------------------------------------------------------------
@@ -497,7 +498,7 @@ package body Ada_Lib.Database.Subscribe is
                  end case;
 
                  Log (Debug_Subscribe, Here, Who & " Send_Update " & Send_Update'img &
-                     " Updater tag " & Tag_Name (Updater'tag));
+                     Tag_Name (" Updater", Updater'tag));
                  if Send_Update then
                     Updater.Update (Null_Address, Name_Value.Tag.Coerce, Name_Value.Value.Coerce,
                      Ada_Lib.Database.Updater.External);

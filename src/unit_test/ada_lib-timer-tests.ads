@@ -1,5 +1,5 @@
 with Ada_Lib.Time;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 --with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 
@@ -7,7 +7,7 @@ package Ada_Lib.Timer.Tests is
 
 Suite_Name                    : constant String := "Timer";
 
-   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with null record;
 
    overriding

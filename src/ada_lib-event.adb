@@ -3,6 +3,8 @@ with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 --with Ada.Text_IO; use  Ada.Text_IO;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 
+with Ada_Lib.Database;
+
 package body Ada_Lib.Event is
 
    -------------------------------------------------------------------
@@ -109,4 +111,5 @@ begin
 --debug := true;
 -- Ada_Lib.Trace.Elaborate := True;
    Log_Here (Elaborate or Trace_Options);
+--log_here("size Database_Type " & Ada_Lib.Database.Database_Type'size'img);
 end Ada_Lib.Event;

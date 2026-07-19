@@ -15,6 +15,7 @@ with Ada_Lib.Event.Unit_Test;
 with Ada_Lib.GNOGA.Unit_Test.Events;
 with Ada_Lib.GNOGA.Unit_Test.Window_Events;
 with Ada_Lib.Help.Tests;
+--with Ada_Lib.ICON.Unit_Test;
 with Ada_Lib.Lock.Tests;
 with Ada_Lib.Mail.Tests;
 with Ada_Lib.Options.Unit_Test;
@@ -43,11 +44,10 @@ procedure Ada_Lib.Test.Run_Suite (
    use type Ada_Lib.Options.Mode_Type;
 
    Debug       : Boolean renames
-                  Ada_Lib.Options.Unit_Test.Ada_Lib_Aunit.Tester_Debug;
-   List_Suites : constant Boolean :=
-                  Options.Mode = Ada_Lib.Options.List_Suites;
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_Aunit.Debug;
+   List_Suites : constant Boolean := Options.Nested_Unit_Test_Options.Mode =
+                  Ada_Lib.Options.List_Suites;
 begin
---Debug := True;
    Log_In (Debug, "list suites " & List_Suites'img);
 
    declare
@@ -66,7 +66,8 @@ begin
                                     AUnit.Test_Suites.New_Suite);
 
    begin
-      AUnit_Options.Filter := Options.Filter'unchecked_access;
+      AUnit_Options.Filter := Options.Nested_Unit_Test_Options.Filter'
+                                 unchecked_access;
 
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Curl.Tests.Suite);
@@ -116,6 +117,8 @@ begin
          Ada_Lib.OS.Tests.Suite);
       Non_DBDaemon_Test_Suite.Add_Test (
          Ada_Lib.Template.Tests.Suite);
+--    Non_DBDaemon_Test_Suite.Add_Test (
+--       Ada_Lib.ICON.Unit_Test.Suite);
       Test_Suite.Add_Test (Non_DBDaemon_Test_Suite);
 
       for Host_Kind in Ada_Lib.Database.Valid_Hosts_Type loop
@@ -125,7 +128,7 @@ begin
 
                when Ada_Lib.Database.Local =>
                   Options.Database_Options.Has_Local_DBDaemon or else
-                  Options.Mode = Ada_Lib.Options.List_Suites,
+                  Options.Nested_Unit_Test_Options.Mode = Ada_Lib.Options.List_Suites,
 
                when Ada_Lib.Database.Remote =>
                   Options.Database_Options.Has_Remote_Host
@@ -167,8 +170,8 @@ begin
       end if;
       Test_Suite.Run (AUnit_Options, Results, Outcome);
 
-      Log_Here (Debug, "Mode " & Options.Mode'img);
-      case Options.Mode is
+      Log_Here (Debug, "Mode " & Options.Nested_Unit_Test_Options.Mode'img);
+      case Options.Nested_Unit_Test_Options.Mode is
 
          when Ada_Lib.Options.Driver_Suites |
               Ada_Lib.Options.List_Suites |
@@ -176,7 +179,7 @@ begin
             Ada_Lib.Unit_Test.Iterate_Suites (
                Ada_Lib.Options.Unit_Test.Suite_Action'access,
                Ada_Lib.Options.Unit_Test.Routine_Action'access,
-               Options.Mode);
+               Options.Nested_Unit_Test_Options.Mode);
 
          when Ada_Lib.Options.Run_Tests =>
             Log_Here (Debug);

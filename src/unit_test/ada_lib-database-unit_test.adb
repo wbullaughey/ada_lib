@@ -1,11 +1,11 @@
 with Ada.Exceptions;
-with Ada.Text_IO;use Ada.Text_IO;
+--with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
 with Ada_Lib.Database.Connection;
 with Ada_Lib.Options.AUnit_Lib;
 --with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Test_Cases;
+--with Ada_Lib.Unit_Test.Test_Cases;
 
 package body Ada_Lib.Database.Unit_Test is
 
@@ -100,7 +100,7 @@ package body Ada_Lib.Database.Unit_Test is
       Result   : constant Boolean := Test.Database /= Null;
 
    begin
-      return Log_Here (Result, Debug or Trace_Pre_Post_Conditions or not Result,
+      return Log_Here (Result, Trace_Pre_Post (Result, Debug or Trace_Pre_Post_Conditions),
          "no database set");
    end Has_Database;
 
@@ -110,16 +110,18 @@ package body Ada_Lib.Database.Unit_Test is
    ) return String is
    ----------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+--                         renames Ada_Lib.Options.AUnit_Lib.
+--                            Aunit_Program_Options_Constant_Class_Access (
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      return (case Test.Which_Host is
-         when Local => Local_Host_Name,
-         when Remote => Options.Database_Options.Remote_Host.Coerce,
-         when No_Host | Unset => ""
-      );
+not_implemented;
+return "";
+--    return (case Test.Which_Host is
+--       when Local => Local_Host_Name,
+--       when Remote => Options.Database_Options.Remote_Host.Coerce,
+--       when No_Host | Unset => ""
+--    );
    end Host_Name;
 
    ----------------------------------------------------------------
@@ -128,12 +130,14 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Ada_Lib.Database.Port_Type is
    ----------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+--                         renames Ada_Lib.Options.AUnit_Lib.
+--                            Aunit_Program_Options_Constant_Class_Access (
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      return Options.Database_Options.Port;
+not_implemented;
+return Ada_Lib.Database.Port_Type'last;
+--    return Options.Database_Options.Port;
    end Host_Port;
 
 -- ----------------------------------------------------------------
@@ -247,21 +251,22 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Boolean is       -- return true if test can be run
    ----------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+--    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+--                         renames Ada_Lib.Options.AUnit_Lib.
+--                            Aunit_Program_Options_Constant_Class_Access (
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
    begin
-      Log_In (Debug, "Has_Local_DBDaemon " & Options.Database_Options.Has_Local_DBDaemon'img &
-         (if Options.Database_Options.Remote_Host.Length = 0 then " no Remote_Host" else " Remote_Host dbdaemon.all "));
-
-      if Options.Database_Options.Has_Local_DBDaemon or else Options.Database_Options.Remote_Host.Length > 0 then
-         Put_Line ("start Database Test Suite");
-         return True;
-      end if;
-
-      Put_Line ("skip Database.Get_Put_Suite");
-      Log_Out (Debug);
+not_implemented;
+--    Log_In (Debug, "Has_Local_DBDaemon " & Options.Database_Options.Has_Local_DBDaemon'img &
+--       (if Options.Database_Options.Remote_Host.Length = 0 then " no Remote_Host" else " Remote_Host dbdaemon.all "));
+--
+--    if Options.Database_Options.Has_Local_DBDaemon or else Options.Database_Options.Remote_Host.Length > 0 then
+--       Put_Line ("start Database Test Suite");
+--       return True;
+--    end if;
+--
+--    Put_Line ("skip Database.Get_Put_Suite");
+--    Log_Out (Debug);
       return False;
    end Test;
 
@@ -281,10 +286,11 @@ package body Ada_Lib.Database.Unit_Test is
    ) return Which_Host_Type is
    ----------------------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+      Options  : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                  renames Ada_Lib.Options.AUnit_Lib.
+                     Aunit_Program_Options_Constant_Class_Access (
+                        Ada_Lib.Options.Verification.
+                           Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       return Options.Database_Options.Which_Host;
    end Which_Host;

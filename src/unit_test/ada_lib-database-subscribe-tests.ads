@@ -2,7 +2,7 @@
 with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 -- with Ada_Lib.Database.Server;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Database.Subscribe.Tests is
 
@@ -13,7 +13,7 @@ package Ada_Lib.Database.Subscribe.Tests is
       Table                      : in out Test_Table_Type;
       Path                       : in     String);
 
-   type Test_Type is new Ada_Lib.Unit_Test.Tests.Test_Case_Type  with record
+   type Test_Type is new Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type  with record
       Subscribed                 : Boolean := False;
       Table                      : Test_Table_Type;
    end record;

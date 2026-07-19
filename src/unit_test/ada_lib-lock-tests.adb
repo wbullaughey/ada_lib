@@ -3,7 +3,7 @@ with Ada.Numerics.Float_Random;
 with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Time;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Simple_Test_Cases;
 with AUnit.Test_Cases;
@@ -12,7 +12,7 @@ package body Ada_Lib.Lock.Tests is
 
    use type Ada_Lib.Time.Time_Type;
 
-   type Test_Type                is new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with null record;
 
    overriding
@@ -112,7 +112,7 @@ package body Ada_Lib.Lock.Tests is
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Ada.Numerics.Float_Random.Reset (Random_Generator);
       Task_Lock_Failed := False;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
@@ -140,7 +140,7 @@ package body Ada_Lib.Lock.Tests is
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 

@@ -76,6 +76,22 @@ package body Ada_Lib.Socket_IO.Client is
          Socket                  : in     Socket_Class_Access) := Null) is
    ---------------------------------------------------------------------------
 
+      ------------------------------------------------------------------------
+      procedure Failure_Close (
+         Fault                   : in     Ada.Exceptions.Exception_Occurrence;
+         Where                   : in     String) is
+      ------------------------------------------------------------------------
+
+      begin
+         Log_Exception (Trace, Fault, "", Where);
+         Socket.Open := False;
+         Socket.GNAT_Socket_Open := False;
+         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
+         Socket.Exception_Message.Construct (
+            Ada.Exceptions.Exception_Message (Fault));
+      end Failure_Close;
+      ------------------------------------------------------------------------
+
       Host_Name                  : constant String := Server_Name & ":" &
                                        Ada_Lib.Strings.Trim (Port'img);
    begin
@@ -126,17 +142,17 @@ package body Ada_Lib.Socket_IO.Client is
          Expected_Read_Callback (Socket'unchecked_access);
       end if;
 
-            if Reuse then
-               declare
-                  Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
+      if Reuse then
+         declare
+            Socket_Option        : GNAT.Sockets.Option_Type (Reuse_Address);
 
-               begin
-                  Socket_Option.Enabled := TRue;
-                  GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
-                     Level       => GNAT.Sockets.Socket_Level,
-                     Option      => Socket_Option);
-               end;
-            end if;
+         begin
+            Socket_Option.Enabled := True;
+            GNAT.Sockets.Set_Socket_Option (Socket.GNAT_Socket,
+               Level       => GNAT.Sockets.Socket_Level,
+               Option      => Socket_Option);
+         end;
+      end if;
 
       Log_Out (Trace, "open " & Socket.Open'img & Socket.Image);
 
@@ -154,26 +170,17 @@ package body Ada_Lib.Socket_IO.Client is
          end;
 
       when Fault: GNAT.SOCKETS.HOST_ERROR =>
-         Log_Exception (Trace, Fault);
-         Socket.Open := False;
-         Socket.GNAT_Socket_Open := False;
-         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
-         Socket.Exception_Message.Construct (
-            Ada.Exceptions.Exception_Message (Fault));
+         Failure_Close (Fault, Here);
          raise Failed with "Could not open host " & Host_Name &
-            Socket.Description.all;
+            Socket.Description.all & " at " & Here;
 
       when Fault: others =>
-         Log_Exception (Trace, Fault);
-         Socket.Open := False;
-         Socket.GNAT_Socket_Open := False;
-         GNAT.Sockets.Close_Socket (Socket.GNAT_Socket);
-         Socket.Exception_Message.Construct (
-            Ada.Exceptions.Exception_Message (Fault));
+         Failure_Close (Fault, Here);
          Ada.Exceptions.Raise_Exception (
             Ada.Exceptions.Exception_Identity (Fault),
             "Could not open host " & Host_Name & " " &
-            Socket.Description.all);
+            Socket.Description.all & " at " & Here);
+
 
    end Connect;
 
@@ -321,7 +328,7 @@ package body Ada_Lib.Socket_IO.Client is
 -- ---------------------------------------------------------------------------
 --
 -- begin
---    Log_In (Trace, "socket tag " & Tag_Name (Client_Socket_Type'class (Socket)'tag));
+--    Log_In (Trace, Tag_Name (" socket", Client_Socket_Type'class (Socket)'tag));
 --    Socket.Stream.GNAT_Stream := GNAT.Sockets.Stream (Socket.GNAT_Socket);
 --    Socket.Stream.Create (Socket);
 --    Log_Out (Trace);

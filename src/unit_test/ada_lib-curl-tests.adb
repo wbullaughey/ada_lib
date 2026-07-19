@@ -54,7 +54,7 @@ package body Ada_Lib.Curl.Tests is
 --
 -- begin
 --    Log_In (Debug);
---    Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+--    Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
 --    Test.Credential.Initialize (Account, Password);
 --    Log_Out (Debug);
 --

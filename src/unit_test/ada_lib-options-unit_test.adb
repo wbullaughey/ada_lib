@@ -5,13 +5,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lib.Help;
 --with GNOGA_Options;
 with Ada_Lib.OS;
-with Ada_Lib.Options.Create;
+with Ada_Lib.Options.AUnit_Lib;
+--with Ada_Lib.Options.Create;
+--with Ada_Lib.Options.Nested;
 with Ada_Lib.Options.Runstring;
-with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 --with Ada_Lib.Unit_Test.Test_Cases;
---with AUnit.Ada_Lib; -- debug moved to Ada_Lib.Options.Aunit
+with AUnit.Ada_Lib; -- debug moved to Ada_Lib.Options.Aunit
 --with Debug_Options;
 
 -- pragma Elaborate (Ada_Lib.OS);
@@ -27,25 +28,25 @@ package body Ada_Lib.Options.Unit_Test is
    Trace_Modifier             : character renames Ada_Lib.Help.Trace_Modifier;
    Options_With_Parameters    : aliased constant
                                  Ada_Lib.Options.Flag_List_Type :=
-                                    Ada_Lib.Options.Create.Create_Multiple (
+                                    Ada_Lib.Options.Initialize (
                                        "es" & Trace_Option,
                                        Ada_Lib.Options.Unmodified_flag) &
-                                 Ada_Lib.Options.Create.Create_Multiple (
+                                 Ada_Lib.Options.Initialize (
                                     "AnR", Ada_Lib.Help.Modifier);
    Options_Without_Parameters : aliased constant
                                  Flag_List_Type :=
-                                    Create.Create_Multiple (
-                                       "x", Unmodified_flag) &
-                                    Create.Create_Multiple (
+                                    Initialize (
+                                       "nx", Unmodified_flag) &
+                                    Initialize (
                                        Driver_List_Option & "lmPsSu",
                                        Ada_Lib.Help.Modifier);
 
-   Initialized_Recursed       : Boolean := False;
-   Unit_Test_Options          : Ada_Lib_Unit_Test_Options_Class_Access := Null;
+   Initialized_Recursed : Boolean := False;
+-- Unit_Test_Options    : Ada_Lib_Unit_Test_Nested_Options_Class_Access := Null;
 
    ---------------------------------------------------------------ada   -------------
    procedure Check_Test_Suite_And_Routine (
-      Options                    : in     Ada_Lib_Unit_Test_Program_Options_Type) is
+      Options                    : in     Ada_Lib_Unit_Test_Nested_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin
@@ -64,51 +65,81 @@ package body Ada_Lib.Options.Unit_Test is
    end Check_Test_Suite_And_Routine;
 
    ------------------------------------------------------------
-   function Get_Modifiable_Ada_Lib_Unit_Test_Options
-   return Ada_Lib_Unit_Test_Options_Class_Access is
+   function Get_Modifiable_Ada_Lib_Unit_Test_Nested_Options (
+      From                       : in  String := Options_Here
+   ) return Ada_Lib_Unit_Test_Nested_Options_Class_Access is
    ------------------------------------------------------------
 
+      Aunit_Program_Options
+         : constant AUnit_Lib.Aunit_Program_Options_Class_Access :=
+            AUnit_Lib.Get_Modifiable_AUnit_Options (From);
    begin
-      return Unit_Test_Options;
-   end Get_Modifiable_Ada_Lib_Unit_Test_Options;
+      Log_Here (Trace_Conversions, "from " & From);
+      return Aunit_Program_Options.Nested_Unit_Test_Options'unchecked_access;
+   end Get_Modifiable_Ada_Lib_Unit_Test_Nested_Options;
 
    ------------------------------------------------------------
-   function Get_Readonly_Ada_Lib_Unit_Test_Options
-   return Ada_Lib_Unit_Test_Options_Constant_Class_Access is
+   function Get_Readonly_Ada_Lib_Unit_Test_Nested_Options (
+      From                       : in  String := Options_Here
+   ) return Ada_Lib_Unit_Test_Nested_Options_Constant_Class_Access is
    ------------------------------------------------------------
 
+      Aunit_Program_Options
+         : constant AUnit_Lib.Aunit_Program_Options_Constant_Class_Access :=
+            AUnit_Lib.Get_Read_Only_AUnit_Options (From);
    begin
-      return Ada_Lib_Unit_Test_Options_Constant_Class_Access (
-         Unit_Test_Options);
-   end Get_Readonly_Ada_Lib_Unit_Test_Options;
+      Log_Here (Trace_Conversions, "from " & From);
+      return Aunit_Program_Options.Nested_Unit_Test_Options'unchecked_access;
+   end Get_Readonly_Ada_Lib_Unit_Test_Nested_Options;
+
+-- ----------------------------------------------------------------------------
+-- function Have_Unit_Test_Options
+-- return Boolean is
+-- ----------------------------------------------------------------------------
+--
+--    Result   : constant Boolean := Unit_Test_Options /= Null;
+--
+-- begin
+--    return Log_Here (Result,
+--       Debug or Trace_Pre_Post_Conditions or not Result,
+--       "unit test options not set");
+-- end Have_Unit_Test_Options;
 
    ----------------------------------------------------------------------------
-   function Have_Unit_Test_Options
-   return Boolean is
+   overriding
+   function Image (
+     Options                     : in     Ada_Lib_Unit_Test_Nested_Options_Type
+   ) return String is
    ----------------------------------------------------------------------------
 
-      Result   : constant Boolean := Unit_Test_Options /= Null;
-
    begin
-      return Log_Here (Result,
-         Debug or Trace_Pre_Post_Conditions or not Result,
-         "unit test options not set");
-   end Have_Unit_Test_Options;
+not_implemented;
+return "";
+   end Image;
 
    ----------------------------------------------------------------------------
    overriding
    function Initialize (
-     Options                     : in out Ada_Lib_Unit_Test_Program_Options_Type;
+     Options                     : in out Ada_Lib_Unit_Test_Nested_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean is
    ----------------------------------------------------------------------------
 
-      Message        : constant String := " from " & From &
+      Message        : constant String :=
+         Tag_Name ("options",
+            Ada_Lib_Unit_Test_Nested_Options_Type'class (Options)'tag) &
+         Tag_Name (" options parent",
+            Program.Nested_Program_Options_Type 'class (Options)'tag) &
+         " from " & From &
          " options with parameters " & Options_With_Parameters.Image &
          " with out " & Options_Without_Parameters.Image;
 
    begin
-     Log_In_Checked (Initialized_Recursed, Debug or Trace_Options, Message);
+     Log_In_Checked (Initialized_Recursed,
+     Debug or Trace_Options, Message);
+
+     Tag_History (Debug or Trace_Options, "Options",
+       Ada_Lib_Unit_Test_Nested_Options_Type'class (Options)'tag);
 
       Ada_Lib.Options.Runstring.Options.Register (
          Ada_Lib.Options.Runstring.With_Parameters,
@@ -118,8 +149,8 @@ package body Ada_Lib.Options.Unit_Test is
          Options_Without_Parameters);
 
       return Log_Out_Checked (Initialized_Recursed,
-         Options.GNOGA_Options.Initialize and then
-            Program.Program_Options_Type (Options).Initialize,
+--       Options.Library_Options.GNOGA_Options.Initialize and then
+            Program.Nested_Program_Options_Type (Options).Initialize,
          Debug or Trace_Options, Message);
 
    end Initialize;
@@ -137,7 +168,7 @@ package body Ada_Lib.Options.Unit_Test is
 --    end if;
 --
 --    Log_Here (Debug, "from " & From &
---       " Get_Ada_Lib_Read_Only_Options tag " & Tag_Name (
+--       Tag_Name (" Get_Ada_Lib_Read_Only_Options",
 --          Ada_Lib.Options.Get_Ada_Lib_Read_Only_Options.all'tag));
 --
 --    return Unit_Test_Options_Constant_Class_Access (
@@ -147,7 +178,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Post_Process (
-     Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type) is
+     Options         : in out Ada_Lib_Unit_Test_Nested_Options_Type) is
    ----------------------------------------------------------------------------
 
       -------------------------------------------------------------------------
@@ -208,7 +239,7 @@ package body Ada_Lib.Options.Unit_Test is
             end;
       end case;
 
-      Ada_Lib.Options.Program.Program_Options_Type (Options).Post_Process   ;
+      Program.Nested_Program_Options_Type (Options).Post_Process   ;
       Log_Out (Debug or Trace_Options);
 
    end Post_Process;
@@ -217,9 +248,9 @@ package body Ada_Lib.Options.Unit_Test is
    -- processes options it knows about and calls parent for others
    overriding
    function Process_Option (
-      Options  : in out Ada_Lib_Unit_Test_Program_Options_Type;
+      Options  : in out Ada_Lib_Unit_Test_Nested_Options_Type;
       Iterator : in out Ada_Lib.Options.Command_Line_Iterator_Interface'class;
-      Option   : in     Ada_Lib.Options.Base_Flag_Option_Type'class
+      Option   : in     Ada_Lib.Options.Flag_Option_Type'class
    ) return Boolean is
    ----------------------------------------------------------------------------
 
@@ -266,6 +297,9 @@ package body Ada_Lib.Options.Unit_Test is
                      Log_Here (Trace_Options or Debug,
                         Ada_Lib.Strings.Unlimited.Quote ("filter Routine",
                            Options.Routine));
+
+                  when 'n' =>    -- no camera
+                     Options.Have_Camera := False;
 
                   when 's' =>    -- suites to include
                      if Options.Mode /= Run_Tests then
@@ -379,6 +413,9 @@ package body Ada_Lib.Options.Unit_Test is
                            Options.Random_Seeds (Options.Random_Seed_Count)'img);
                      end if;
 
+                  when 's' =>
+                     Options.Short_Test := True;
+
                   when 'S' =>
                      Options.Report_Random := True;
 
@@ -409,13 +446,15 @@ package body Ada_Lib.Options.Unit_Test is
 
          end case;
 
-         return Log_Out (True, Trace_Options or Debug,
+         return Log_Out (True,
+--          Program.Nested_Program_Options_Type (
+--             Options).Process_Option (Iterator, Option),
+            Trace_Options or Debug,
             " " & Option.Image & " handled mode " & Options.Mode'img);
       else
-         return Log_Out (Options.GNOGA_Options.Process_Option (
-               Iterator, Option) or else
-            Ada_Lib.Options.Program.Program_Options_Type (
-               Options).Process_Option (Iterator, Option),
+         return Log_Out (
+            Program.Nested_Program_Options_Type (Options).Process_Option (
+               Iterator, Option),
             Trace_Options or Debug,
             "other option" & " Option " & Option.Image);
       end if;
@@ -424,7 +463,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Program_Help (
-      Options                    : in      Ada_Lib_Unit_Test_Program_Options_Type;  -- only used for dispatch
+      Options                    : in      Ada_Lib_Unit_Test_Nested_Options_Type;  -- only used for dispatch
       Help_Mode                  : in      Ada_Lib.Options.Help_Mode_Type) is
    ----------------------------------------------------------------------------
 
@@ -432,42 +471,50 @@ package body Ada_Lib.Options.Unit_Test is
 
    begin
       Log_In (Debug or Trace_Options, "mode " & Help_Mode'img);
-      Options.GNOGA_Options.Program_Help (Help_Mode);
-      Ada_Lib.Options.Program.Program_Options_Type (
+--    Options.Library_Options.GNOGA_Options.Program_Help (Help_Mode);
+      Program.Nested_Program_Options_Type (
          Options).Program_Help (Help_Mode);
 
       case Help_Mode is
 
       when Ada_Lib.Options.Program_Mode =>
          -- options without modifier
-         Ada_Lib.Help.Create_Option ('e', "routine", "routine to test.", Component, Ada_Lib.Help.Unmodified_Flag);
-         Ada_Lib.Help.Create_Option ('s', "suite to test", "select test suite to run.",
-            Component, Ada_Lib.Help.Unmodified_Flag);
-         Ada_Lib.Help.Create_Option ('A', "suites", "enable default disabled suites.",
+         Ada_Lib.Help.Create_Option ('e', False, "routine", "routine to test.", Component, Ada_Lib.Options.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('s', False, "suite to test", "select test suite to run.",
+            Component, Ada_Lib.Options.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('A', False, "suites", "enable default disabled suites.",
             Component, Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('U', "unit test trace Ada_Lib",
-            "select trace", Component, Ada_Lib.Help.Unmodified_Flag);
-         Ada_Lib.Help.Create_Option ('x', "", "exit on tests complete", Component, Ada_Lib.Help.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('U', True, "unit test trace Ada_Lib",
+            "select trace", Component, Ada_Lib.Options.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('x', False, "", "exit on tests complete", Component,
+            Ada_Lib.Options.Unmodified_Flag);
          -- options with modifier
-         Ada_Lib.Help.Create_Option ('d', "", "driver suites", Component,
+         Ada_Lib.Help.Create_Option ('d', False, "", "driver suites", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('l', "", "List test suites", Component,
+         Ada_Lib.Help.Create_Option ('l', False, "", "List test suites", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('m', "", "manual operations.", Component,
+         Ada_Lib.Help.Create_Option ('m', False, "", "manual operations.", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('n', "number of random seeds", "number seeds.",
+         Ada_Lib.Help.Create_Option ('n', False, "", "no camera", Component,
+            Ada_Lib.Options.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('S', False, "trace options", "trace flags",
+            Component, Ada_Lib.Options.Unmodified_Flag);
+         Ada_Lib.Help.Create_Option ('n', False, "number of random seeds", "number seeds.",
             Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('P', "", "Print test suites.", Component,
+         Ada_Lib.Help.Create_Option ('P', False, "", "Print test suites.", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('S', "", "report random seed", Component,
+         Ada_Lib.Help.Create_Option ('s', False, "", "short test", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('R', "seed", "set random seed", Component,
+         Ada_Lib.Help.Create_Option ('S', False, "", "report random seed", Component,
             Ada_Lib.Help.Modifier);
-         Ada_Lib.Help.Create_Option ('u', "", "use random seed", Component,
+         Ada_Lib.Help.Create_Option ('R', False, "seed", "set random seed", Component,
+            Ada_Lib.Help.Modifier);
+         Ada_Lib.Help.Create_Option ('u', False, "", "use random seed", Component,
             Ada_Lib.Help.Modifier);
 
       when Ada_Lib.Options.Trace_Mode =>
+         Ada_Lib.Help.Set_Has_Trace ('U', Ada_Lib.Options.Unmodified_Flag);
          Put_Line ("Ada_Lib unit test library trace options (-" &
             Trace_Option & ")");
          Put_Line ("      a               all");
@@ -477,6 +524,7 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      E               Ada_Lib.Evemt.Unit_Test.Debug");
          Put_Line ("      f               Fixtures Debug");
          Put_Line ("      g               Database Get,Put Debug");
+         Put_Line ("      i               ICON Unit Test Debug");
          Put_Line ("      p               test programs");
          Put_Line ("      P               Parser Debug");
          Put_Line ("      r               Runtime_Options");
@@ -488,13 +536,17 @@ package body Ada_Lib.Options.Unit_Test is
          Put_Line ("      u               Ada_Lib.Unit_Test.Debug Library");
          Put_Line ("      U               Ada_Lib.Unit_Test.Test_Cases.Debug Library");
          Put_Line ("      " & Trace_Modifier &
-                         "a              AUnit.Ada_Lib.Debug");
+                         "a              Ada_Lib_Aunit.Debug");
+         Put_Line ("      " & Trace_Modifier &
+                         "A              AUnit.Ada_Lib.Debug");
          Put_Line ("      " & Trace_Modifier &
                          "s              Ada_Lib.Unit_Test.Test_States.Debug");
          Put_Line ("      " & Trace_Modifier &
                          "S              Database Server Debug");
          Put_Line ("      " & Trace_Modifier &
                          "u              Unit_Test Debug");
+         Put_Line ("      " & Trace_Modifier &
+                         "U              AUnit Debug");
 
          New_Line;
          Put_Line ("Enable suites disabled by default (-S)");
@@ -537,14 +589,14 @@ package body Ada_Lib.Options.Unit_Test is
       Log_Out (Debug);
    end Routine_Action;
 
-   ------------------------------------------------------------
-   procedure Set_Ada_Lib_Unit_Test_Options (
-      Options                    : in     Ada_Lib_Unit_Test_Options_Class_Access) is
-   ------------------------------------------------------------
-
-   begin
-      Unit_Test_Options := Options;
-   end Set_Ada_Lib_Unit_Test_Options;
+-- ------------------------------------------------------------
+-- procedure Set_Ada_Lib_Unit_Test_Options (
+--    Options     : in     Ada_Lib_Unit_Test_Nested_Options_Class_Access) is
+-- ------------------------------------------------------------
+--
+-- begin
+--    Unit_Test_Options := Options;
+-- end Set_Ada_Lib_Unit_Test_Options;
 
    ------------------------------------------------------------
    procedure Suite_Action (
@@ -578,7 +630,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Trace_Parse (
-      Options     : in out Ada_Lib_Unit_Test_Program_Options_Type;
+      Options     : in out Ada_Lib_Unit_Test_Nested_Options_Type;
       Iterator    : in out Command_Line_Iterator_Interface'class) is
    ----------------------------------------------------------------------------
 
@@ -588,7 +640,8 @@ package body Ada_Lib.Options.Unit_Test is
    begin
       Log_In (Trace_Options or Debug,  Quote ("parameter", Parameter));
       for Trace of Parameter loop
-         Log_Here (Trace_Options or Debug, Quote ("trace", Trace));
+         Log_Here (Trace_Options or Debug, Quote ("trace", Trace) &
+            " Suboption " & Suboption'img);
 
          case Suboption is
             when Plain =>
@@ -597,7 +650,6 @@ package body Ada_Lib.Options.Unit_Test is
 
                   when 'a' =>
                      Debug := True;
-                     Ada_Lib.Trace.Trace_Exceptions := True;
                      Ada_Lib.Trace.Trace_Pre_Post_Conditions := True;
                      Ada_Lib.Trace.Trace_Set_Up_Tear_Down := True;
                      Ada_Lib.Trace.Trace_Tests := True;
@@ -606,6 +658,8 @@ package body Ada_Lib.Options.Unit_Test is
                      Ada_Lib_Database_Unit_Test.Server_Tests_Trace := True;
                      Ada_Lib_Database_Unit_Test.Subscribe_Debug := True;
                      Ada_Lib_Event_Unit_Test.Debug := True;
+                     Ada_Lib_ICON_Unit_Test.Debug := True;
+                     Ada_Lib_Options_Unit_Test.Client_Debug := True;
                      Ada_Lib_Options_Unit_Test.Debug := True;
                      Ada_Lib_Unit_Test.Fixtures_Debug := True;
                      Ada_Lib_Unit_Test.Parser_Debug := True;
@@ -614,15 +668,13 @@ package body Ada_Lib.Options.Unit_Test is
                      Options.Debug := True;
                      Ada_Lib_Unit_Test_Test_Cases.Debug := True;
                      Ada_Lib_Test_States.Debug := True;
+                     Standard.AUnit.Ada_Lib.Debug := True;
 
                   when 'A' =>
                      Ada_Lib.Trace.Trace_Tests := True;
 
                   when 'd' =>
                      Ada_Lib_Database_Unit_Test.Debug := True;
-
-                  when 'e' =>
-                     Ada_Lib.Trace.Trace_Exceptions := True;
 
                   when 'E' =>
                      Ada_Lib_Event_Unit_Test.Debug := True;
@@ -632,6 +684,9 @@ package body Ada_Lib.Options.Unit_Test is
 
                   when 'g' =>
                      Ada_Lib_Database_Unit_Test.Get_Put_Debug := True;
+
+                  when 'i' =>
+                     Ada_Lib_ICON_Unit_Test.Debug := True;
 
                   when 'p' =>
                      Options.Debug := True;
@@ -685,6 +740,9 @@ package body Ada_Lib.Options.Unit_Test is
                   when 'a' =>
                      Ada_Lib_Aunit.Debug := True;
 
+                  when 'A' =>
+                     Standard.AUnit.Ada_Lib.Debug := True;
+
                   when 's' =>
                      Ada_Lib_Test_States.Debug := True;
 
@@ -696,6 +754,9 @@ package body Ada_Lib.Options.Unit_Test is
 
                   when 'u' =>
                      Ada_Lib_Unit_Test.Debug := True;
+
+                  when 'U' =>
+                     AUnit.Debug := True;
 
                   when others =>
                      Options.Bad_Option (Quote (
@@ -719,7 +780,7 @@ package body Ada_Lib.Options.Unit_Test is
    ----------------------------------------------------------------------------
    overriding
    procedure Update_Filter (
-      Options                    : in out Ada_Lib_Unit_Test_Program_Options_Type) is
+      Options                    : in out Ada_Lib_Unit_Test_Nested_Options_Type) is
    ----------------------------------------------------------------------------
 
    begin
@@ -750,6 +811,7 @@ begin
    Debug := Debug or Debug_All;
 --Debug := True;
 --Trace_Options := True;
+--AUnit.Debug := True;
    Log_Here (Debug or Elaborate or Trace_Options);
 
 exception

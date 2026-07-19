@@ -572,7 +572,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       if Last = 0  then
          Log_Here (Trace, "zero length read");
       else
-         if Test_Condition or Trace then
+         if Test_Condition and Trace then
             Dump ("read completed", Buffer (Buffer'first .. Last));
          end if;
       end if;
@@ -644,7 +644,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Start := Last + 1;
       end loop;
 
-      if Test_Condition or Trace then
+      if Test_Condition and Trace then
          Dump ("read", Buffer);
       end if;
 
@@ -669,7 +669,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       if Last = 0  then
          Log_Here (Trace, "zero length read");
       else
-         if Test_Condition or Trace then
+         if Test_Condition and Trace then
             Dump ("read", Buffer (Buffer'first .. Last));
          end if;
       end if;
@@ -690,7 +690,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
       Log_In (Tracing, Stream.Image & " length" & Item'length'img);
       Read (Stream, Item, Last, 0.0);
 
-   if Test_Condition or Trace then
+   if Test_Condition and Trace then
             Trace_Read (Item, Last);
          end if;
       Log_Out (Tracing, "last" & Last'img);
@@ -785,7 +785,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          Index_Type'image (Item'last) & " timeout");
 --          Format_Timeout (Timeout_Length));
 --       " output buffer " & Image (Stream.Output_Buffer'address));
-      if Test_Condition or Trace then
+      if Test_Condition and Trace then
          Dump ("write", Item);
       end if;
 
@@ -899,7 +899,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             " tail" & Tail'img & " data first" & Data'first'img &
             " data'last" & Data'last'img);
 
-         Log_Here (Test_Condition, Image);
+         Log_Here (Test_Condition and Trace, Image);
          case State is
 
          when Closed =>
@@ -1075,7 +1075,7 @@ package body Ada_Lib.Socket_IO.Stream_IO is
             Dump ("Buffer", Buffer);
          end if;
 
-         Log_Here (Test_Condition, Image);
+         Log_Here (Test_Condition and Trace, Image);
 
          Log_Out (Tracing, Prefix & " Buffer_Count" & Buffer_Count'img &
             " Head" & Head'img & " event " & Event'img);
@@ -1126,11 +1126,15 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                                        Timed_Out   => No_Change
                                     )
                                  );
+         Transition  : constant Change_Action_Type :=
+                        Valid_Transitions (State, Event);
+
       begin
          Log_In (Tracing, Prefix & " event " & Event'img &
+            " transition " & Transition'img &
             " from " & From);
 
-         case Valid_Transitions (State, Event) is
+         case Transition is
 
             when Allow =>
                State := Event;
@@ -1384,8 +1388,11 @@ package body Ada_Lib.Socket_IO.Stream_IO is
          exception
             when Fault: GNAT.Sockets.Socket_Error =>
                declare
+                  Socket_State   : constant Ada_Lib.Socket_IO.Stream_IO.
+                                       Event_Type :=
+                                    Stream_Pointer.Input_Buffer.Get_State;
                   Socket_Closed  : constant Boolean :=
-                                    Stream_Pointer.Input_Buffer.Get_State = Closed;
+                                    Socket_State = Closed;
                begin
                   Trace_Message_Exception (Trace and not Socket_Closed, Fault,
 --                Trace_Message_Exception (true or Trace, Fault,
@@ -1393,7 +1400,8 @@ package body Ada_Lib.Socket_IO.Stream_IO is
                         ""
                      else
                         "not ") &
-                     "expected exception Socket closed " & Stream_Pointer.Image);
+                     "expected exception Socket closed " & Stream_Pointer.Image &
+                     " state " & Socket_State'img);
                   if not Socket_Closed then
                      Stream_Pointer.Input_Buffer.Set_Event (Closed);
                   end if;

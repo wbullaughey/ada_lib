@@ -28,16 +28,17 @@ package Ada_Lib.Options.Template is
      Options                     : in out Template_Options_Type;
      From                        : in     String := Standard.Ada_Lib.Trace.Here
    ) return Boolean
-   with pre => Options.Verify_Preinitialize;
+   with pre    => not Options.Verify_Step (Initialized),
+        Post   => Options.Verify_Step (Initialized);
 
    overriding
    function Process_Option (
       Options           : in out Template_Options_Type;
       Iterator          : in out Ada_Lib.Options.
                                     Command_Line_Iterator_Interface'class;
-      Option            : in     Base_Flag_Option_Type'class
+      Option            : in     Flag_Option_Type'class
    ) return Boolean
-   with pre => Options.Verify_Initialized;
+   with pre => Options.Verify_Step (Initialized);
 
    overriding
    procedure Trace_Parse (

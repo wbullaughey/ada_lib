@@ -6,16 +6,15 @@ with AUnit.Assertions; use AUnit.Assertions;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
 --with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.OS.Base64;
 with Ada_Lib.OS.Run.Path;
---with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
-with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
+with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
+--with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
 with Ada_Lib.Unit_Test;
 with AUnit.Test_Cases;
-
--- pragma Elaborate (Ada_Lib.OS);
 
 package body Ada_Lib.OS.Tests is
 
@@ -193,11 +192,12 @@ package body Ada_Lib.OS.Tests is
       pragma Unreferenced (Test);
    ---------------------------------------------------------------
 
-      Options     : Ada_Lib.Options.AUnit_Lib.
+      Options  : Ada_Lib.Options.AUnit_Lib.
                      Aunit_Program_Options_Type'class renames
-                        Ada_Lib.Options.AUnit_Lib.
-                           Aunit_Program_Options_Constant_Class_Access (
-                              Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
+                  Ada_Lib.Options.
+                     AUnit_Lib.Aunit_Program_Options_Constant_Class_Access (
+                        Ada_Lib.Options.Verification.
+                           Get_Ada_Lib_Read_Only_Program_Options).all;
    begin
       Log_In (Trace,
          Quote ("remote host",

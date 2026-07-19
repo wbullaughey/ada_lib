@@ -1,5 +1,5 @@
 with AUnit.Test_Suites;
---with Ada_Lib.Unit_Test.Tests;
+--with Ada_Lib.Unit_Test.Test_Cases;
 --with GNOGA_Ada_Lib;
 --with Gnoga.Gui.Element.Common;
 --with Gnoga.Gui.Element.Form;

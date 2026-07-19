@@ -2,14 +2,14 @@ with AUnit.Test_Cases;
 with AUnit.Test_Suites;
 with Ada_Lib.Mail.CURL;
 with Ada_Lib.Mail.SMTP;
-with Ada_Lib.Unit_Test.Tests;
+with Ada_Lib.Unit_Test.Test_Cases;
 -- with Ada_Lib.Unit_Test.Test_Cases;
 
 package Ada_Lib.Mail.Tests is
 
    Suite_Name                    : constant String := "Send_Mail";
 
-   type Test_Type                is abstract new Ada_Lib.Unit_Test.Tests.
+   type Test_Type                is abstract new Ada_Lib.Unit_Test.Test_Cases.
                                     Test_Case_Type with null record;
 
    overriding

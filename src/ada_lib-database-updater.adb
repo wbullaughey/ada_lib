@@ -148,8 +148,8 @@ not_implemented;
        -------------------------------------------------------------------
 
       begin
-         Log_In (Trace, "left tag " & Tag_Name (Base_Updater_Type'class (Left)'tag) &
-            " right tag " & Tag_Name (Base_Updater_Type'class (Right)'tag));
+         Log_In (Trace, Tag_Name ("left", Base_Updater_Type'class (Left)'tag) &
+            Tag_Name (" right", Base_Updater_Type'class (Right)'tag));
 
          declare
             Result               : constant Boolean := Left.ID = Right.ID and then

@@ -6,7 +6,7 @@ with Ada_Lib.Database.Subscription.Tests;
 with ADa_Lib.Options.Unit_Test;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
-with Ada_Lib.Unit_Test.Test_Cases;
+--with Ada_Lib.Unit_Test.Test_Cases;
 --with Ada_Lib.Test; -- .Tests;
 
 package body Ada_Lib.Database.Subscribe.Tests is
@@ -182,7 +182,7 @@ Not_Implemented;
       Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_1));
       Test.Table.Add_Subscription (Ada_Lib.Database.Updater.Updater_Interface_Class_Access (Subscription_2));
       Test.Subscribed := True;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Set_Up;
 
@@ -288,7 +288,7 @@ Not_Implemented;
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
       Test.Table.Delete_All;
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Tear_Down;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Tear_Down;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
    end Tear_Down;
 

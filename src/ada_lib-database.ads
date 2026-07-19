@@ -323,30 +323,31 @@ package Ada_Lib.Database is
 
 private
    procedure Unlocked_Post (                   -- does not lock database
-      Database                   : in out Database_Type;
-      Line                       : in     String;
-      Timeout                    : in     Duration);
+      Database             : in out Database_Type;
+      Line                 : in     String;
+      Timeout              : in     Duration);
 
-    subtype Tag_Range_Type      is Natural range 0 .. 11;
-    subtype ID_Range_Type       is Tag_Range_Type range Tag_Range_Type'first .. Tag_Range_Type'last - 1;
+    subtype ID_Range_Type  is Natural range 0 .. 12;
+    subtype Tag_Range_Type is ID_Range_Type range
+                              ID_Range_Type'first + 1 .. ID_Range_Type'last;
 
-    Read_Lock_Description       : aliased constant String := "database read lock";
-    Write_Lock_Description      : aliased constant String := "database write lock";
+    Read_Lock_Description  : aliased constant String := "database read lock";
+    Write_Lock_Description : aliased constant String := "database write lock";
 
-    type Database_Type          is new Ada.Finalization.Limited_Controlled with record
-        Initialized             : Boolean := False;
-        Label                   : Ada_Lib.Strings.Bounded.Bounded_Type (64);
-        Read_Lock               : aliased Ada_Lib.Lock.Lock_Type (Read_Lock_Description'access);
-        Selector                : GNAT.Sockets.Selector_Type;
-        Selector_Created        : Boolean := False;
-        Socket                  : GNAT.Sockets.Socket_Type;
-        Socket_Created          : Boolean := False;
-        Socket_Opened           : Boolean := False;
-        Stream                  : GNAT.Sockets.Stream_Access := Null;
-        Tag                     : String (TAG_Range_Type);
-        Tag_Length              : TAG_Range_Type := 0;
-        Use_Locks               : Boolean;
-        Write_Lock              : aliased Ada_Lib.Lock.Lock_Type (Write_Lock_Description'access);
+    type Database_Type     is new Ada.Finalization.Limited_Controlled with record
+        Initialized        : Boolean := False;
+        Label              : Ada_Lib.Strings.Bounded.Bounded_Type (64);
+        Read_Lock          : aliased Ada_Lib.Lock.Lock_Type (Read_Lock_Description'access);
+        Selector           : GNAT.Sockets.Selector_Type;
+        Selector_Created   : Boolean := False;
+        Socket             : GNAT.Sockets.Socket_Type;
+        Socket_Created     : Boolean := False;
+        Socket_Opened      : Boolean := False;
+        Stream             : GNAT.Sockets.Stream_Access := Null;
+        Tag                : String (Tag_Range_Type);
+        Tag_Length         : ID_Range_Type := 0;
+        Use_Locks          : Boolean;
+        Write_Lock         : aliased Ada_Lib.Lock.Lock_Type (Write_Lock_Description'access);
     end record;
 
     Null_Name_Index_Tag          : constant Name_Index_Tag_Type := Name_Index_Tag_Type'(

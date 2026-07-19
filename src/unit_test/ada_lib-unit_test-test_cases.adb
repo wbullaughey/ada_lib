@@ -1,7 +1,7 @@
 with Ada.Environment_Variables;
 with Ada.Text_IO; use Ada.Text_IO;
---with Ada_Lib.Options.AUnit_Lib;
---with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Program;
+with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Trace;
 
@@ -12,27 +12,61 @@ package body Ada_Lib.Unit_Test.Test_Cases is
    Debug    : Boolean renames Options.Unit_Test.Ada_Lib_Unit_Test_Test_Cases.Debug;
 
    ----------------------------------------------------------------------------
+   procedure Add_Optional_Routine (
+      Test                 : in out Test_Case_Type;
+      Routine              : in     AUnit.Test_Cases.Test_Routine;
+      Suite_Name           : in     String;
+      Routine_Name         : in     String;
+      Needs_Camera         : in     Boolean) is
+   ----------------------------------------------------------------------------
+
+      Has_Camera  : constant Boolean := Ada_Lib.Options.Program.Has_Camera;
+
+   begin
+      Log_Here (Debug, "needs camera " & Needs_Camera'img &
+         " Has_Camera " & Has_Camera'img);
+      if Needs_Camera and then not Has_Camera then
+         Put_Line ("skipping " & Suite_Name & " routine " & Routine_Name);
+      else
+         Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
+            Routine, AUnit.Format (Routine_Name)));
+      end if;
+   end Add_Optional_Routine;
+
+   ----------------------------------------------------------------------------
    overriding
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
       Val                     : AUnit.Test_Cases.Routine_Spec) is
    ----------------------------------------------------------------------------
 
-      Options     : Ada_Lib.Options.Unit_Test.
-                     Ada_Lib_Unit_Test_Program_Options_Type'class renames
-                           Ada_Lib.Options.Unit_Test.
-                        Ada_Lib_Unit_Test_Program_Options_Type'class (
-                           Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options.all);
+      Options  : constant Ada_Lib.Options.Verification.
+                     Verification_Program_Options_Constant_Class_Access :=
+                  Ada_Lib.Options.Verification.
+                     Get_Ada_Lib_Read_Only_Program_Options;
    begin
-      Log_In (Debug, Quote ("routine", Val.Routine_Name.all) &
-         " mode " & Options.Mode'img);
+      Log_In (Debug, Quote ("routine", Val.Routine_Name.all));
+--       " mode " & Options.Mode'img);
 
-      if Options.Mode = Ada_Lib.Options.Run_Tests then
-         AUnit.Test_Cases.Test_Case (Test).Add_Routine (Val);
-      end if;
+      Tag_History (Debug, "options", Options.all'tag);
+      declare
+         Program_Options
+            : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type renames
+               Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type (
+                  Options.all);
+         Nested_Options
+            : Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Nested_Options_Type'class renames
+                  Ada_Lib.Options.Unit_Test.Ada_Lib_Unit_Test_Nested_Options_Type'class (
+                        Program_Options.Nested_Unit_Test_Options);
+      begin
+         if Nested_Options.Mode = Ada_Lib.Options.Run_Tests then
+            Log_Here (Debug);
+            AUnit.Test_Cases.Test_Case (Test).Add_Routine (Val);
+         end if;
 
-      Routine (Test_Case_Type'class (Test).Name.all, Val.Routine_Name.all);
-      Log_Out (Debug);
+         Routine (Test_Case_Type'class (Test).Name.all, Val.Routine_Name.all);
+         Log_Out (Debug);
+      end;
    end Add_Routine;
 
    ----------------------------------------------------------------------------
@@ -41,13 +75,15 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Test     : in out Test_Case_Type) is
    ----------------------------------------------------------------------------
 
-   Options     : Ada_Lib.Options.Unit_Test.
-                  Ada_Lib_Unit_Test_Program_Options_Type'class renames
-                     Ada_Lib.Options.Unit_Test.
-                        Ada_Lib_Unit_Test_Options_Class_Access (
-                           Ada_Lib.Options.Get_Ada_Lib_Modifiable_Program_Options).all;
+   Options  : Ada_Lib.Options.Unit_Test.
+                  Ada_Lib_Unit_Test_Nested_Options_Type renames
+               Ada_Lib.Options.AUnit_Lib.
+                     Aunit_Program_Options_Constant_Class_Access (
+                  Ada_Lib.Options.Verification.
+                     Get_Ada_Lib_Read_Only_Program_Options).Nested_Unit_Test_Options;
    begin
-      Log_In (Debug or Trace_Set_Up_Tear_Down, "Random_Seed_Mode " & Options.Random_Seed_Mode'img);
+      Log_In (Debug or Trace_Set_Up_Tear_Down, "Random_Seed_Mode " &
+         Options.Random_Seed_Mode'img);
 
       for Index in 1 .. Options.Number_Random_Generators loop
          Log_Here (Debug, "reset random gemerator mode " &
@@ -74,12 +110,12 @@ package body Ada_Lib.Unit_Test.Test_Cases is
    ----------------------------------------------------------------------------
 
    begin
-      Put_Line ("------ exception trace --------");
+--    Put_Line ("------ exception trace --------");
       Put ("Exception in Set_Up " & Ada.Exceptions.Exception_Name (Fault) &
          ": " & Ada.Exceptions.Exception_Message (Fault) &
          "' called from " & Who & " at " & Here);
       New_Line;
-      Put_Line ("-------------------------------------------------");
+--    Put_Line ("-------------------------------------------------");
       Flush;
       Test.Set_Up_Failed;
    end Set_Up_Exception;
@@ -284,9 +320,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
                                        not Test.Set_Up_Failed;
 
       begin
-         return Log_Here (Result,
-            Debug or else Trace_Pre_Post_Conditions or else
-               not (Expect_True = Result),
+         return Log_Here (Result, Trace_Pre_Post (Result, Debug),
             "Set_Up_Succeeded " & Test.Set_Up_Succeeded'img &
             " Set_Up_Failed " & Test.Set_Up_Failed'img &
             " called from " & Here);
@@ -303,9 +337,7 @@ package body Ada_Lib.Unit_Test.Test_Cases is
       Result   : constant Boolean := Test.Torn_Down and then
                                        not Test.Tear_Down_Failed;
       begin
-         return Log_Here (Result,
-            Debug or else Trace_Pre_Post_Conditions or else
-               not (Expect_True = Result),
+         return Log_Here (Result, Trace_Pre_Post (Result, Debug),
             "Torn_Down " & Test.Torn_Down'img &
             " Tear_Down_Failed " & Test.Tear_Down_Failed'img &
             " called from " & Here);
@@ -319,8 +351,10 @@ begin
       Debug := Trace_Tests;
    end if;
 --Debug := True;
-   Log_Here (Trace_Options or Elaborate, "unit testing " & Ada_Lib.Options.Ada_Lib_Environment.Unit_Testing'img &
-         " Ada_Lib.Options.Ada_Lib_Environment.Help_Test " & Ada_Lib.Options.Ada_Lib_Environment.Help_Test'img &
+   Log_Here (Debug or Trace_Options or Elaborate, "unit testing " &
+      Ada_Lib.Options.Ada_Lib_Environment.Unit_Testing'img &
+      " Ada_Lib.Options.Ada_Lib_Environment.Help_Test " &
+      Ada_Lib.Options.Ada_Lib_Environment.Help_Test'img &
       "Environment_Variables help test " & Ada.Environment_Variables.Value (
          "BUILD_MODE", "execute") &
       "Environment_Variables unit test " & Ada.Environment_Variables.Value (

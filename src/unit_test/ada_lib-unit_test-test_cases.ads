@@ -2,6 +2,7 @@ with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with AUnit.Test_Cases;
 --with Gnoga_Ada_Lib;
@@ -72,15 +73,23 @@ package Ada_Lib.Unit_Test.Test_Cases is
       Failure_From               : Ada_Lib.Strings.Unlimited.String_Type;
       Random_Generators          : Random_Generators_Type;
       Suite_Name                 : Ada_Lib.Strings.Unlimited.String_Type;
+      Test_Failed                : Boolean := False;
    end record;
 
    type Test_Case_Class_Access is access all Test_Case_Type'class;
+
+   procedure Add_Optional_Routine (
+      Test                 : in out Test_Case_Type;
+      Routine              : in     AUnit.Test_Cases.Test_Routine;
+      Suite_Name           : in     String;
+      Routine_Name         : in     String;
+      Needs_Camera         : in     Boolean);
 
    overriding
    procedure Add_Routine (
       Test                    : in out Test_Case_Type;
       Val                     : in     AUnit.Test_Cases.Routine_Spec
-   ) with pre => Ada_Lib.Options.Have_Ada_Lib_Program_Options;
+   ) with pre => Ada_Lib.Options.Verification.Have_Ada_Lib_Verification_Options;
 
    overriding
    procedure Set_Up (

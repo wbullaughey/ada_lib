@@ -1,12 +1,11 @@
-with "ada_lib_aunit";
-with "ada_lib_base";
-with "ada_lib_options";
+with "ada_lib_aunit.gpr";
+with "ada_lib_base.gpr";
+with "ada_lib_options.gpr";
 with "alr_environment.gpr";
 with "aunit.gpr";
-with "gnoga";
-with "gnoga_ada_lib";
-with "gnoga_options";
-with "gnatcoll";
+with "gnoga.gpr";
+with "gnoga_ada_lib.gpr";
+with "gnatcoll_minimal.gpr";
 
 project Ada_Lib is
 

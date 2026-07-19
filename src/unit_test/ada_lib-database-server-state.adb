@@ -264,14 +264,6 @@ package body Ada_Lib.Database.Server.State is
 --    return Server.GUI;
 -- end Get_Top;
 --
--- --------------------------------------------------------------------------------
--- function Get_Main_Window return Gnoga.Gui.Window.Pointer_To_Window_Class is
--- --------------------------------------------------------------------------------
---
--- begin
---    return Server.GUI.Top_Window;
--- end Get_Main_Window;
-
    --------------------------------------------------------------------------------
    function Get_Server (
       Server                     : in     Server_Type
@@ -412,7 +404,7 @@ package body Ada_Lib.Database.Server.State is
       Result : constant Boolean := Server.Server /= Null;
 
    begin
-      return Log_Here (Result, Debug or Trace_Pre_Post_Conditions or not Result,
+      return Log_Here (Result, Trace_Pre_Post (Result, Debug),
          "server not allocated");
    end Is_Server_Allocated;
 
@@ -432,8 +424,7 @@ package body Ada_Lib.Database.Server.State is
             Log_Here ("server not opened");
          end if;
       end if;
-      return Log_Here (Result,
-         Debug or Trace_Pre_Post_Conditions or not Result,
+      return Log_Here (Result, Trace_Pre_Post (Result, Debug),
          "Server " & (if Server.Server = Null then
             "null"
          else
@@ -461,16 +452,16 @@ package body Ada_Lib.Database.Server.State is
    ) return Boolean is
    ---------------------------------------------------------------
 
-      Result   : constant Boolean := Server.Server = Null or else
-                                       Server.Server.Is_Stopped;
+      No_Server         : constant Boolean := Server.Server = Null;
+      Server_Stopped    : constant Boolean := Server.Server.Is_Stopped;
+      Result            : constant Boolean := No_Server or else Server_Stopped;
+
    begin
-      return Log_Here (Result,
-         Debug or Trace_Pre_Post_Conditions or not Result,
-         "server " & (if Server.Server = Null then
+      return Log_Here (Result, Trace_Pre_Post (Result, Debug), (if No_Server then
             "null"
          else
             "set") &
-         " Is_Stopped " & Server.Server.Is_Stopped'img);
+         " Is_Stopped " & Server_Stopped'img);
    end Is_Server_Stopped;
 
 
@@ -501,8 +492,7 @@ package body Ada_Lib.Database.Server.State is
       Result   : constant Boolean := Ada_Lib.Strings.Unlimited.length (
                                        Server.Host_Name) > 0;
    begin
-      return Log_Here (Result,
-         Debug or Trace_Pre_Post_Conditions or not Result,
+      return Log_Here (Result, Trace_Pre_Post (Result, Debug),
          Ada_Lib.Strings.Unlimited.Quote ("Host Name", Server.Host_Name));
    end Is_Host_Known;
 

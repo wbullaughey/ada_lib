@@ -8,6 +8,7 @@ with Ada_Lib.Database.Event;
 --with Ada_Lib.Options.Flags;
 with Ada_Lib.Options.AUnit_Lib;
 with Ada_Lib.Options.Unit_Test;
+with Ada_Lib.Options.Verification;
 with Ada_Lib.String_Quote; use Ada_Lib.String_Quote;
 with Ada_Lib.Strings.Unlimited;use Ada_Lib.Strings.Unlimited;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
@@ -615,19 +616,21 @@ package body Ada_Lib.Database.Server.Tests is
 
    use Ada_Lib.Options.Unit_Test;
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Listing_Suites             : constant Boolean :=
-                                    Options.Mode /= Ada_Lib.Options.Run_Tests;
-      Star_Names                 : constant String :=
-                                    (if Listing_Suites then "*" else "");
+      Options        : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+                        renames Ada_Lib.Options.AUnit_Lib.
+                           Aunit_Program_Options_Constant_Class_Access (
+                              Ada_Lib.Options.Verification.
+                                 Get_Ada_Lib_Read_Only_Program_Options).all;
+      Listing_Suites : constant Boolean :=
+                        Options.Nested_Unit_Test_Options.Mode /=
+                           Ada_Lib.Options.Run_Tests;
+      Star_Names     : constant String := (if Listing_Suites then "*" else "");
+
    begin
-      Log (Debug, Here, Who & " enter Which_Host " & Test.Which_Host'img);
+      Log_In (Debug, "enter Which_Host " & Test.Which_Host'img);
 
       if Listing_Suites or else
-            Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
+            Options.Nested_Unit_Test_Options.Suite_Set (Ada_Lib.Options.Unit_Test.Database_Server) then
          Test.Add_Routine (AUnit.Test_Cases.Routine_Spec'(
            Routine        => Parse_Name_Value'access,
            Routine_Name   => AUnit.Format ("Parse_Name_Value" & Star_Names)));
@@ -705,7 +708,7 @@ package body Ada_Lib.Database.Server.Tests is
             Routine_Name   => AUnit.Format ("Wild_Get" & Star_Names)));
       end if;
 
--- Log_Here ("exit");
+      Log_Out (Debug);
    end Register_Tests;
 
    ---------------------------------------------------------------
@@ -888,27 +891,28 @@ package body Ada_Lib.Database.Server.Tests is
       Test                          : in out Server_Test_Type) is
    ---------------------------------------------------------------
 
-      Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
-                           renames Ada_Lib.Options.AUnit_Lib.
-                              Aunit_Program_Options_Constant_Class_Access (
-                                 Ada_Lib.Options.Get_Ada_Lib_Read_Only_Program_Options).all;
-      Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
-                                    Table_Class_Access := new Ada_Lib.Database.
-                                       Subscription.Tests.Subscription_Table_Type;
+--    Options           : Ada_Lib.Options.AUnit_Lib.Aunit_Program_Options_Type'class
+--                         renames Ada_Lib.Options.AUnit_Lib.
+--                            Aunit_Program_Options_Constant_Class_Access (
+--                               Ada_Lib.Options.Verification.Get_Ada_Lib_Read_Only_Nested_Options).all;
+--    Subscription_Table         : constant Ada_Lib.DAtabase.Subscribe.
+--                                  Table_Class_Access := new Ada_Lib.Database.
+--                                     Subscription.Tests.Subscription_Table_Type;
    begin
-      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter which host " & Test.Which_Host'img);
-      Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
-      Test.Started := Server_State.Create_Server (
-         Subscription_Table,
-         Options.Database_Options.Get_Host,
-         Options.Database_Options.Port);
-      Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
-
-   exception
-      when Fault: others =>
-         Trace_Message_Exception (Fault, Who, Here);
-         Test.Set_Up_Message_Exception (Fault, Here, Who, "could not open database");
-         Log (Debug, Here, Who & " kill");
+not_implemented;
+--    Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " enter which host " & Test.Which_Host'img);
+--    Ada_Lib.Database.Unit_Test.Test_Case_Type (Test).Set_Up;
+--    Test.Started := Server_State.Create_Server (
+--       Subscription_Table,
+--       Options.Database_Options.Get_Host,
+--       Options.Database_Options.Port);
+--    Log (Debug or Trace_Set_Up_Tear_Down, Here, Who & " exit");
+--
+-- exception
+--    when Fault: others =>
+--       Trace_Message_Exception (Fault, Who, Here);
+--       Test.Set_Up_Message_Exception (Fault, Here, Who, "could not open database");
+--       Log (Debug, Here, Who & " kill");
    end Set_Up;
 
    ---------------------------------------------------------------------------------

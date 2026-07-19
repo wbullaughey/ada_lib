@@ -1,18 +1,7 @@
---with Ada.Exceptions;
---with Ada.Numerics.Discrete_Random;
---with Ada.Real_Time;
---with Ada.Text_IO;use Ada.Text_IO;
 with AUnit.Assertions; use AUnit.Assertions;
---with Ada_Lib.Options.Unit_Test;
---with Ada_Lib.OS;
---with Ada_Lib.Socket_IO.Client;
---with Ada_Lib.Socket_IO.Server;
+with Ada_Lib.Options.Unit_Test;
 with Ada_Lib.Trace; use Ada_Lib.Trace;
---with Ada_Lib.Trace_Tasks;
 with AUnit.Test_Cases;
---with Hex_IO;
---with Runtime_Options;
---with SYSTEM.ASSERTIONS;
 
 package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
@@ -21,7 +10,10 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 -- use type Ada_Lib.Socket_IO.Port_Type;
 
    procedure Test_Connect (
-      Test                       : in out AUnit.Test_Cases.Test_Case'class);
+      Test  : in out AUnit.Test_Cases.Test_Case'class);
+
+   Debug    : Boolean renames Ada_Lib.Options.Unit_Test.
+               Ada_Lib_Options_Unit_Test.Client_Debug;
 
    ---------------------------------------------------------------
    overriding
@@ -59,7 +51,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
    begin
       Log_In (Debug or Trace_Set_Up_Tear_Down);
-      Ada_Lib.Unit_Test.Tests.Test_Case_Type (Test).Set_Up;
+      Ada_Lib.Unit_Test.Test_Cases.Test_Case_Type (Test).Set_Up;
       Log_Out (Debug or Trace_Set_Up_Tear_Down);
 
    exception
@@ -113,6 +105,7 @@ package body Ada_Lib.Socket_IO.Client.Unit_Test is
 
          when Fault: others =>
             Trace_Exception (Fault);
+            return;
 --          Assert (False, "exception " & Ada.Exceptions.Exception_Message (Fault));
 
       end;
